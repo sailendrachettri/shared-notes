@@ -1,0 +1,22 @@
+
+/* ---------------------------------CUSTOM SCROLL BAR--------------------------------- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+.custom-scrollbar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px grey;
+  border-radius: 4px;
+}
+
+/* Handle */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(199, 187, 187);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: grey;
+}
