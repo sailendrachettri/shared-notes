@@ -4,7 +4,7 @@ import { GET_MST_NOTE_URL } from "../../../api/api_routes";
 
 
 
-const Sidebar = ({ setSelectedNoteId, sidebarItems, setSidebarItems }) => {
+const Sidebar = ({ setSelectedNoteId, sidebarItems, setSidebarItems, refresh }) => {
   const [active, setActive] = useState(1);
 
   const handleFetchAllItemList = async () => {
@@ -20,7 +20,7 @@ const Sidebar = ({ setSelectedNoteId, sidebarItems, setSidebarItems }) => {
 
   useEffect(() => {
     handleFetchAllItemList();
-  }, []);
+  }, [refresh]);
 
   const handleSelectNote = (noteId) => {
     console.log(noteId);
