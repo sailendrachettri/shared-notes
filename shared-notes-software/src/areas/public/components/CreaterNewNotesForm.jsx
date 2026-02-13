@@ -10,7 +10,7 @@ const CreaterNewNotesForm = () => {
       </div>
 
         <div className="p-4 border-t border-gray-200">
-        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl transition">
+        <button className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-xl transition">
           + New Project
         </button>
       </div>

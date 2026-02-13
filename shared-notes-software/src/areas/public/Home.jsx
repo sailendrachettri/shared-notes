@@ -6,27 +6,36 @@ import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
 const Home = () => {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
-  console.log(selectedNoteId)
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
-      {/* Main Section */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-lg border-r border-gray-200 hidden md:block">
-          <CreaterNewNotesForm />
-          <Sidebar setSelectedNoteId={setSelectedNoteId} />
+    <div className="h-screen bg-gray-100 p-6">
+      
+      {/* Outer Card Container */}
+      <div className="h-full flex flex-col gap-6">
+        
+        {/* Main Section */}
+        <div className="flex flex-1 gap-6 overflow-hidden">
+          
+          {/* Sidebar Card */}
+          <div className="w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col hidden md:flex">
+            <CreaterNewNotesForm />
+            <div className="mt-4 flex-1 overflow-y-auto">
+              <Sidebar setSelectedNoteId={setSelectedNoteId} />
+            </div>
+          </div>
+
+          {/* Content Card */}
+          <div className="flex-1 bg-white rounded-2xl shadow-sm p-6 overflow-y-auto">
+            <Playground selectedNoteId={selectedNoteId} />
+          </div>
+
         </div>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <Playground selectedNoteId={selectedNoteId} />
+        {/* Footer Card */}
+        <div className="bg-white rounded-2xl shadow-sm px-6 py-3">
+          <Footer />
         </div>
-      </div>
 
-      {/* Footer */}
-      <div className="h-12 bg-white border-t border-gray-200">
-        <Footer />
       </div>
     </div>
   );
