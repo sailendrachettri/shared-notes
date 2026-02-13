@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { GET_MST_NOTE_URL } from "../../../api/api_routes";
+import { PiNotebookLight } from "react-icons/pi";
+
+
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -40,7 +43,7 @@ const Sidebar = ({
     setActive(noteId);
   };
 
-  console.log(sidebarItems)
+  console.log(sidebarItems);
 
   return (
     <aside className="h-full flex flex-col bg-white ">
@@ -53,7 +56,7 @@ const Sidebar = ({
         <section className="h-full w-full">
           {sidebarItems != null && sidebarItems?.length > 0 ? (
             <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar">
-              {sidebarItems?.map((item) => (
+              {sidebarItems?.map((item, idx) => (
                 <button
                   key={item?.note_id}
                   onClick={() => handleSelectNote(item?.note_id)}
@@ -65,7 +68,16 @@ const Sidebar = ({
               }
             `}
                 >
-                  {item?.note_title || ""}
+                  <div className="flex items-center gap-3 py-2">
+                   
+                    <div className="shrink-0 text-sm font-semibold text-gray-500 w-6 text-right">
+                      {/* {idx + 1}. */}
+                      <PiNotebookLight size={20} className="text-primary/90" />
+                    </div>
+                    <div className="text-sm text-gray-800 leading-snug">
+                      {item?.note_title || ""}
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
