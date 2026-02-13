@@ -17,7 +17,7 @@ const Home = () => {
         <div className="flex flex-1 gap-3 overflow-hidden">
           
           {/* Sidebar Card */}
-          <div className="w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col hidden md:flex">
+          <div className="w-72 bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
             <CreaterNewNotesForm />
             <div className="mt-4 flex-1 overflow-y-auto">
               <Sidebar setSelectedNoteId={setSelectedNoteId} />
