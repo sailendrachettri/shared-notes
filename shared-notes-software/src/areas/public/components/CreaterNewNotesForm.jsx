@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { HiOutlineViewGridAdd, HiOutlineSearch } from "react-icons/hi";
+
 
 const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,8 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
 
   return (
     <div>
-      <div className="px-6 border-b border-gray-200">
+      <div className="flex items-center justify-start pe-6 border-b border-gray-200">
+        
         <h2 className="text-sm p-2 font-semibold text-gray-800">All Notes</h2>
       </div>
 

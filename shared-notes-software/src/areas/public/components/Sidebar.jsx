@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { GET_MST_NOTE_URL } from "../../../api/api_routes";
 import { PiNotebookLight } from "react-icons/pi";
