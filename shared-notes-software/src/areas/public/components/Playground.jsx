@@ -1,50 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import RichTextEditor from "../common/RichTextEditor";
-
-const sidebarItems = [
-  { sidebar_id: 1, sidebar_title: "Project Alpha" },
-  { sidebar_id: 2, sidebar_title: "Project Beta" },
-  { sidebar_id: 3, sidebar_title: "Project Gamma" },
-  { sidebar_id: 4, sidebar_title: "Project Delta" },
-  { sidebar_id: 5, sidebar_title: "Project Omega" },
-  { sidebar_id: 6, sidebar_title: "Project Sigma" },
-  { sidebar_id: 7, sidebar_title: "Project Nova" },
-  { sidebar_id: 8, sidebar_title: "Project Orion" },
-  { sidebar_id: 9, sidebar_title: "Project Phoenix" },
-  { sidebar_id: 10, sidebar_title: "Project Titan" },
-  { sidebar_id: 11, sidebar_title: "Project Atlas" },
-  { sidebar_id: 12, sidebar_title: "Project Eclipse" },
-  { sidebar_id: 13, sidebar_title: "Project Horizon" },
-  { sidebar_id: 14, sidebar_title: "Project Zenith" },
-  { sidebar_id: 15, sidebar_title: "Project Vertex" },
-  { sidebar_id: 16, sidebar_title: "Project Quantum" },
-  { sidebar_id: 17, sidebar_title: "Project Pulse" },
-  { sidebar_id: 18, sidebar_title: "Project Fusion" },
-  { sidebar_id: 19, sidebar_title: "Project Nebula" },
-  { sidebar_id: 20, sidebar_title: "Project Infinity" },
-];
 
 const Playground = ({ selectedNoteId }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const timeoutRef = useRef(null);
 
-  useEffect(() => {
-    const data = sidebarItems.find((obj) => obj.sidebar_id === selectedNoteId);
+  const handleOnInputChange = (content) => {
+    setSelectedFullDetails(content);
 
-    if (data) {
-      setSelectedFullDetails(data.content);
-    } else {
-      setSelectedFullDetails("");
+    // Clear previous timer
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
-  }, [selectedNoteId]);
+
+    // Auto-save after 1 second
+    timeoutRef.current = setTimeout(() => {
+      handleAutoSave(content);
+    }, 1000);
+  };
+
+  const handleAutoSave = (data) => {
+    console.log("Auto saving...", data);
+
+    // 👉 Call your API here
+    // await saveNoteApi(data)
+
+    // Show toast
+    setShowToast(true);
+
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2000);
+  };
 
   return (
-    <section>
+    <section className="relative">
       <RichTextEditor
         value={selectedFullDetails}
-        onChange={setSelectedFullDetails}
+        onChange={handleOnInputChange}
         placeholder="Start writing your note..."
         height="900px"
       />
+
+      {/* Custom Toast */}
+      {showToast && (
+        <div className="fixed bottom-6 right-6  text-slate-400 px-4 py-2 rounded-lg text-sm animate-fadeIn">
+          Auto saved ✓
+        </div>
+      )}
     </section>
   );
 };
