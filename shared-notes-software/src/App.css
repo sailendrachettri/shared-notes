@@ -1,22 +1,57 @@
-
 /* ---------------------------------CUSTOM SCROLL BAR--------------------------------- */
-.custom-scrollbar::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 5px;
 }
 
 /* Track */
-.custom-scrollbar::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   box-shadow: inset 0 0 2px grey;
   border-radius: 4px;
 }
 
 /* Handle */
-.custom-scrollbar::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: rgb(199, 187, 187);
   border-radius: 4px;
 }
 
 /* Handle on hover */
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: grey;
+}
+
+/* Hide Scrollbar (Cross Browser) */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+
+/*------------------------------------------------- FOR REACT QUILL -------------------------------------------------*/
+
+/* Make quill take full height */
+.ql-container {
+  flex: 1 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Scroll only editor area */
+.ql-editor {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Fix toolbar */
+.ql-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }

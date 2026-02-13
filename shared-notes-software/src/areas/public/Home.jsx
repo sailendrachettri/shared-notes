@@ -25,14 +25,14 @@ const Home = () => {
           </div>
 
           {/* Content Card */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm p-6 overflow-y-auto">
+          <div className="flex-1  rounded-2xl shadow-sm overflow-y-auto hide-scrollbar">
             <Playground selectedNoteId={selectedNoteId} />
           </div>
 
         </div>
 
         {/* Footer Card */}
-        <div className="bg-white rounded-2xl shadow-sm px-6 py-3">
+        <div className="px-6 py-3">
           <Footer />
         </div>
 

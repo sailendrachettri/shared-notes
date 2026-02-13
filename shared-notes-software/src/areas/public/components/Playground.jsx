@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import RichTextEditor from "../common/RichTextEditor";
 
 const sidebarItems = [
   { sidebar_id: 1, sidebar_title: "Project Alpha" },
@@ -23,24 +24,29 @@ const sidebarItems = [
   { sidebar_id: 20, sidebar_title: "Project Infinity" },
 ];
 
-
-const Playground = ({selectedNoteId}) => {
-  const [selectedFullDetails, setSelectedFullDetails] = useState(null);
-  console.log(selectedNoteId)
-
-  const handleGetSelectedValue = () => {
-    const data = sidebarItems.find((obj) => obj.sidebar_id == selectedNoteId);
-    console.log(data);
-    setSelectedFullDetails(data);
-  };
+const Playground = ({ selectedNoteId }) => {
+  const [selectedFullDetails, setSelectedFullDetails] = useState("");
 
   useEffect(() => {
-    handleGetSelectedValue();
+    const data = sidebarItems.find((obj) => obj.sidebar_id === selectedNoteId);
+
+    if (data) {
+      setSelectedFullDetails(data.content);
+    } else {
+      setSelectedFullDetails("");
+    }
   }, [selectedNoteId]);
 
-  return <div>
-    {selectedFullDetails?.sidebar_id } = {selectedFullDetails?.sidebar_title};
-  </div>;
+  return (
+    <section className="py-2">
+      <RichTextEditor
+        value={selectedFullDetails}
+        onChange={setSelectedFullDetails}
+        placeholder="Start writing your note..."
+        height="600px"
+      />
+    </section>
+  );
 };
 
 export default Playground;
