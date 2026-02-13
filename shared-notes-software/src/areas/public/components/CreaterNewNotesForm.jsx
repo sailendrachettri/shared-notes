@@ -2,33 +2,34 @@ import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
+import { HiOutlineViewGridAdd } from "react-icons/hi";
 
-const CreaterNewNotesForm = ({setRefresh}) => {
+const CreaterNewNotesForm = ({ setRefresh }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-   try {
-     if (!title.trim()) return;
- 
-     // 👉 Do your API call here
-     console.log("Note Title:", title);
-     const payload = {
-       NoteTitle: title || null,
-     };
-     const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-     console.log(res);
- 
-     setTitle("");
-     setIsOpen(false);
-     toast.success("Note created successful!");
-   } catch (error) {
-    console.error("Not able to create new note");
-    toast.error("Can't create new note");
-   }finally{
-    setRefresh(prev => !prev);
-   }
+    try {
+      if (!title.trim()) return;
+
+      // 👉 Do your API call here
+      console.log("Note Title:", title);
+      const payload = {
+        NoteTitle: title || null,
+      };
+      const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
+      console.log(res);
+
+      setTitle("");
+      setIsOpen(false);
+      toast.success("Note created successful!");
+    } catch (error) {
+      console.error("Not able to create new note");
+      toast.error("Can't create new note");
+    } finally {
+      setRefresh((prev) => !prev);
+    }
   };
 
   // Close on ESC
@@ -51,7 +52,10 @@ const CreaterNewNotesForm = ({setRefresh}) => {
           onClick={() => setIsOpen(true)}
           className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-xl transition"
         >
-          + New Notes
+          <span className="flex items-center justify-center gap-x-2 flex-nowrap">
+            <HiOutlineViewGridAdd size={20}/>
+          <div> Create Notes</div>
+          </span>
         </button>
       </div>
 

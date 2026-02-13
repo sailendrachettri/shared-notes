@@ -48,7 +48,7 @@ const Sidebar = ({
             <button
               key={item?.note_id}
               onClick={() => handleSelectNote(item?.note_id)}
-              className={`w-full text-sm text-left px-3 py-2 cursor-pointer rounded-xl transition-all duration-200
+              className={`w-full capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-xl transition-all duration-200
               ${
                 active === item?.note_id
                   ? "bg-slate-50 text-primary"
