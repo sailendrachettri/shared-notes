@@ -8,8 +8,14 @@ const sidebarItems = [
   { sidebar_id: 5, sidebar_title: "Project Omega" },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({setSelectedNoteId}) => {
   const [active, setActive] = useState(1);
+
+  const handleSelectNote = (noteId)=>{
+    console.log(noteId)
+    setSelectedNoteId(noteId)
+    setActive(noteId)
+  }
 
   return (
     <aside className="h-full flex flex-col bg-white">
@@ -19,7 +25,7 @@ const Sidebar = () => {
         {sidebarItems.map((item) => (
           <button
             key={item.sidebar_id}
-            onClick={() => setActive(item.sidebar_id)}
+            onClick={() =>  handleSelectNote(item.sidebar_id)}
             className={`w-full text-left px-4 py-3 cursor-pointer rounded-xl transition-all duration-200
               ${
                 active === item.sidebar_id
