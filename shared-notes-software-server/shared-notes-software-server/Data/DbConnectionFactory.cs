@@ -1,7 +1,7 @@
 ﻿using Npgsql;
 using Microsoft.Extensions.Configuration;
 
-namespace OfficeConnectServer.Data
+namespace shared_notes_software_server.Data
 {
     public class DbConnectionFactory
     {

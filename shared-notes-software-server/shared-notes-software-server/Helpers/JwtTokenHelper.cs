@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace OfficeConnectServer.Helpers
+namespace shared_notes_software_server.Helpers
 {
     public class JwtTokenHelper
     {

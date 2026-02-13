@@ -1,7 +1,7 @@
 ﻿using Npgsql;
-using OfficeConnectServer.Data;
+using shared_notes_software_server.Data;
 using System.Reflection;
-using OfficeConnectServer.Extensions;
+using shared_notes_software_server.Extensions;
 
 public class DbHelper
 {
