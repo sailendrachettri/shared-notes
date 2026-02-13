@@ -34,6 +34,10 @@ const Playground = ({ selectedNoteId }) => {
     }, 2000);
   };
 
+  console.log(selectedNoteId);
+
+
+  useEffect(()=>{})
   return (
     <section className="relative">
       <RichTextEditor

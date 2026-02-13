@@ -5,6 +5,7 @@ import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
 const Home = () => {
+  const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
 
   return (
@@ -20,13 +21,13 @@ const Home = () => {
           <div className="w-72 bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
             <CreaterNewNotesForm />
             <div className="mt-4 flex-1 overflow-y-auto">
-              <Sidebar setSelectedNoteId={setSelectedNoteId} />
+              <Sidebar sidebarItems={sidebarItems} setSidebarItems={setSidebarItems} setSelectedNoteId={setSelectedNoteId} />
             </div>
           </div>
 
           {/* Content Card */}
           <div className="flex-1  rounded-2xl shadow-sm overflow-y-auto hide-scrollbar">
-            <Playground selectedNoteId={selectedNoteId} />
+            <Playground  selectedNoteId={selectedNoteId} />
           </div>
 
         </div>
