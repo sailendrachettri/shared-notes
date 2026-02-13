@@ -8,13 +8,13 @@ const Home = () => {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
 
   return (
-    <div className="h-screen bg-gray-100 p-6">
+    <div className="h-screen bg-gray-100 p-3">
       
       {/* Outer Card Container */}
-      <div className="h-full flex flex-col gap-6">
+      <div className="h-full flex flex-col gap-3">
         
         {/* Main Section */}
-        <div className="flex flex-1 gap-6 overflow-hidden">
+        <div className="flex flex-1 gap-3 overflow-hidden">
           
           {/* Sidebar Card */}
           <div className="w-72 bg-white rounded-2xl shadow-sm p-4 flex flex-col hidden md:flex">

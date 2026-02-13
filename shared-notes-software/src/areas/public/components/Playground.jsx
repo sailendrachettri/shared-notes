@@ -38,12 +38,12 @@ const Playground = ({ selectedNoteId }) => {
   }, [selectedNoteId]);
 
   return (
-    <section className="py-2">
+    <section>
       <RichTextEditor
         value={selectedFullDetails}
         onChange={setSelectedFullDetails}
         placeholder="Start writing your note..."
-        height="600px"
+        height="900px"
       />
     </section>
   );

@@ -31,12 +31,12 @@ const RichTextEditor = ({
   value,
   onChange,
   placeholder = "Write something...",
-  height = "600px",
+  height = "900px",
 }) => {
   return (
     <>
       <section>
-        <div className="max-h-[80vh] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="max-h-[90vh] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <ReactQuill
             theme="snow"
             value={value}
