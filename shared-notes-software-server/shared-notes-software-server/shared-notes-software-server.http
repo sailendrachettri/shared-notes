@@ -1,0 +1,6 @@
+@shared_notes_software_server_HostAddress = http://localhost:5234
+
+GET {{shared_notes_software_server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
