@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { HiOutlineViewGridAdd } from "react-icons/hi";
+import { HiOutlineViewGridAdd, HiOutlineSearch } from "react-icons/hi";
 
-const CreaterNewNotesForm = ({ setRefresh }) => {
+const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,13 +51,42 @@ const CreaterNewNotesForm = ({ setRefresh }) => {
       <div className="p-4 border-t border-gray-200">
         <button
           onClick={() => setIsOpen(true)}
-          className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-xl transition"
+          className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-md transition"
         >
           <span className="flex items-center justify-center gap-x-2 flex-nowrap">
-            <HiOutlineViewGridAdd size={20}/>
-          <div> Create Notes</div>
+            <HiOutlineViewGridAdd size={20} />
+            <div> Create Notes</div>
           </span>
         </button>
+
+        <div className="mt-4">
+          <div className="relative">
+            <HiOutlineSearch
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+
+            <input
+            onChange={(e)=> setSearchText(e.target.value)}
+              type="text"
+              placeholder="Search notes..."
+              className="
+        w-full
+        pl-10 pr-4 py-2.5
+        rounded-md
+         border-none
+        bg-gray-50
+        text-sm
+        placeholder:text-gray-400
+        focus:outline-none
+        focus:ring-1
+        focus:ring-primary/40
+        focus:border-primary
+        transition
+      "
+            />
+          </div>
+        </div>
       </div>
 
       {/* Modal */}

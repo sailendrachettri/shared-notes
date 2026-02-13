@@ -4,4 +4,9 @@
     {
         public string NoteTitle { get; set; }
     }
+
+    public class GetNoteRequest
+    {
+        public string? SearchText { get; set; }
+    }
 }

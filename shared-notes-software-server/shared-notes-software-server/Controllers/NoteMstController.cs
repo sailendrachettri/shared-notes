@@ -15,11 +15,16 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
-        [HttpGet("list")]
-        public async Task<IActionResult> GetNotes()
+        [HttpPost("list")]
+        public async Task<IActionResult> GetNotes([FromBody] GetNoteRequest request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.get_notes_item_list();"
+                "SELECT public.get_notes_item_list(@search_text);",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("search_text",
+                        request.SearchText ?? (object)DBNull.Value);
+                }
             );
 
             if (string.IsNullOrEmpty(jsonResult))
@@ -27,6 +32,8 @@ namespace shared_notes_software_server.Controllers
 
             return Content(jsonResult, "application/json");
         }
+
+
 
 
         [HttpPost("add")]

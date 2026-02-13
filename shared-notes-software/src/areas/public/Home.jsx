@@ -8,6 +8,7 @@ const Home = () => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
+   const [searchText, setSearchText] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -20,9 +21,9 @@ const Home = () => {
           
           {/* Sidebar Card */}
           <div className="w-72 bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
-            <CreaterNewNotesForm setRefresh={setRefresh} />
-            <div className="mt-4 flex-1 overflow-y-auto">
-              <Sidebar refresh={refresh} sidebarItems={sidebarItems} setSidebarItems={setSidebarItems} setSelectedNoteId={setSelectedNoteId} />
+            <CreaterNewNotesForm setSearchText={setSearchText} setRefresh={setRefresh} />
+            <div className="flex-1 overflow-y-auto">
+              <Sidebar searchText={searchText} refresh={refresh} sidebarItems={sidebarItems} setSidebarItems={setSidebarItems} setSelectedNoteId={setSelectedNoteId} />
             </div>
           </div>
 
