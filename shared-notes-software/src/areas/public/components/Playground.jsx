@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import RichTextEditor from "../common/RichTextEditor";
 import { axiosInstance } from "../../../api/axios";
 import {
   ADD_UPDATE_NOTES_URL,
   GET_NOTES__DETAILS_URL,
 } from "../../../api/api_routes";
+import InfoScreen from "../../../utils/info-screen/InfoScreen";
+
 
 const Playground = ({ selectedNoteId }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
@@ -61,9 +63,8 @@ const Playground = ({ selectedNoteId }) => {
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         console.log(res?.data?.data?.notes_details);
-      }else{
+      } else {
         setSelectedFullDetails("");
-
       }
     } catch (error) {
       console.error("Not able fetch details", error);
@@ -77,22 +78,31 @@ const Playground = ({ selectedNoteId }) => {
   }, [selectedNoteId]);
 
   return (
-    <section className="relative">
-      <RichTextEditor
-        value={selectedFullDetails}
-        onChange={handleOnInputChange}
-        placeholder="Start writing your note..."
-        height="1080px"
-        
-      />
+    <>
+      <section>
+        {selectedNoteId ? (
+          <section className="relative">
+            <RichTextEditor
+              value={selectedFullDetails}
+              onChange={handleOnInputChange}
+              placeholder="Start writing your note..."
+              height="1080px"
+            />
 
-      {/* Custom Toast */}
-      {showToast && (
-        <div className="fixed bottom-6 right-6  text-slate-400 px-4 py-2 rounded-lg text-sm animate-fadeIn">
-          Auto saved ✓
-        </div>
-      )}
-    </section>
+            {/* Custom Toast */}
+            {showToast && (
+              <div className="fixed bottom-6 right-6  text-slate-400 px-4 py-2 rounded-lg text-sm animate-fadeIn">
+                Auto saved ✓
+              </div>
+            )}
+          </section>
+        ) : (
+          <section>
+            <InfoScreen />
+          </section>
+        )}
+      </section>
+    </>
   );
 };
 

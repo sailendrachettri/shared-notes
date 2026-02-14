@@ -225,13 +225,13 @@ body{
   transition: all 0.15s ease;
 }
 
-.notion-editor-content .task-item > label input[type="checkbox"]:hover {
+.notion-editor-content .task-item > label input[type="checkbox"]:hover { 
   background-color: #f3f4f6;
 }
 
 .notion-editor-content .task-item > label input[type="checkbox"]:checked {
-  background-color: #2563eb;
-  border-color: #2563eb;
+  background-color: #d25564;
+  border-color: #d25564;
 }
 
 .notion-editor-content .task-item > label input[type="checkbox"]:checked::after {
