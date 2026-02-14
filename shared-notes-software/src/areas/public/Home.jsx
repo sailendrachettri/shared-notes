@@ -72,7 +72,7 @@ const Home = () => {
         </div>
 
         {/* Footer Card */}
-        <div className="px-6 py-3">
+        <div className="px-6 py-1">
           <Footer />
         </div>
       </div>

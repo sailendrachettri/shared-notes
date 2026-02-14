@@ -44,7 +44,7 @@ const Playground = ({ selectedNoteId }) => {
         value={selectedFullDetails}
         onChange={handleOnInputChange}
         placeholder="Start writing your note..."
-        height="900px"
+        height="1080px"
       />
 
       {/* Custom Toast */}

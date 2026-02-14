@@ -8,6 +8,10 @@ const modules = {
     ["bold", "italic", "underline", "strike"],
     [{ list: "ordered" }, { list: "bullet" }],
     ["blockquote", "code-block"],
+    [{ align: [] }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ color: [] }],
+    [{ direction: "rtl" }],
     ["link", "image"],
     ["clean"],
   ],
@@ -20,23 +24,28 @@ const formats = [
   "underline",
   "strike",
   "list",
-  "bullet",
   "blockquote",
   "code-block",
   "link",
   "image",
+  "color",
+  "indent",
+  "align",
+  "direction",
 ];
+
+
 
 const RichTextEditor = ({
   value,
   onChange,
   placeholder = "Write something...",
-  height = "900px",
+  height = "1080px",
 }) => {
   return (
     <>
       <section>
-        <div className="max-h-[90vh] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="max-h-[95vh] bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <ReactQuill
             theme="snow"
             value={value}
