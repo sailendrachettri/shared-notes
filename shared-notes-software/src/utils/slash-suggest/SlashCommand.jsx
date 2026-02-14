@@ -155,19 +155,19 @@ export const SlashCommand = Extension.create({
                   .run();
               },
             },
-            {
-              title: "Table",
-              description: "Insert a table",
-              icon: "⊞",
-              command: ({ editor, range }) => {
-                editor
-                  .chain()
-                  .focus()
-                  .deleteRange(range)
-                  .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-                  .run();
-              },
-            },
+            // {
+            //   title: "Table",
+            //   description: "Insert a table",
+            //   icon: "⊞",
+            //   command: ({ editor, range }) => {
+            //     editor
+            //       .chain()
+            //       .focus()
+            //       .deleteRange(range)
+            //       .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+            //       .run();
+            //   },
+            // },
           ];
 
           return items.filter((item) =>
