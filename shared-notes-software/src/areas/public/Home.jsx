@@ -53,7 +53,7 @@ const Home = () => {
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
               />
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar
                   searchText={searchText}
                   refresh={refresh}

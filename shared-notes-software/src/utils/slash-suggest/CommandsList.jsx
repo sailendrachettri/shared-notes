@@ -53,7 +53,7 @@ export const CommandsList = forwardRef((props, ref) => {
   }));
 
   return (
-    <div className="slash-commands-menu">
+    <div className="slash-commands-menu hide-scrollbar">
       {props.items.length ? (
         props.items.map((item, index) => (
           <button
