@@ -28,19 +28,16 @@ export const SlashCommand = Extension.create({
             {
               title: "Text",
               description: "Just start writing with plain text",
+              keywords: ["txt", "te", "text"],
               icon: "📝",
               command: ({ editor, range }) => {
-                editor
-                  .chain()
-                  .focus()
-                  .deleteRange(range)
-                  .setParagraph()
-                  .run();
+                editor.chain().focus().deleteRange(range).setParagraph().run();
               },
             },
             {
               title: "Heading 1",
               description: "Big section heading",
+              keywords: ["h1", "head1", "he1", "heading 1"],
               icon: "H1",
               command: ({ editor, range }) => {
                 editor
@@ -54,6 +51,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Heading 2",
               description: "Medium section heading",
+              keywords: ["h2", "head2", "he2", "heading 2"],
               icon: "H2",
               command: ({ editor, range }) => {
                 editor
@@ -67,6 +65,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Heading 3",
               description: "Small section heading",
+              keywords: ["h3", "head3", "he3", "heading 3"],
               icon: "H3",
               command: ({ editor, range }) => {
                 editor
@@ -80,6 +79,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Bullet List",
               description: "Create a simple bullet list",
+              keywords: ["blis", "bullet list", "bl", "lst", "list"],
               icon: "•",
               command: ({ editor, range }) => {
                 editor
@@ -93,6 +93,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Numbered List",
               description: "Create a list with numbering",
+              keywords: ["nlis", "number list", "nl", "lst", "list"],
               icon: "1.",
               command: ({ editor, range }) => {
                 editor
@@ -106,6 +107,7 @@ export const SlashCommand = Extension.create({
             {
               title: "To-do List",
               description: "Track tasks with a to-do list",
+              keywords: ["tdl", "todo", "todo list", "to"],
               icon: "☑",
               command: ({ editor, range }) => {
                 editor
@@ -119,6 +121,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Quote",
               description: "Capture a quote",
+              keywords: ["q", "qt", "quote"],
               icon: "",
               command: ({ editor, range }) => {
                 editor
@@ -132,6 +135,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Code Block",
               description: "Capture a code snippet",
+              keywords: ["code", "co", "c", "cd"],
               icon: "</>",
               command: ({ editor, range }) => {
                 editor
@@ -145,6 +149,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Divider",
               description: "Visually divide blocks",
+              keywords: ["d", "div", "divider", "min"],
               icon: "—",
               command: ({ editor, range }) => {
                 editor
@@ -170,9 +175,16 @@ export const SlashCommand = Extension.create({
             // },
           ];
 
-          return items.filter((item) =>
-            item.title.toLowerCase().includes(query.toLowerCase())
-          );
+          // Search suggestion based on keywoard
+          return items.filter((item) => {
+            const q = query.toLowerCase();
+
+            return (
+              item.title.toLowerCase().includes(q) ||
+              item.description.toLowerCase().includes(q) ||
+              item.keywords?.some((k) => k.toLowerCase().includes(q))
+            );
+          });
         },
         render: () => {
           let component;

@@ -113,13 +113,17 @@ body{
 .notion-editor-wrapper {
   min-height: 100vh;
   background-color: #ffffff;
-  padding: 2.5rem 1.5rem;
+  padding: 2.5rem 1rem;
 }
 
 .notion-editor-container {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
 }
+
+/* @media screen() {
+  
+} */
 
 /* Editor Content Styles */
 .notion-editor-content {
