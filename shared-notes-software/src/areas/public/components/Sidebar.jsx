@@ -19,7 +19,7 @@ const Sidebar = ({
   const [openMenu, setOpenMenu] = useState(null);
 
   const handleFetchAllItemList = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const payload = {
         SearchText: searchText || null,

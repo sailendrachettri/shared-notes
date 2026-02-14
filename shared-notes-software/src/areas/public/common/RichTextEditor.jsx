@@ -15,6 +15,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
+import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -503,7 +504,7 @@ const RichTextEditor = ({
 
         {lastUpdatedAt && (
           <p className="text-sm text-slate-400 mt-2">
-            Last updated {new Date(lastUpdatedAt).toLocaleString()}
+            Last updated {formatePrettyDateTime(lastUpdatedAt) }
           </p>
         )}
       </div>

@@ -73,6 +73,7 @@ const Home = () => {
             <Playground
               selectedNoteId={selectedNoteId}
               noteHeading={noteHeading}
+              setRefresh={setRefresh}
             />
           </div>
         </div>

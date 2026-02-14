@@ -9,12 +9,11 @@ import {
 import InfoScreen from "../../../utils/info-screen/InfoScreen";
 import toast from "react-hot-toast";
 
-const Playground = ({ selectedNoteId, noteHeading }) => {
+const Playground = ({ selectedNoteId, noteHeading, setRefresh }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef(null);
   const [currentNotesId, setCurrentNotesId] = useState(null);
-
 
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 
@@ -79,25 +78,26 @@ const Playground = ({ selectedNoteId, noteHeading }) => {
     }
   };
 
-  useEffect(() => {
-    if (selectedNoteId != null) {
-      getNotesDetails();
-    }
-  }, [selectedNoteId]);
-
   const renameNoteTitle = async (newTitle) => {
     try {
       const payload = {
         NoteId: selectedNoteId,
         NoteTitle: newTitle || noteHeading,
       };
-      const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-      console.log(res);
+      await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
     } catch (error) {
       console.error("Not able to rename", error);
       toast.error("Can't rename at this moment");
+    }finally{
+      setRefresh(prev => !prev);
     }
   };
+
+  useEffect(() => {
+    if (selectedNoteId != null) {
+      getNotesDetails();
+    }
+  }, [selectedNoteId]);
 
   return (
     <>
