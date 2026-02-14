@@ -11,6 +11,7 @@ const Home = () => {
   const [refresh, setRefresh] = useState(null);
   const [searchText, setSearchText] = useState(null);
   const [toggleSidebar, setToggleSidebar] = useState(false);
+  const [noteHeading, setNoteHeading] = useState("");
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -61,6 +62,7 @@ const Home = () => {
                   sidebarItems={sidebarItems}
                   setSidebarItems={setSidebarItems}
                   setSelectedNoteId={setSelectedNoteId}
+                  setNoteHeading={setNoteHeading}
                 />
               </div>
             </div>
@@ -68,7 +70,10 @@ const Home = () => {
 
           {/* Content Card */}
           <div className="flex-1  rounded-2xl shadow-sm overflow-y-auto hide-scrollbar mb-1">
-            <Playground selectedNoteId={selectedNoteId} />
+            <Playground
+              selectedNoteId={selectedNoteId}
+              noteHeading={noteHeading}
+            />
           </div>
         </div>
 

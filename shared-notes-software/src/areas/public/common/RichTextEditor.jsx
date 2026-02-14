@@ -368,7 +368,13 @@ const TableMenu = ({ editor }) => {
   );
 };
 
-const RichTextEditor = ({ value, onChange }) => {
+const RichTextEditor = ({
+  value,
+  onChange,
+  heading,
+  lastUpdatedAt,
+  onTitleChange,
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -437,7 +443,7 @@ const RichTextEditor = ({ value, onChange }) => {
 
     // Only update if the content is different
     if (value !== editor.getHTML()) {
-      editor.commands.setContent(value || ""); 
+      editor.commands.setContent(value || "");
       editor.commands.focus("end");
     }
   }, [value, editor]);
@@ -453,7 +459,7 @@ const RichTextEditor = ({ value, onChange }) => {
       // Ignore if typing inside input/textarea/button
       if (["INPUT", "TEXTAREA", "BUTTON"].includes(activeTag)) return;
 
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.key == "/" && !e.ctrlKey && !e.metaKey && !e.altKey) {
         editor.chain().focus().insertContent(e.key).run();
       }
     };
@@ -467,6 +473,41 @@ const RichTextEditor = ({ value, onChange }) => {
 
   return (
     <div className="notion-editor-wrapper">
+      <div className="px-8 pt-10 pb-4">
+        <div
+          contentEditable
+          suppressContentEditableWarning
+          onInput={(e) => {
+            let text = e.currentTarget.textContent || "";
+
+            if (text.length > 45) {
+              text = text.slice(0, 45);
+              e.currentTarget.textContent = text;
+
+              // Move cursor to end after trimming
+              const range = document.createRange();
+              const sel = window.getSelection();
+              range.selectNodeContents(e.currentTarget);
+              range.collapse(false);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+
+            onTitleChange(text);
+          }}
+          className="text-4xl font-bold outline-none text-slate-800"
+          data-placeholder="Untitled"
+        >
+          {heading}
+        </div>
+
+        {lastUpdatedAt && (
+          <p className="text-sm text-slate-400 mt-2">
+            Last updated {new Date(lastUpdatedAt).toLocaleString()}
+          </p>
+        )}
+      </div>
+
       <div className="notion-editor-container">
         {editor && <FormattingMenu editor={editor} />}
         {editor && <TableMenu editor={editor} />}

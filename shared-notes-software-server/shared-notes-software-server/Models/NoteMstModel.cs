@@ -14,4 +14,9 @@
     {
         public long NoteId { get; set; }
     }
+    public class RenameNoteRequest
+    {
+        public long NoteId { get; set; }
+        public string NoteTitle { get; set; }
+    }
 }

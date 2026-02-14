@@ -12,6 +12,7 @@ const Sidebar = ({
   refresh,
   setRefresh,
   searchText,
+  setNoteHeading
 }) => {
   const [active, setActive] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -59,10 +60,11 @@ const Sidebar = ({
     handleFetchAllItemList();
   }, [refresh, searchText]);
 
-  const handleSelectNote = (noteId) => {
+  const handleSelectNote = (note) => {
     setOpenMenu(null)
-    setSelectedNoteId(noteId);
-    setActive(noteId);
+    setNoteHeading(note?.note_title || "")
+    setSelectedNoteId(note?.note_id);
+    setActive(note?.note_id);
   };
 
   return (
@@ -79,7 +81,7 @@ const Sidebar = ({
               {sidebarItems?.map((item, idx) => (
                 <button
                   key={item?.note_id}
-                  onClick={() => handleSelectNote(item?.note_id)}
+                  onClick={() => handleSelectNote(item)}
                   className={`group relative w-full  capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-md transition-all duration-200
   ${
     active === item?.note_id

@@ -33,6 +33,36 @@ namespace shared_notes_software_server.Controllers
             return Content(jsonResult, "application/json");
         }
 
+        [HttpPost("rename")]
+        public async Task<IActionResult> DeleteNote([FromBody] RenameNoteRequest request)
+        {
+            if (request.NoteId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_notes
+          SET note_title = @note_title,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE note_id = @note_id
+          RETURNING json_build_object(
+              'success', true,
+              'note_id', note_id,
+              'status', 'UPDATED',
+              'message', 'Note title updated successfully'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("note_title", request.NoteTitle);
+                    cmd.Parameters.AddWithValue("note_id", request.NoteId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteNote([FromBody] DeleteNoteRequest request)
         {
