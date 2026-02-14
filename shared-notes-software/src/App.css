@@ -111,7 +111,7 @@ body{
 /* ---------------------------------------------------for editor--------------------------------------------------- */
 /* Notion Editor Wrapper */
 .notion-editor-wrapper {
-  min-height: 100vh;
+  min-height: 93vh;
   background-color: #ffffff;
   padding: 2.5rem 1rem;
 }

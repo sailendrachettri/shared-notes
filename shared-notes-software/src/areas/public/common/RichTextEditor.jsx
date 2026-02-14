@@ -11,10 +11,10 @@ import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
-import {TextStyle} from "@tiptap/extension-text-style";
-import {Color} from "@tiptap/extension-color";
-import {Highlight} from "@tiptap/extension-highlight";
-import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand"; 
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import { Highlight } from "@tiptap/extension-highlight";
+import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -29,7 +29,7 @@ const FormattingMenu = ({ editor }) => {
     const checkSelection = () => {
       const { from, to } = editor.state.selection;
       setIsTextSelected(from !== to);
-      
+
       if (from === to) {
         setShowColorPicker(false);
         setShowHighlightPicker(false);
@@ -71,11 +71,7 @@ const FormattingMenu = ({ editor }) => {
 
   const setLink = () => {
     if (linkUrl) {
-      editor
-        .chain()
-        .focus()
-        .setLink({ href: linkUrl })
-        .run();
+      editor.chain().focus().setLink({ href: linkUrl }).run();
       setLinkUrl("");
       setShowLinkInput(false);
     }
@@ -190,7 +186,11 @@ const FormattingMenu = ({ editor }) => {
                     if (!highlight.value) {
                       editor.chain().focus().unsetHighlight().run();
                     } else {
-                      editor.chain().focus().setHighlight({ color: highlight.value }).run();
+                      editor
+                        .chain()
+                        .focus()
+                        .setHighlight({ color: highlight.value })
+                        .run();
                     }
                     setShowHighlightPicker(false);
                   }}
@@ -431,6 +431,29 @@ const RichTextEditor = ({ value, onChange }) => {
       },
     },
   });
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleKeyDown = (e) => {
+      if (editor.isFocused) return;
+
+      const activeTag = document.activeElement?.tagName;
+
+      // Ignore if typing inside input/textarea/button
+      if (["INPUT", "TEXTAREA", "BUTTON"].includes(activeTag)) return;
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        editor.chain().focus().insertContent(e.key).run();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [editor]);
 
   return (
     <div className="notion-editor-wrapper">

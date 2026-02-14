@@ -175,7 +175,7 @@ export const SlashCommand = Extension.create({
             // },
           ];
 
-          // Search suggestion based on keywoard
+          /* Search suggestion based on keywoard */
           return items.filter((item) => {
             const q = query.toLowerCase();
 
