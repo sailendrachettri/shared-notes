@@ -49,7 +49,7 @@ const Sidebar = ({
       {/* Project List */}
       {loading ? (
         <div className="w-full h-[60vh]  flex items-center justify-center">
-          <div class="loader"></div>
+          <div className="loader"></div>
         </div>
       ) : (
         <section className="h-full w-full">
