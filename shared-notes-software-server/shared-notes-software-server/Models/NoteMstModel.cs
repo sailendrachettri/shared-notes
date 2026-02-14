@@ -9,4 +9,9 @@
     {
         public string? SearchText { get; set; }
     }
+
+    public class DeleteNoteRequest
+    {
+        public long NoteId { get; set; }
+    }
 }

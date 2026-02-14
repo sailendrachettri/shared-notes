@@ -1,14 +1,16 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosInstance } from "../../../api/axios";
-import { GET_MST_NOTE_URL } from "../../../api/api_routes";
+import { DELETE_MST_NOTE_URL, GET_MST_NOTE_URL } from "../../../api/api_routes";
 import { PiNotebookLight } from "react-icons/pi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
+import toast from "react-hot-toast";
 
 const Sidebar = ({
   setSelectedNoteId,
   sidebarItems,
   setSidebarItems,
   refresh,
+  setRefresh,
   searchText,
 }) => {
   const [active, setActive] = useState(1);
@@ -33,16 +35,35 @@ const Sidebar = ({
     }
   };
 
+  const handleDeleteNote = async (noteId) => {
+    try {
+
+      const payload = {
+        NoteId: noteId,
+      };
+      const res = await axiosInstance.post(DELETE_MST_NOTE_URL, payload);
+      if (res?.data?.success == true && res?.data?.status == "DELETED") {
+        toast.success("Note Deleted Successful");
+      } else {
+        toast.error("Can't delete note");
+      }
+    } catch (error) {
+      console.error("not able to delete note", error);
+    } finally {
+      setOpenMenu(null);
+      setRefresh(prev => !prev);
+    }
+  };
+
   useEffect(() => {
     handleFetchAllItemList();
   }, [refresh, searchText]);
 
   const handleSelectNote = (noteId) => {
-    console.log(noteId);
+    setOpenMenu(null)
     setSelectedNoteId(noteId);
     setActive(noteId);
   };
-
 
   return (
     <aside className="h-full flex flex-col bg-white ">
@@ -110,7 +131,6 @@ const Sidebar = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("Edit clicked");
                           setOpenMenu(null);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
@@ -120,7 +140,6 @@ const Sidebar = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("Edit clicked");
                           setOpenMenu(null);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
@@ -131,8 +150,7 @@ const Sidebar = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("Delete clicked");
-                          setOpenMenu(null);
+                          handleDeleteNote(item?.note_id);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-gray-50"
                       >

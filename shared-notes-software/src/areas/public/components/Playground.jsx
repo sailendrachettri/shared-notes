@@ -37,7 +37,7 @@ const Playground = ({ selectedNoteId }) => {
       };
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
-      console.log(res);
+
 
       setCurrentNotesId(res?.data?.notes_id || null);
 
@@ -48,7 +48,7 @@ const Playground = ({ selectedNoteId }) => {
         setShowToast(false);
       }, 2000);
     } catch (error) {
-      console.log("Not able to auto save", error);
+      console.error("Not able to auto save", error);
     }
   };
 
@@ -59,10 +59,9 @@ const Playground = ({ selectedNoteId }) => {
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-      console.log(res);
+ 
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
-        console.log(res?.data?.data?.notes_details);
       } else {
         setSelectedFullDetails("");
       }

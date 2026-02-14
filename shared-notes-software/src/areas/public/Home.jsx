@@ -57,6 +57,7 @@ const Home = () => {
                 <Sidebar
                   searchText={searchText}
                   refresh={refresh}
+                  setRefresh={setRefresh}
                   sidebarItems={sidebarItems}
                   setSidebarItems={setSidebarItems}
                   setSelectedNoteId={setSelectedNoteId}
