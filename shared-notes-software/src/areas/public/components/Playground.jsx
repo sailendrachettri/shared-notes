@@ -42,7 +42,6 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh }) => {
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
 
       setCurrentNotesId(res?.data?.notes_id || null);
-      setLastUpdatedAt(new Date()); // reflect latest update
 
       // Show toast
       setShowToast(true);

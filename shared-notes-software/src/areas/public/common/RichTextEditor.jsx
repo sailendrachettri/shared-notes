@@ -474,7 +474,7 @@ const RichTextEditor = ({
 
   return (
     <div className="notion-editor-wrapper">
-      <div className="px-8 pt-10 pb-4">
+      <div className="px-8 pt-10 pb-4 text-center">
         <div
           contentEditable
           suppressContentEditableWarning
@@ -499,7 +499,7 @@ const RichTextEditor = ({
           className="text-4xl font-bold outline-none text-slate-800"
           data-placeholder="Untitled"
         >
-          {heading}
+         <span className="capitalize"> {heading}</span>
         </div>
 
         {lastUpdatedAt && (
