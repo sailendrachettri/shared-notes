@@ -130,7 +130,7 @@ const Sidebar = ({
                   {/* Dropdown */}
                   {openMenu === item?.note_id && (
                     <div className="absolute right-2 top-10 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                      <button
+                      {/* <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpenMenu(null);
@@ -139,15 +139,7 @@ const Sidebar = ({
                       >
                         Add Subnote
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenu(null);
-                        }}
-                        className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
-                      >
-                        Rename
-                      </button>
+                      */}
 
                       <button
                         onClick={(e) => {
