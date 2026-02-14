@@ -14,14 +14,11 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
     e.preventDefault();
     try {
       if (!title.trim()) return;
-
-      // 👉 Do your API call here
-      console.log("Note Title:", title);
       const payload = {
         NoteTitle: title || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      console.log(res);
+    
 
       setTitle("");
       setIsOpen(false);
@@ -105,7 +102,7 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full capitalize border border-white rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
                 autoFocus
-                maxLength={30}
+                maxLength={45}
                 minLength={3}
               />
 

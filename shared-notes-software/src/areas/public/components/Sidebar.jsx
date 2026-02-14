@@ -43,19 +43,18 @@ const Sidebar = ({
     setActive(noteId);
   };
 
-  console.log(sidebarItems);
 
   return (
     <aside className="h-full flex flex-col bg-white ">
       {/* Project List */}
       {loading ? (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-[60vh]  flex items-center justify-center">
           <div class="loader"></div>
         </div>
       ) : (
         <section className="h-full w-full">
           {sidebarItems != null && sidebarItems?.length > 0 ? (
-            <div className="flex-1 overflow-y-auto px-4 space-y-1 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 space-y-1">
               {sidebarItems?.map((item, idx) => (
                 <button
                   key={item?.note_id}

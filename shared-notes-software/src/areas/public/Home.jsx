@@ -48,7 +48,7 @@ const Home = () => {
 
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"}`}>
-            <div className="w-72 bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
+            <div className="w-72 h-full bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
               <CreaterNewNotesForm
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
