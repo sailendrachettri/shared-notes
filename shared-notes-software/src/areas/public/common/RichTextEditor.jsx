@@ -435,6 +435,16 @@ const RichTextEditor = ({ value, onChange }) => {
   useEffect(() => {
     if (!editor) return;
 
+    // Only update if the content is different
+    if (value !== editor.getHTML()) {
+      editor.commands.setContent(value || ""); 
+      editor.commands.focus("end");
+    }
+  }, [value, editor]);
+
+  useEffect(() => {
+    if (!editor) return;
+
     const handleKeyDown = (e) => {
       if (editor.isFocused) return;
 

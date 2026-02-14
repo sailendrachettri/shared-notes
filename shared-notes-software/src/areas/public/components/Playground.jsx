@@ -1,10 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import RichTextEditor from "../common/RichTextEditor";
+import { axiosInstance } from "../../../api/axios";
+import {
+  ADD_UPDATE_NOTES_URL,
+  GET_NOTES__DETAILS_URL,
+} from "../../../api/api_routes";
 
 const Playground = ({ selectedNoteId }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef(null);
+  const [currentNotesId, setCurrentNotesId] = useState(null);
 
   const handleOnInputChange = (content) => {
     setSelectedFullDetails(content);
@@ -20,24 +26,56 @@ const Playground = ({ selectedNoteId }) => {
     }, 1000);
   };
 
-  const handleAutoSave = (data) => {
-    console.log("Auto saving...", data);
+  const handleAutoSave = async (data) => {
+    try {
+      const payload = {
+        NotesDetails: data || "",
+        NoteId: selectedNoteId,
+        NotesId: currentNotesId,
+      };
 
-    // 👉 Call your API here
-    // await saveNoteApi(data)
+      const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
+      console.log(res);
 
-    // Show toast
-    setShowToast(true);
+      setCurrentNotesId(res?.data?.notes_id || null);
 
-    setTimeout(() => {
-      setShowToast(false);
-    }, 2000);
+      // Show toast
+      setShowToast(true);
+
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    } catch (error) {
+      console.log("Not able to auto save", error);
+    }
   };
 
-  console.log(selectedNoteId);
+  const getNotesDetails = async () => {
+    try {
+      const payload = {
+        NotesId: currentNotesId,
+        NoteId: selectedNoteId,
+      };
+      const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "FETCHED") {
+        setSelectedFullDetails(res?.data?.data?.notes_details);
+        console.log(res?.data?.data?.notes_details);
+      }else{
+        setSelectedFullDetails("");
 
+      }
+    } catch (error) {
+      console.error("Not able fetch details", error);
+    }
+  };
 
-  useEffect(()=>{})
+  useEffect(() => {
+    if (selectedNoteId != null) {
+      getNotesDetails();
+    }
+  }, [selectedNoteId]);
+
   return (
     <section className="relative">
       <RichTextEditor
@@ -45,6 +83,7 @@ const Playground = ({ selectedNoteId }) => {
         onChange={handleOnInputChange}
         placeholder="Start writing your note..."
         height="1080px"
+        
       />
 
       {/* Custom Toast */}
