@@ -430,8 +430,13 @@ const RichTextEditor = ({
     ],
     content: value,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+
+      if (html !== value) {
+        onChange(html);
+      }
     },
+
     editorProps: {
       attributes: {
         class: "notion-editor-content",
@@ -499,12 +504,12 @@ const RichTextEditor = ({
           className="text-4xl font-bold outline-none text-slate-800"
           data-placeholder="Untitled"
         >
-         <span className="capitalize"> {heading}</span>
+          <span className="capitalize"> {heading}</span>
         </div>
 
         {lastUpdatedAt && (
           <p className="text-sm text-slate-400 mt-2">
-            Last updated {formatePrettyDateTime(lastUpdatedAt) }
+            Last updated {formatePrettyDateTime(lastUpdatedAt)}
           </p>
         )}
       </div>

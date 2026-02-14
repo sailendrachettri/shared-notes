@@ -32,6 +32,7 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh }) => {
   };
 
   const handleAutoSave = async (data) => {
+     
     try {
       const payload = {
         NotesDetails: data || "",
@@ -57,6 +58,7 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh }) => {
 
   const getNotesDetails = async () => {
     try {
+     
       const payload = {
         NotesId: currentNotesId,
         NoteId: selectedNoteId,
