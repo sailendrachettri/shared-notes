@@ -509,7 +509,7 @@ const RichTextEditor = ({
 
         {lastUpdatedAt && (
           <p className="text-sm text-slate-400 mt-2">
-            Last updated {formatePrettyDateTime(lastUpdatedAt)}
+            Edited {formatePrettyDateTime(lastUpdatedAt)}
           </p>
         )}
       </div>
