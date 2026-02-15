@@ -27,9 +27,9 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [subPageTitle, setSubPageTitle] = useState("");
   const [openNotes, setOpenNotes] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   const handleFetchAllItemList = async () => {
-    // setLoading(true);
     try {
       const payload = {
         SearchText: searchText || null,
@@ -42,7 +42,7 @@ const Sidebar = ({
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 2000);
+      }, 1000);
     }
   };
 
@@ -78,6 +78,7 @@ const Sidebar = ({
   };
 
   const handleAddSubPage = async () => {
+    setSubmitting(true);
     try {
       console.log(selectedNoteId);
       const payload = {
@@ -91,7 +92,13 @@ const Sidebar = ({
     } catch (error) {
       console.error("Not able to create sub page", error);
     } finally {
-      setOpenMenu(null);
+      setTimeout(() => {
+        setOpenMenu(null);
+        setIsOpen(false);
+        handleFetchAllItemList();
+        setSubPageTitle("");
+        setSubmitting(false);
+      }, 1000);
     }
   };
 
@@ -230,7 +237,7 @@ const Sidebar = ({
                             }}
                             className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                           >
-                            Add Subnote
+                            Add sub-page
                           </button>
 
                           <button
@@ -263,7 +270,7 @@ const Sidebar = ({
           <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative">
             <h3 className="text-lg font-semibold mb-4">Create New Note</h3>
 
-            <form onSubmit={handleAddSubPage}>
+            <div>
               <input
                 type="text"
                 placeholder="Enter note title..."
@@ -285,13 +292,17 @@ const Sidebar = ({
                 </button>
 
                 <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition"
+                  disabled={submitting}
+                  // type="submit"
+                  onClick={() => {
+                    handleAddSubPage();
+                  }}
+                  className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                 >
-                  Create
+                  {`${submitting ? 'Creating..' : 'Create'}`}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
 
           {/* Click outside to close */}
