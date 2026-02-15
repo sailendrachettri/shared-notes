@@ -479,7 +479,7 @@ const RichTextEditor = ({
 
   return (
     <div className="notion-editor-wrapper">
-      <div className="px-8 pt-10 pb-4 text-center">
+      <div className="px-8 pb-4 text-center">
         <div
           contentEditable
           suppressContentEditableWarning
