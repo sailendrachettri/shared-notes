@@ -9,11 +9,11 @@ import {
 import InfoScreen from "../../../utils/info-screen/InfoScreen";
 import toast from "react-hot-toast";
 
-const Playground = ({ selectedNoteId, noteHeading, setRefresh }) => {
+const Playground = ({ selectedNoteId, noteHeading, setRefresh, currentNotesId, setCurrentNotesId }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef(null);
-  const [currentNotesId, setCurrentNotesId] = useState(null);
+ 
 
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 

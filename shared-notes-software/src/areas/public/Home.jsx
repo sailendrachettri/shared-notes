@@ -12,6 +12,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState(null);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [noteHeading, setNoteHeading] = useState("");
+  const [currentNotesId, setCurrentNotesId] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -62,7 +63,10 @@ const Home = () => {
                   sidebarItems={sidebarItems}
                   setSidebarItems={setSidebarItems}
                   setSelectedNoteId={setSelectedNoteId}
+                  selectedNoteId={selectedNoteId}
                   setNoteHeading={setNoteHeading}
+                  currentNotesId={currentNotesId}
+                  setCurrentNotesId={setCurrentNotesId}
                 />
               </div>
             </div>
@@ -74,6 +78,8 @@ const Home = () => {
               selectedNoteId={selectedNoteId}
               noteHeading={noteHeading}
               setRefresh={setRefresh}
+              currentNotesId={currentNotesId}
+              setCurrentNotesId={setCurrentNotesId}
             />
           </div>
         </div>
