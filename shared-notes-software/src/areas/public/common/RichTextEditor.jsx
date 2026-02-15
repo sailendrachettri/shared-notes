@@ -25,10 +25,13 @@ import {
   CHANGE_COVER_IMAGE_MST_NOTE_URL,
   CHANGE_COVER_IMAGE_SUB_PAGE_URL,
   FILE_UPLOAD_URL,
+  REMOVE_COVER_IMAGE_MST_NOTE_URL,
+  REMOVE_COVER_IMAGE_SUB_PAGE_URL,
   VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import { useMemo } from "react";
 import defaultIcon from "../../../assets/pngs/logo.png";
+import toast from "react-hot-toast";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -530,9 +533,29 @@ const RichTextEditor = ({
     }
   };
 
-  const handleRemoveCover = () => {
-    // setCoverImage(null);
-    // Optionally call API to remove cover
+  const handleRemoveCover = async () => {
+    try {
+      let res;
+
+      const payload =
+        selectedNoteType === "mst-note"
+          ? { NoteId: selectedNoteId }
+          : { SubPageId: selectedNoteId };
+
+      res = await axiosInstance.post(
+        selectedNoteType === "mst-note"
+          ? REMOVE_COVER_IMAGE_MST_NOTE_URL
+          : REMOVE_COVER_IMAGE_SUB_PAGE_URL,
+        payload,
+      );
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        toast.success("Cover image removed");
+      }
+    } catch (error) {
+      console.error("not able remove cover image");
+      toast.error("Not able to remove cover image");
+    }
   };
 
   // Change Icon
@@ -574,25 +597,34 @@ const RichTextEditor = ({
 
     const isSubPage = selectedNoteType === "sub-page";
 
+    // Determine if cover should be shown
+    const shouldShowCover = isSubPage
+      ? !fullData?.sub_page_remove_cover && fullData?.sub_page_cover_image
+      : !fullData?.mst_note_remove_cover && fullData?.mst_note_cover_image;
+
+    // Determine if icon should be shown
+    const shouldShowIcon = isSubPage
+      ? !fullData?.sub_page_remove_icon && fullData?.sub_page_cover_icon
+      : !fullData?.mst_note_remove_icon && fullData?.mst_note_cover_icon;
+
     return {
       title: fullData?.note_title,
       updatedAt: fullData?.updated_at,
 
-      coverImage: isSubPage
-        ? fullData?.sub_page_remove_cover
-          ? null
-          : fullData?.sub_page_cover_image
-        : fullData?.mst_note_remove_cover
-          ? null
-          : fullData?.mst_note_cover_image,
+      coverImage: shouldShowCover
+        ? isSubPage
+          ? fullData?.sub_page_cover_image
+          : fullData?.mst_note_cover_image
+        : null,
 
-      icon: isSubPage
-        ? fullData?.sub_page_remove_icon
-          ? null
-          : fullData?.sub_page_cover_icon
-        : fullData?.mst_note_remove_icon
-          ? null
-          : fullData?.mst_note_cover_icon,
+      icon: shouldShowIcon
+        ? isSubPage
+          ? fullData?.sub_page_cover_icon
+          : fullData?.mst_note_cover_icon
+        : null,
+
+      shouldShowCover, // Add these to the return object
+      shouldShowIcon,
     };
   }, [fullData, selectedNoteType]);
 
@@ -603,15 +635,19 @@ const RichTextEditor = ({
     ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote?.icon}`
     : null;
 
+  // Use these variables in your JSX
+  const shouldShowCover = normalizedNote?.shouldShowCover;
+  const shouldShowIcon = normalizedNote?.shouldShowIcon;
+
   console.log(fullData);
   console.log(coverImage);
 
   return (
     <div className="notion-editor-wrapper">
       {/* Cover Image Section - ALWAYS render this container */}
-      <div className="relative group">
+     { shouldShowCover && <div className="relative group">
         <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden bg-slate-100">
-          {(coverImage || coverDefaultImage) && (
+          
             <>
               <img
                 src={coverImage || coverDefaultImage}
@@ -635,10 +671,10 @@ const RichTextEditor = ({
                 </div>
               </div>
             </>
-          )}
+          
 
           {/* Show "Add Cover" button when no cover exists */}
-          {!(coverImage || coverDefaultImage) && (
+          {!shouldShowCover && (
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={handleChangeCoverClick}
@@ -657,13 +693,13 @@ const RichTextEditor = ({
             accept="image/*"
           />
         </div>
-      </div>
+      </div>}
 
       {/* Content Section with Icon */}
       <div className="max-w-[900px] mx-auto px-8 lg:px-24">
         {/* Icon - ALWAYS overlaps the cover area */}
 
-        <div className={`relative -mt-12  mb-4 group/icon inline-block `}>
+        {shouldShowIcon && <div className={`relative ${shouldShowCover ? '-mt-12' : 'pt-10'}  mb-4 group/icon inline-block `}>
           <img
             src={coverIcon || defaultIcon}
             alt="Icon"
@@ -671,7 +707,7 @@ const RichTextEditor = ({
           />
 
           {/* Hover Edit Button */}
-          <div className="absolute -top-2 -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity">
+          <div className={`absolute ${shouldShowCover ? '-top-2' : 'top-8'}   -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity`}>
             <button
               onClick={handleChangeIcon}
               className="p-1.5 bg-white rounded-full shadow-lg text-xs hover:bg-slate-100"
@@ -687,7 +723,7 @@ const RichTextEditor = ({
             className="hidden"
             accept="image/*"
           />
-        </div>
+        </div>}
 
         {/* Title */}
         <div className="pb-4">

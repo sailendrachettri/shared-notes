@@ -93,6 +93,8 @@ namespace shared_notes_software_server.Controllers
 
             return Content(jsonResult, "application/json");
         }
+
+        
         [HttpPost("change-cover-icon")]
         public async Task<IActionResult> ChangeCoverIcon([FromBody] ChangeCoverIconRequest request)
         {
@@ -123,6 +125,64 @@ namespace shared_notes_software_server.Controllers
 
             return Content(jsonResult, "application/json");
         }
+
+        [HttpPost("remove-cover-image")]
+        public async Task<IActionResult> RemoveCoverImage([FromBody] RemoveCoverImageRequest request)
+        {
+            if (request.NoteId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_notes
+                SET remove_cover = true,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE note_id = @note_id
+          RETURNING json_build_object(
+              'success', true,
+              'note_id', note_id,
+              'status', 'UPDATED',
+              'message', 'Cover Image removed successfully'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("note_id", request.NoteId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
+        [HttpPost("remove-cover-icon")]
+        public async Task<IActionResult> RemoveCoverIcon([FromBody] RemoveCoverIconRequest request)
+        {
+            if (request.NoteId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_notes
+                SET remove_icon = true,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE note_id = @note_id
+          RETURNING json_build_object(
+              'success', true,
+              'note_id', note_id,
+              'status', 'UPDATED',
+              'message', 'Cover Icon removed successfully'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("note_id", request.NoteId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
+
 
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteNote([FromBody] DeleteNoteRequest request)

@@ -29,4 +29,13 @@
         public long NoteId { get; set; }
         public string CoverIcon { get; set; }
     }
+
+    public class RemoveCoverIconRequest
+    {
+        public long NoteId { get; set; }
+    }
+    public class RemoveCoverImageRequest
+    {
+        public long NoteId { get; set; }
+    }
 }

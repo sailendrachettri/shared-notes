@@ -110,6 +110,65 @@ namespace shared_notes_software_server.Controllers
             return Content(jsonResult, "application/json");
         }
 
+
+        [HttpPost("remove-cover-icon")]
+        public async Task<IActionResult> RemoveCoverIcon([FromBody] RemoveCoverIconSubPageModel request)
+        {
+            if (request.SubPageId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_sub_pages
+                   SET remove_icon = true,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE sub_page_id = @sub_page_id
+          RETURNING json_build_object(
+              'success', true,
+              'sub_page_id', sub_page_id,
+              'status', 'UPDATED',
+              'message', 'Cover icon removed successfully'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("sub_page_id", request.SubPageId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
+
+        [HttpPost("remove-cover-image")]
+        public async Task<IActionResult> RemoveCoverImage([FromBody] RemoveCoverImageSubPageModel request)
+        {
+            if (request.SubPageId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_sub_pages
+                   SET remove_image = true,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE sub_page_id = @sub_page_id
+          RETURNING json_build_object(
+              'success', true,
+              'sub_page_id', sub_page_id,
+              'status', 'UPDATED',
+              'message', 'Cover image removed successfully'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("sub_page_id", request.SubPageId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("add-sub-page")]
         public async Task<IActionResult> AddNote([FromBody] AddNoteMstSubPageModel request)
         {

@@ -21,4 +21,12 @@
         public string CoverIcon { get; set; }
         public long SubPageId { get; set; }
     }
+    public class RemoveCoverIconSubPageModel
+    {
+        public long SubPageId { get; set; }
+    }
+    public class RemoveCoverImageSubPageModel
+    {
+        public long SubPageId { get; set; }
+    }
 }

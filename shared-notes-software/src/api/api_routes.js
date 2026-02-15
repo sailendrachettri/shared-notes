@@ -18,13 +18,17 @@ export const GET_MST_NOTE_URL = "/mst-note/list";
 export const RENAME_MST_NOTE_URL = "/mst-note/rename";
 export const ADD_MST_NOTE_URL = "/mst-note/add";
 export const CHANGE_COVER_ICON_MST_NOTE_URL = "/mst-note/change-cover-icon";
+export const REMOVE_COVER_ICON_MST_NOTE_URL = "/mst-note/remove-cover-icon";
 export const CHANGE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/change-cover-image";
+export const REMOVE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/remove-cover-image";
 //#endregion
 
 //#region sub pages
 export const ADD_SUB_PAGE_DETAILS_URL = "/sub-page/add-sub-page";
 export const RENAME_SUB_PAGE_TITLE_URL = "/sub-page/rename";
+export const REMOVE_COVER_ICON_SUB_PAGE_URL = "/sub-page/remove-cover-icon";
 export const CHANGE_COVER_ICON_SUB_PAGE_URL = "/sub-page/change-cover-icon";
 export const CHANGE_COVER_IMAGE_SUB_PAGE_URL = "/sub-page/change-cover-image";
+export const REMOVE_COVER_IMAGE_SUB_PAGE_URL = "/sub-page/remove-cover-image";
 
 //#endregion
