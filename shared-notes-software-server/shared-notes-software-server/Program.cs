@@ -73,7 +73,7 @@ app.MapGet("/debug-updates", () =>
 
 app.UseCors("AllowViteDevServer");
 
-app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 

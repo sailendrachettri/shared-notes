@@ -6,7 +6,17 @@ import axios from "axios";
 |--------------------------------------------------------------------------
 */
 
-const BASE_URL = "https://localhost:44383/api/v1";
+let BASE_URL;
+let ENV_TYPE = import.meta.env.VITE_ENV_TYPE;
+
+
+// console.log(ENV_TYPE);
+if (ENV_TYPE == "development") {
+  BASE_URL = import.meta.env.VITE_DEV_API_URL;
+} else {
+  BASE_URL = import.meta.env.VITE_API_URL;
+}
+// console.log({ BASE_URL });
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +64,7 @@ axiosPrivate.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /*
@@ -73,5 +83,5 @@ axiosPrivate.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
