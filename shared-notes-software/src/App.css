@@ -2,6 +2,17 @@ body{
   background-color: #F2F3F5;
   overflow: hidden;
 }
+
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+}
+
+button,
+input,
+textarea {
+  -webkit-app-region: no-drag;
+}
+
 /* ---------------------------------CUSTOM SCROLL BAR--------------------------------- */
 ::-webkit-scrollbar {
   width: 5px;

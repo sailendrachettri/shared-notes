@@ -46,10 +46,10 @@ const Navbar = () => {
     <>
       <div
         data-tauri-drag-region
-        className="h-10 flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950"
+        className="h-8 flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950 select-none"
       >
         {/* Left side - Logo */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ">
           <img src={logo} className="h-6 w-auto " />
           <span className="text-sm font-medium ">SharedNotes</span>
         </div>
@@ -59,7 +59,7 @@ const Navbar = () => {
           <button
             data-tauri-drag-region={false}
             onClick={minimize}
-            className="w-12 flex items-center justify-center hover:bg-zinc-300"
+            className="w-10 flex items-center justify-center hover:bg-zinc-300"
           >
             <VscChromeMinimize size={14} />
           </button>
