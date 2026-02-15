@@ -72,6 +72,7 @@ namespace shared_notes_software_server.Controllers
             var jsonResult = await _db.ExecuteScalarAsync<string>(
                 @"UPDATE public.utbl_mst_notes
           SET cover_image = @cover_image,
+                remove_cover = false,
               updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
           WHERE note_id = @note_id
           RETURNING json_build_object(
@@ -101,6 +102,7 @@ namespace shared_notes_software_server.Controllers
             var jsonResult = await _db.ExecuteScalarAsync<string>(
                 @"UPDATE public.utbl_mst_notes
           SET cover_icon = @cover_icon,
+                remove_icon = false,
               updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
           WHERE note_id = @note_id
           RETURNING json_build_object(
