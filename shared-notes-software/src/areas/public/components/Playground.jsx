@@ -120,6 +120,19 @@ const Playground = ({
     }
   }, [selectedNoteId]);
 
+   useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        getNotesDetails();
+        console.log("fetching notes details..");
+      } catch (err) {
+        console.error("Version check failed");
+      }
+    }, 30000); // every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <section>

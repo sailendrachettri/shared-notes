@@ -3,7 +3,6 @@ import Sidebar from "./components/Sidebar";
 import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
-import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 
 const Home = ({toggleSidebar, setToggleSidebar}) => {
   const [sidebarItems, setSidebarItems] = useState(null);
@@ -21,33 +20,7 @@ const Home = ({toggleSidebar, setToggleSidebar}) => {
       <div className="h-full flex flex-col gap-3">
         {/* Main Section */}
         <div className="flex flex-1 gap-3 overflow-hidden ">
-          {/* <div className="relative">
-            <button
-              onClick={() => setToggleSidebar((prev) => !prev)}
-              className={`
-      absolute -right-7 top-0 cursor-pointer
-      flex items-center justify-center
-      w-7 h-7
-      bg-white
-      border border-gray-200
-      rounded-full
-      shadow-sm
-      hover:shadow-md
-      hover:bg-gray-50
-      transition-all duration-200
-      group z-40
-    `}
-            >
-              <MdKeyboardDoubleArrowLeft
-                size={18}
-                className={`
-        text-gray-600
-        transition-transform duration-300
-        ${toggleSidebar ? "rotate-180" : ""}
-      `}
-              />
-            </button>
-          </div> */}
+         
 
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>

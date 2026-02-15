@@ -19,7 +19,7 @@ const Sidebar = ({
   setNoteHeading,
   selectedNoteId,
   setCurrentNotesId,
-  setIsSubPage
+  setIsSubPage,
 }) => {
   const [active, setActive] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -65,17 +65,14 @@ const Sidebar = ({
     }
   };
 
-  useEffect(() => {
-    handleFetchAllItemList();
-  }, [refresh, searchText]);
-
   const handleSelectNote = (note) => {
     console.log(note);
     setOpenMenu(null);
-    setNoteHeading(note?.note_title ||  "");
+    setNoteHeading(note?.note_title || "");
     setSelectedNoteId(note?.note_id);
     setActive(note?.note_id);
   };
+
   const handleSelectNoteFromSubPage = (subNote) => {
     console.log(subNote);
     setOpenMenu(null);
@@ -111,6 +108,23 @@ const Sidebar = ({
       }, 500);
     }
   };
+
+  useEffect(() => {
+    handleFetchAllItemList();
+  }, [refresh, searchText]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        handleFetchAllItemList();
+        console.log("fetching all items..");
+      } catch (err) {
+        console.error("Version check failed");
+      }
+    }, 30000); // every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -165,8 +179,10 @@ const Sidebar = ({
                                 >
                                   <path d="M9 5l7 7-7 7" />
                                 </svg>
-                              </div>) : <div className="pl-5"></div>
-                            }
+                              </div>
+                            ) : (
+                              <div className="pl-5"></div>
+                            )}
 
                             <PiNotebookLight
                               size={18}
@@ -229,7 +245,9 @@ const Sidebar = ({
   }
 `}
                           >
-                            <div className={`${active === sub?.sub_page_id ? 'bg-primary' : 'bg-gray-400'} w-1 h-1  rounded-full`}></div>
+                            <div
+                              className={`${active === sub?.sub_page_id ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
+                            ></div>
                             {sub?.sub_page_title}
                           </div>
                         ))}
