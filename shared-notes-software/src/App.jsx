@@ -1,13 +1,16 @@
+import { useState } from "react";
 import "./App.css";
 import Navbar from "./areas/public/common/nav-bar/Navbar";
 import Home from "./areas/public/Home";
 
 function App() {
+   const [toggleSidebar, setToggleSidebar] = useState(false);
+
   return (
     <>
-      <Navbar />
+      <Navbar setToggleSidebar={setToggleSidebar} toggleSidebar={toggleSidebar}/>
 
-      <Home />
+      <Home toggleSidebar={toggleSidebar}/>
     </>
   );
 }

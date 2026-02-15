@@ -5,12 +5,12 @@ import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 
-const Home = () => {
+const Home = ({toggleSidebar, setToggleSidebar}) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
   const [searchText, setSearchText] = useState(null);
-  const [toggleSidebar, setToggleSidebar] = useState(false);
+ 
   const [noteHeading, setNoteHeading] = useState("");
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
@@ -21,7 +21,7 @@ const Home = () => {
       <div className="h-full flex flex-col gap-3">
         {/* Main Section */}
         <div className="flex flex-1 gap-3 overflow-hidden ">
-          <div className="relative">
+          {/* <div className="relative">
             <button
               onClick={() => setToggleSidebar((prev) => !prev)}
               className={`
@@ -47,7 +47,7 @@ const Home = () => {
       `}
               />
             </button>
-          </div>
+          </div> */}
 
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>

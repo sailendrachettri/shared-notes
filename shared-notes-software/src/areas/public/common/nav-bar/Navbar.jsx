@@ -6,19 +6,20 @@ import {
   VscChromeMaximize,
   VscChromeRestore,
   VscChromeClose,
+  VscLayoutSidebarLeft,
+  VscLayoutSidebarLeftOff,
 } from "react-icons/vsc";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Navbar = () => {
+const Navbar = ({ setToggleSidebar, toggleSidebar }) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
-  console.log(isMaximized);
 
   useEffect(() => {
     const checkMaximized = async () => {
       const maximized = await appWindow.isMaximized();
-      console.log(maximized)
+      console.log(maximized);
       setIsMaximized(maximized);
     };
 
@@ -34,10 +35,9 @@ const Navbar = () => {
   const minimize = () => appWindow.minimize();
 
   const maximize = async () => {
-
     await appWindow.toggleMaximize();
     const maximized = await appWindow.isMaximized();
-    console.log(maximized)
+    console.log(maximized);
     setIsMaximized(maximized);
   };
 
@@ -55,34 +55,50 @@ const Navbar = () => {
         </div>
 
         {/* Right side - Window Controls */}
-        <div className="flex h-full">
-          <button
-            data-tauri-drag-region={false}
-            onClick={minimize}
-            className="w-10 flex items-center justify-center hover:bg-zinc-300"
-          >
-            <VscChromeMinimize size={14} />
-          </button>
+        <div className="flex h-full gap-x-3 items-center">
+          <div>
+            <span
+              data-tauri-drag-region={false}
+              onClick={() => {
+                setToggleSidebar((prev) => !prev);
+              }}
+            >
+              {toggleSidebar ? (
+                <VscLayoutSidebarLeftOff />
+              ) : (
+                <VscLayoutSidebarLeft />
+              )}
+            </span>
+          </div>
+          <div className="flex h-full items-center">
+            <button
+              data-tauri-drag-region={false}
+              onClick={minimize}
+              className="w-10 h-full flex items-center justify-center hover:bg-zinc-300"
+            >
+              <VscChromeMinimize size={14} />
+            </button>
 
-          <button
-            data-tauri-drag-region={false}
-            onClick={maximize}
-            className="w-12 flex items-center justify-center hover:bg-zinc-300"
-          >
-            {isMaximized ? (
-              <VscChromeRestore size={14} />
-            ) : (
-              <VscChromeMaximize size={14} />
-            )}
-          </button>
+            <button
+              data-tauri-drag-region={false}
+              onClick={maximize}
+              className="w-12 h-full flex items-center justify-center hover:bg-zinc-300"
+            >
+              {isMaximized ? (
+                <VscChromeRestore size={14} />
+              ) : (
+                <VscChromeMaximize size={14} />
+              )}
+            </button>
 
-          <button
-            data-tauri-drag-region={false}
-            onClick={close}
-            className="w-12 flex items-center justify-center hover:bg-red-600 hover:text-white"
-          >
-            <VscChromeClose size={14} />
-          </button>
+            <button
+              data-tauri-drag-region={false}
+              onClick={close}
+              className="w-12 h-full flex items-center justify-center hover:bg-red-600 hover:text-white"
+            >
+              <VscChromeClose size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </>
