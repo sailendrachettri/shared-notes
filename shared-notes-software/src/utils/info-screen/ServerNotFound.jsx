@@ -22,7 +22,7 @@ const ServerNotFound = () => {
       className="flex flex-col items-center justify-center h-screen bg-[#F2F3F5] text-slate-800"
       style={{ fontFamily: "Arial, sans-serif" }}
     >
-      <div class="loader"></div>
+      <div className="loader"></div>
       <p className="text-gray-400 my-6">
         Server offline. Retrying in{" "}
         <span className="font-mono text-primary">{countdown}</span> sec...

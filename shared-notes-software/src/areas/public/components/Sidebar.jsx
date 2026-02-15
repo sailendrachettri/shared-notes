@@ -20,6 +20,7 @@ const Sidebar = ({
   selectedNoteId,
   setCurrentNotesId,
   setIsSubPage,
+  setSelectedNoteType
 }) => {
   const [active, setActive] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -35,7 +36,7 @@ const Sidebar = ({
         SearchText: searchText || null,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      console.log(res);
+      
       setSidebarItems(res?.data?.data || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
@@ -66,7 +67,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log(note);
+    setSelectedNoteType('mst-note');
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
     setSelectedNoteId(note?.note_id);
@@ -74,7 +75,7 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log(subNote);
+   setSelectedNoteType('sub-page');
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");
     setSelectedNoteId(subNote?.sub_page_id);
@@ -85,13 +86,12 @@ const Sidebar = ({
   const handleAddSubPage = async () => {
     setSubmitting(true);
     try {
-      console.log(selectedNoteId);
       const payload = {
         SubPageTitle: subPageTitle,
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      console.log(res);
+
       setSelectedNoteId(res?.data?.sub_page_id);
       setCurrentNotesId(res?.data?.notes_id);
       setNoteHeading(subPageTitle || "");
@@ -117,7 +117,6 @@ const Sidebar = ({
     const interval = setInterval(async () => {
       try {
         handleFetchAllItemList();
-        console.log("fetching all items..");
       } catch (err) {
         console.error("Version check failed");
       }

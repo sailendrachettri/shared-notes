@@ -127,7 +127,9 @@ textarea {
 .notion-editor-wrapper {
   min-height: 93vh;
   background-color: #ffffff;
-  padding: 2.5rem 1rem;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
+  padding-bottom: 2.5rem;
 }
 
 .notion-editor-container {

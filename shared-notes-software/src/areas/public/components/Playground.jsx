@@ -17,6 +17,7 @@ const Playground = ({
   currentNotesId,
   setCurrentNotesId,
   isSubPage,
+  selectedNoteType
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -39,8 +40,7 @@ const Playground = ({
   };
 
   const handleAutoSave = async (data) => {
-    console.log(data);
-
+   
     try {
       const payload = {
         NotesDetails: data || "",
@@ -49,7 +49,7 @@ const Playground = ({
       };
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
-      console.log(res?.data);
+   
       setCurrentNotesId(res?.data?.notes_id || null);
       setLastUpdatedAt(res?.data?.updated_at);
 
@@ -72,7 +72,7 @@ const Playground = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-      console.log(res);
+     
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         setLastUpdatedAt(
@@ -88,8 +88,7 @@ const Playground = ({
   };
 
   const renameNoteTitle = async (newTitle) => {
-    console.log(selectedNoteId);
-    console.log(isSubPage);
+   
     try {
       if (isSubPage) {
         const payload = {
@@ -97,14 +96,14 @@ const Playground = ({
           SupPageTitle: newTitle || noteHeading,
         };
         await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
-        console.log("here");
+     
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
         };
         await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-        console.log("here");
+       
       }
     } catch (error) {
       console.error("Not able to rename", error);
@@ -114,24 +113,26 @@ const Playground = ({
     }
   };
 
+
+
   useEffect(() => {
     if (selectedNoteId != null) {
       getNotesDetails();
     }
   }, [selectedNoteId]);
 
-   useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        getNotesDetails();
-        console.log("fetching notes details..");
-      } catch (err) {
-        console.error("Version check failed");
-      }
-    }, 30000); // every 30 seconds
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     try {
+  //       getNotesDetails();
+       
+  //     } catch (err) {
+  //       console.error("Version check failed");
+  //     }
+  //   }, 30000); // every 30 seconds
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <>
@@ -146,6 +147,8 @@ const Playground = ({
               heading={noteHeading}
               lastUpdatedAt={lastUpdatedAt}
               onTitleChange={renameNoteTitle}
+              selectedNoteId={selectedNoteId}
+              selectedNoteType={selectedNoteType}
             />
 
             {/* Custom Toast */}

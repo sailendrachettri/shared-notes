@@ -16,6 +16,14 @@ import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
+import coverDefaultImage from "../../../assets/pngs/logo.png";
+import { useRef } from "react";
+import { axiosInstance } from "../../../api/axios";
+import {
+  CHANGE_COVER_IMAGE_MST_NOTE_URL,
+  CHANGE_COVER_IMAGE_SUB_PAGE_URL,
+  FILE_UPLOAD_URL,
+} from "../../../api/api_routes";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -375,7 +383,16 @@ const RichTextEditor = ({
   heading,
   lastUpdatedAt,
   onTitleChange,
+  selectedNoteType, 
+  defaultIcon = "📄", 
+  selectedNoteId
 }) => {
+  const [coverImage, setCoverImage] = useState(coverDefaultImage);
+  const [pageIcon, setPageIcon] = useState(defaultIcon);
+
+  const fileInputRef = useRef(null);
+  const iconInputRef = useRef(null);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -477,47 +494,171 @@ const RichTextEditor = ({
     };
   }, [editor]);
 
+  const handleChangeCoverClick = () => fileInputRef.current.click();
+
+  const handleFileSelected = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    console.log(file)
+
+    try {
+      console.log("here")
+      const formData = new FormData();
+      formData.append("files", file);
+      let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("res ", res);
+      const uploadedUrl = res.data[0];
+      console.log({uploadedUrl});
+      setCoverImage(uploadedUrl);
+
+      const payload =
+        selectedNoteType === "mst-note"
+          ? { NoteId: selectedNoteId, CoverImage: uploadedUrl }
+          : { SubPageId: selectedNoteId, CoverImage: uploadedUrl };
+
+      res = await axiosInstance.post(
+        selectedNoteType === "mst-note"
+          ? CHANGE_COVER_IMAGE_MST_NOTE_URL
+          : CHANGE_COVER_IMAGE_SUB_PAGE_URL,
+        payload,
+      );
+      console.log(res);
+    } catch (err) {
+      console.error("Cover upload failed:", err);
+    }
+  };
+
+  const handleRemoveCover = () => {
+    setCoverImage(null);
+    // Optionally call API to remove cover
+  };
+
+  // Change Icon
+  const handleChangeIcon = () => iconInputRef.current.click();
+  const handleIconSelected = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Upload icon same way as cover (or just update icon state)
+    const url = URL.createObjectURL(file);
+    setPageIcon(url);
+  };
+
   return (
     <div className="notion-editor-wrapper">
-      <div className="px-8 pb-4 text-center">
-        <div
-          contentEditable
-          suppressContentEditableWarning
-          onInput={(e) => {
-            let text = e.currentTarget.textContent || "";
+      {/* Cover Image Section */}
+      <div className="relative group">
+        {coverDefaultImage && (
+          <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden">
+            <img
+              src={coverDefaultImage}
+              alt="Cover"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors">
+              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                <button
+                  onClick={() => {
+                    handleChangeCoverClick();
+                  }}
+                  className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+                >
+                  Change cover
+                </button>
+                <button
+                  onClick={handleRemoveCover}
+                  className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
 
-            if (text.length > 45) {
-              text = text.slice(0, 45);
-              e.currentTarget.textContent = text;
-
-              // Move cursor to end after trimming
-              const range = document.createRange();
-              const sel = window.getSelection();
-              range.selectNodeContents(e.currentTarget);
-              range.collapse(false);
-              sel.removeAllRanges();
-              sel.addRange(range);
-            }
-
-            onTitleChange(text);
-          }}
-          className="text-lg lg:text-4xl font-bold outline-none text-slate-800"
-          data-placeholder="Untitled"
-        >
-          <span className="capitalize"> {heading}</span>
-        </div>
-
-        {lastUpdatedAt && (
-          <p className="text-xs lg:text-sm text-slate-400 mt-2">
-            Edited {formatePrettyDateTime(lastUpdatedAt)}
-          </p>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelected}
+              className="hidden"
+              accept="image/*"
+            />
+          </div>
         )}
       </div>
 
-      <div className="notion-editor-container">
-        {editor && <FormattingMenu editor={editor} />}
-        {editor && <TableMenu editor={editor} />}
-        <EditorContent editor={editor} />
+      {/* Content Section with Icon */}
+      <div className="max-w-[900px] mx-auto px-8 lg:px-24">
+        {/* Icon */}
+        <div
+          className={`${coverDefaultImage ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
+        >
+          {pageIcon && (
+            <div className="relative">
+              <div className="text-7xl cursor-pointer hover:scale-105 transition-transform">
+                {pageIcon}
+              </div>
+              <div className="absolute top-0 right-0 opacity-0 group-hover/icon:opacity-100 transition-opacity">
+                <button
+                  onClick={handleChangeIcon}
+                  className="p-1 bg-white rounded shadow-lg text-xs"
+                >
+                  ✏️
+                </button>
+              </div>
+              <input
+                type="file"
+                ref={iconInputRef}
+                onChange={handleIconSelected}
+                className="hidden"
+                accept="image/*"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Title */}
+        <div className="pb-4">
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onInput={(e) => {
+              let text = e.currentTarget.textContent || "";
+
+              if (text.length > 45) {
+                text = text.slice(0, 45);
+                e.currentTarget.textContent = text;
+
+                // Move cursor to end after trimming
+                const range = document.createRange();
+                const sel = window.getSelection();
+                range.selectNodeContents(e.currentTarget);
+                range.collapse(false);
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+              }
+
+              onTitleChange(text);
+            }}
+            className="text-4xl font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
+            data-placeholder="Untitled"
+          >
+            {heading && <span className="capitalize">{heading}</span>}
+          </div>
+
+          {lastUpdatedAt && (
+            <p className="text-sm text-slate-400 mt-2">
+              Edited {formatePrettyDateTime(lastUpdatedAt)}
+            </p>
+          )}
+        </div>
+
+        {/* Editor Content */}
+        <div className="notion-editor-container pb-32">
+          {editor && <FormattingMenu editor={editor} />}
+          {editor && <TableMenu editor={editor} />}
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </div>
   );

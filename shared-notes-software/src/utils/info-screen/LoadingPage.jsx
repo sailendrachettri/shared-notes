@@ -4,7 +4,7 @@ const LoadingPage = () => {
   return (
     <>
       <section className="h-screen flex items-center justify-center">
-        <div class="loader"></div>
+        <div className="loader"></div>
       </section>
     </>
   );

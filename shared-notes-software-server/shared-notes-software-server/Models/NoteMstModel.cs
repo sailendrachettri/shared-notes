@@ -19,4 +19,14 @@
         public long NoteId { get; set; }
         public string NoteTitle { get; set; }
     }
+    public class ChangeCoverImageRequest
+    {
+        public long NoteId { get; set; }
+        public string CoverImage { get; set; }
+    }
+    public class ChangeCoverIconRequest
+    {
+        public long NoteId { get; set; }
+        public string CoverIcon { get; set; }
+    }
 }

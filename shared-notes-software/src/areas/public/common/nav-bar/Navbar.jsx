@@ -19,7 +19,6 @@ const Navbar = ({ setToggleSidebar, toggleSidebar }) => {
   useEffect(() => {
     const checkMaximized = async () => {
       const maximized = await appWindow.isMaximized();
-      console.log(maximized);
       setIsMaximized(maximized);
     };
 
@@ -37,7 +36,6 @@ const Navbar = ({ setToggleSidebar, toggleSidebar }) => {
   const maximize = async () => {
     await appWindow.toggleMaximize();
     const maximized = await appWindow.isMaximized();
-    console.log(maximized);
     setIsMaximized(maximized);
   };
 

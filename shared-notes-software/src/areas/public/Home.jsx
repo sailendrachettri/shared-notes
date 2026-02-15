@@ -13,6 +13,7 @@ const Home = ({toggleSidebar}) => {
   const [noteHeading, setNoteHeading] = useState("");
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
+  const [selectedNoteType, setSelectedNoteType] = useState("");
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -41,13 +42,14 @@ const Home = ({toggleSidebar}) => {
                   setNoteHeading={setNoteHeading}
                   setCurrentNotesId={setCurrentNotesId}
                   setIsSubPage={setIsSubPage}
+                  setSelectedNoteType={setSelectedNoteType}
                 />
               </div>
             </div>
           </section>
 
           {/* Content Card */}
-          <div className="flex-1  rounded-2xl shadow-sm overflow-y-auto hide-scrollbar mb-1">
+          <div className="flex-1 rounded-2xl overflow-y-auto hide-scrollbar mb-1">
             <Playground
               selectedNoteId={selectedNoteId}
               noteHeading={noteHeading}
@@ -55,6 +57,7 @@ const Home = ({toggleSidebar}) => {
               currentNotesId={currentNotesId}
               setCurrentNotesId={setCurrentNotesId}
               isSubPage={isSubPage}
+              selectedNoteType={selectedNoteType}
             />
           </div>
         </div>

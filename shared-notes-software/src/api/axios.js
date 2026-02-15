@@ -10,13 +10,12 @@ let BASE_URL;
 let ENV_TYPE = import.meta.env.VITE_ENV_TYPE;
 
 
-// console.log(ENV_TYPE);
 if (ENV_TYPE == "development") {
   BASE_URL = import.meta.env.VITE_DEV_API_URL;
 } else {
   BASE_URL = import.meta.env.VITE_API_URL;
 }
-// console.log({ BASE_URL });
+
 
 /*
 |--------------------------------------------------------------------------
