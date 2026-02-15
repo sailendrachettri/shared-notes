@@ -18,7 +18,7 @@ import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
-import { axiosInstance, BASE_URL_EXPORTED } from "../../../api/axios";
+import { axiosInstance } from "../../../api/axios";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
   CHANGE_COVER_ICON_SUB_PAGE_URL,
@@ -28,6 +28,7 @@ import {
   VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import { useMemo } from "react";
+import defaultIcon from "../../../assets/pngs/logo.png";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -388,7 +389,6 @@ const RichTextEditor = ({
   lastUpdatedAt,
   onTitleChange,
   selectedNoteType,
-  defaultIcon = "📄",
   selectedNoteId,
   fullData,
 }) => {
@@ -608,84 +608,85 @@ const RichTextEditor = ({
 
   return (
     <div className="notion-editor-wrapper">
-      {/* Cover Image Section */}
+      {/* Cover Image Section - ALWAYS render this container */}
       <div className="relative group">
-        {
-          <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden">
-            <img
-              src={coverImage || coverDefaultImage}
-              alt="Cover"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors">
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                <button
-                  onClick={() => {
-                    handleChangeCoverClick();
-                  }}
-                  className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
-                >
-                  Change cover
-                </button>
-                <button
-                  onClick={handleRemoveCover}
-                  className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
-                >
-                  Remove
-                </button>
+        <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden bg-slate-100">
+          {(coverImage || coverDefaultImage) && (
+            <>
+              <img
+                src={coverImage || coverDefaultImage}
+                alt="Cover"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors">
+                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                  <button
+                    onClick={handleChangeCoverClick}
+                    className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+                  >
+                    Change cover
+                  </button>
+                  <button
+                    onClick={handleRemoveCover}
+                    className="px-3 py-1.5 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
-            </div>
+            </>
+          )}
 
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelected}
-              className="hidden"
-              accept="image/*"
-            />
-          </div>
-        }
+          {/* Show "Add Cover" button when no cover exists */}
+          {!(coverImage || coverDefaultImage) && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={handleChangeCoverClick}
+                className="px-4 py-2 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+              >
+                Add cover
+              </button>
+            </div>
+          )}
+
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelected}
+            className="hidden"
+            accept="image/*"
+          />
+        </div>
       </div>
 
       {/* Content Section with Icon */}
       <div className="max-w-[900px] mx-auto px-8 lg:px-24">
-        {/* Icon */}
-        <div
-          className={`${coverIcon ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
-        >
-          {defaultIcon && (
-            <div
-              className={`relative ${
-                coverIcon ? "-mt-12 lg:-mt-16" : "mt-12"
-              } mb-4 group/icon`}
+        {/* Icon - ALWAYS overlaps the cover area */}
+
+        <div className={`relative -mt-12  mb-4 group/icon inline-block `}>
+          <img
+            src={coverIcon || defaultIcon}
+            alt="Icon"
+            className="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform bg-white"
+          />
+
+          {/* Hover Edit Button */}
+          <div className="absolute -top-2 -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity">
+            <button
+              onClick={handleChangeIcon}
+              className="p-1.5 bg-white rounded-full shadow-lg text-xs hover:bg-slate-100"
             >
-              <div className="relative inline-block">
-                <img
-                  src={coverIcon || defaultIcon}
-                  alt="Icon"
-                  className="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform bg-white"
-                />
+              ✏️
+            </button>
+          </div>
 
-                {/* Hover Edit Button */}
-                <div className="absolute -top-2 -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity">
-                  <button
-                    onClick={handleChangeIcon}
-                    className="p-1.5 bg-white rounded-full shadow-lg text-xs hover:bg-slate-100"
-                  >
-                    ✏️
-                  </button>
-                </div>
-
-                <input
-                  type="file"
-                  ref={iconInputRef}
-                  onChange={handleIconSelected}
-                  className="hidden"
-                  accept="image/*"
-                />
-              </div>
-            </div>
-          )}
+          <input
+            type="file"
+            ref={iconInputRef}
+            onChange={handleIconSelected}
+            className="hidden"
+            accept="image/*"
+          />
         </div>
 
         {/* Title */}
@@ -700,7 +701,6 @@ const RichTextEditor = ({
                 text = text.slice(0, 45);
                 e.currentTarget.textContent = text;
 
-                // Move cursor to end after trimming
                 const range = document.createRange();
                 const sel = window.getSelection();
                 range.selectNodeContents(e.currentTarget);
