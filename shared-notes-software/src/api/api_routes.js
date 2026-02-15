@@ -5,3 +5,4 @@ export const RENAME_MST_NOTE_URL = '/mst-note/rename';
 export const ADD_UPDATE_NOTES_URL = '/notes/add-update';
 export const GET_NOTES__DETAILS_URL = '/notes/notes-details';
 export const ADD_SUB_PAGE_DETAILS_URL = '/sub-page/add-sub-page';
+export const RENAME_SUB_PAGE_TITLE_URL = '/sub-page/rename';

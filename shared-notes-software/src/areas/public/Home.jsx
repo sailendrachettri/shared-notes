@@ -13,6 +13,7 @@ const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [noteHeading, setNoteHeading] = useState("");
   const [currentNotesId, setCurrentNotesId] = useState(null);
+  const [isSubPage, setIsSubPage] = useState(false);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -65,8 +66,8 @@ const Home = () => {
                   setSelectedNoteId={setSelectedNoteId}
                   selectedNoteId={selectedNoteId}
                   setNoteHeading={setNoteHeading}
-                  currentNotesId={currentNotesId}
                   setCurrentNotesId={setCurrentNotesId}
+                  setIsSubPage={setIsSubPage}
                 />
               </div>
             </div>
@@ -80,6 +81,7 @@ const Home = () => {
               setRefresh={setRefresh}
               currentNotesId={currentNotesId}
               setCurrentNotesId={setCurrentNotesId}
+              isSubPage={isSubPage}
             />
           </div>
         </div>

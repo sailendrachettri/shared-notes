@@ -18,8 +18,8 @@ const Sidebar = ({
   searchText,
   setNoteHeading,
   selectedNoteId,
-  currentNotesId,
   setCurrentNotesId,
+  setIsSubPage
 }) => {
   const [active, setActive] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -72,9 +72,17 @@ const Sidebar = ({
   const handleSelectNote = (note) => {
     console.log(note);
     setOpenMenu(null);
-    setNoteHeading(note?.note_title || note?.sub_page_title || "");
-    setSelectedNoteId(note?.note_id || note?.sub_page_id);
-    setActive(note?.note_id || note?.sub_page_id);
+    setNoteHeading(note?.note_title ||  "");
+    setSelectedNoteId(note?.note_id);
+    setActive(note?.note_id);
+  };
+  const handleSelectNoteFromSubPage = (subNote) => {
+    console.log(subNote);
+    setOpenMenu(null);
+    setNoteHeading(subNote?.sub_page_title || "");
+    setSelectedNoteId(subNote?.sub_page_id);
+    setActive(subNote?.sub_page_id);
+    setIsSubPage(true);
   };
 
   const handleAddSubPage = async () => {
@@ -204,9 +212,9 @@ const Sidebar = ({
                         {item?.sub_pages?.map((sub) => (
                           <div
                             onClick={() => {
-                              handleSelectNote(sub);
+                              handleSelectNoteFromSubPage(sub);
                             }}
-                            key={sub.sub_page_id}
+                            key={sub?.sub_page_id}
                             className={`
   flex items-center gap-2
   text-xs
@@ -222,7 +230,7 @@ const Sidebar = ({
 `}
                           >
                             <div className={`${active === sub?.sub_page_id ? 'bg-primary' : 'bg-gray-400'} w-1 h-1  rounded-full`}></div>
-                            {sub.sub_page_title}
+                            {sub?.sub_page_title}
                           </div>
                         ))}
                       </div>

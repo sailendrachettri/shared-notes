@@ -5,15 +5,22 @@ import {
   ADD_UPDATE_NOTES_URL,
   GET_NOTES__DETAILS_URL,
   RENAME_MST_NOTE_URL,
+  RENAME_SUB_PAGE_TITLE_URL,
 } from "../../../api/api_routes";
 import InfoScreen from "../../../utils/info-screen/InfoScreen";
 import toast from "react-hot-toast";
 
-const Playground = ({ selectedNoteId, noteHeading, setRefresh, currentNotesId, setCurrentNotesId }) => {
+const Playground = ({
+  selectedNoteId,
+  noteHeading,
+  setRefresh,
+  currentNotesId,
+  setCurrentNotesId,
+  isSubPage,
+}) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef(null);
- 
 
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 
@@ -33,7 +40,7 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh, currentNotesId, s
 
   const handleAutoSave = async (data) => {
     console.log(data);
-     
+
     try {
       const payload = {
         NotesDetails: data || "",
@@ -42,9 +49,9 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh, currentNotesId, s
       };
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
-console.log(res?.data)
+      console.log(res?.data);
       setCurrentNotesId(res?.data?.notes_id || null);
-      setLastUpdatedAt(res?.data?.updated_at)
+      setLastUpdatedAt(res?.data?.updated_at);
 
       // Show toast
       setShowToast(true);
@@ -60,7 +67,6 @@ console.log(res?.data)
 
   const getNotesDetails = async () => {
     try {
-     
       const payload = {
         NotesId: currentNotesId,
         NoteId: selectedNoteId,
@@ -82,17 +88,29 @@ console.log(res?.data)
   };
 
   const renameNoteTitle = async (newTitle) => {
+    console.log(selectedNoteId);
+    console.log(isSubPage);
     try {
-      const payload = {
-        NoteId: selectedNoteId,
-        NoteTitle: newTitle || noteHeading,
-      };
-      await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
+      if (isSubPage) {
+        const payload = {
+          SubPageId: selectedNoteId,
+          SupPageTitle: newTitle || noteHeading,
+        };
+        await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
+        console.log("here");
+      } else {
+        const payload = {
+          NoteId: selectedNoteId,
+          NoteTitle: newTitle || noteHeading,
+        };
+        await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
+        console.log("here");
+      }
     } catch (error) {
       console.error("Not able to rename", error);
       toast.error("Can't rename at this moment");
-    }finally{
-      setRefresh(prev => !prev);
+    } finally {
+      setRefresh((prev) => !prev);
     }
   };
 
