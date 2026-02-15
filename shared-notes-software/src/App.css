@@ -1,5 +1,6 @@
 body{
   background-color: #F2F3F5;
+  overflow: hidden;
 }
 /* ---------------------------------CUSTOM SCROLL BAR--------------------------------- */
 ::-webkit-scrollbar {

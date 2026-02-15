@@ -1,0 +1,41 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="headGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a8ffb0"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <circle cx="300" cy="300" r="280" fill="#f1f5f9"/>
+
+  <!-- Alien Head -->
+  <ellipse cx="300" cy="290" rx="170" ry="210"
+           fill="url(#headGrad)"
+           stroke="#1e293b"
+           stroke-width="8"/>
+
+  <!-- Eyes -->
+  <ellipse cx="240" cy="270" rx="45" ry="75"
+           fill="#1e293b"/>
+  <ellipse cx="360" cy="270" rx="45" ry="75"
+           fill="#1e293b"/>
+
+  <!-- Eye shine -->
+  <ellipse cx="255" cy="245" rx="10" ry="18"
+           fill="#ffffff"/>
+  <ellipse cx="375" cy="245" rx="10" ry="18"
+           fill="#ffffff"/>
+
+  <!-- Small nose dots -->
+  <circle cx="290" cy="330" r="5" fill="#1e293b"/>
+  <circle cx="310" cy="330" r="5" fill="#1e293b"/>
+
+  <!-- Smile -->
+  <path d="M240 360 Q300 400 360 360"
+        stroke="#1e293b"
+        stroke-width="8"
+        fill="none"
+        stroke-linecap="round"/>
+</svg>
