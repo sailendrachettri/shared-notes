@@ -77,12 +77,12 @@ const Sidebar = ({
       ) : (
         <section className="h-full w-full">
           {sidebarItems != null && sidebarItems?.length > 0 ? (
-            <div className="flex-1 overflow-y-auto  px-4 space-y-1 ">
+            <div className="flex-1 overflow-y-auto  px-4 space-y-1 min-h-[90vh]">
               {sidebarItems?.map((item, idx) => (
                 <button
                   key={item?.note_id}
                   onClick={() => handleSelectNote(item)}
-                  className={`group relative w-full  capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-md transition-all duration-200
+                  className={`group relative w-full   capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-md transition-all duration-200
   ${
     active === item?.note_id
       ? "border border-slate-200 text-primary bg-gray-50"
