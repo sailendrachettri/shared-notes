@@ -34,7 +34,7 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
                 using (var stream = new FileStream(fullPath, FileMode.Create))
                     file.CopyTo(stream);
 
-                savedFiles.Add($"/uploadedFiles/{newName}");
+                savedFiles.Add($"{newName}");
             }
 
             return Ok(savedFiles);

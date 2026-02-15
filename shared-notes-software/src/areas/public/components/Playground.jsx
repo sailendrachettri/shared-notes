@@ -17,11 +17,12 @@ const Playground = ({
   currentNotesId,
   setCurrentNotesId,
   isSubPage,
-  selectedNoteType
+  selectedNoteType,
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
   const timeoutRef = useRef(null);
+  const [fullData, setfullData] = useState(null);
 
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 
@@ -40,7 +41,6 @@ const Playground = ({
   };
 
   const handleAutoSave = async (data) => {
-   
     try {
       const payload = {
         NotesDetails: data || "",
@@ -49,7 +49,7 @@ const Playground = ({
       };
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
-   
+
       setCurrentNotesId(res?.data?.notes_id || null);
       setLastUpdatedAt(res?.data?.updated_at);
 
@@ -72,9 +72,11 @@ const Playground = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-     
+      console.log(res);
+
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
+        setfullData(res?.data?.data || null);
         setLastUpdatedAt(
           res?.data?.data?.updated_at || res?.data?.data?.created_at || null,
         );
@@ -88,7 +90,6 @@ const Playground = ({
   };
 
   const renameNoteTitle = async (newTitle) => {
-   
     try {
       if (isSubPage) {
         const payload = {
@@ -96,14 +97,12 @@ const Playground = ({
           SupPageTitle: newTitle || noteHeading,
         };
         await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
-     
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
         };
         await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-       
       }
     } catch (error) {
       console.error("Not able to rename", error);
@@ -112,8 +111,6 @@ const Playground = ({
       setRefresh((prev) => !prev);
     }
   };
-
-
 
   useEffect(() => {
     if (selectedNoteId != null) {
@@ -125,7 +122,7 @@ const Playground = ({
   //   const interval = setInterval(async () => {
   //     try {
   //       getNotesDetails();
-       
+
   //     } catch (err) {
   //       console.error("Version check failed");
   //     }
@@ -149,6 +146,7 @@ const Playground = ({
               onTitleChange={renameNoteTitle}
               selectedNoteId={selectedNoteId}
               selectedNoteType={selectedNoteType}
+              fullData={fullData}
             />
 
             {/* Custom Toast */}

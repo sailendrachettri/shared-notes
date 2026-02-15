@@ -18,12 +18,16 @@ import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
-import { axiosInstance } from "../../../api/axios";
+import { axiosInstance, BASE_URL_EXPORTED } from "../../../api/axios";
 import {
+  CHANGE_COVER_ICON_MST_NOTE_URL,
+  CHANGE_COVER_ICON_SUB_PAGE_URL,
   CHANGE_COVER_IMAGE_MST_NOTE_URL,
   CHANGE_COVER_IMAGE_SUB_PAGE_URL,
   FILE_UPLOAD_URL,
+  VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
+import { useMemo } from "react";
 
 const FormattingMenu = ({ editor }) => {
   const [isTextSelected, setIsTextSelected] = useState(false);
@@ -383,11 +387,11 @@ const RichTextEditor = ({
   heading,
   lastUpdatedAt,
   onTitleChange,
-  selectedNoteType, 
-  defaultIcon = "📄", 
-  selectedNoteId
+  selectedNoteType,
+  defaultIcon = "📄",
+  selectedNoteId,
+  fullData,
 }) => {
-  const [coverImage, setCoverImage] = useState(coverDefaultImage);
   const [pageIcon, setPageIcon] = useState(defaultIcon);
 
   const fileInputRef = useRef(null);
@@ -499,10 +503,10 @@ const RichTextEditor = ({
   const handleFileSelected = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    console.log(file)
+    console.log(file);
 
     try {
-      console.log("here")
+      console.log("here");
       const formData = new FormData();
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
@@ -510,8 +514,6 @@ const RichTextEditor = ({
       });
       console.log("res ", res);
       const uploadedUrl = res.data[0];
-      console.log({uploadedUrl});
-      setCoverImage(uploadedUrl);
 
       const payload =
         selectedNoteType === "mst-note"
@@ -531,29 +533,86 @@ const RichTextEditor = ({
   };
 
   const handleRemoveCover = () => {
-    setCoverImage(null);
+    // setCoverImage(null);
     // Optionally call API to remove cover
   };
 
   // Change Icon
   const handleChangeIcon = () => iconInputRef.current.click();
-  const handleIconSelected = (e) => {
+  const handleIconSelected = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    console.log(file);
 
-    // Upload icon same way as cover (or just update icon state)
-    const url = URL.createObjectURL(file);
-    setPageIcon(url);
+    try {
+      console.log("here");
+      const formData = new FormData();
+      formData.append("files", file);
+      let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("res ", res);
+      const uploadedUrl = res.data[0];
+
+      const payload =
+        selectedNoteType === "mst-note"
+          ? { NoteId: selectedNoteId, CoverIcon: uploadedUrl }
+          : { SubPageId: selectedNoteId, CoverIcon: uploadedUrl };
+
+      res = await axiosInstance.post(
+        selectedNoteType === "mst-note"
+          ? CHANGE_COVER_ICON_MST_NOTE_URL
+          : CHANGE_COVER_ICON_SUB_PAGE_URL,
+        payload,
+      );
+      console.log(res);
+    } catch (err) {
+      console.error("Cover upload failed:", err);
+    }
   };
+
+  const normalizedNote = useMemo(() => {
+    if (!fullData) return null;
+
+    const isSubPage = selectedNoteType === "sub-page";
+
+    return {
+      title: fullData.note_title,
+      updatedAt: fullData.updated_at,
+
+      coverImage: isSubPage
+        ? fullData.sub_page_remove_cover
+          ? null
+          : fullData.sub_page_cover_image
+        : fullData.mst_note_remove_cover
+          ? null
+          : fullData.mst_note_cover_image,
+
+      icon: isSubPage
+        ? fullData.sub_page_remove_icon
+          ? null
+          : fullData.sub_page_cover_icon
+        : fullData.mst_note_remove_icon
+          ? null
+          : fullData.mst_note_cover_icon,
+    };
+  }, [fullData, selectedNoteType]);
+
+  const coverImage = normalizedNote?.coverImage
+    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote.coverImage}`
+    : null;
+
+  console.log(fullData);
+  console.log(coverImage)
 
   return (
     <div className="notion-editor-wrapper">
       {/* Cover Image Section */}
       <div className="relative group">
-        {coverDefaultImage && (
+        {
           <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden">
             <img
-              src={coverDefaultImage}
+              src={coverImage || coverDefaultImage}
               alt="Cover"
               className="w-full h-full object-cover"
             />
@@ -584,7 +643,7 @@ const RichTextEditor = ({
               accept="image/*"
             />
           </div>
-        )}
+        }
       </div>
 
       {/* Content Section with Icon */}
@@ -593,10 +652,10 @@ const RichTextEditor = ({
         <div
           className={`${coverDefaultImage ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
         >
-          {pageIcon && (
+          {normalizedNote?.icon ? (
             <div className="relative">
               <div className="text-7xl cursor-pointer hover:scale-105 transition-transform">
-                {pageIcon}
+                {normalizedNote?.icon}
               </div>
               <div className="absolute top-0 right-0 opacity-0 group-hover/icon:opacity-100 transition-opacity">
                 <button
@@ -614,6 +673,13 @@ const RichTextEditor = ({
                 accept="image/*"
               />
             </div>
+          ) : (
+            <button
+              onClick={handleChangeIcon}
+              className="text-3xl text-slate-400 hover:text-slate-600"
+            >
+              Add icon
+            </button>
           )}
         </div>
 

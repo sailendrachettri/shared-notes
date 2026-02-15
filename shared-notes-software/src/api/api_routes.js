@@ -7,6 +7,7 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 export const CHECK_SERVER_NETWORK = "/network/check";
 export const FILE_UPLOAD_URL = "/upload-files";
 export const DELETE_FILE_URL = "/delete-files";
+export const VIEW_UPLOADED_FILE_URL = 'https://localhost:44383'
 
 
 //#endregion

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using shared_notes_software_server.Data;
 using shared_notes_software_server.Helpers;
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,8 @@ builder.WebHost.ConfigureKestrel(options =>
     //});
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -72,6 +75,13 @@ app.MapGet("/debug-updates", () =>
 });
 
 app.UseCors("AllowViteDevServer");
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "uploadedFiles")),
+    RequestPath = "/uploads"
+});
 
 
 
