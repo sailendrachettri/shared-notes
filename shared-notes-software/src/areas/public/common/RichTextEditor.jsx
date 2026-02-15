@@ -501,14 +501,14 @@ const RichTextEditor = ({
 
             onTitleChange(text);
           }}
-          className="text-4xl font-bold outline-none text-slate-800"
+          className="text-lg lg:text-4xl font-bold outline-none text-slate-800"
           data-placeholder="Untitled"
         >
           <span className="capitalize"> {heading}</span>
         </div>
 
         {lastUpdatedAt && (
-          <p className="text-sm text-slate-400 mt-2">
+          <p className="text-xs lg:text-sm text-slate-400 mt-2">
             Edited {formatePrettyDateTime(lastUpdatedAt)}
           </p>
         )}

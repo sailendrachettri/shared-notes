@@ -54,7 +54,7 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
         >
           <span className="flex items-center justify-center gap-x-2 flex-nowrap">
             <HiOutlineViewGridAdd size={20} />
-            <div> Create Notes</div>
+            <div className="text-sm lg:text-base"> Create Notes</div>
           </span>
         </button>
 

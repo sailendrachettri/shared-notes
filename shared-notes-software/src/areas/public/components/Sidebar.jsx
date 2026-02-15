@@ -177,7 +177,7 @@ const Sidebar = ({
                               }`}
                             />
 
-                            <div className="truncate font-medium">
+                            <div className="truncate font-medium text-xs lg:text-sm">
                               {item?.note_title}
                             </div>
                           </div>
