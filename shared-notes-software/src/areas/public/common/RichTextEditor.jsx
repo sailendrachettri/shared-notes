@@ -575,32 +575,32 @@ const RichTextEditor = ({
     const isSubPage = selectedNoteType === "sub-page";
 
     return {
-      title: fullData.note_title,
-      updatedAt: fullData.updated_at,
+      title: fullData?.note_title,
+      updatedAt: fullData?.updated_at,
 
       coverImage: isSubPage
-        ? fullData.sub_page_remove_cover
+        ? fullData?.sub_page_remove_cover
           ? null
-          : fullData.sub_page_cover_image
-        : fullData.mst_note_remove_cover
+          : fullData?.sub_page_cover_image
+        : fullData?.mst_note_remove_cover
           ? null
-          : fullData.mst_note_cover_image,
+          : fullData?.mst_note_cover_image,
 
       icon: isSubPage
-        ? fullData.sub_page_remove_icon
+        ? fullData?.sub_page_remove_icon
           ? null
-          : fullData.sub_page_cover_icon
-        : fullData.mst_note_remove_icon
+          : fullData?.sub_page_cover_icon
+        : fullData?.mst_note_remove_icon
           ? null
-          : fullData.mst_note_cover_icon,
+          : fullData?.mst_note_cover_icon,
     };
   }, [fullData, selectedNoteType]);
 
   const coverImage = normalizedNote?.coverImage
-    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote.coverImage}`
+    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote?.coverImage}`
     : null;
-  const coverIcon = normalizedNote.icon
-    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote.icon}`
+  const coverIcon = normalizedNote?.icon
+    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote?.icon}`
     : null;
 
   console.log(fullData);
@@ -651,12 +651,12 @@ const RichTextEditor = ({
       <div className="max-w-[900px] mx-auto px-8 lg:px-24">
         {/* Icon */}
         <div
-          className={`${coverDefaultImage ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
+          className={`${coverIcon ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
         >
           {defaultIcon && (
             <div
               className={`relative ${
-                coverImage ? "-mt-12 lg:-mt-16" : "mt-12"
+                coverIcon ? "-mt-12 lg:-mt-16" : "mt-12"
               } mb-4 group/icon`}
             >
               <div className="relative inline-block">
