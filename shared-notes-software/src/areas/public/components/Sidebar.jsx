@@ -89,6 +89,8 @@ const Sidebar = ({
       console.log(res);
       setSelectedNoteId(res?.data?.sub_page_id);
       setCurrentNotesId(res?.data?.notes_id);
+      setNoteHeading(subPageTitle || "");
+      setActive(res?.data?.sub_page_id);
     } catch (error) {
       console.error("Not able to create sub page", error);
     } finally {
@@ -98,7 +100,7 @@ const Sidebar = ({
         handleFetchAllItemList();
         setSubPageTitle("");
         setSubmitting(false);
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -133,7 +135,7 @@ const Sidebar = ({
                           {/* Left Content */}
                           <div className="flex items-center gap-2 min-w-0">
                             {/* Expand Arrow */}
-                            {item?.sub_pages?.length > 0 && (
+                            {item?.sub_pages?.length > 0 ? (
                               <div
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -142,7 +144,7 @@ const Sidebar = ({
                                     [item.note_id]: !prev[item.note_id],
                                   }));
                                 }}
-                                className="p-1 rounded hover:bg-gray-200 transition"
+                                className="p-1 rounded hover:bg-primary/5 transition"
                               >
                                 <svg
                                   className={`w-3 h-3 transition-transform duration-200 ${
@@ -155,8 +157,8 @@ const Sidebar = ({
                                 >
                                   <path d="M9 5l7 7-7 7" />
                                 </svg>
-                              </div>
-                            )}
+                              </div>) : <div className="pl-5"></div>
+                            }
 
                             <PiNotebookLight
                               size={18}
@@ -195,7 +197,7 @@ const Sidebar = ({
                       <div
                         className={`ml-8 overflow-hidden transition-all duration-300 ${
                           isOpen
-                            ? "max-h-96 opacity-100 mt-1"
+                            ? "max-h-96 opacity-100 mt-1 "
                             : "max-h-0 opacity-0"
                         }`}
                       >
@@ -219,7 +221,7 @@ const Sidebar = ({
   }
 `}
                           >
-                            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                            <div className={`${active === sub?.sub_page_id ? 'bg-primary' : 'bg-gray-400'} w-1 h-1  rounded-full`}></div>
                             {sub.sub_page_title}
                           </div>
                         ))}
@@ -234,6 +236,10 @@ const Sidebar = ({
                               setSelectedNoteId(item?.note_id);
                               setIsOpen(true);
                               setOpenMenu(null);
+                              setOpenNotes((prev) => ({
+                                ...prev,
+                                [item.note_id]: true,
+                              }));
                             }}
                             className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                           >
@@ -299,7 +305,7 @@ const Sidebar = ({
                   }}
                   className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                 >
-                  {`${submitting ? 'Creating..' : 'Create'}`}
+                  {`${submitting ? "Creating.." : "Create"}`}
                 </button>
               </div>
             </div>

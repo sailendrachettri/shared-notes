@@ -32,6 +32,7 @@ const Playground = ({ selectedNoteId, noteHeading, setRefresh, currentNotesId, s
   };
 
   const handleAutoSave = async (data) => {
+    console.log(data);
      
     try {
       const payload = {
@@ -65,7 +66,7 @@ console.log(res?.data)
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-
+      console.log(res);
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         setLastUpdatedAt(
