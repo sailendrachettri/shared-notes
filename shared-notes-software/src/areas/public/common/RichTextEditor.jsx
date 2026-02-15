@@ -392,8 +392,6 @@ const RichTextEditor = ({
   selectedNoteId,
   fullData,
 }) => {
-  const [pageIcon, setPageIcon] = useState(defaultIcon);
-
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
 
@@ -601,9 +599,12 @@ const RichTextEditor = ({
   const coverImage = normalizedNote?.coverImage
     ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote.coverImage}`
     : null;
+  const coverIcon = normalizedNote.icon
+    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote.icon}`
+    : null;
 
   console.log(fullData);
-  console.log(coverImage)
+  console.log(coverImage);
 
   return (
     <div className="notion-editor-wrapper">
@@ -652,34 +653,38 @@ const RichTextEditor = ({
         <div
           className={`${coverDefaultImage ? "-mt-12" : "mt-12"} mb-2 group/icon relative inline-block`}
         >
-          {normalizedNote?.icon ? (
-            <div className="relative">
-              <div className="text-7xl cursor-pointer hover:scale-105 transition-transform">
-                {normalizedNote?.icon}
-              </div>
-              <div className="absolute top-0 right-0 opacity-0 group-hover/icon:opacity-100 transition-opacity">
-                <button
-                  onClick={handleChangeIcon}
-                  className="p-1 bg-white rounded shadow-lg text-xs"
-                >
-                  ✏️
-                </button>
-              </div>
-              <input
-                type="file"
-                ref={iconInputRef}
-                onChange={handleIconSelected}
-                className="hidden"
-                accept="image/*"
-              />
-            </div>
-          ) : (
-            <button
-              onClick={handleChangeIcon}
-              className="text-3xl text-slate-400 hover:text-slate-600"
+          {defaultIcon && (
+            <div
+              className={`relative ${
+                coverImage ? "-mt-12 lg:-mt-16" : "mt-12"
+              } mb-4 group/icon`}
             >
-              Add icon
-            </button>
+              <div className="relative inline-block">
+                <img
+                  src={coverIcon || defaultIcon}
+                  alt="Icon"
+                  className="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform bg-white"
+                />
+
+                {/* Hover Edit Button */}
+                <div className="absolute -top-2 -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity">
+                  <button
+                    onClick={handleChangeIcon}
+                    className="p-1.5 bg-white rounded-full shadow-lg text-xs hover:bg-slate-100"
+                  >
+                    ✏️
+                  </button>
+                </div>
+
+                <input
+                  type="file"
+                  ref={iconInputRef}
+                  onChange={handleIconSelected}
+                  className="hidden"
+                  accept="image/*"
+                />
+              </div>
+            </div>
           )}
         </div>
 
