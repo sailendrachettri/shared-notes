@@ -1,3 +1,4 @@
+export const CHECK_SERVER_NETWORK = '/network/check';
 export const ADD_MST_NOTE_URL = '/mst-note/add';
 export const DELETE_MST_NOTE_URL = '/mst-note/delete';
 export const GET_MST_NOTE_URL = '/mst-note/list';

@@ -4,7 +4,7 @@ import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
-const Home = ({toggleSidebar, setToggleSidebar}) => {
+const Home = ({toggleSidebar}) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
