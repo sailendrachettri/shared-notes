@@ -20,7 +20,7 @@ const CreaterNewNotesForm = ({
     e.preventDefault();
     try {
       if (!title.trim()) return;
-      
+
       const payload = {
         NoteTitle: title || null,
       };
@@ -72,7 +72,7 @@ const CreaterNewNotesForm = ({
           </span>
         </button>
 
-        <div className="mt-4">
+        <div className="mt-2">
           <div className="relative">
             <HiOutlineSearch
               size={18}
@@ -89,7 +89,7 @@ const CreaterNewNotesForm = ({
         rounded-md
          border-none
         bg-gray-50
-        text-sm
+        text-xs
         placeholder:text-gray-400
         focus:outline-none
         focus:ring-1
