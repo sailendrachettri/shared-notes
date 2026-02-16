@@ -506,7 +506,8 @@ const RichTextEditor = ({
     };
   }, [editor]);
 
-  const handleChangeCoverClick = () => fileInputRef.current.click();
+  const handleChangeCoverClick = () => fileInputRef?.current?.click();
+  const handleChangeIconClick = () => iconInputRef?.current?.click();
 
   const handleFileSelected = async (e) => {
     const file = e.target.files[0];
@@ -724,14 +725,6 @@ const RichTextEditor = ({
                 </button>
               </div>
             )}
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelected}
-              className="hidden"
-              accept="image/*"
-            />
           </div>
         </div>
       )}
@@ -755,38 +748,34 @@ const RichTextEditor = ({
             {showMenu && (
               <div
                 ref={menuRef}
-                className="absolute -right-16 mt-2 w-36 bg-white rounded-lg shadow-xl border text-sm z-50"
+                className="absolute -right-16 mt-2 w-36 bg-white rounded-lg shadow-xl border-slate-200 border text-sm z-50"
               >
                 <button
-                  onClick={handleChangeIcon}
-                  className="w-full text-left px-3 py-2 hover:bg-slate-100"
+                  onClick={handleChangeIconClick}
+                  className="w-full text-left px-3 py-2 hover:bg-slate-100 cursor-pointer"
                 >
                   Change icon
                 </button>
                 <button
                   onClick={handleRemoveIcon}
-                  className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600"
+                  className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 cursor-pointer"
                 >
                   Remove icon
                 </button>
               </div>
             )}
-            <input
-              type="file"
-              ref={iconInputRef}
-              onChange={handleChangeIcon}
-              className="hidden"
-              accept="image/*"
-            />
           </div>
         )}
 
-        <div className="flex items-center gap-3 py-4 hover:opacity-100 opacity-0">
+        <div className="flex items-center group gap-3 py-4 relative z-20">
           {!shouldShowIcon && (
             <button
-              className="flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm text-gray-500 
-                 hover:bg-gray-100 hover:text-gray-800 
-                 rounded-md transition-colors"
+              onClick={handleChangeIconClick}
+              className="flex items-center gap-2 px-3 py-1.5 
+           text-sm text-gray-500 
+           hover:bg-gray-100 hover:text-gray-800 
+           rounded-md transition-all 
+           opacity-0 group-hover:opacity-100"
             >
               <FaRegFaceSmileBeam className="text-base" />
               <span>Add icon</span>
@@ -795,9 +784,12 @@ const RichTextEditor = ({
 
           {!shouldShowCover && (
             <button
-              className="flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm text-gray-500 
-                 hover:bg-gray-100 hover:text-gray-800 
-                 rounded-md transition-colors"
+              onClick={handleChangeCoverClick}
+              className="flex items-center gap-2 px-3 py-1.5 
+           text-sm text-gray-500 
+           hover:bg-gray-100 hover:text-gray-800 
+           rounded-md transition-all 
+           opacity-0 group-hover:opacity-100"
             >
               <IoImageOutline className="text-base" />
               <span>Add cover</span>
@@ -847,7 +839,25 @@ const RichTextEditor = ({
           <EditorContent editor={editor} />
         </div>
       </div>
-      <div></div>
+
+      {/* Input for icon and image hiddden by default */}
+      <div>
+        <input
+          type="file"
+          ref={iconInputRef}
+          onChange={handleChangeIcon}
+          className="hidden"
+          accept="image/*"
+        />
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelected}
+          className="hidden"
+          accept="image/*"
+        />
+      </div>
     </div>
   );
 };
