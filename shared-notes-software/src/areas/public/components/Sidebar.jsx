@@ -128,7 +128,7 @@ const Sidebar = ({
       try {
         handleFetchAllItemList();
       } catch (err) {
-        console.error("Version check failed");
+        console.error("Auto fetch failed");
       }
     }, 30000); // every 30 seconds
 
