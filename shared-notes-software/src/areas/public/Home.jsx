@@ -25,7 +25,7 @@ const Home = ({toggleSidebar}) => {
 
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
-            <div className="w-72 h-full  bg-white rounded-2xl shadow-sm px-4 flex flex-col hidden md:flex">
+            <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
               <CreaterNewNotesForm
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
@@ -51,7 +51,7 @@ const Home = ({toggleSidebar}) => {
           </section>
 
           {/* Content Card */}
-          <div className="flex-1 rounded-2xl overflow-y-auto hide-scrollbar mb-1">
+          <div className="flex-1 rounded-md overflow-y-auto hide-scrollbar mb-1">
             <Playground
               selectedNoteId={selectedNoteId}
               noteHeading={noteHeading}
