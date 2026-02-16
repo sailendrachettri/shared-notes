@@ -9,6 +9,9 @@ const CreaterNewNotesForm = ({
   setSearchText,
   setSelectedNoteId,
   setCurrentNotesId,
+  setNoteHeading,
+  setActive,
+  setSelectedNoteType
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -24,7 +27,10 @@ const CreaterNewNotesForm = ({
       console.log(res);
 
       if(res?.data?.success == true && res?.data?.status == 'CREATED'){
+        setSelectedNoteType('mst-note');
+        setNoteHeading(res?.data?.note_title)
         setCurrentNotesId(res?.data?.notes_id);
+        setActive(res?.data?.mst_note_id)
         setSelectedNoteId(res?.data?.mst_note_id); /* mst_note_id is same as note_id same as note_or_sub_page_id */
       }
 

@@ -3,11 +3,6 @@ body {
   overflow: hidden;
 }
 
-*:focus {
-  outline: 1px solid #d25564; 
-  /* outline-offset: 2px; */
-}
-
 [data-tauri-drag-region] {
   -webkit-app-region: drag;
 }

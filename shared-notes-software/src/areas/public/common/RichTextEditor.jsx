@@ -690,12 +690,16 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
   console.log(fullData);
   console.log(coverImage);
   console.log(coverIcon);
 
   console.log(shouldShowCover);
   console.log(shouldShowIcon);
+
+  console.log(selectedNoteId);
+  console.log(heading)
 
   return (
     <div className="notion-editor-wrapper">

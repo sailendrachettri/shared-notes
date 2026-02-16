@@ -14,6 +14,7 @@ const Home = ({toggleSidebar}) => {
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
   const [selectedNoteType, setSelectedNoteType] = useState("");
+  const [active, setActive] = useState(1);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -31,6 +32,9 @@ const Home = ({toggleSidebar}) => {
                 setRefresh={setRefresh}
                 setSelectedNoteId={setSelectedNoteId}
                 setCurrentNotesId={setCurrentNotesId}
+                setNoteHeading={setNoteHeading}
+                setActive={setActive}
+                setSelectedNoteType={setSelectedNoteType}
               />
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar
@@ -45,6 +49,9 @@ const Home = ({toggleSidebar}) => {
                   setCurrentNotesId={setCurrentNotesId}
                   setIsSubPage={setIsSubPage}
                   setSelectedNoteType={setSelectedNoteType}
+                  selectedNoteType={selectedNoteType}
+                  active={active}
+                  setActive={setActive}
                 />
               </div>
             </div>

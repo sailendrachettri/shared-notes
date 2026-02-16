@@ -20,9 +20,11 @@ const Sidebar = ({
   selectedNoteId,
   setCurrentNotesId,
   setIsSubPage,
-  setSelectedNoteType
+  setSelectedNoteType,
+  selectedNoteType,
+  active,
+  setActive,
 }) => {
-  const [active, setActive] = useState(1);
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +38,7 @@ const Sidebar = ({
         SearchText: searchText || null,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      
+
       setSidebarItems(res?.data?.data || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
@@ -67,8 +69,8 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log(note)
-    setSelectedNoteType('mst-note');
+    console.log(note);
+    setSelectedNoteType("mst-note");
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
     setSelectedNoteId(note?.note_id);
@@ -76,8 +78,8 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log(subNote)
-   setSelectedNoteType('sub-page');
+    console.log(subNote);
+    setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");
     setSelectedNoteId(subNote?.sub_page_id);
@@ -93,11 +95,17 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
+      console.log(res);
 
-      setSelectedNoteId(res?.data?.sub_page_id);
-      setCurrentNotesId(res?.data?.notes_id);
-      setNoteHeading(subPageTitle || "");
-      setActive(res?.data?.sub_page_id);
+      if (res?.data?.success == true && res?.data?.status == "CREATED") {
+        setSelectedNoteId(res?.data?.sub_page_id);
+        setCurrentNotesId(res?.data?.notes_id);
+        setNoteHeading(subPageTitle || "");
+        setActive(res?.data?.sub_page_id);
+        setSelectedNoteType("sub-page");
+      } else {
+        toast.error("Can't create sub pages at the moment");
+      }
     } catch (error) {
       console.error("Not able to create sub page", error);
     } finally {
@@ -149,7 +157,7 @@ const Sidebar = ({
                         onClick={() => handleSelectNote(item)}
                         className={`group w-full capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-lg transition-all duration-200
             ${
-              active === item?.note_id
+              active === item?.note_id && selectedNoteType == "mst-note"
                 ? "bg-primary/10 text-primary"
                 : "text-gray-600 hover:bg-gray-50"
             }`}
@@ -188,7 +196,8 @@ const Sidebar = ({
                             <PiNotebookLight
                               size={18}
                               className={`shrink-0 ${
-                                active === item?.note_id
+                                active === item?.note_id &&
+                                selectedNoteType == "mst-note"
                                   ? "text-primary"
                                   : "text-gray-400 group-hover:text-gray-600"
                               }`}
@@ -240,14 +249,14 @@ const Sidebar = ({
   cursor-pointer
   transition-all duration-200
   ${
-    active === sub?.sub_page_id
+    active === sub?.sub_page_id && selectedNoteType == "sub-page"
       ? "bg-primary/10 text-primary"
       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
   }
 `}
                           >
                             <div
-                              className={`${active === sub?.sub_page_id ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
+                              className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
                             ></div>
                             {sub?.sub_page_title}
                           </div>
