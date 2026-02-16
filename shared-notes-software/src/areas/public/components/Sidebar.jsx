@@ -318,7 +318,7 @@ const Sidebar = ({
                 placeholder="Enter note title..."
                 value={subPageTitle}
                 onChange={(e) => setSubPageTitle(e.target.value)}
-                className="w-full capitalize border border-white rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full capitalize border border-primary rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
                 autoFocus
                 maxLength={45}
                 minLength={3}
