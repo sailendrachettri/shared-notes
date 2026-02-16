@@ -18,6 +18,9 @@ import { SlashCommand } from "../../../utils/slash-suggest/SlashCommand";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
+import { IoImageOutline } from "react-icons/io5";
+import { FaRegFaceSmileBeam } from "react-icons/fa6";
+
 import { axiosInstance } from "../../../api/axios";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
@@ -25,6 +28,8 @@ import {
   CHANGE_COVER_IMAGE_MST_NOTE_URL,
   CHANGE_COVER_IMAGE_SUB_PAGE_URL,
   FILE_UPLOAD_URL,
+  REMOVE_COVER_ICON_MST_NOTE_URL,
+  REMOVE_COVER_ICON_SUB_PAGE_URL,
   REMOVE_COVER_IMAGE_MST_NOTE_URL,
   REMOVE_COVER_IMAGE_SUB_PAGE_URL,
   VIEW_UPLOADED_FILE_URL,
@@ -397,6 +402,8 @@ const RichTextEditor = ({
 }) => {
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
 
   const editor = useEditor({
     extensions: [
@@ -557,10 +564,34 @@ const RichTextEditor = ({
       toast.error("Not able to remove cover image");
     }
   };
+  const handleRemoveIcon = async () => {
+    try {
+      let res;
+      const payload =
+        selectedNoteType === "mst-note"
+          ? { NoteId: selectedNoteId }
+          : { SubPageId: selectedNoteId };
 
-  // Change Icon
-  const handleChangeIcon = () => iconInputRef.current.click();
-  const handleIconSelected = async (e) => {
+      res = await axiosInstance.post(
+        selectedNoteType === "mst-note"
+          ? REMOVE_COVER_ICON_MST_NOTE_URL
+          : REMOVE_COVER_ICON_SUB_PAGE_URL,
+        payload,
+      );
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        toast.success("Icon removed successful!");
+      } else {
+        toast.error("Can't remove icon at the moment");
+      }
+    } catch (err) {
+      toast.error("Can't remove icon at the moment");
+      console.error("Cover upload failed:", err);
+    } finally {
+      setShowMenu(false);
+    }
+  };
+
+  const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     console.log(file);
@@ -639,15 +670,25 @@ const RichTextEditor = ({
   const shouldShowCover = normalizedNote?.shouldShowCover;
   const shouldShowIcon = normalizedNote?.shouldShowIcon;
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   console.log(fullData);
   console.log(coverImage);
 
   return (
     <div className="notion-editor-wrapper">
       {/* Cover Image Section - ALWAYS render this container */}
-     { shouldShowCover && <div className="relative group">
-        <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden bg-slate-100">
-          
+      {shouldShowCover && (
+        <div className="relative group">
+          <div className="relative w-full h-20 lg:h-[30vh] overflow-hidden bg-slate-100">
             <>
               <img
                 src={coverImage || coverDefaultImage}
@@ -671,59 +712,98 @@ const RichTextEditor = ({
                 </div>
               </div>
             </>
-          
 
-          {/* Show "Add Cover" button when no cover exists */}
-          {!shouldShowCover && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={handleChangeCoverClick}
-                className="px-4 py-2 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
-              >
-                Add cover
-              </button>
-            </div>
-          )}
+            {/* Show "Add Cover" button when no cover exists */}
+            {!shouldShowCover && (
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={handleChangeCoverClick}
+                  className="px-4 py-2 bg-white/90 hover:bg-white text-sm rounded shadow-lg"
+                >
+                  Add cover
+                </button>
+              </div>
+            )}
 
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileSelected}
-            className="hidden"
-            accept="image/*"
-          />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelected}
+              className="hidden"
+              accept="image/*"
+            />
+          </div>
         </div>
-      </div>}
+      )}
 
       {/* Content Section with Icon */}
-      <div className="max-w-[900px] mx-auto px-8 lg:px-24">
+      <div className="mx-auto px-8 lg:px-16">
         {/* Icon - ALWAYS overlaps the cover area */}
 
-        {shouldShowIcon && <div className={`relative ${shouldShowCover ? '-mt-12' : 'pt-10'}  mb-4 group/icon inline-block `}>
-          <img
-            src={coverIcon || defaultIcon}
-            alt="Icon"
-            className="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform bg-white"
-          />
+        {shouldShowIcon && (
+          <div
+            className={`relative ${shouldShowCover ? "-mt-12" : "pt-10"}  mb-4 group/icon inline-block `}
+          >
+            <img
+              onClick={() => setShowMenu((prev) => !prev)}
+              src={coverIcon || defaultIcon}
+              alt="Icon"
+              className="w-16 h-16 lg:w-20 lg:h-20 object-cover rounded-xl shadow-md cursor-pointer hover:scale-105 transition-transform bg-white"
+            />
 
-          {/* Hover Edit Button */}
-          <div className={`absolute ${shouldShowCover ? '-top-2' : 'top-8'}   -right-2 opacity-0 group-hover/icon:opacity-100 transition-opacity`}>
-            <button
-              onClick={handleChangeIcon}
-              className="p-1.5 bg-white rounded-full shadow-lg text-xs hover:bg-slate-100"
-            >
-              ✏️
-            </button>
+            {/* Hover Edit Button */}
+            {showMenu && (
+              <div
+                ref={menuRef}
+                className="absolute -right-16 mt-2 w-36 bg-white rounded-lg shadow-xl border text-sm z-50"
+              >
+                <button
+                  onClick={handleChangeIcon}
+                  className="w-full text-left px-3 py-2 hover:bg-slate-100"
+                >
+                  Change icon
+                </button>
+                <button
+                  onClick={handleRemoveIcon}
+                  className="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600"
+                >
+                  Remove icon
+                </button>
+              </div>
+            )}
+            <input
+              type="file"
+              ref={iconInputRef}
+              onChange={handleChangeIcon}
+              className="hidden"
+              accept="image/*"
+            />
           </div>
+        )}
 
-          <input
-            type="file"
-            ref={iconInputRef}
-            onChange={handleIconSelected}
-            className="hidden"
-            accept="image/*"
-          />
-        </div>}
+        <div className="flex items-center gap-3 py-4 hover:opacity-100 opacity-0">
+          {!shouldShowIcon && (
+            <button
+              className="flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm text-gray-500 
+                 hover:bg-gray-100 hover:text-gray-800 
+                 rounded-md transition-colors"
+            >
+              <FaRegFaceSmileBeam className="text-base" />
+              <span>Add icon</span>
+            </button>
+          )}
+
+          {!shouldShowCover && (
+            <button
+              className="flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm text-gray-500 
+                 hover:bg-gray-100 hover:text-gray-800 
+                 rounded-md transition-colors"
+            >
+              <IoImageOutline className="text-base" />
+              <span>Add cover</span>
+            </button>
+          )}
+        </div>
 
         {/* Title */}
         <div className="pb-4">
@@ -761,12 +841,13 @@ const RichTextEditor = ({
         </div>
 
         {/* Editor Content */}
-        <div className="notion-editor-container pb-32">
+        <div className="notion-editor-container">
           {editor && <FormattingMenu editor={editor} />}
           {editor && <TableMenu editor={editor} />}
           <EditorContent editor={editor} />
         </div>
       </div>
+      <div></div>
     </div>
   );
 };
