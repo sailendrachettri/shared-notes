@@ -1,14 +1,17 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { HiOutlineViewGridAdd, HiOutlineSearch } from "react-icons/hi";
 
-
-const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
+const CreaterNewNotesForm = ({
+  setRefresh,
+  setSearchText,
+  setSelectedNoteId,
+  setCurrentNotesId,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
- 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +21,12 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
         NoteTitle: title || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-    
+      // console.log(res);
+
+      if(res?.data?.success == true && res?.data?.status == 'CREATED'){
+        setCurrentNotesId(res?.data?.notes_id);
+        setSelectedNoteId(res?.data?.mst_note_id); /* mst_note_id is same as note_id same as note_or_sub_page_id */
+      }
 
       setTitle("");
       setIsOpen(false);
@@ -43,7 +51,6 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
   return (
     <div>
       <div className="flex items-center justify-start pe-6 border-b border-gray-200">
-        
         <h2 className="text-sm p-2 font-semibold text-gray-800">All Notes</h2>
       </div>
 
@@ -66,7 +73,7 @@ const CreaterNewNotesForm = ({ setRefresh, setSearchText }) => {
             />
 
             <input
-            onChange={(e)=> setSearchText(e.target.value)}
+              onChange={(e) => setSearchText(e.target.value)}
               type="text"
               placeholder="Search notes..."
               className="

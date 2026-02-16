@@ -399,6 +399,7 @@ const RichTextEditor = ({
   selectedNoteType,
   selectedNoteId,
   fullData,
+  setRefresh,
 }) => {
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
@@ -538,6 +539,8 @@ const RichTextEditor = ({
       console.log(res);
     } catch (err) {
       console.error("Cover upload failed:", err);
+    } finally {
+      setRefresh((prev) => !prev);
     }
   };
 
@@ -563,8 +566,11 @@ const RichTextEditor = ({
     } catch (error) {
       console.error("not able remove cover image");
       toast.error("Not able to remove cover image");
+    } finally {
+      setRefresh((prev) => !prev);
     }
   };
+
   const handleRemoveIcon = async () => {
     try {
       let res;
@@ -589,6 +595,7 @@ const RichTextEditor = ({
       console.error("Cover upload failed:", err);
     } finally {
       setShowMenu(false);
+      setRefresh((prev) => !prev);
     }
   };
 
@@ -621,6 +628,8 @@ const RichTextEditor = ({
       console.log(res);
     } catch (err) {
       console.error("Cover upload failed:", err);
+    } finally {
+      setRefresh((prev) => !prev);
     }
   };
 
@@ -661,10 +670,10 @@ const RichTextEditor = ({
   }, [fullData, selectedNoteType]);
 
   const coverImage = normalizedNote?.coverImage
-    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote?.coverImage}`
+    ? `${VIEW_UPLOADED_FILE_URL}/${normalizedNote?.coverImage}`
     : null;
   const coverIcon = normalizedNote?.icon
-    ? `${VIEW_UPLOADED_FILE_URL}${normalizedNote?.icon}`
+    ? `${VIEW_UPLOADED_FILE_URL}/${normalizedNote?.icon}`
     : null;
 
   // Use these variables in your JSX
@@ -683,6 +692,10 @@ const RichTextEditor = ({
 
   console.log(fullData);
   console.log(coverImage);
+  console.log(coverIcon);
+
+  console.log(shouldShowCover);
+  console.log(shouldShowIcon);
 
   return (
     <div className="notion-editor-wrapper">
@@ -775,7 +788,7 @@ const RichTextEditor = ({
            text-sm text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
-           opacity-0 group-hover:opacity-100"
+           opacity-0 group-hover:opacity-100 cursor-pointer"
             >
               <FaRegFaceSmileBeam className="text-base" />
               <span>Add icon</span>
@@ -789,7 +802,7 @@ const RichTextEditor = ({
            text-sm text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
-           opacity-0 group-hover:opacity-100"
+           opacity-0 group-hover:opacity-100 cursor-pointer"
             >
               <IoImageOutline className="text-base" />
               <span>Add cover</span>

@@ -29,6 +29,8 @@ const Home = ({toggleSidebar}) => {
               <CreaterNewNotesForm
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
+                setSelectedNoteId={setSelectedNoteId}
+                setCurrentNotesId={setCurrentNotesId}
               />
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar
@@ -58,6 +60,7 @@ const Home = ({toggleSidebar}) => {
               setCurrentNotesId={setCurrentNotesId}
               isSubPage={isSubPage}
               selectedNoteType={selectedNoteType}
+              refresh={refresh}
             />
           </div>
         </div>

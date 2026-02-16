@@ -26,9 +26,9 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
             foreach (var file in files)
             {
                 string timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                string safeName = Path.GetFileNameWithoutExtension(file.FileName);
+                //string safeName = Path.GetFileNameWithoutExtension(file.FileName);
                 string extension = Path.GetExtension(file.FileName);
-                string newName = $"{safeName}_{timestamp}{extension}";
+                string newName = $"file_{timestamp}{extension}";
                 string fullPath = Path.Combine(directoryPath, newName);
 
                 using (var stream = new FileStream(fullPath, FileMode.Create))

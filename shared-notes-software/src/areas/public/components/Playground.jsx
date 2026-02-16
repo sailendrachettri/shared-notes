@@ -18,6 +18,7 @@ const Playground = ({
   setCurrentNotesId,
   isSubPage,
   selectedNoteType,
+  refresh
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -71,6 +72,7 @@ const Playground = ({
         NotesId: currentNotesId,
         NoteId: selectedNoteId,
       };
+      console.log(payload)
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
       console.log(res);
 
@@ -116,7 +118,7 @@ const Playground = ({
     if (selectedNoteId != null) {
       getNotesDetails();
     }
-  }, [selectedNoteId]);
+  }, [selectedNoteId, refresh]);
 
   // useEffect(() => {
   //   const interval = setInterval(async () => {
@@ -147,6 +149,7 @@ const Playground = ({
               selectedNoteId={selectedNoteId}
               selectedNoteType={selectedNoteType}
               fullData={fullData}
+              setRefresh={setRefresh}
             />
 
             {/* Custom Toast */}
