@@ -3,4 +3,6 @@ Local notes sharing software
 
 
 ## Features to be added
-- Subpages / sub notes
+- sort by recent modify, created at, or ascenidng/descending
+- unsplash api for cover images
+- gif for icons

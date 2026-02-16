@@ -21,7 +21,7 @@ const CreaterNewNotesForm = ({
         NoteTitle: title || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      // console.log(res);
+      console.log(res);
 
       if(res?.data?.success == true && res?.data?.status == 'CREATED'){
         setCurrentNotesId(res?.data?.notes_id);

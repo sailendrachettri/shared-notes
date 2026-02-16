@@ -67,6 +67,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
+    console.log(note)
     setSelectedNoteType('mst-note');
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
@@ -75,6 +76,7 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
+    console.log(subNote)
    setSelectedNoteType('sub-page');
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");

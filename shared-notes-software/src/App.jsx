@@ -16,6 +16,7 @@ function App() {
     try {
       const payload = { SearchText: "" };
       const res = await axiosInstance.post(CHECK_SERVER_NETWORK, payload);
+      console.log(res)
 
       if (res?.data?.success === true && res?.data?.status === "FETCHED") {
         setServerStatus(true);
