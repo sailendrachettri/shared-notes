@@ -20,6 +20,7 @@ const CreaterNewNotesForm = ({
     e.preventDefault();
     try {
       if (!title.trim()) return;
+      
       const payload = {
         NoteTitle: title || null,
       };

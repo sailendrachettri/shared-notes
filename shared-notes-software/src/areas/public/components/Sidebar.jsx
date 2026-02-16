@@ -135,6 +135,15 @@ const Sidebar = ({
     return () => clearInterval(interval);
   }, []);
 
+  // Close on ESC
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
   return (
     <>
       <aside className="h-full flex flex-col">
@@ -242,18 +251,19 @@ const Sidebar = ({
                             }}
                             key={sub?.sub_page_id}
                             className={`
-  flex items-center gap-2
-  text-xs
-  px-3 py-1.5
-  rounded-md
-  cursor-pointer
-  transition-all duration-200
-  ${
-    active === sub?.sub_page_id && selectedNoteType == "sub-page"
-      ? "bg-primary/10 text-primary"
-      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-  }
-`}
+                                flex items-center gap-2 mb-1
+                                text-xs
+                                px-3 py-1.5
+                                rounded-md
+                                cursor-pointer
+                                transition-all duration-200
+                                ${
+                                  active === sub?.sub_page_id &&
+                                  selectedNoteType == "sub-page"
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                                }
+                              `}
                           >
                             <div
                               className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
@@ -318,6 +328,12 @@ const Sidebar = ({
                 placeholder="Enter note title..."
                 value={subPageTitle}
                 onChange={(e) => setSubPageTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // prevent form submit
+                    handleAddSubPage();
+                  }
+                }}
                 className="w-full capitalize border border-primary rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
                 autoFocus
                 maxLength={45}
