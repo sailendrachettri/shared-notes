@@ -57,11 +57,11 @@ const CreaterNewNotesForm = ({
 
   return (
     <div>
-      <div className="flex items-center justify-start pe-6 border-b border-gray-200">
+      <div className="flex items-center justify-center pe-6 border-b border-gray-200">
         <h2 className="text-sm p-2 font-semibold text-gray-800">All Notes</h2>
       </div>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-2 border-t border-gray-200">
         <button
           onClick={() => setIsOpen(true)}
           className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-md transition"

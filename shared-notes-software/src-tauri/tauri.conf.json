@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "Shared Notes",
-        "width": 800,
-        "height": 600,
+        "width": 1080,
+        "height": 650,
         "resizable": true,
         "fullscreen": false,
         "decorations": false

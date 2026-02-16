@@ -690,7 +690,6 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-
   console.log(fullData);
   console.log(coverImage);
   console.log(coverIcon);
@@ -699,7 +698,7 @@ const RichTextEditor = ({
   console.log(shouldShowIcon);
 
   console.log(selectedNoteId);
-  console.log(heading)
+  console.log(heading);
 
   return (
     <div className="notion-editor-wrapper">
@@ -784,12 +783,13 @@ const RichTextEditor = ({
           </div>
         )}
 
-        <div className="flex items-center group gap-3 py-4 relative z-20">
+        {/*  Add buttons */}
+        <div className="flex items-center group gap-3 py-2 xl:py-4 relative z-20">
           {!shouldShowIcon && (
             <button
               onClick={handleChangeIconClick}
               className="flex items-center gap-2 px-3 py-1.5 
-           text-sm text-gray-500 
+           text-xs xl:text-sm text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
            opacity-0 group-hover:opacity-100 cursor-pointer"
@@ -803,7 +803,7 @@ const RichTextEditor = ({
             <button
               onClick={handleChangeCoverClick}
               className="flex items-center gap-2 px-3 py-1.5 
-           text-sm text-gray-500 
+           text-xs xl:text-sm text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
            opacity-0 group-hover:opacity-100 cursor-pointer"
@@ -836,14 +836,14 @@ const RichTextEditor = ({
 
               onTitleChange(text);
             }}
-            className="text-4xl font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
+            className="text-2xl xl:text-4xl font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
             data-placeholder="Untitled"
           >
             {heading && <span className="capitalize">{heading}</span>}
           </div>
 
           {lastUpdatedAt && (
-            <p className="text-sm text-slate-400 mt-2">
+            <p className="text-xs xl:text-sm text-slate-400 mt-2">
               Edited {formatePrettyDateTime(lastUpdatedAt)}
             </p>
           )}
