@@ -14,7 +14,7 @@ const Home = ({toggleSidebar}) => {
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
   const [selectedNoteType, setSelectedNoteType] = useState("");
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
