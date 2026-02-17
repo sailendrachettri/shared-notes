@@ -8,6 +8,7 @@ import {
 import { PiNotebookLight } from "react-icons/pi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
+import { BiBookAlt } from "react-icons/bi";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -216,15 +217,32 @@ const Sidebar = ({
                               <div className="pl-5"></div>
                             )} */}
 
-                            <PiNotebookLight
-                              size={16}
-                              className={`shrink-0 ${
-                                active === item?.note_id &&
-                                selectedNoteType == "mst-note"
-                                  ? "text-primary"
-                                  : "text-gray-400 group-hover:text-gray-600"
-                              }`}
-                            />
+                            <div className="relative">
+                              <BiBookAlt
+                                size={20}
+                                className={`shrink-0 ${
+                                  active === item?.note_id &&
+                                  selectedNoteType == "mst-note"
+                                    ? "text-primary"
+                                    : "text-gray-400 group-hover:text-gray-600"
+                                }`}
+                              />
+
+                              {/* Sub pages count */}
+                              {item?.sub_pages?.length > 0 ? (
+                                <small
+                                  className={`$${
+                                    selectedNoteType == "mst-note"
+                                      ? "text-primary"
+                                      : "text-gray-400 group-hover:text-gray-600"
+                                  } text-[10px]   absolute top-px left-0.5 flex items-center justify-center h-4 w-4  p-px rounded-full`}
+                                >
+                                  {item?.sub_pages?.length || ""}
+                                </small>
+                              ) : (
+                                <span></span>
+                              )}
+                            </div>
 
                             <div className="truncate font-medium text-xs lg:text-sm">
                               {item?.note_title}
@@ -254,7 +272,7 @@ const Sidebar = ({
                       <div
                         className={`ml-8 overflow-hidden transition-all duration-300 ${
                           isOpen
-                            ? "max-h-96 opacity-100 mt-1 "
+                            ? " opacity-100 mt-1 "
                             : "max-h-0 opacity-0"
                         }`}
                       >
