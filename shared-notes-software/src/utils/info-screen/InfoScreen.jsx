@@ -10,7 +10,7 @@ const InfoScreen = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[93vh] text-center px-4 py-12 bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-[93vh] select-none text-center px-4 py-12 bg-gray-50">
       {/* SVG Illustration */}
       <img
         src={emptyScreenSvg}

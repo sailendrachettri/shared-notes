@@ -20,7 +20,7 @@ const ServerNotFound = () => {
   return (
     <div
       data-tauri-drag-region
-      className="flex flex-col items-center justify-center h-screen bg-[#F2F3F5] text-slate-800"
+      className="flex flex-col select-none items-center justify-center h-screen bg-[#F2F3F5] text-slate-800"
       style={{ fontFamily: "Arial, sans-serif" }}
     >
       <div className="loader"></div>
