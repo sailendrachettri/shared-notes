@@ -87,7 +87,40 @@ textarea {
 }
 
 /* -----------------------------------------------loadings----------------------------------------------- */
-/* HTML: <div className="loader"></div> */
+/* for the sync dots loading animation*/
+.sync-loader {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.sync-loader span {
+  width: 3px;
+  height: 3px;
+  background-color: #45556c;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.sync-loader span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.sync-loader span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+
+/* generic loader */
+
 .loader {
   width: 50px;
   aspect-ratio: 1.154;

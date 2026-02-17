@@ -11,6 +11,8 @@ function App() {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [serverStatus, setServerStatus] = useState(null); // null = loading, true = ok, false = error
   const intervalRef = useRef(null); // store interval ID
+   const [autoFetchStatus, setAutoFetchStatus] = useState(false); 
+
 
   const handleServerNetworkCheck = async () => {
     try {
@@ -40,6 +42,7 @@ function App() {
 
     // Then retry every 10 seconds
     intervalRef.current = setInterval(() => {
+     
       handleServerNetworkCheck();
     }, 10000);
 
@@ -48,6 +51,14 @@ function App() {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
+
+  useEffect(()=>{
+    if(autoFetchStatus){
+      setTimeout(() => {
+        setAutoFetchStatus(false);
+      }, 5000);
+    }
+  }, [autoFetchStatus]);
 
 
 
@@ -60,9 +71,10 @@ function App() {
       <Navbar
         setToggleSidebar={setToggleSidebar}
         toggleSidebar={toggleSidebar}
+        autoFetchStatus={autoFetchStatus} 
       />
       <section>
-        {serverStatus === true && <Home toggleSidebar={toggleSidebar} />}
+        {serverStatus === true && <Home autoFetchStatus={autoFetchStatus} setAutoFetchStatus ={setAutoFetchStatus} toggleSidebar={toggleSidebar} />}
       
       </section>
     </>

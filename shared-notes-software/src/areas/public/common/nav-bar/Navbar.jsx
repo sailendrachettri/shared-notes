@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Navbar = ({ setToggleSidebar, toggleSidebar }) => {
+const Navbar = ({ setToggleSidebar, toggleSidebar, autoFetchStatus }) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -50,6 +50,19 @@ const Navbar = ({ setToggleSidebar, toggleSidebar }) => {
         <div className="flex items-center gap-2 ">
           <img src={logo} className="h-6 w-auto " />
           <span className="text-sm font-medium ">SharedNotes</span>
+        </div>
+
+        <div>
+          {autoFetchStatus && (
+            <div className="text-sm text-slate-600">
+              Syncing{" "}
+              <span class="sync-loader">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Right side - Window Controls */}

@@ -27,6 +27,7 @@ const Sidebar = ({
   setActive,
   sortBy,
   sortDirection,
+  autoFetchStatus, setAutoFetchStatus
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -34,6 +35,7 @@ const Sidebar = ({
   const [subPageTitle, setSubPageTitle] = useState("");
   const [openNotes, setOpenNotes] = useState({});
   const [submitting, setSubmitting] = useState(false);
+   
 
   const handleFetchAllItemList = async () => {
     /**
@@ -132,14 +134,16 @@ const Sidebar = ({
     handleFetchAllItemList();
   }, [refresh, searchText, sortBy, sortDirection]);
 
+  // Auto fetch
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
         handleFetchAllItemList();
+        setAutoFetchStatus(true);
       } catch (err) {
         console.error("Auto fetch failed");
       }
-    }, 30000); // every 30 seconds
+    }, 100000); // every 100 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -155,16 +159,18 @@ const Sidebar = ({
 
   return (
     <>
+
       <aside className="h-full flex flex-col mt-2">
+        
         {/* Project List */}
         {loading ? (
           <div className="w-full h-[60vh] flex items-center justify-center">
             <div className="loader"></div>
           </div>
         ) : (
-          <section className="h-full w-full">
+          <section className="h-full w-full ">
             {sidebarItems != null && sidebarItems?.length > 0 ? (
-              <div className="flex-1 overflow-y-auto space-y-1 min-h-[78vh] pb-10">
+              <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {sidebarItems?.map((item) => {
                   const isOpen = openNotes[item?.note_id];
 
@@ -402,6 +408,8 @@ const Sidebar = ({
           />
         </div>
       )}
+
+     
     </>
   );
 };
