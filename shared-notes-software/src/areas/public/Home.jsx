@@ -4,17 +4,19 @@ import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
-const Home = ({toggleSidebar}) => {
+const Home = ({ toggleSidebar }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
   const [searchText, setSearchText] = useState(null);
- 
+
   const [noteHeading, setNoteHeading] = useState("");
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
   const [selectedNoteType, setSelectedNoteType] = useState("");
   const [active, setActive] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [sortBy, setSortBy] = useState("title");
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -22,8 +24,6 @@ const Home = ({toggleSidebar}) => {
       <div className="h-full flex flex-col gap-3">
         {/* Main Section */}
         <div className="flex flex-1 gap-3 overflow-hidden ">
-         
-
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
             <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
@@ -35,6 +35,10 @@ const Home = ({toggleSidebar}) => {
                 setNoteHeading={setNoteHeading}
                 setActive={setActive}
                 setSelectedNoteType={setSelectedNoteType}
+                sortBy={sortBy}
+                sortDirection={sortDirection}
+                setSortBy={setSortBy}
+                setSortDirection={setSortDirection}
               />
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar
@@ -52,6 +56,8 @@ const Home = ({toggleSidebar}) => {
                   selectedNoteType={selectedNoteType}
                   active={active}
                   setActive={setActive}
+                  sortBy={sortBy}
+                  sortDirection={sortDirection}
                 />
               </div>
             </div>

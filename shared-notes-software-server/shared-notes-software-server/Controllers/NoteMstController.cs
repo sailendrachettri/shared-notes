@@ -19,11 +19,15 @@ namespace shared_notes_software_server.Controllers
         public async Task<IActionResult> GetNotes([FromBody] GetNoteRequest request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.get_notes_item_list(@search_text);",
+                "SELECT public.get_notes_item_list(@search_text, @sort_by, @sort_dir);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("search_text",
                         request.SearchText ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("sort_by",
+                        request.SortBy ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("sort_dir",
+                        request.SortDirection ?? (object)DBNull.Value);
                 }
             );
 

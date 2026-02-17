@@ -8,6 +8,8 @@
     public class GetNoteRequest
     {
         public string? SearchText { get; set; }
+        public string? SortBy { get; set; }
+        public string? SortDirection { get; set; }
     }
 
     public class DeleteNoteRequest

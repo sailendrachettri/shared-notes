@@ -24,6 +24,8 @@ const Sidebar = ({
   selectedNoteType,
   active,
   setActive,
+  sortBy,
+  sortDirection,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -33,9 +35,15 @@ const Sidebar = ({
   const [submitting, setSubmitting] = useState(false);
 
   const handleFetchAllItemList = async () => {
+    /**
+     * sort_by_i TEXT,      -- 'title' or 'created_at'
+     * sort_dir_i TEXT      -- 'asc' or 'desc'
+     */
     try {
       const payload = {
         SearchText: searchText || null,
+        SortBy: sortBy,
+        SortDirection: sortDirection,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
 
@@ -121,7 +129,7 @@ const Sidebar = ({
 
   useEffect(() => {
     handleFetchAllItemList();
-  }, [refresh, searchText]);
+  }, [refresh, searchText, sortBy, sortDirection]);
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -146,7 +154,7 @@ const Sidebar = ({
 
   return (
     <>
-      <aside className="h-full flex flex-col">
+      <aside className="h-full flex flex-col mt-2">
         {/* Project List */}
         {loading ? (
           <div className="w-full h-[60vh] flex items-center justify-center">
@@ -155,7 +163,7 @@ const Sidebar = ({
         ) : (
           <section className="h-full w-full">
             {sidebarItems != null && sidebarItems?.length > 0 ? (
-              <div className="flex-1 overflow-y-auto px-4 space-y-1 min-h-[90vh]">
+              <div className="flex-1 overflow-y-auto space-y-1 min-h-[90vh] pb-10">
                 {sidebarItems?.map((item) => {
                   const isOpen = openNotes[item.note_id];
 
@@ -164,7 +172,7 @@ const Sidebar = ({
                       {/* Note Button */}
                       <button
                         onClick={() => handleSelectNote(item)}
-                        className={`group w-full capitalize text-sm text-left px-3 py-2 cursor-pointer rounded-lg transition-all duration-200
+                        className={`group w-full capitalize text-sm text-left px-2 py-1.5 cursor-pointer rounded-lg transition-all duration-200
             ${
               active === item?.note_id && selectedNoteType == "mst-note"
                 ? "bg-primary/10 text-primary"
@@ -203,7 +211,7 @@ const Sidebar = ({
                             )}
 
                             <PiNotebookLight
-                              size={18}
+                              size={16}
                               className={`shrink-0 ${
                                 active === item?.note_id &&
                                 selectedNoteType == "mst-note"

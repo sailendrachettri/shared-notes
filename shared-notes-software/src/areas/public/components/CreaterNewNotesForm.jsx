@@ -3,6 +3,14 @@ import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { HiOutlineViewGridAdd, HiOutlineSearch } from "react-icons/hi";
+import { BiSolidMessageRoundedAdd } from "react-icons/bi";
+import { BiSolidCommentAdd } from "react-icons/bi";
+import { TbAbc } from "react-icons/tb";
+import { IoTimerOutline } from "react-icons/io5";
+import { RiArrowUpDownLine } from "react-icons/ri";
+import { HiArrowSmUp, HiArrowSmDown } from "react-icons/hi";
+import { FaArrowUpLong } from "react-icons/fa6";
+import { FaArrowDownLong } from "react-icons/fa6";
 
 const CreaterNewNotesForm = ({
   setRefresh,
@@ -11,10 +19,18 @@ const CreaterNewNotesForm = ({
   setCurrentNotesId,
   setNoteHeading,
   setActive,
-  setSelectedNoteType
+  setSelectedNoteType,
+  sortBy,
+  setSortBy,
+  sortDirection,
+  setSortDirection,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+
+  const toggleSortDirection = () => {
+    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +43,14 @@ const CreaterNewNotesForm = ({
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
       console.log(res);
 
-      if(res?.data?.success == true && res?.data?.status == 'CREATED'){
-        setSelectedNoteType('mst-note');
-        setNoteHeading(res?.data?.note_title)
+      if (res?.data?.success == true && res?.data?.status == "CREATED") {
+        setSelectedNoteType("mst-note");
+        setNoteHeading(res?.data?.note_title);
         setCurrentNotesId(res?.data?.notes_id);
-        setActive(res?.data?.mst_note_id)
-        setSelectedNoteId(res?.data?.mst_note_id); /* mst_note_id is same as note_id same as note_or_sub_page_id */
+        setActive(res?.data?.mst_note_id);
+        setSelectedNoteId(
+          res?.data?.mst_note_id,
+        ); /* mst_note_id is same as note_id same as note_or_sub_page_id */
       }
 
       setTitle("");
@@ -57,18 +75,13 @@ const CreaterNewNotesForm = ({
 
   return (
     <div>
-      <div className="flex items-center justify-center pe-6 border-b border-gray-200">
-        <h2 className="text-sm p-2 font-semibold text-gray-800">All Notes</h2>
-      </div>
-
-      <div className="p-2 border-t border-gray-200">
+      <div className="mb-3 mt-5">
         <button
           onClick={() => setIsOpen(true)}
-          className="w-full bg-primary hover:bg-primary/90 text-white py-2 rounded-md transition"
+          className="h-12 w-12 absolute bottom-16 left-56 z-40 cursor-pointer rounded-full bg-primary  text-white py-2  shadow-lg shadow-primary/40 hover:shadow-primary/80 duration-150 transition"
         >
           <span className="flex items-center justify-center gap-x-2 flex-nowrap">
-            <HiOutlineViewGridAdd size={20} />
-            <div className="text-sm lg:text-base"> Create Notes</div>
+            <BiSolidCommentAdd size={20} />
           </span>
         </button>
 
@@ -98,6 +111,44 @@ const CreaterNewNotesForm = ({
         transition
       "
             />
+
+            <div className="flex items-center justify-start gap-x-2 flex-nowrap absolute right-3 top-1/2 -translate-y-1/2">
+              {/* Sort By Title */}
+              <TbAbc
+                size={21}
+                className={`${sortBy === "title" ? "text-primary" : "text-gray-400"} cursor-pointer`}
+                onClick={() => setSortBy("title")}
+              />
+
+              {/* Sort By Created Time */}
+              <IoTimerOutline
+                size={18}
+                className={`${sortBy === "created_at" ? "text-primary" : "text-gray-400"} cursor-pointer`}
+                onClick={() => setSortBy("created_at")}
+              />
+
+              {/* Toggle Direction */}
+              <div
+                onClick={() =>
+                  setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+                className="flex items-center cursor-pointer"
+              >
+                <FaArrowUpLong
+                  size={11}
+                  className={`transition-colors duration-200 translate-x-0.5 ${
+                    sortDirection === "asc" ? "text-primary" : "text-gray-400"
+                  }`}
+                />
+
+                <FaArrowDownLong
+                  size={11}
+                  className={`transition-colors duration-200 ${
+                    sortDirection === "desc" ? "text-primary" : "text-gray-400"
+                  }`}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
