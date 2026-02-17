@@ -272,7 +272,7 @@ const Sidebar = ({
                       <div
                         className={`ml-8 overflow-hidden transition-all duration-300 ${
                           isOpen
-                            ? " opacity-100 mt-1 "
+                            ? " opacity-100"
                             : "max-h-0 opacity-0"
                         }`}
                       >
