@@ -33,7 +33,10 @@
             "core:window:allow-is-maximized",
             "core:event:allow-listen",
             "core:event:default",
-            "core:event:allow-unlisten"
+            "core:event:allow-unlisten",
+            "core:window:allow-set-size",        
+           "core:window:allow-set-min-size",   
+           "core:window:allow-set-max-size"
           ]
         }
       ]

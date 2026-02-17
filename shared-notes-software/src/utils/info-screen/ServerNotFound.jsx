@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ServerNotFound = () => {
   const [countdown, setCountdown] = useState(30); // seconds
@@ -19,6 +19,7 @@ const ServerNotFound = () => {
 
   return (
     <div
+      data-tauri-drag-region
       className="flex flex-col items-center justify-center h-screen bg-[#F2F3F5] text-slate-800"
       style={{ fontFamily: "Arial, sans-serif" }}
     >
@@ -27,7 +28,6 @@ const ServerNotFound = () => {
         Server offline. Retrying in{" "}
         <span className="font-mono text-primary">{countdown}</span> sec...
       </p>
-     
     </div>
   );
 };
