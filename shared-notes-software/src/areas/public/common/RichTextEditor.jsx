@@ -513,16 +513,16 @@ const RichTextEditor = ({
   const handleFileSelected = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // console.log(file);
+    (file);
 
     try {
-      // console.log("here");
+      ("here");
       const formData = new FormData();
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      // console.log("res ", res);
+      ("res ", res);
       const uploadedUrl = res.data[0];
 
       const payload =
@@ -536,7 +536,7 @@ const RichTextEditor = ({
           : CHANGE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-      // console.log(res);
+      (res);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -559,7 +559,7 @@ const RichTextEditor = ({
           : REMOVE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-      // console.log(res);
+      (res);
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         toast.success("Cover image removed");
       }
@@ -602,16 +602,16 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // console.log(file);
+    (file);
 
     try {
-      // console.log("here");
+      ("here");
       const formData = new FormData();
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      // console.log("res ", res);
+      ("res ", res);
       const uploadedUrl = res.data[0];
 
       const payload =
@@ -625,7 +625,7 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      // console.log(res);
+      (res);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -690,15 +690,15 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // console.log(fullData);
-  // console.log(coverImage);
-  // console.log(coverIcon);
+  (fullData);
+  (coverImage);
+  (coverIcon);
 
-  // console.log(shouldShowCover);
-  // console.log(shouldShowIcon);
+  (shouldShowCover);
+  (shouldShowIcon);
 
-  // console.log(selectedNoteId);
-  // console.log(heading);
+  (selectedNoteId);
+  (heading);
 
   return (
     <div className="notion-editor-wrapper">
