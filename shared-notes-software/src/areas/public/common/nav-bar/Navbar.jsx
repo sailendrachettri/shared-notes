@@ -56,7 +56,7 @@ const Navbar = ({ setToggleSidebar, toggleSidebar, autoFetchStatus }) => {
           {autoFetchStatus && (
             <div className="text-sm text-slate-600">
               Syncing{" "}
-              <span class="sync-loader">
+              <span className="sync-loader">
                 <span></span>
                 <span></span>
                 <span></span>

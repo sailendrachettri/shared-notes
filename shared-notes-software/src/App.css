@@ -52,31 +52,6 @@ textarea {
   display: none; /* Chrome, Safari */
 }
 
-/*------------------------------------------------- FOR REACT QUILL -------------------------------------------------*/
-
-/* Make quill take full height */
-.ql-container {
-  flex: 1 !important;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Scroll only editor area */
-.ql-editor {
-  flex: 1;
-  overflow-y: auto;
-}
-
-/* Fix toolbar */
-.ql-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
 /* -------------------------------------------------auto save------------------------------------------------- */
 @keyframes fadeIn {
   from {
@@ -192,7 +167,6 @@ textarea {
 }
 
 .notion-editor-container {
-  max-width: 1080px;
   margin: 0 auto;
 }
 
