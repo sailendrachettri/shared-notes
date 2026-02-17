@@ -15,8 +15,8 @@ const Home = ({ toggleSidebar }) => {
   const [isSubPage, setIsSubPage] = useState(false);
   const [selectedNoteType, setSelectedNoteType] = useState("");
   const [active, setActive] = useState(null);
-  const [sortDirection, setSortDirection] = useState("asc");
-  const [sortBy, setSortBy] = useState("title");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [sortBy, setSortBy] = useState("created_at");
 
   return (
     <div className="h-screen bg-gray-100 p-3">
