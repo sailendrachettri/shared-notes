@@ -164,7 +164,7 @@ const Sidebar = ({
         ) : (
           <section className="h-full w-full">
             {sidebarItems != null && sidebarItems?.length > 0 ? (
-              <div className="flex-1 overflow-y-auto space-y-1 min-h-[90vh] pb-10">
+              <div className="flex-1 overflow-y-auto space-y-1 min-h-[78vh] pb-10">
                 {sidebarItems?.map((item) => {
                   const isOpen = openNotes[item?.note_id];
 
