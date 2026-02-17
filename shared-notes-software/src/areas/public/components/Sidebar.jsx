@@ -46,7 +46,7 @@ const Sidebar = ({
         SortDirection: sortDirection,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-
+      console.log(res?.data);
       setSidebarItems(res?.data?.data || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
@@ -77,7 +77,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log(note);
+    // console.log(note);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
@@ -86,7 +86,7 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log(subNote);
+    // console.log(subNote);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");
@@ -103,7 +103,7 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      console.log(res);
+      // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteId(res?.data?.sub_page_id);
@@ -165,13 +165,19 @@ const Sidebar = ({
             {sidebarItems != null && sidebarItems?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[90vh] pb-10">
                 {sidebarItems?.map((item) => {
-                  const isOpen = openNotes[item.note_id];
+                  const isOpen = openNotes[item?.note_id];
 
                   return (
-                    <div key={item.note_id} className="relative">
+                    <div key={item?.note_id} className="relative">
                       {/* Note Button */}
                       <button
-                        onClick={() => handleSelectNote(item)}
+                        onClick={() => {
+                          handleSelectNote(item);
+                          setOpenNotes((prev) => ({
+                            ...prev,
+                            [item?.note_id]: !prev[item?.note_id],
+                          }));
+                        }}
                         className={`group w-full capitalize text-sm text-left px-2 py-1.5 cursor-pointer rounded-lg transition-all duration-200
             ${
               active === item?.note_id && selectedNoteType == "mst-note"
@@ -183,13 +189,13 @@ const Sidebar = ({
                           {/* Left Content */}
                           <div className="flex items-center gap-2 min-w-0">
                             {/* Expand Arrow */}
-                            {item?.sub_pages?.length > 0 ? (
+                            {/* {item?.sub_pages?.length > 0 ? (
                               <div
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setOpenNotes((prev) => ({
                                     ...prev,
-                                    [item.note_id]: !prev[item.note_id],
+                                    [item?.note_id]: !prev[item?.note_id],
                                   }));
                                 }}
                                 className="p-1 rounded hover:bg-primary/5 transition"
@@ -208,7 +214,7 @@ const Sidebar = ({
                               </div>
                             ) : (
                               <div className="pl-5"></div>
-                            )}
+                            )} */}
 
                             <PiNotebookLight
                               size={16}
@@ -292,7 +298,7 @@ const Sidebar = ({
                               setOpenMenu(null);
                               setOpenNotes((prev) => ({
                                 ...prev,
-                                [item.note_id]: true,
+                                [item?.note_id]: true,
                               }));
                             }}
                             className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
