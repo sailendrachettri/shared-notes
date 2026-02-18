@@ -786,7 +786,7 @@ const RichTextEditor = ({
             {!shouldShowIcon && (
               <button
                 onClick={handleChangeIconClick}
-                className="flex items-center gap-2 px-4 py-[5px]
+                className="flex items-center gap-2 px-4 py-1.25
            text-[11px] text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
@@ -800,7 +800,7 @@ const RichTextEditor = ({
             {!shouldShowCover && (
               <button
                 onClick={handleChangeCoverClick}
-                className="flex items-center gap-2 px-4 py-[5px]
+                className="flex items-center gap-2 px-4 py-1.25
            text-[11px] text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
