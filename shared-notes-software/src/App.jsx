@@ -45,19 +45,25 @@ function App() {
     };
   }, []);
 
-  // ✅ Control window size based on server status
+  // Control window size based on server status
   useEffect(() => {
-    if (serverStatus === true) {
-      appWindow.setSize(new LogicalSize(1080, 650));
-    } else if (serverStatus === false) {
-      appWindow.setSize(new LogicalSize(480, 360));
-    }
+    const resizeAndCenter = async () => {
+      if (serverStatus === true) {
+        await appWindow.setSize(new LogicalSize(1080, 650));
+      } else {
+        await appWindow.setSize(new LogicalSize(480, 360));
+      }
+
+      await appWindow.center(); // 👈 center after resizing
+    };
+
+    resizeAndCenter();
   }, [serverStatus]);
 
   useEffect(() => {
     if (autoFetchStatus) {
       const t = setTimeout(() => setAutoFetchStatus(false), 5000);
-      return () => clearTimeout(t); // ✅ also clean this up
+      return () => clearTimeout(t);
     }
   }, [autoFetchStatus]);
 
