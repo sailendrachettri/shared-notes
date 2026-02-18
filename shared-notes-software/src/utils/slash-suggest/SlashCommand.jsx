@@ -163,7 +163,7 @@ export const SlashCommand = Extension.create({
             {
               title: "Table",
               description: "Insert a table",
-              keywords: ["table", "ta", "tab", "t"],
+              keywords: ["table", "ta", "tab", "t", "tb", "tbl"],
               icon: "⊞",
               command: ({ editor, range }) => {
                 editor

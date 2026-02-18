@@ -11,6 +11,7 @@ import { RiArrowUpDownLine } from "react-icons/ri";
 import { HiArrowSmUp, HiArrowSmDown } from "react-icons/hi";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
+import { LuRefreshCw } from "react-icons/lu";
 
 const CreaterNewNotesForm = ({
   setRefresh,
@@ -27,10 +28,9 @@ const CreaterNewNotesForm = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [pageReload, setPageReload] = useState(false);
 
-  const toggleSortDirection = () => {
-    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ const CreaterNewNotesForm = ({
         NoteTitle: title || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      (res);
+      res;
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");
@@ -64,6 +64,13 @@ const CreaterNewNotesForm = ({
     }
   };
 
+  const handlePageRefresh = () => {
+    setPageReload(true);
+
+    setTimeout(() => {
+      setPageReload(false);
+    }, 2000);
+  };
   // Close on ESC
   useEffect(() => {
     const handleEsc = (e) => {
@@ -88,17 +95,17 @@ const CreaterNewNotesForm = ({
         <div className="mt-2">
           <div className="relative">
             <HiOutlineSearch
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              size={17}
+              className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"
             />
 
             <input
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
-              placeholder="Search notes..."
+              placeholder={`${pageReload ? 'Syncing notes' : 'Search notes'} `}
               className="
         w-full
-        pl-10 pr-4 py-2.5
+        pl-8 pr-4 py-2.5
         rounded-md
          border-none
         bg-gray-50
@@ -114,6 +121,12 @@ const CreaterNewNotesForm = ({
 
             <div className="flex items-center justify-start gap-x-2 flex-nowrap absolute right-3 top-1/2 -translate-y-1/2">
               {/* Sort By Title */}
+
+              <LuRefreshCw
+                size={16}
+                className={`${pageReload? "text-primary animate-spin" : "text-gray-400"} cursor-pointer`}
+                onClick={handlePageRefresh}
+              />
               <TbAbc
                 size={21}
                 className={`${sortBy === "title" ? "text-primary" : "text-gray-400"} cursor-pointer`}

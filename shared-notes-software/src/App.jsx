@@ -16,6 +16,16 @@ function App() {
   const intervalRef = useRef(null);
   const [autoFetchStatus, setAutoFetchStatus] = useState(false);
 
+  const currrentEnvironment = window.location.host;
+
+  console.log(currrentEnvironment);
+
+  if (currrentEnvironment?.includes("localhost")) {
+    console.log(currrentEnvironment);
+  } else {
+    console.log("outside", currrentEnvironment);
+  }
+
   const handleServerNetworkCheck = async () => {
     try {
       const res = await axiosInstance.post(CHECK_SERVER_NETWORK, {
@@ -57,6 +67,37 @@ function App() {
 
     resizeAndCenter();
   }, [serverStatus]);
+
+  // Keyboard shortcut to refresh block
+  useEffect(() => {
+    if (currrentEnvironment?.includes("localhost")) {
+      console.info("Allowing page reloading in development");
+      return;
+    }
+
+    const handleKeyDown = (e) => {
+      // F5
+      if (e.key === "F5") {
+        e.preventDefault();
+      }
+
+      // Ctrl + R (Windows/Linux)
+      if (e.ctrlKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+      }
+
+      // Cmd + R (Mac)
+      if (e.metaKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     if (autoFetchStatus) {
