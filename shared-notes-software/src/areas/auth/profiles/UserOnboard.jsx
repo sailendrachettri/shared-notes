@@ -4,6 +4,9 @@ import { FaTimes, FaUser } from "react-icons/fa";
 import PinInput from "./PinInput";
 import Stepper from "./Stepper";
 import { IoChevronBackCircleOutline } from "react-icons/io5";
+import { axiosInstance } from "../../../api/axios";
+import { ADD_USER_URL } from "../../../api/api_routes";
+import toast from "react-hot-toast";
 
 export default function UserOnboard({ open, onClose }) {
   const [fullName, setFullName] = useState("");
@@ -22,18 +25,28 @@ export default function UserOnboard({ open, onClose }) {
 
   const handleBack = () => setStep(step - 1);
 
-  const handleSubmit = () => {
-    if (confirmPin.length !== 4) return alert("PIN must be 4 digits");
-    if (pin !== confirmPin) return alert("PINs do not match");
+  const handleSubmit = async () => {
+    try {
+      if (confirmPin.length !== 4) return toast.error("PIN must be 4 digits");
+      if (pin !== confirmPin) return toast.error("PINs do not match");
 
-    const payload = { fullName, pin };
-    console.log("Final Payload:", payload);
-    alert("Registered Successfully!");
-    onClose();
-    setFullName("");
-    setPin("");
-    setConfirmPin("");
-    setStep(1);
+      const payload = { UserName: fullName, UserPassword: pin.toString() };
+
+      const res = await axiosInstance.post(ADD_USER_URL, payload);
+      console.log(res);
+
+      console.log("Final Payload:", payload);
+
+      // onClose();
+      // setFullName("");
+      // setPin("");
+      // setConfirmPin("");
+      // setStep(1);
+    } catch (error) {
+      console.error("not able to create user", error);
+      toast.error("Can't create at the moment");
+    } finally {
+    }
   };
 
   return (
