@@ -498,11 +498,11 @@ const RichTextEditor = ({
         </div>
 
         {/* Editor Content */}
-        <div className="notion-editor-container">
-          {editor && <FormattingMenu editor={editor} />}
-          {editor && <TableMenu editor={editor} />}
-          <EditorContent editor={editor} />
-        </div>
+       <div className="notion-editor-container" style={{ position: "relative" }}>
+  {editor && <FormattingMenu editor={editor} />}
+  {editor && <TableMenu editor={editor} />}
+  <EditorContent editor={editor} />
+</div>
       </div>
 
       {/* Input for icon and image hiddden by default */}

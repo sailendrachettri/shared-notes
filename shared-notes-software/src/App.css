@@ -424,39 +424,12 @@ textarea {
   color: #1d4ed8;
 }
 
-/* Table Styles */
-.notion-editor-content .editor-table {
+/* Table */
+.notion-editor-container table,
+.notion-editor-container td,
+.notion-editor-container th {
+  border: 1px solid #e0e0e0 !important;
   border-collapse: collapse;
-  table-layout: fixed;
-  width: 100%;
-  margin: 1rem 0;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-}
-
-.notion-editor-content .editor-table td,
-.notion-editor-content .editor-table th {
-  min-width: 1em;
-  border: 1px solid #e5e7eb;
-  padding: 0.5rem 0.75rem;
-  vertical-align: top;
-  box-sizing: border-box;
-  position: relative;
-}
-
-.notion-editor-content .editor-table th {
-  font-weight: 600;
-  text-align: left;
-  background-color: #f9fafb;
-}
-
-.notion-editor-content .editor-table .selectedCell {
-  background-color: #dbeafe;
-}
-
-.notion-editor-content .editor-table p {
-  margin: 0;
 }
 
 /* Formatting Menu (Selection Menu) */
