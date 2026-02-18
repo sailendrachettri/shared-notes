@@ -395,7 +395,7 @@ const Sidebar = ({
                   }}
                   className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                 >
-                  {`${submitting ? "Creating.." : "Create"}`}
+                  {`${submitting ? "Creating.." : "Create"}`} 
                 </button>
               </div>
             </div>

@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { HiOutlineViewGridAdd, HiOutlineSearch } from "react-icons/hi";
-import { BiSolidMessageRoundedAdd } from "react-icons/bi";
+import { HiOutlineSearch } from "react-icons/hi";
+
 import { BiSolidCommentAdd } from "react-icons/bi";
 import { TbAbc } from "react-icons/tb";
 import { IoTimerOutline } from "react-icons/io5";
-import { RiArrowUpDownLine } from "react-icons/ri";
-import { HiArrowSmUp, HiArrowSmDown } from "react-icons/hi";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { LuRefreshCw } from "react-icons/lu";
@@ -29,11 +27,11 @@ const CreaterNewNotesForm = ({
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [pageReload, setPageReload] = useState(false);
-
- 
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       if (!title.trim()) return;
 
@@ -60,14 +58,17 @@ const CreaterNewNotesForm = ({
       console.error("Not able to create new note");
       toast.error("Can't create new note");
     } finally {
-      setRefresh((prev) => !prev);
+      setTimeout(() => {
+        setRefresh((prev) => !prev);
+        setSubmitting(false);
+      }, 500);
     }
   };
 
   const handlePageRefresh = () => {
     setPageReload(true);
 
-    setRefresh(prev => !prev);
+    setRefresh((prev) => !prev);
 
     setTimeout(() => {
       setPageReload(false);
@@ -104,7 +105,7 @@ const CreaterNewNotesForm = ({
             <input
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
-              placeholder={`${pageReload ? 'Syncing notes' : 'Search notes'} `}
+              placeholder={`${pageReload ? "Syncing notes" : "Search notes"} `}
               className="
         w-full
         pl-8 pr-4 py-2.5
@@ -126,7 +127,7 @@ const CreaterNewNotesForm = ({
 
               <LuRefreshCw
                 size={16}
-                className={`${pageReload? "text-primary animate-spin" : "text-gray-400"} cursor-pointer`}
+                className={`${pageReload ? "text-primary animate-spin" : "text-gray-400"} cursor-pointer`}
                 onClick={handlePageRefresh}
               />
               <TbAbc
@@ -195,11 +196,21 @@ const CreaterNewNotesForm = ({
                   Cancel
                 </button>
 
-                <button
+                {/* <button
                   type="submit"
                   className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition"
                 >
                   Create
+                </button> */}
+                <button
+                  disabled={submitting}
+                  // type="submit"
+                  onClick={() => {
+                    handleAddSubPage();
+                  }}
+                  className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
+                >
+                  {`${submitting ? "Creating.." : "Create"}`}
                 </button>
               </div>
             </form>
