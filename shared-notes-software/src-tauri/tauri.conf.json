@@ -37,7 +37,8 @@
             "core:event:allow-unlisten",
             "core:window:allow-set-size",        
            "core:window:allow-set-min-size",   
-           "core:window:allow-set-max-size"
+           "core:window:allow-set-max-size",
+           "store:default"
           ]
         }
       ]

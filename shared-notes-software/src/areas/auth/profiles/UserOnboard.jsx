@@ -7,12 +7,14 @@ import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_USER_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
+import { load } from "@tauri-apps/plugin-store";
 
-export default function UserOnboard({ open, onClose }) {
+export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [step, setStep] = useState(1); // 1 = fullName, 2 = pin, 3 = confirmPin
+  const [submitting, setSubmitting] = useState(false);
 
   const steps = ["Full Name", "Set PIN", "Confirm PIN"];
 
@@ -26,6 +28,8 @@ export default function UserOnboard({ open, onClose }) {
   const handleBack = () => setStep(step - 1);
 
   const handleSubmit = async () => {
+    setSubmitting(true);
+
     try {
       if (confirmPin.length !== 4) return toast.error("PIN must be 4 digits");
       if (pin !== confirmPin) return toast.error("PINs do not match");
@@ -35,17 +39,30 @@ export default function UserOnboard({ open, onClose }) {
       const res = await axiosInstance.post(ADD_USER_URL, payload);
       console.log(res);
 
-      console.log("Final Payload:", payload);
+      if (res?.data?.success == true && res?.data?.status == "CREATED") {
+        setIsUserLoggedIn(true);
+        toast.success("User Registration Successful!");
+        onClose();
+        setFullName("");
+        setPin("");
+        setConfirmPin("");
+        setStep(1);
+        const store = await load("user-store.json", { autoSave: true });
+        await store.set("user", {
+          isLoggedIn: true,
+          userId: res?.data?.user_id,
+          user_name: res?.data?.user_name,
+        });
+      } else {
+        toast.error("Can't create user at the moment");
+      }
 
-      // onClose();
-      // setFullName("");
-      // setPin("");
-      // setConfirmPin("");
-      // setStep(1);
+      console.log("Final Payload:", payload);
     } catch (error) {
       console.error("not able to create user", error);
       toast.error("Can't create at the moment");
     } finally {
+      setSubmitting(false);
     }
   };
 
@@ -154,7 +171,7 @@ export default function UserOnboard({ open, onClose }) {
                   >
                     <IoChevronBackCircleOutline size={18} /> Back
                   </button>
-                  <button
+                  {/* <button
                     onClick={handleSubmit}
                     disabled={confirmPin.length !== 4}
                     className={`py-2 px-4 rounded-xl text-white transition ${
@@ -164,6 +181,14 @@ export default function UserOnboard({ open, onClose }) {
                     }`}
                   >
                     Confirm Registration
+                  </button> */}
+
+                  <button
+                    disabled={submitting || confirmPin?.length !== 4}
+                    onClick={handleSubmit}
+                    className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
+                  >
+                    {`${submitting ? "Registering.." : "Confirm Registration"}`}
                   </button>
                 </div>
               </div>

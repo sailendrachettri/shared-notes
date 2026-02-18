@@ -8,6 +8,7 @@ import ServerNotFound from "./utils/info-screen/ServerNotFound";
 import LoadingPage from "./utils/info-screen/LoadingPage";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import UserOnboard from "./areas/auth/profiles/UserOnboard";
+import { load } from "@tauri-apps/plugin-store";
 
 const appWindow = getCurrentWindow();
 
@@ -18,8 +19,21 @@ function App() {
   const [autoFetchStatus, setAutoFetchStatus] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [openRegistrationWindow, setOpenRegistrationWindow] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const currrentEnvironment = window.location.host;
+
+  const handleLoadUser = async () => {
+    const store = await load("user-store.json", { autoSave: true });
+    const user = await store.get("user");
+    setUserData(user);
+
+    console.log(user.isLoggedIn);
+    console.log(user.userId);
+    console.log(user.user_name);
+
+    setIsUserLoggedIn(user.isLoggedIn);
+  };
 
   const handleServerNetworkCheck = async () => {
     try {
@@ -44,7 +58,7 @@ function App() {
 
   useEffect(() => {
     handleServerNetworkCheck();
-    
+
     intervalRef.current = setInterval(handleServerNetworkCheck, 10000);
     console.info("Connection to server again...");
     return () => {
@@ -98,11 +112,14 @@ function App() {
 
   useEffect(() => {
     if (autoFetchStatus) {
-      
       const t = setTimeout(() => setAutoFetchStatus(false), 5000);
       return () => clearTimeout(t);
     }
   }, [autoFetchStatus]);
+
+  useEffect(() => {
+    handleLoadUser();
+  }, [isUserLoggedIn]);
 
   if (serverStatus === null) return <LoadingPage />;
   if (serverStatus === false) return <ServerNotFound />;
@@ -115,6 +132,8 @@ function App() {
         autoFetchStatus={autoFetchStatus}
         isUserLoggedIn={isUserLoggedIn}
         setOpenRegistrationWindow={setOpenRegistrationWindow}
+        userData={userData}
+        setIsUserLoggedIn={setIsUserLoggedIn}
       />
       <section>
         <Home
@@ -124,7 +143,11 @@ function App() {
         />
       </section>
 
-      <UserOnboard open={openRegistrationWindow} onClose={() => setOpenRegistrationWindow(false)} />
+      <UserOnboard
+        setIsUserLoggedIn={setIsUserLoggedIn}
+        open={openRegistrationWindow}
+        onClose={() => setOpenRegistrationWindow(false)}
+      />
     </>
   );
 }

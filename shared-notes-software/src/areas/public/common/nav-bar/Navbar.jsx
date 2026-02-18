@@ -1,4 +1,3 @@
-import React from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import logo from "../../../../assets/pngs/logo.png";
 import {
@@ -11,16 +10,28 @@ import {
 } from "react-icons/vsc";
 import { useState } from "react";
 import { useEffect } from "react";
+import { load } from "@tauri-apps/plugin-store";
+import toast from "react-hot-toast";
 
 const Navbar = ({
   setToggleSidebar,
   toggleSidebar,
   autoFetchStatus,
   isUserLoggedIn,
-  setOpenRegistrationWindow
+  setOpenRegistrationWindow,
+  userData,
+  setIsUserLoggedIn,
 }) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
+
+  const handleLogoutUser = async () => {
+    const store = await load("user-store.json", { autoSave: true });
+    await store.delete("user");
+    setIsUserLoggedIn(false);
+    //  await store.clear(); // wipes everything in the store
+    toast.success("Logged out successfully!");
+  };
 
   useEffect(() => {
     const checkMaximized = async () => {
@@ -57,7 +68,22 @@ const Navbar = ({
         <div className="flex items-center gap-2 ">
           <img src={logo} className="h-6 w-auto " />
           <span className="text-sm font-medium">
-            SharedNotes <span onClick={()=>{setOpenRegistrationWindow(true)}} className="font-medium text-slate-800">{isUserLoggedIn ? "" : "(UNREGISTERED)"}</span>
+            SharedNotes{" "}
+            <span className="font-medium text-slate-800" data-tauri-drag-region={false}>
+              {isUserLoggedIn ? (
+                <span onClick={handleLogoutUser} className="ps-5">
+                  Hello, {userData?.user_name}
+                </span>
+              ) : (
+                <span
+                  onClick={() => {
+                    setOpenRegistrationWindow(true);
+                  }}
+                >
+                  (UNREGISTERED)
+                </span>
+              )}
+            </span>
           </span>
         </div>
 

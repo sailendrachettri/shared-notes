@@ -12,7 +12,7 @@ export default function PinInput({ value, onChange }) {
     onChange(newValue.join(""));
 
     // Move to next input
-    if (index < 5) inputsRef.current[index + 1].focus();
+    if (index < 5) inputsRef.current[index + 1]?.focus();
   };
 
   const handleKeyDown = (e, index) => {
@@ -22,7 +22,7 @@ export default function PinInput({ value, onChange }) {
       onChange(newValue.join(""));
 
       // Move back if empty
-      if (!value[index] && index > 0) inputsRef.current[index - 1].focus();
+      if (!value[index] && index > 0) inputsRef.current[index - 1]?.focus();
     }
   };
 
