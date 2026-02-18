@@ -289,7 +289,7 @@ const Sidebar = ({
                             }}
                             key={sub?.sub_page_id}
                             className={`
-                                flex items-center gap-2 mb-1
+                                flex items-center gap-2 my-1
                                 text-xs
                                 px-3 py-1.5
                                 rounded-md
