@@ -49,7 +49,7 @@ const Sidebar = ({
         SortDirection: sortDirection,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      console.log(res?.data);
+      
       setSidebarItems(res?.data?.data || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);

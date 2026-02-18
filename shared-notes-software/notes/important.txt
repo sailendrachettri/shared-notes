@@ -1,3 +1,8 @@
 /* mst_note_id is same as note_id same as note_or_sub_page_id */
 
 Hide scrollbar custom css: Written in App.css and RichTextEditor.jsx
+
+Encryption:
+ - only the notes is encrypted but not titles
+ - It is because we need title for searching/sorting etc  in the psql function
+ - So it is not good ideas to encrypt titles
