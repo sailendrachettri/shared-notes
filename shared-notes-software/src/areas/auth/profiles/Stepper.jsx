@@ -1,4 +1,12 @@
 import { motion } from "framer-motion";
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { MdOutlineLockPerson } from "react-icons/md";
+
+const iconsArray = [
+  <IoPersonCircleOutline size={20} className="text-slate-200" />,
+  <MdOutlineLockPerson size={20} className="text-slate-200" />,
+  <MdOutlineLockPerson size={20} className="text-slate-200" />,
+];
 
 export default function Stepper({ steps, step }) {
   const progress = ((step - 1) / (steps.length - 1)) * 100;
@@ -6,13 +14,17 @@ export default function Stepper({ steps, step }) {
   return (
     <div className="relative mb-6 px-4 sm:px-0">
       {/* Full background line */}
-      <div className="absolute top-4 left-0 right-0 h-1 bg-gray-300 rounded" />
+      <div
+        className="absolute top-4 h-1 bg-gray-300 rounded"
+        style={{ left: "1rem", right: "2rem" }}
+      />
 
       {/* Animated progress line */}
       <motion.div
-        className="absolute top-4 left-0 h-1 bg-primary rounded"
+        className="absolute top-4 h-1 bg-primary rounded"
+        style={{ left: "1rem" }} // start at first circle center
         initial={{ width: 0 }}
-        animate={{ width: `${progress}%` }}
+        animate={{ width: `calc(${progress}% - 2.1rem)` }} // stop at last circle center
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       />
 
@@ -30,13 +42,13 @@ export default function Stepper({ steps, step }) {
                   backgroundColor: isActive
                     ? "#d25564" // bg-primary
                     : isCompleted
-                    ? "#d25564" // bg-green-500
-                    : "#d1d5db", // bg-gray-300
-                  scale: isActive ? 1.2 : 1,
+                      ? "#d25564" // bg-green-500
+                      : "#d1d5db", // bg-gray-300
+                  scale: isActive ? 1.1 : 1,
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                {idx + 1}
+                {iconsArray[idx]}
               </motion.div>
               <span className="text-xs text-center mt-1">{s}</span>
             </div>

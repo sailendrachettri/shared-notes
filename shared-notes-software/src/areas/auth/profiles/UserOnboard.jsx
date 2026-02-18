@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaTimes, FaUser, FaArrowLeft } from "react-icons/fa";
+import { FaTimes, FaUser } from "react-icons/fa";
 import PinInput from "./PinInput";
 import Stepper from "./Stepper";
+import { IoChevronBackCircleOutline } from "react-icons/io5";
 
 export default function UserOnboard({ open, onClose }) {
   const [fullName, setFullName] = useState("");
@@ -69,19 +70,10 @@ export default function UserOnboard({ open, onClose }) {
 
             {/* Steps Indicator */}
             <div className="relative mb-6">
-              {/* Full line background */}
-              <div className="absolute top-4 left-0 w-full h-1 bg-gray-300 rounded"></div>
-
-              {/* Filled progress line */}
-              <div
-                className="absolute top-4 left-0 h-1 bg-primary rounded"
-                style={{
-                  width: `${((step - 1) / (steps.length - 1)) * 100}%`,
-                }}
-              ></div>
-
               {/* Step circles */}
-             <Stepper step={step} steps={steps} />
+              <div className="px-8">
+                <Stepper step={step} steps={steps} />
+              </div>
             </div>
 
             {/* Step Content */}
@@ -100,12 +92,14 @@ export default function UserOnboard({ open, onClose }) {
                 />
                 <div className="flex justify-between mt-4">
                   <div /> {/* Empty to align next button right */}
-                  {fullName?.length >= 3 && <button
-                    onClick={handleNext}
-                    className="bg-primary text-white py-2 px-4 rounded-xl hover:bg-primary/80 transition"
-                  >
-                    Next
-                  </button>}
+                  {fullName?.length >= 3 && (
+                    <button
+                      onClick={handleNext}
+                      className="bg-primary text-white py-2 px-4 rounded-xl hover:bg-primary/80 transition"
+                    >
+                      Next
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -117,9 +111,9 @@ export default function UserOnboard({ open, onClose }) {
                 <div className="flex justify-between mt-4">
                   <button
                     onClick={handleBack}
-                    className="bg-gray-300 text-black py-2 px-4 rounded-xl hover:bg-gray-400 transition flex items-center gap-1"
+                    className=" text-slate-600 py-2 px-4 border border-slate-200 cursor-pointer hover:bg-slate-50 rounded-xl  flex items-center gap-1"
                   >
-                    <FaArrowLeft /> Back
+                    <IoChevronBackCircleOutline size={18} /> Back
                   </button>
                   <button
                     onClick={handleNext}
@@ -143,9 +137,9 @@ export default function UserOnboard({ open, onClose }) {
                 <div className="flex justify-between mt-4">
                   <button
                     onClick={handleBack}
-                    className="bg-gray-300 text-black py-2 px-4 rounded-xl hover:bg-gray-400 transition flex items-center gap-1"
+                    className=" text-slate-600 py-2 px-4 border border-slate-200 cursor-pointer hover:bg-slate-50 rounded-xl  flex items-center gap-1"
                   >
-                    <FaArrowLeft /> Back
+                    <IoChevronBackCircleOutline size={18} /> Back
                   </button>
                   <button
                     onClick={handleSubmit}
