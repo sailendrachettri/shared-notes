@@ -5,4 +5,20 @@
         public string UserName { get; set; }
         public string UserPassword { get; set; }
     }
+
+    public class PinLoginModel
+    {
+        public string UserPassword { get; set; }
+    }
+
+
+
+    public class UserDto
+    {
+        public Guid user_id { get; set; }
+        public string user_name { get; set; }
+        public string user_password { get; set; }
+    }
+
+
 }

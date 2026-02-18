@@ -39,6 +39,66 @@ namespace shared_notes_software_server.Controllers
             return Content(jsonResult, "application/json");
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] PinLoginModel request)
+        {
+            if (string.IsNullOrWhiteSpace(request.UserPassword))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "PIN is required"
+                });
+            }
+
+            try
+            {
+                string sql = @"
+            SELECT user_id, user_password, user_name
+            FROM public.utbl_users;
+        ";
+
+                var users = await _db.ExecuteQueryListAsync<UserDto>(sql);
+
+                foreach (var user in users)
+                {
+                    bool isValid = PasswordHelper.VerifyPassword(
+                        request.UserPassword,
+                        user.user_password
+                    );
+
+                    if (isValid)
+                    {
+                        return Ok(new
+                        {
+                            success = true,
+                            message = "Login successful",
+                            user_id = user.user_id,
+                            user_name = user.user_name
+                        });
+                    }
+                }
+
+                return Unauthorized(new
+                {
+                    success = false,
+                    message = "Invalid PIN"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Server error",
+                    error = ex.Message
+                });
+            }
+        }
+
+
+
+
 
 
     }
