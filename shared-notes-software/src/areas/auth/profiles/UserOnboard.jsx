@@ -76,7 +76,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         UserPassword: pin,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-      console.log(res);
+      
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
         const store = await load("user-store.json", { autoSave: true });
