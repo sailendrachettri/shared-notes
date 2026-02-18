@@ -9,6 +9,7 @@ import { PiNotebookLight } from "react-icons/pi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
 import { BiBookAlt } from "react-icons/bi";
+import { LuBadgePlus } from "react-icons/lu";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -27,7 +28,8 @@ const Sidebar = ({
   setActive,
   sortBy,
   sortDirection,
-  autoFetchStatus, setAutoFetchStatus
+  autoFetchStatus,
+  setAutoFetchStatus,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -35,7 +37,6 @@ const Sidebar = ({
   const [subPageTitle, setSubPageTitle] = useState("");
   const [openNotes, setOpenNotes] = useState({});
   const [submitting, setSubmitting] = useState(false);
-   
 
   const handleFetchAllItemList = async () => {
     /**
@@ -49,7 +50,7 @@ const Sidebar = ({
         SortDirection: sortDirection,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      
+
       setSidebarItems(res?.data?.data || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
@@ -80,7 +81,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    (note);
+    note;
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
@@ -89,7 +90,7 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    (subNote);
+    subNote;
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");
@@ -106,7 +107,7 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      (res);
+      res;
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteId(res?.data?.sub_page_id);
@@ -159,9 +160,7 @@ const Sidebar = ({
 
   return (
     <>
-
       <aside className="h-full flex flex-col mt-2">
-        
         {/* Project List */}
         {loading ? (
           <div className="w-full h-[60vh] flex items-center justify-center">
@@ -171,124 +170,110 @@ const Sidebar = ({
           <section className="h-full w-full ">
             {sidebarItems != null && sidebarItems?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
-                {sidebarItems?.map((item) => {
-                  const isOpen = openNotes[item?.note_id];
+                {/* Private Notes */}
+                <div>
+                  <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                    Private
+                  </div>
+                  <div className="capitalize text-xs ps-1 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
+                    {" "}
+                    <LuBadgePlus size={16} /> <span>Create Private Notes</span>
+                  </div>
+                </div>
 
-                  return (
-                    <div key={item?.note_id} className="relative">
-                      {/* Note Button */}
-                      <button
-                        onClick={() => {
-                          handleSelectNote(item);
-                          setOpenNotes((prev) => ({
-                            ...prev,
-                            [item?.note_id]: !prev[item?.note_id],
-                          }));
-                        }}
-                        className={`group w-full capitalize text-sm text-left px-2 py-1.5 cursor-pointer rounded-lg transition-all duration-200
+                {/* Shared notes */}
+                <section className="mt-3">
+                  <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                    Shared
+                  </div>
+                  {sidebarItems?.map((item) => {
+                    const isOpen = openNotes[item?.note_id];
+
+                    return (
+                      <div key={item?.note_id} className="relative">
+                        {/* Note Button */}
+                        <button
+                          onClick={() => {
+                            handleSelectNote(item);
+                            setOpenNotes((prev) => ({
+                              ...prev,
+                              [item?.note_id]: !prev[item?.note_id],
+                            }));
+                          }}
+                          className={`group w-full capitalize text-sm text-left px-2 py-1.5 cursor-pointer rounded-lg transition-all duration-200
             ${
               active === item?.note_id && selectedNoteType == "mst-note"
                 ? "bg-primary/10 text-primary"
                 : "text-gray-600 hover:bg-gray-50"
             }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          {/* Left Content */}
-                          <div className="flex items-center gap-2 min-w-0">
-                            {/* Expand Arrow */}
-                            {/* {item?.sub_pages?.length > 0 ? (
-                              <div
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenNotes((prev) => ({
-                                    ...prev,
-                                    [item?.note_id]: !prev[item?.note_id],
-                                  }));
-                                }}
-                                className="p-1 rounded hover:bg-primary/5 transition"
-                              >
-                                <svg
-                                  className={`w-3 h-3 transition-transform duration-200 ${
-                                    isOpen ? "rotate-90" : ""
-                                  }`}
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path d="M9 5l7 7-7 7" />
-                                </svg>
-                              </div>
-                            ) : (
-                              <div className="pl-5"></div>
-                            )} */}
-
-                            <div className="relative">
-                              <BiBookAlt
-                                size={20}
-                                className={`shrink-0 ${
-                                  active === item?.note_id &&
-                                  selectedNoteType == "mst-note"
-                                    ? "text-primary"
-                                    : "text-gray-400 group-hover:text-gray-600"
-                                }`}
-                              />
-
-                              {/* Sub pages count */}
-                              {item?.sub_pages?.length > 0 ? (
-                                <small
-                                  className={`$${
+                        >
+                          <div className="flex items-center justify-between">
+                            {/* Left Content */}
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div className="relative">
+                                <BiBookAlt
+                                  size={20}
+                                  className={`shrink-0 ${
+                                    active === item?.note_id &&
                                     selectedNoteType == "mst-note"
                                       ? "text-primary"
                                       : "text-gray-400 group-hover:text-gray-600"
-                                  } text-[10px]   absolute top-px left-0.5 flex items-center justify-center h-4 w-4  p-px rounded-full`}
-                                >
-                                  {item?.sub_pages?.length || ""}
-                                </small>
-                              ) : (
-                                <span></span>
-                              )}
+                                  }`}
+                                />
+
+                                {/* Sub pages count */}
+                                {item?.sub_pages?.length > 0 ? (
+                                  <small
+                                    className={`$${
+                                      selectedNoteType == "mst-note"
+                                        ? "text-primary"
+                                        : "text-gray-400 group-hover:text-gray-600"
+                                    } text-[10px]   absolute top-px left-0.5 flex items-center justify-center h-4 w-4  p-px rounded-full`}
+                                  >
+                                    {item?.sub_pages?.length || ""}
+                                  </small>
+                                ) : (
+                                  <span></span>
+                                )}
+                              </div>
+
+                              <div className="truncate font-medium text-xs lg:text-sm">
+                                {item?.note_title}
+                              </div>
                             </div>
 
-                            <div className="truncate font-medium text-xs lg:text-sm">
-                              {item?.note_title}
+                            {/* Three Dot Button */}
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenMenu(
+                                  openMenu === item?.note_id
+                                    ? null
+                                    : item?.note_id,
+                                );
+                              }}
+                              className={`opacity-0 group-hover:opacity-100 ${
+                                active === item?.note_id ? "opacity-100" : ""
+                              } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
+                            >
+                              <PiDotsThreeVerticalBold size={16} />
                             </div>
                           </div>
+                        </button>
 
-                          {/* Three Dot Button */}
-                          <div
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpenMenu(
-                                openMenu === item?.note_id
-                                  ? null
-                                  : item?.note_id,
-                              );
-                            }}
-                            className={`opacity-0 group-hover:opacity-100 ${
-                              active === item?.note_id ? "opacity-100" : ""
-                            } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
-                          >
-                            <PiDotsThreeVerticalBold size={16} />
-                          </div>
-                        </div>
-                      </button>
-
-                      {/* Sub Pages Dropdown */}
-                      <div
-                        className={`ml-8 overflow-hidden transition-all duration-300 ${
-                          isOpen
-                            ? " opacity-100"
-                            : "max-h-0 opacity-0"
-                        }`}
-                      >
-                        {item?.sub_pages?.map((sub) => (
-                          <div
-                            onClick={() => {
-                              handleSelectNoteFromSubPage(sub);
-                            }}
-                            key={sub?.sub_page_id}
-                            className={`
+                        {/* Sub Pages Dropdown */}
+                        <div
+                          className={`ml-8 overflow-hidden transition-all duration-300 ${
+                            isOpen ? " opacity-100" : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          {item?.sub_pages?.map((sub) => (
+                            <div
+                              onClick={() => {
+                                handleSelectNoteFromSubPage(sub);
+                              }}
+                              key={sub?.sub_page_id}
+                              className={`
                                 flex items-center gap-2 my-1
                                 text-xs
                                 px-3 py-1.5
@@ -302,48 +287,49 @@ const Sidebar = ({
                                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                                 }
                               `}
-                          >
-                            <div
-                              className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
-                            ></div>
-                            {sub?.sub_page_title}
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Dropdown Menu */}
-                      {openMenu === item?.note_id && (
-                        <div className="absolute right-2 top-10 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedNoteId(item?.note_id);
-                              setIsOpen(true);
-                              setOpenMenu(null);
-                              setOpenNotes((prev) => ({
-                                ...prev,
-                                [item?.note_id]: true,
-                              }));
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                          >
-                            Add sub-page
-                          </button>
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteNote(item?.note_id);
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
-                          >
-                            Archive
-                          </button>
+                            >
+                              <div
+                                className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
+                              ></div>
+                              {sub?.sub_page_title}
+                            </div>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+
+                        {/* Dropdown Menu */}
+                        {openMenu === item?.note_id && (
+                          <div className="absolute right-2 top-10 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedNoteId(item?.note_id);
+                                setIsOpen(true);
+                                setOpenMenu(null);
+                                setOpenNotes((prev) => ({
+                                  ...prev,
+                                  [item?.note_id]: true,
+                                }));
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                            >
+                              Add sub-page
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteNote(item?.note_id);
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
+                            >
+                              Archive
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </section>
               </div>
             ) : (
               <div className="flex items-center justify-center h-full w-full text-slate-600 text-sm">
@@ -395,7 +381,7 @@ const Sidebar = ({
                   }}
                   className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                 >
-                  {`${submitting ? "Creating.." : "Create"}`} 
+                  {`${submitting ? "Creating.." : "Create"}`}
                 </button>
               </div>
             </div>
@@ -408,8 +394,6 @@ const Sidebar = ({
           />
         </div>
       )}
-
-     
     </>
   );
 };

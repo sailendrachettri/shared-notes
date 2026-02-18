@@ -12,7 +12,13 @@ import {
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Navbar = ({ setToggleSidebar, toggleSidebar, autoFetchStatus }) => {
+const Navbar = ({
+  setToggleSidebar,
+  toggleSidebar,
+  autoFetchStatus,
+  isUserLoggedIn,
+  setOpenRegistrationWindow
+}) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -40,6 +46,7 @@ const Navbar = ({ setToggleSidebar, toggleSidebar, autoFetchStatus }) => {
   };
 
   const close = () => appWindow.close();
+
   return (
     <>
       <div
@@ -49,7 +56,9 @@ const Navbar = ({ setToggleSidebar, toggleSidebar, autoFetchStatus }) => {
         {/* Left side - Logo */}
         <div className="flex items-center gap-2 ">
           <img src={logo} className="h-6 w-auto " />
-          <span className="text-sm font-medium ">SharedNotes</span>
+          <span className="text-sm font-medium">
+            SharedNotes <span onClick={()=>{setOpenRegistrationWindow(true)}} className="font-medium text-slate-800">{isUserLoggedIn ? "" : "(UNREGISTERED)"}</span>
+          </span>
         </div>
 
         <div>

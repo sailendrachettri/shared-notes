@@ -7,6 +7,7 @@ import { CHECK_SERVER_NETWORK } from "./api/api_routes";
 import ServerNotFound from "./utils/info-screen/ServerNotFound";
 import LoadingPage from "./utils/info-screen/LoadingPage";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
+import UserOnboard from "./areas/auth/profiles/UserOnboard";
 
 const appWindow = getCurrentWindow();
 
@@ -15,6 +16,8 @@ function App() {
   const [serverStatus, setServerStatus] = useState(null);
   const intervalRef = useRef(null);
   const [autoFetchStatus, setAutoFetchStatus] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [openRegistrationWindow, setOpenRegistrationWindow] = useState(false);
 
   const currrentEnvironment = window.location.host;
 
@@ -110,6 +113,8 @@ function App() {
         setToggleSidebar={setToggleSidebar}
         toggleSidebar={toggleSidebar}
         autoFetchStatus={autoFetchStatus}
+        isUserLoggedIn={isUserLoggedIn}
+        setOpenRegistrationWindow={setOpenRegistrationWindow}
       />
       <section>
         <Home
@@ -118,6 +123,8 @@ function App() {
           toggleSidebar={toggleSidebar}
         />
       </section>
+
+      <UserOnboard open={openRegistrationWindow} onClose={() => setOpenRegistrationWindow(false)} />
     </>
   );
 }
