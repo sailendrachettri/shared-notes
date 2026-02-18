@@ -11,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<DbConnectionFactory>();
 builder.Services.AddScoped<DbHelper>();
+builder.Services.AddSingleton<EncryptionService>();
+
 
 
 
