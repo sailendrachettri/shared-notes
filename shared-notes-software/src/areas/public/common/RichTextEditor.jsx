@@ -513,7 +513,7 @@ const RichTextEditor = ({
   const handleFileSelected = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    (file);
+    file;
 
     try {
       ("here");
@@ -536,7 +536,7 @@ const RichTextEditor = ({
           : CHANGE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-      (res);
+      res;
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -559,7 +559,7 @@ const RichTextEditor = ({
           : REMOVE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-      (res);
+      res;
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         toast.success("Cover image removed");
       }
@@ -602,7 +602,7 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    (file);
+    file;
 
     try {
       ("here");
@@ -625,7 +625,7 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      (res);
+      res;
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -690,15 +690,8 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  (fullData);
-  (coverImage);
-  (coverIcon);
-
-  (shouldShowCover);
-  (shouldShowIcon);
-
-  (selectedNoteId);
-  (heading);
+  console.log(!shouldShowCover);
+  console.log(!shouldShowIcon);
 
   return (
     <div className="notion-editor-wrapper">
@@ -751,7 +744,7 @@ const RichTextEditor = ({
 
         {shouldShowIcon && (
           <div
-            className={`relative ${shouldShowCover ? "-mt-12" : "pt-10"}  mb-4 group/icon inline-block `}
+            className={`relative ${shouldShowCover ? "-mt-12" : "pt-10"}  group/icon inline-block `}
           >
             <img
               onClick={() => setShowMenu((prev) => !prev)}
@@ -784,35 +777,41 @@ const RichTextEditor = ({
         )}
 
         {/*  Add buttons */}
-        <div className="flex items-center group gap-3 py-2 xl:py-4 relative z-20">
-          {!shouldShowIcon && (
-            <button
-              onClick={handleChangeIconClick}
-              className="flex items-center gap-2 px-3 py-1.5 
-           text-xs xl:text-sm text-gray-500 
+        <section
+          className={`${!shouldShowCover && !shouldShowIcon ? "pt-3 pb-2" : "pt-1"} `}
+        >
+          <div
+            className={`flex items-center group gap-3 xl:py-1 relative z-20`}
+          >
+            {!shouldShowIcon && (
+              <button
+                onClick={handleChangeIconClick}
+                className="flex items-center gap-2 px-4 py-[5px]
+           text-[11px] text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
            opacity-0 group-hover:opacity-100 cursor-pointer"
-            >
-              <FaRegFaceSmileBeam className="text-base" />
-              <span>Add icon</span>
-            </button>
-          )}
+              >
+                <FaRegFaceSmileBeam className="text-base" />
+                <span>Add icon</span>
+              </button>
+            )}
 
-          {!shouldShowCover && (
-            <button
-              onClick={handleChangeCoverClick}
-              className="flex items-center gap-2 px-3 py-1.5 
-           text-xs xl:text-sm text-gray-500 
+            {!shouldShowCover && (
+              <button
+                onClick={handleChangeCoverClick}
+                className="flex items-center gap-2 px-4 py-[5px]
+           text-[11px] text-gray-500 
            hover:bg-gray-100 hover:text-gray-800 
            rounded-md transition-all 
            opacity-0 group-hover:opacity-100 cursor-pointer"
-            >
-              <IoImageOutline className="text-base" />
-              <span>Add cover</span>
-            </button>
-          )}
-        </div>
+              >
+                <IoImageOutline className="text-base" />
+                <span>Add cover</span>
+              </button>
+            )}
+          </div>
+        </section>
 
         {/* Title */}
         <div className="pb-4">
