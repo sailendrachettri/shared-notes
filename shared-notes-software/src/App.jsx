@@ -53,8 +53,6 @@ function App() {
       } else {
         await appWindow.setSize(new LogicalSize(480, 360));
       }
-
-      await appWindow.center(); // 👈 center after resizing
     };
 
     resizeAndCenter();
