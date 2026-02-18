@@ -67,6 +67,8 @@ const CreaterNewNotesForm = ({
   const handlePageRefresh = () => {
     setPageReload(true);
 
+    setRefresh(prev => !prev);
+
     setTimeout(() => {
       setPageReload(false);
     }, 2000);

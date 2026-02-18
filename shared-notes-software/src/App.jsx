@@ -18,14 +18,6 @@ function App() {
 
   const currrentEnvironment = window.location.host;
 
-  console.log(currrentEnvironment);
-
-  if (currrentEnvironment?.includes("localhost")) {
-    console.log(currrentEnvironment);
-  } else {
-    console.log("outside", currrentEnvironment);
-  }
-
   const handleServerNetworkCheck = async () => {
     try {
       const res = await axiosInstance.post(CHECK_SERVER_NETWORK, {
@@ -49,7 +41,9 @@ function App() {
 
   useEffect(() => {
     handleServerNetworkCheck();
+    
     intervalRef.current = setInterval(handleServerNetworkCheck, 10000);
+    console.info("Connection to server again...");
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
@@ -101,6 +95,7 @@ function App() {
 
   useEffect(() => {
     if (autoFetchStatus) {
+      
       const t = setTimeout(() => setAutoFetchStatus(false), 5000);
       return () => clearTimeout(t);
     }

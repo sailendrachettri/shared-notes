@@ -6,3 +6,6 @@ Encryption:
  - only the notes is encrypted but not titles
  - It is because we need title for searching/sorting etc  in the psql function
  - So it is not good ideas to encrypt titles
+
+Making the build for windows:
+ - Change the .env from development to production

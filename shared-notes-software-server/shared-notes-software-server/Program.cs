@@ -56,30 +56,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/updates-check", () =>
-{
-    return Directory.GetFiles(@"C:\OfficeConnectRelease");
-});
-
-
-app.MapGet("/debug-updates", () =>
-{
-    var path = @"C:\OfficeConnectRelease\latest.yml";
-    return new
-    {
-        Exists = System.IO.File.Exists(path),
-        Files = Directory.Exists(@"C:\OfficeConnectRelease")
-            ? Directory.GetFiles(@"C:\OfficeConnectRelease")
-            : Array.Empty<string>()
-    };
-});
 
 app.UseCors("AllowViteDevServer");
 app.UseStaticFiles();
+
+var uploadPath = Path.Combine(builder.Environment.ContentRootPath, "uploadedFiles");
+Directory.CreateDirectory(uploadPath);
+
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "uploadedFiles")),
+    FileProvider = new PhysicalFileProvider(uploadPath),
     RequestPath = "/uploads"
 });
 
