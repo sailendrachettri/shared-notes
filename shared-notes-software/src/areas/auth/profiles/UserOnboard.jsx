@@ -5,11 +5,16 @@ import PinInput from "./PinInput";
 import Stepper from "./Stepper";
 import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { axiosInstance } from "../../../api/axios";
-import { ADD_USER_URL, LOGIN_USER_URL } from "../../../api/api_routes";
+import {
+  ADD_USER_URL,
+  GET_ALL_USERS_URL,
+  LOGIN_USER_URL,
+} from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { load } from "@tauri-apps/plugin-store";
 import { FaUserPlus, FaSignInAlt } from "react-icons/fa";
 import AuthToggle from "./AuthToggle";
+import { useEffect } from "react";
 
 export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");
@@ -18,6 +23,8 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [step, setStep] = useState(1); // 1 = fullName, 2 = pin, 3 = confirmPin
   const [submitting, setSubmitting] = useState(false);
   const [selectedType, setSelectedType] = useState("signup");
+  const [allUsersList, setAllUsersList] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const steps = ["Full Name", "Set PIN", "Confirm PIN"];
 
@@ -29,6 +36,16 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   };
 
   const handleBack = () => setStep(step - 1);
+
+  const handleGetAllUsers = async () => {
+    try {
+      const res = await axiosInstance.get(GET_ALL_USERS_URL);
+      console.log(res);
+      setAllUsersList(res?.data || []);
+    } catch (error) {
+      console.error("Not able to fetch users", error);
+    }
+  };
 
   // Signup/register user
   const handleSubmit = async () => {
@@ -78,10 +95,11 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
 
     try {
       const payload = {
+        UserId: selectedUserId,
         UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-
+      console.log(res);
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
         const store = await load("user-store.json", { autoSave: true });
@@ -92,22 +110,25 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         });
         toast.success("Credential verified");
         onClose();
-        setPin("");
       } else {
         toast.error("Please check your credentials.");
-        setPin("");
       }
     } catch (error) {
       console.error("Please check your credentials.", error);
       toast.error("Please check your credentials.");
+    } finally {
+      setPin("");
     }
   };
+
+  useEffect(() => {
+    handleGetAllUsers();
+  }, [selectedUserId, submitting]);
 
   return (
     <AnimatePresence>
       {open && (
         <>
-          {/* Overlay */}
           {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -123,7 +144,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
             animate={{ x: 0 }} // slide into place
             exit={{ x: "-100%" }} // slide back out when closing
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-0 w-full sm:w-96 h-full bg-white z-50 p-6 flex flex-col"
+            className="fixed left-0 top-0 w-full sm:w-96 h-full bg-white z-50 p-4 flex flex-col"
           >
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
@@ -145,7 +166,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
               />
 
               {selectedType == "signup" ? (
-                <section>
+                <section className="ps-3">
                   {/* Steps Indicator */}
                   <div className="relative mb-6">
                     {/* Step circles */}
@@ -165,7 +186,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Enter Full Name"
-                        maxLength={25}
+                        maxLength={10}
                         className="w-full pl-3 pr-3 py-2 border capitalize border-slate-200 rounded-2xl focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                       <div className="flex justify-between mt-4">
@@ -233,19 +254,77 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                 </section>
               ) : (
                 <section>
-                  <div className="flex flex-col gap-4 items-center">
-                    <label className="font-semibold">Enter 4-Digit PIN</label>
-                    <PinInput
-                      value={pin}
-                      onChange={(value) => {
-                        setPin(value);
+                  {/* List the users */}
+                  <div className="p-3">
+                    <p className="text-xs ps-3 pb-2 uppercase text-gray-400 tracking-wider mb-3">
+                      Select a Profile
+                    </p>
 
-                        if (value.length === 4) {
-                          handleLogin(value);
-                        }
-                      }}
-                    />
+                    <div className="grid grid-cols-4 gap-x-3 gap-y-5">
+                      {allUsersList?.map((user) => {
+                        const isSelected = selectedUserId === user?.user_id;
+
+                        return (
+                          <div
+                            key={user?.user_id}
+                            onClick={() =>
+                              setSelectedUserId(
+                                selectedUserId == user?.user_id
+                                  ? null
+                                  : user?.user_id,
+                              )
+                            }
+                            className="flex flex-col items-center  cursor-pointer group transition-all duration-200"
+                          >
+                            {/* Avatar */}
+                            <div
+                              className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-semibold 
+          transition-all duration-200
+          ${
+            isSelected
+              ? "bg-primary text-white scale-110 ring-1 shadow-md"
+              : "bg-gray-400 text-white group-hover:bg-gray-600 group-hover:scale-105"
+          }`}
+                            >
+                              {user?.user_name?.charAt(0)?.toUpperCase() || "G"}
+                            </div>
+
+                            {/* Full Name */}
+                            <p
+                              className={`mt-1 text-xs text-center transition-all duration-200 capitalize
+          ${
+            isSelected
+              ? "text-primary font-semibold"
+              : "text-gray-400 hover:text-gray-600"
+          }`}
+                            >
+                              {user?.user_name || "Guest"}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
+
+                  {selectedUserId && (
+                    <section className="mt-12 ps-8">
+                      <p className="text-xs text-start pb-2 uppercase text-gray-400 tracking-wider mb-3">
+                        Enter 4-Digit PIN
+                      </p>
+                      <div className="flex flex-col gap-4 items-start">
+                        <PinInput
+                          value={pin}
+                          onChange={(value) => {
+                            setPin(value);
+
+                            if (value.length === 4) {
+                              handleLogin(value);
+                            }
+                          }}
+                        />
+                      </div>
+                    </section>
+                  )}
                 </section>
               )}
             </section>

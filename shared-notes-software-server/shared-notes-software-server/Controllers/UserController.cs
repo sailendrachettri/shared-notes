@@ -14,6 +14,29 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpGet("get-all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var users = await _db.ExecuteQueryListAsync<UserFullDetailsDto>(
+                    @"SELECT 
+                    user_id,
+                    user_name,
+                    created_at,
+                    updated_at
+                  FROM public.utbl_users
+                  ORDER BY user_name"
+                );
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error fetching users: {ex.Message}");
+            }
+        }
+
         [HttpPost("add")]
         public async Task<IActionResult> AddUser([FromBody] AddUserModel request)
         {
@@ -42,12 +65,12 @@ namespace shared_notes_software_server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] PinLoginModel request)
         {
-            if (string.IsNullOrWhiteSpace(request.UserPassword))
+            if (request.UserId == Guid.Empty || string.IsNullOrWhiteSpace(request.UserPassword))
             {
                 return BadRequest(new
                 {
                     success = false,
-                    message = "PIN is required"
+                    message = "UserId and PIN are required"
                 });
             }
 
@@ -55,34 +78,47 @@ namespace shared_notes_software_server.Controllers
             {
                 string sql = @"
             SELECT user_id, user_password, user_name
-            FROM public.utbl_users;
+            FROM public.utbl_users
+            WHERE user_id = @user_id;
         ";
 
-                var users = await _db.ExecuteQueryListAsync<UserDto>(sql);
-
-                foreach (var user in users)
-                {
-                    bool isValid = PasswordHelper.VerifyPassword(
-                        request.UserPassword,
-                        user.user_password
-                    );
-
-                    if (isValid)
+                var user = await _db.ExecuteQuerySingleAsync<UserDto>(
+                    sql,
+                    cmd =>
                     {
-                        return Ok(new
-                        {
-                            success = true,
-                            message = "Login successful",
-                            user_id = user.user_id,
-                            user_name = user.user_name
-                        });
+                        cmd.Parameters.AddWithValue("user_id", request.UserId);
                     }
+                );
+
+                if (user == null)
+                {
+                    return Unauthorized(new
+                    {
+                        success = false,
+                        message = "Invalid user"
+                    });
                 }
 
-                return Unauthorized(new
+                bool isValid = PasswordHelper.VerifyPassword(
+                    request.UserPassword,
+                    user.user_password
+                );
+
+                if (!isValid)
                 {
-                    success = false,
-                    message = "Invalid PIN"
+                    return Unauthorized(new
+                    {
+                        success = false,
+                        message = "Invalid PIN"
+                    });
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Login successful",
+                    user_id = user.user_id,
+                    user_name = user.user_name
                 });
             }
             catch (Exception ex)
@@ -95,6 +131,7 @@ namespace shared_notes_software_server.Controllers
                 });
             }
         }
+
 
 
 

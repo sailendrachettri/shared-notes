@@ -8,9 +8,18 @@
 
     public class PinLoginModel
     {
+        public Guid UserId { get; set; }
         public string UserPassword { get; set; }
     }
 
+
+    public class UserFullDetailsDto
+    {
+        public Guid user_id { get; set; }
+        public string user_name { get; set; } = string.Empty;
+        public DateTime created_at { get; set; }
+        public DateTime? updated_at { get; set; }
+    }
 
 
     public class UserDto

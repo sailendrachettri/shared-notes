@@ -28,9 +28,9 @@ function App() {
     const user = await store.get("user");
     setUserData(user);
 
-    console.log(user.isLoggedIn);
-    console.log(user.userId);
-    console.log(user.user_name);
+    // console.info(user.isLoggedIn);
+    // console.info(user.userId);
+    // console.info(user.user_name);
 
     setIsUserLoggedIn(user.isLoggedIn);
   };
