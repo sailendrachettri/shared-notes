@@ -191,31 +191,79 @@ namespace shared_notes_software_server.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteNote([FromBody] DeleteNoteRequest request)
         {
-            if (request.NoteId <= 0)
-                return BadRequest("Invalid NoteId");
+            if (request.NoteOrSubPageId <= 0 || string.IsNullOrWhiteSpace(request.NoteType))
+                return BadRequest("Invalid request");
 
-            var jsonResult = await _db.ExecuteScalarAsync<string>(
-                @"UPDATE public.utbl_mst_notes
-          SET is_deleted = TRUE,
-              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
-          WHERE note_id = @note_id
-          RETURNING json_build_object(
-              'success', true,
-              'note_id', note_id,
-              'status', 'DELETED',
-              'message', 'Note deleted successfully'
-          );",
-                cmd =>
-                {
-                    cmd.Parameters.AddWithValue("note_id", request.NoteId);
-                }
+            string sql = string.Empty;
+            string paramName = string.Empty;
+
+            if (request.NoteType == "mst-note")
+            {
+                sql = @"
+            UPDATE public.utbl_mst_notes
+            SET is_deleted = TRUE,
+                updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+            WHERE note_id = @id
+            RETURNING json_build_object(
+                'success', true,
+                'type', 'mst-note',
+                'id', note_id,
+                'status', 'DELETED',
+                'message', 'Note deleted successfully'
             );
+        ";
 
-            if (string.IsNullOrEmpty(jsonResult))
-                return NotFound("Note not found or already deleted");
+                paramName = "note_id";
+            }
+            else if (request.NoteType == "sub-page")
+            {
+                sql = @"
+            UPDATE public.utbl_mst_sub_pages
+            SET is_deleted = TRUE,
+                updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+            WHERE sub_page_id = @id
+            RETURNING json_build_object(
+                'success', true,
+                'type', 'sub-page',
+                'id', sub_page_id,
+                'status', 'DELETED',
+                'message', 'Sub page deleted successfully'
+            );
+        ";
 
-            return Content(jsonResult, "application/json");
+                paramName = "sub_page_id";
+            }
+            else
+            {
+                return BadRequest("Invalid NoteType. Allowed: mst-note, sub-page");
+            }
+
+            try
+            {
+                var jsonResult = await _db.ExecuteScalarAsync<string>(
+                    sql,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("id", request.NoteOrSubPageId);
+                    }
+                );
+
+                if (string.IsNullOrEmpty(jsonResult))
+                    return NotFound("Item not found or already deleted");
+
+                return Content(jsonResult, "application/json");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Server error",
+                    error = ex.Message
+                });
+            }
         }
+
 
 
 

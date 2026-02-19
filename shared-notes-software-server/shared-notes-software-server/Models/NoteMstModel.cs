@@ -14,7 +14,8 @@
 
     public class DeleteNoteRequest
     {
-        public long NoteId { get; set; }
+        public string NoteType { get; set; }
+        public long NoteOrSubPageId { get; set; }
     }
     public class RenameNoteRequest
     {

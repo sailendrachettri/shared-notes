@@ -16,6 +16,11 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        /* For delete sub page note:
+         * Check the MstNoteController
+         */
+
+
         [HttpPost("add-sub-page")]
         public async Task<IActionResult> AddNote([FromBody] AddNoteMstSubPageModel request)
         {

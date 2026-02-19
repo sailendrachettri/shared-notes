@@ -5,11 +5,12 @@ import {
   DELETE_MST_NOTE_URL,
   GET_MST_NOTE_URL,
 } from "../../../api/api_routes";
-import { PiNotebookLight } from "react-icons/pi";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
 import { BiBookAlt } from "react-icons/bi";
 import { LuBadgePlus } from "react-icons/lu";
+import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -30,7 +31,7 @@ const Sidebar = ({
   sortDirection,
   autoFetchStatus,
   setAutoFetchStatus,
-  isUserLoggedIn
+  isUserLoggedIn,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -38,6 +39,9 @@ const Sidebar = ({
   const [subPageTitle, setSubPageTitle] = useState("");
   const [openNotes, setOpenNotes] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(null);
+  const [deleteNoteType, setDeleteNoteType] = useState(null);
 
   const handleFetchAllItemList = async () => {
     /**
@@ -62,10 +66,12 @@ const Sidebar = ({
     }
   };
 
-  const handleDeleteNote = async (noteId) => {
+  const handleDeleteNote = async () => {
+
     try {
       const payload = {
-        NoteId: noteId,
+        NoteType: deleteNoteType,
+        NoteOrSubPageId: deleteItemId,
       };
       const res = await axiosInstance.post(DELETE_MST_NOTE_URL, payload);
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
@@ -78,6 +84,9 @@ const Sidebar = ({
     } finally {
       setOpenMenu(null);
       setRefresh((prev) => !prev);
+      setDeleteItemId(null);
+      setDeleteNoteType(null);
+      setIsDeleteOpen(false);
     }
   };
 
@@ -172,18 +181,21 @@ const Sidebar = ({
             {sidebarItems != null && sidebarItems?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {/* Private Notes */}
-                {isUserLoggedIn &&<div>
-                  <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                    Private
+                {isUserLoggedIn && (
+                  <div>
+                    <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                      Private
+                    </div>
+                    <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
+                      {" "}
+                      <LuBadgePlus size={16} />{" "}
+                      <span>Create Private Notes</span>
+                    </div>
                   </div>
-                  <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
-                    {" "}
-                    <LuBadgePlus size={16}  /> <span>Create Private Notes</span>
-                  </div>
-                </div>}
+                )}
 
                 {/* Shared notes */}
-                <section className={`${isUserLoggedIn ? 'mt-3' : ''}`}>
+                <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     Shared
                   </div>
@@ -191,7 +203,7 @@ const Sidebar = ({
                     const isOpen = openNotes[item?.note_id];
 
                     return (
-                      <div key={item?.note_id} className="relative">
+                      <div key={item?.note_id} className="relative my-2">
                         {/* Note Button */}
                         <button
                           onClick={() => {
@@ -201,7 +213,7 @@ const Sidebar = ({
                               [item?.note_id]: !prev[item?.note_id],
                             }));
                           }}
-                          className={`group w-full capitalize text-sm text-left px-2 py-1.5 cursor-pointer rounded-lg transition-all duration-200
+                          className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
             ${
               active === item?.note_id && selectedNoteType == "mst-note"
                 ? "bg-primary/10 text-primary"
@@ -253,8 +265,8 @@ const Sidebar = ({
                                     : item?.note_id,
                                 );
                               }}
-                              className={`opacity-0 group-hover:opacity-100 ${
-                                active === item?.note_id ? "opacity-100" : ""
+                              className={`   ${
+                                active === item?.note_id ? "block" : "hidden"
                               } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
                             >
                               <PiDotsThreeVerticalBold size={16} />
@@ -274,8 +286,8 @@ const Sidebar = ({
                                 handleSelectNoteFromSubPage(sub);
                               }}
                               key={sub?.sub_page_id}
-                              className={`
-                                flex items-center gap-2 my-1
+                              className={` group
+                                flex items-center justify-between gap-2 my-1
                                 text-xs
                                 px-3 py-1.5
                                 rounded-md
@@ -289,10 +301,25 @@ const Sidebar = ({
                                 }
                               `}
                             >
-                              <div
-                                className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1  rounded-full`}
-                              ></div>
-                              {sub?.sub_page_title}
+                              <div className="flex items-center justify-start gap-x-1.5 flex-nowrap">
+                                <div
+                                  className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1   rounded-full`}
+                                ></div>
+                                <span className="capitalize">
+                                  {sub?.sub_page_title}
+                                </span>
+                              </div>
+                              <span
+                                onClick={() => {
+                                  setDeleteItemId(sub?.sub_page_id);
+                                  setIsOpen(false)
+                                  setDeleteNoteType("sub-page");
+                                  setIsDeleteOpen(true);
+                                }}
+                                className="group-hover:block hidden"
+                              >
+                                <RiDeleteBinLine size={14} />
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -319,7 +346,10 @@ const Sidebar = ({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteNote(item?.note_id);
+                                setDeleteItemId(item?.note_id);
+                                setOpenMenu(false)
+                                setDeleteNoteType("mst-note");
+                                setIsDeleteOpen(true);
                               }}
                               className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
                             >
@@ -395,6 +425,14 @@ const Sidebar = ({
           />
         </div>
       )}
+
+      <DeleteConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => handleDeleteNote()}
+        title="Delete Note"
+        description="This note will be permanently removed."
+      />
     </>
   );
 };
