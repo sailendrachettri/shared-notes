@@ -46,6 +46,7 @@ const Home = ({
                 sortDirection={sortDirection}
                 setSortBy={setSortBy}
                 setSortDirection={setSortDirection}
+                isUserLoggedIn={isUserLoggedIn}
               />
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar

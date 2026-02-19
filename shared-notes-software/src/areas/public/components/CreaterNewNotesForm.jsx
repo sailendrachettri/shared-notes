@@ -24,11 +24,13 @@ const CreaterNewNotesForm = ({
   setSortBy,
   sortDirection,
   setSortDirection,
+  isUserLoggedIn,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [pageReload, setPageReload] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [makeItPublic, setMakeItPublic] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,16 +180,45 @@ const CreaterNewNotesForm = ({
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative">
             <h3 className="text-lg font-semibold mb-4">Create New Note</h3>
 
             <form onSubmit={handleSubmit}>
+              {isUserLoggedIn ? (
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3 mb-4">
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">Private by default.</span>
+                    You can choose to make this note public.
+                  </p>
+
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-primary"
+                      onChange={(e) => setMakeItPublic(e.target.checked)}
+                    />
+                    <span className="text-sm text-gray-600">
+                      Make this note public
+                    </span>
+                  </label>
+                </div>
+              ) : (
+                <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 mb-4">
+                  <p className="text-sm text-primary font-medium">
+                    You are creating a public note.
+                  </p>
+                  <p className="text-xs text-primary/90 mt-1">
+                    Anyone with access will be able to view it.
+                  </p>
+                </div>
+              )}
+
               <input
                 type="text"
                 placeholder="Enter note title..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full capitalize border border-white rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full capitalize border border-primary rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-1 focus:ring-primary"
                 autoFocus
                 maxLength={45}
                 minLength={3}

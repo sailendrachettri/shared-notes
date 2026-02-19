@@ -209,15 +209,14 @@ const Sidebar = ({
                   </div>
                 ) : (
                   <section>
-                    <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                      Private
-                    </div>
-
                     {privateNotes?.map((item) => {
                       const isOpen = openNotes[item?.note_id];
 
                       return (
                         <div key={item?.note_id} className="relative my-2">
+                          <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                            Private
+                          </div>
                           {/* Note Button */}
                           <button
                             onClick={() => {
