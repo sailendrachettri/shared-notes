@@ -25,12 +25,11 @@ namespace shared_notes_software_server.Controllers
         public async Task<IActionResult> AddNote([FromBody] AddNoteMstSubPageModel request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-             "SELECT public.add_sub_page_item(@sub_page_title_i, @note_id_i, @user_id_i)",
+             "SELECT public.add_sub_page_item(@sub_page_title_i, @note_id_i)",
              cmd =>
              {
                  cmd.Parameters.AddWithValue("sub_page_title_i", request.SubPageTitle);
                  cmd.Parameters.AddWithValue("note_id_i", request.NoteId);
-                 cmd.Parameters.AddWithValue("user_id_i", request.UserId ?? (object)DBNull.Value);
              });
 
 

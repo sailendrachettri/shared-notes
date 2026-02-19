@@ -126,8 +126,7 @@ const Sidebar = ({
     try {
       const payload = {
         SubPageTitle: subPageTitle,
-        NoteId: selectedNoteId,
-        UserId: user?.userId || null,
+        NoteId: selectedNoteId
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
       res;
@@ -554,7 +553,7 @@ const Sidebar = ({
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-6 relative">
-            <h3 className="text-lg font-semibold mb-4">Create New Note</h3>
+            <h3 className="text-lg font-semibold mb-4">Create New Sub Page</h3>
 
             <div>
               <input
