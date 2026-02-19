@@ -52,12 +52,15 @@ const CreaterNewNotesForm = ({
         user_decision = user?.userId;
       }
 
+      // (makeItPublic)
+
       const payload = {
         NoteTitle: title || null,
         UserId: user_decision || null,
       };
+      // (payload)
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      console.log(res);
+      // (res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");

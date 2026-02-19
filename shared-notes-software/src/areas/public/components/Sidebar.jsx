@@ -68,7 +68,7 @@ const Sidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      console.log(res);
+      // (res);
       setSidebarItems(res?.data?.data?.public || []);
       setPublicNotes(res?.data?.data?.public || []);
       setPrivateNotes(res?.data?.data?.private || []);
@@ -129,7 +129,7 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(MAKE_NOTE_PUBLIC_URL, payload);
-      console.log(res);
+      // (res);
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         toast.success("Note moved to Shared");
         setRefresh(prev => !prev);
@@ -137,7 +137,7 @@ const Sidebar = ({
         toast.error("Can't move note at the momemt");
       }
     } catch (error) {
-      console.log("Not able to move note", error);
+      // ("Not able to move note", error);
       toast.error("Can't move note at the momemt");
     } finally {
       setIsGenericConfirmModalOpen(false);
@@ -205,7 +205,7 @@ const Sidebar = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  console.log(privateNotes);
+  // (privateNotes);
 
   return (
     <>

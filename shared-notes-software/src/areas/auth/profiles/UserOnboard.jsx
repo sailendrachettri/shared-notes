@@ -51,7 +51,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const handleGetAllUsers = async () => {
     try {
       const res = await axiosInstance.get(GET_ALL_USERS_URL);
-      console.log(res);
+      // (res);
       setAllUsersList(res?.data || []);
     } catch (error) {
       console.error("Not able to fetch users", error);
@@ -69,7 +69,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       const payload = { UserName: fullName, UserPassword: pin.toString() };
 
       const res = await axiosInstance.post(ADD_USER_URL, payload);
-      console.log(res);
+      // (res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setIsUserLoggedIn(true);
@@ -89,7 +89,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         toast.error("Can't create user at the moment");
       }
 
-      console.log("Final Payload:", payload);
+      // ("Final Payload:", payload);
     } catch (error) {
       console.error("not able to create user", error);
       toast.error("Can't create at the moment");
@@ -107,7 +107,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-      console.log(res);
+      // (res);
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
         const store = await load("user-store.json", { autoSave: true });
