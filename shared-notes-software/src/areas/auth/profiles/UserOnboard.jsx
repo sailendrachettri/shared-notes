@@ -15,6 +15,7 @@ import { load } from "@tauri-apps/plugin-store";
 import { FaUserPlus, FaSignInAlt } from "react-icons/fa";
 import AuthToggle from "./AuthToggle";
 import { useEffect } from "react";
+import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
 
 export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");
@@ -29,9 +30,19 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const steps = ["Full Name", "Set PIN", "Confirm PIN"];
 
   const handleNext = () => {
-    if (step === 1 && !fullName.trim())
-      return alert("Please enter your full name");
-    if (step === 2 && pin.length !== 4) return alert("PIN must be 4 digits");
+    if (step === 1 && !fullName.trim()) {
+      return toast.error("Please enter your full name");
+    }
+
+    if (step === 2 && pin.length !== 4) {
+      return toast.error("PIN must be 4 digits");
+    }
+
+    if (step == 2 && isWeakPin(pin)) {
+      toast.error("Please use a strong PIN");
+      setPin("");
+      return;
+    }
     setStep(step + 1);
   };
 
@@ -88,10 +99,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   };
 
   const handleLogin = async (pinCode) => {
-    console.log("called");
-    console.log(pinCode);
     if (pinCode?.length != 4) return;
-    console.log("called");
 
     try {
       const payload = {
