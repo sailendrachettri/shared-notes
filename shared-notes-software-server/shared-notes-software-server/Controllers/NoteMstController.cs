@@ -19,7 +19,7 @@ namespace shared_notes_software_server.Controllers
         public async Task<IActionResult> GetNotes([FromBody] GetNoteRequest request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.get_notes_item_list(@search_text, @sort_by, @sort_dir);",
+                "SELECT public.get_notes_item_list(@search_text, @sort_by, @sort_dir, @user_id);",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("search_text",
@@ -28,6 +28,8 @@ namespace shared_notes_software_server.Controllers
                         request.SortBy ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("sort_dir",
                         request.SortDirection ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("user_id",
+                        request.UserId ?? (object)DBNull.Value);
                 }
             );
 
@@ -272,10 +274,11 @@ namespace shared_notes_software_server.Controllers
         public async Task<IActionResult> AddNote([FromBody] AddNoteRequest request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.add_note_item(@note_title_i)",
+                "SELECT public.add_note_item(@note_title_i, @user_id_i)",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("note_title_i", request.NoteTitle);
+                    cmd.Parameters.AddWithValue("user_id_i", request.UserId ?? (object)DBNull.Value);
                 });
 
             if (string.IsNullOrEmpty(jsonResult))

@@ -10,6 +10,7 @@ import { IoTimerOutline } from "react-icons/io5";
 import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { LuRefreshCw } from "react-icons/lu";
+import { load } from "@tauri-apps/plugin-store";
 
 const CreaterNewNotesForm = ({
   setRefresh,
@@ -32,14 +33,19 @@ const CreaterNewNotesForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
+    const store = await load("user-store.json", { autoSave: true });
+    const user = await store.get("user");
+
     try {
       if (!title.trim()) return;
 
       const payload = {
         NoteTitle: title || null,
+        UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      res;
+      console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");
@@ -204,10 +210,10 @@ const CreaterNewNotesForm = ({
                 </button> */}
                 <button
                   disabled={submitting}
-                  // type="submit"
-                  onClick={() => {
-                    handleAddSubPage();
-                  }}
+                  type="submit"
+                  // onClick={() => {
+                  //   handleSubmit();
+                  // }}
                   className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                 >
                   {`${submitting ? "Creating.." : "Create"}`}

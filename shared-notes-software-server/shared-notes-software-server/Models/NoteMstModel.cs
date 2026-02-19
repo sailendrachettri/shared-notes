@@ -2,6 +2,7 @@
 {
     public class AddNoteRequest
     {
+        public Guid? UserId { get; set; }
         public string NoteTitle { get; set; }
     }
 
@@ -10,6 +11,7 @@
         public string? SearchText { get; set; }
         public string? SortBy { get; set; }
         public string? SortDirection { get; set; }
+        public Guid? UserId { get; set; }
     }
 
     public class DeleteNoteRequest
