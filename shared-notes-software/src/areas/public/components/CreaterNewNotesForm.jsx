@@ -11,6 +11,7 @@ import { FaArrowUpLong } from "react-icons/fa6";
 import { FaArrowDownLong } from "react-icons/fa6";
 import { LuRefreshCw } from "react-icons/lu";
 import { load } from "@tauri-apps/plugin-store";
+import { useRef } from "react";
 
 const CreaterNewNotesForm = ({
   setRefresh,
@@ -31,6 +32,7 @@ const CreaterNewNotesForm = ({
   const [pageReload, setPageReload] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [makeItPublic, setMakeItPublic] = useState(true);
+  const searchInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,6 +98,7 @@ const CreaterNewNotesForm = ({
       setPageReload(false);
     }, 2000);
   };
+
   // Close on ESC
   useEffect(() => {
     const handleEsc = (e) => {
@@ -103,6 +106,32 @@ const CreaterNewNotesForm = ({
     };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  // Search shotcut key ctrl + k
+  useEffect(() => {
+    const handleSearchShortcut = (e) => {
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+
+      const isShortcutPressed = isMac
+        ? e.metaKey && e.key.toLowerCase() === "k"
+        : e.ctrlKey && e.key.toLowerCase() === "k";
+
+      if (!isShortcutPressed) return;
+
+      e.preventDefault();
+
+      // Ignore if user already typing inside input/textarea
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+
+      // Only focus if no note selected
+
+      searchInputRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", handleSearchShortcut);
+    return () => window.removeEventListener("keydown", handleSearchShortcut);
   }, []);
 
   return (
@@ -125,9 +154,10 @@ const CreaterNewNotesForm = ({
             />
 
             <input
+              ref={searchInputRef}
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
-              placeholder={`${pageReload ? "Syncing notes" : "Search notes"} `}
+              placeholder={`${pageReload ? "Syncing notes" : "Search (Ctrl+K)"} `}
               className="
         w-full
         pl-8 pr-4 py-2.5
@@ -202,7 +232,9 @@ const CreaterNewNotesForm = ({
                 <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3 mb-4">
                   <p className="text-sm text-gray-700">
                     <span className="font-semibold">Private by default.</span>
-                    <span className="ps-1">You can choose to make this note public.</span>
+                    <span className="ps-1">
+                      You can choose to make this note public.
+                    </span>
                   </p>
 
                   <label className="flex items-center gap-3 cursor-pointer">
