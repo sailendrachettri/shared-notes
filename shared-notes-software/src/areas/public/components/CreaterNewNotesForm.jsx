@@ -41,10 +41,20 @@ const CreaterNewNotesForm = ({
 
     try {
       if (!title.trim()) return;
+      /**
+       * Based On user make it public or private decison
+       * And if the user is not loggedin then it will be public by default
+       */
+      let user_decision;
+      if (makeItPublic) {
+        user_decision = null;
+      } else if (!makeItPublic && isUserLoggedIn) {
+        user_decision = user?.userId;
+      }
 
       const payload = {
         NoteTitle: title || null,
-        UserId: user?.userId || null,
+        UserId: user_decision || null,
       };
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
       console.log(res);
@@ -69,6 +79,7 @@ const CreaterNewNotesForm = ({
       setTimeout(() => {
         setRefresh((prev) => !prev);
         setSubmitting(false);
+        setMakeItPublic(false);
       }, 500);
     }
   };

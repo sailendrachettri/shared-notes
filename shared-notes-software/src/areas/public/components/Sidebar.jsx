@@ -195,12 +195,12 @@ const Sidebar = ({
           <section className="h-full w-full ">
             {publicNotes != null && publicNotes?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
+               {isUserLoggedIn && <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                  Private
+                </div>}
                 {/* Private Notes */}
                 {isUserLoggedIn && privateNotes?.length <= 0 ? (
                   <div>
-                    <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                      Private
-                    </div>
                     <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
                       {" "}
                       <LuBadgePlus size={16} />{" "}
@@ -214,9 +214,6 @@ const Sidebar = ({
 
                       return (
                         <div key={item?.note_id} className="relative my-2">
-                          <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                            Private
-                          </div>
                           {/* Note Button */}
                           <button
                             onClick={() => {
