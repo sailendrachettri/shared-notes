@@ -8,6 +8,7 @@
     }
     public class AddNoteMstSubPageModel
     {
+        public Guid? UserId { get; set; }
         public string SubPageTitle { get; set; }
         public long NoteId { get; set; }
     }

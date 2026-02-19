@@ -4,7 +4,12 @@ import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
-const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus, isUserLoggedIn }) => {
+const Home = ({
+  toggleSidebar,
+  autoFetchStatus,
+  setAutoFetchStatus,
+  isUserLoggedIn,
+}) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
@@ -17,6 +22,8 @@ const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus, isUserLogged
   const [active, setActive] = useState(null);
   const [sortDirection, setSortDirection] = useState("desc");
   const [sortBy, setSortBy] = useState("created_at");
+  const [publicNotes, setPublicNotes] = useState(null);
+  const [privateNotes, setPrivateNotes] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -61,6 +68,10 @@ const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus, isUserLogged
                   autoFetchStatus={autoFetchStatus}
                   setAutoFetchStatus={setAutoFetchStatus}
                   isUserLoggedIn={isUserLoggedIn}
+                  publicNotes={publicNotes}
+                  setPublicNotes={setPublicNotes}
+                  privateNotes={privateNotes}
+                  setPrivateNotes={setPrivateNotes}
                 />
               </div>
             </div>

@@ -32,7 +32,7 @@ function App() {
     // console.info(user.userId);
     // console.info(user.user_name);
 
-    setIsUserLoggedIn(user.isLoggedIn);
+    setIsUserLoggedIn(user?.isLoggedIn);
   };
 
   const handleServerNetworkCheck = async () => {
