@@ -201,9 +201,9 @@ const Sidebar = ({
                 {isUserLoggedIn && privateNotes?.length <= 0 ? (
                   <div>
                     <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
-                      {" "}
-                      <LuBadgePlus size={16} />{" "}
-                      <span>Create Private Notes</span>
+                      {/* <LuBadgePlus size={16} />{" "}
+                      <span>Create Private Notes</span> */}
+                      <span>Your Private Notes</span> 
                     </div>
                   </div>
                 ) : (

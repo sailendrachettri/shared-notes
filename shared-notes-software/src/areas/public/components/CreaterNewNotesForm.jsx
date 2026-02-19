@@ -199,7 +199,7 @@ const CreaterNewNotesForm = ({
                 <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3 mb-4">
                   <p className="text-sm text-gray-700">
                     <span className="font-semibold">Private by default.</span>
-                    You can choose to make this note public.
+                    <span className="ps-1">You can choose to make this note public.</span>
                   </p>
 
                   <label className="flex items-center gap-3 cursor-pointer">
