@@ -137,6 +137,7 @@ function App() {
       />
       <section>
         <Home
+        isUserLoggedIn={isUserLoggedIn}
           autoFetchStatus={autoFetchStatus}
           setAutoFetchStatus={setAutoFetchStatus}
           toggleSidebar={toggleSidebar}

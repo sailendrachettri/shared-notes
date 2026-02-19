@@ -30,6 +30,7 @@ const Sidebar = ({
   sortDirection,
   autoFetchStatus,
   setAutoFetchStatus,
+  isUserLoggedIn
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -171,18 +172,18 @@ const Sidebar = ({
             {sidebarItems != null && sidebarItems?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {/* Private Notes */}
-                <div>
+                {isUserLoggedIn &&<div>
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     Private
                   </div>
-                  <div className="capitalize text-xs ps-1 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
+                  <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
                     {" "}
-                    <LuBadgePlus size={16} /> <span>Create Private Notes</span>
+                    <LuBadgePlus size={16}  /> <span>Create Private Notes</span>
                   </div>
-                </div>
+                </div>}
 
                 {/* Shared notes */}
-                <section className="mt-3">
+                <section className={`${isUserLoggedIn ? 'mt-3' : ''}`}>
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     Shared
                   </div>

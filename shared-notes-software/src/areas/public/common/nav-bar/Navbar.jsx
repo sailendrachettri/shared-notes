@@ -10,8 +10,10 @@ import {
 } from "react-icons/vsc";
 import { useState } from "react";
 import { useEffect } from "react";
-import { load } from "@tauri-apps/plugin-store";
-import toast from "react-hot-toast";
+
+import LoggedInUserInfoMenu from "../../../auth/profiles/LoggedInUserInfoMenu";
+import { useRef } from "react";
+import { getGreeting } from "../../../../utils/greets/greetingHelper";
 
 const Navbar = ({
   setToggleSidebar,
@@ -24,14 +26,8 @@ const Navbar = ({
 }) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
-
-  const handleLogoutUser = async () => {
-    const store = await load("user-store.json", { autoSave: true });
-    await store.delete("user");
-    setIsUserLoggedIn(false);
-    //  await store.clear(); // wipes everything in the store
-    toast.success("Logged out successfully!");
-  };
+  const [showDetailsMenu, setShowDetailsMenu] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const checkMaximized = async () => {
@@ -58,6 +54,18 @@ const Navbar = ({
 
   const close = () => appWindow.close();
 
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowDetailsMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <>
       <div
@@ -69,10 +77,23 @@ const Navbar = ({
           <img src={logo} className="h-6 w-auto " />
           <span className="text-sm font-medium">
             SharedNotes{" "}
-            <span className="font-medium text-slate-800" data-tauri-drag-region={false}>
+            <span
+              className="font-medium text-slate-800"
+              data-tauri-drag-region={false}
+              ref={menuRef}
+            >
               {isUserLoggedIn ? (
-                <span onClick={handleLogoutUser} className="ps-5">
-                  Hello, {userData?.user_name}
+                <span
+                  onClick={() => setShowDetailsMenu((prev) => !prev)}
+                  className="ps-5 capitalize"
+                >
+                  {getGreeting()}, {userData?.user_name || "Guest"}
+                  {showDetailsMenu && (
+                    <LoggedInUserInfoMenu
+                      setIsUserLoggedIn={setIsUserLoggedIn}
+                      setShowDetailsMenu={setShowDetailsMenu}
+                    />
+                  )}
                 </span>
               ) : (
                 <span

@@ -4,7 +4,7 @@ import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 
-const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus }) => {
+const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus, isUserLoggedIn }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
@@ -60,6 +60,7 @@ const Home = ({ toggleSidebar, autoFetchStatus, setAutoFetchStatus }) => {
                   sortDirection={sortDirection}
                   autoFetchStatus={autoFetchStatus}
                   setAutoFetchStatus={setAutoFetchStatus}
+                  isUserLoggedIn={isUserLoggedIn}
                 />
               </div>
             </div>
