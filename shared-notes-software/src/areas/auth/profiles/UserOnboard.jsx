@@ -70,10 +70,15 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (pinCode) => {
+    console.log("called");
+    console.log(pinCode);
+    if (pinCode?.length != 4) return;
+    console.log("called");
+
     try {
       const payload = {
-        UserPassword: pin,
+        UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
 
@@ -90,6 +95,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         setPin("");
       } else {
         toast.error("Please check your credentials.");
+        setPin("");
       }
     } catch (error) {
       console.error("Please check your credentials.", error);
@@ -229,22 +235,16 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                 <section>
                   <div className="flex flex-col gap-4 items-center">
                     <label className="font-semibold">Enter 4-Digit PIN</label>
-                    <PinInput value={pin} onChange={setPin} />
-                    <div className="flex justify-center mt-4">
-                      {pin?.length === 4 && (
-                        <button
-                          onClick={handleLogin}
-                          disabled={pin?.length !== 4}
-                          className={`py-2 px-10 rounded-xl text-white transition ${
-                            pin.length === 4
-                              ? "bg-primary hover:bg-primary/80"
-                              : "bg-gray-300 cursor-not-allowed"
-                          }`}
-                        >
-                          Sign In
-                        </button>
-                      )}
-                    </div>
+                    <PinInput
+                      value={pin}
+                      onChange={(value) => {
+                        setPin(value);
+
+                        if (value.length === 4) {
+                          handleLogin(value);
+                        }
+                      }}
+                    />
                   </div>
                 </section>
               )}
