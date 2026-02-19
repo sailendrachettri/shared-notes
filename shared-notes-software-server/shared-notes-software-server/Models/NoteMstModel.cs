@@ -24,6 +24,10 @@
         public long NoteId { get; set; }
         public string NoteTitle { get; set; }
     }
+    public class MakeNotePublicRequest
+    {
+        public long NoteId { get; set; }
+    }
     public class ChangeCoverImageRequest
     {
         public long NoteId { get; set; }

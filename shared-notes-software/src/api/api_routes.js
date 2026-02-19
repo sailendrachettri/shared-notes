@@ -20,6 +20,7 @@ export const DELETE_MST_NOTE_URL = "/mst-note/delete";
 export const GET_MST_NOTE_URL = "/mst-note/list";
 export const RENAME_MST_NOTE_URL = "/mst-note/rename";
 export const ADD_MST_NOTE_URL = "/mst-note/add";
+export const MAKE_NOTE_PUBLIC_URL = "/mst-note/make-note-public";
 export const CHANGE_COVER_ICON_MST_NOTE_URL = "/mst-note/change-cover-icon";
 export const REMOVE_COVER_ICON_MST_NOTE_URL = "/mst-note/remove-cover-icon";
 export const CHANGE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/change-cover-image";

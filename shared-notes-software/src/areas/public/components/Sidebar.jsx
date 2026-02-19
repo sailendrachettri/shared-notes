@@ -4,6 +4,7 @@ import {
   ADD_SUB_PAGE_DETAILS_URL,
   DELETE_MST_NOTE_URL,
   GET_MST_NOTE_URL,
+  MAKE_NOTE_PUBLIC_URL,
 } from "../../../api/api_routes";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
@@ -12,6 +13,7 @@ import { BiBookAlt } from "react-icons/bi";
 import { LuBadgePlus } from "react-icons/lu";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import { load } from "@tauri-apps/plugin-store";
+import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -45,6 +47,8 @@ const Sidebar = ({
   const [openNotes, setOpenNotes] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isGenericConfirmModalOpen, setIsGenericConfirmModalOpen] =
+    useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [deleteNoteType, setDeleteNoteType] = useState(null);
 
@@ -119,6 +123,27 @@ const Sidebar = ({
     setIsSubPage(true);
   };
 
+  const handleModeNoteItem = async () => {
+    try {
+      const payload = {
+        NoteId: selectedNoteId,
+      };
+      const res = await axiosInstance.post(MAKE_NOTE_PUBLIC_URL, payload);
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        toast.success("Note moved to Shared");
+        setRefresh(prev => !prev);
+      } else {
+        toast.error("Can't move note at the momemt");
+      }
+    } catch (error) {
+      console.log("Not able to move note", error);
+      toast.error("Can't move note at the momemt");
+    } finally {
+      setIsGenericConfirmModalOpen(false);
+    }
+  };
+
   const handleAddSubPage = async () => {
     setSubmitting(true);
     const store = await load("user-store.json", { autoSave: true });
@@ -126,7 +151,7 @@ const Sidebar = ({
     try {
       const payload = {
         SubPageTitle: subPageTitle,
-        NoteId: selectedNoteId
+        NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
       res;
@@ -194,16 +219,18 @@ const Sidebar = ({
           <section className="h-full w-full ">
             {publicNotes != null && publicNotes?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
-               {isUserLoggedIn && <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                  Private
-                </div>}
+                {isUserLoggedIn && (
+                  <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                    Private
+                  </div>
+                )}
                 {/* Private Notes */}
                 {isUserLoggedIn && privateNotes?.length <= 0 ? (
                   <div>
                     <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
                       {/* <LuBadgePlus size={16} />{" "}
                       <span>Create Private Notes</span> */}
-                      <span>Your Private Notes</span> 
+                      <span>Your Private Notes</span>
                     </div>
                   </div>
                 ) : (
@@ -350,6 +377,17 @@ const Sidebar = ({
                                 className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                               >
                                 Add sub-page
+                              </button>
+
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpenMenu(false);
+                                  setIsGenericConfirmModalOpen(true);
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
+                              >
+                                Move to Shared
                               </button>
 
                               <button
@@ -610,6 +648,14 @@ const Sidebar = ({
         onConfirm={() => handleDeleteNote()}
         title="Delete Note"
         description="This note will be permanently removed."
+      />
+
+      <GenericConfirmModal
+        isOpen={isGenericConfirmModalOpen}
+        onClose={() => setIsGenericConfirmModalOpen(false)}
+        onConfirm={() => handleModeNoteItem()}
+        title="Move to Shared"
+        description="This note will be permanently move to Shared."
       />
     </>
   );

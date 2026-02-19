@@ -68,6 +68,35 @@ namespace shared_notes_software_server.Controllers
 
             return Content(jsonResult, "application/json");
         }
+        [HttpPost("make-note-public")]
+        public async Task<IActionResult> MakeNotePublic([FromBody] MakeNotePublicRequest request)
+        {
+            if (request.NoteId <= 0)
+                return BadRequest("Invalid NoteId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"UPDATE public.utbl_mst_notes
+          SET user_id = null,
+              is_private = false,
+              updated_at = CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Kolkata'
+          WHERE note_id = @note_id
+          RETURNING json_build_object(
+              'success', true,
+              'note_id', note_id,
+              'status', 'UPDATED',
+              'message', 'Note is public now'
+          );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("note_id", request.NoteId);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return NotFound("Note not found or already deleted");
+
+            return Content(jsonResult, "application/json");
+        }
 
         [HttpPost("change-cover-image")]
         public async Task<IActionResult> ChangeCoverImage([FromBody] ChangeCoverImageRequest request)

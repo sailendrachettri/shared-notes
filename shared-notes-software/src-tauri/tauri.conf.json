@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Shared Notes",
+        "title": "Shared Notes (Beta)",
         "width": 1080,
         "height": 650,
         "center": true,

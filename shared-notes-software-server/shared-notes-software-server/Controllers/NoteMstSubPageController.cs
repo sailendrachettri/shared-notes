@@ -41,6 +41,7 @@ namespace shared_notes_software_server.Controllers
             return Ok(result);
         }
 
+
         [HttpPost("rename")]
         public async Task<IActionResult> RenameNote([FromBody] RenameSupPageModel request)
         {
