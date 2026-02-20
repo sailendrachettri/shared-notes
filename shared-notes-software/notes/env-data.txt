@@ -1,0 +1,5 @@
+VITE_API_URL=http://192.168.1.50:5171/api/v1
+VITE_DEV_API_URL=https://localhost:44383/api/v1
+
+VITE_ENV_TYPE=development
+# VITE_ENV_TYPE=production
