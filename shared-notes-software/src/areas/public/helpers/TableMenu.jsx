@@ -17,7 +17,7 @@ const CSS = `
 .ProseMirror table {
   border-collapse: collapse !important;
   table-layout: fixed;
-  width: max-content;
+  width: 100%;
   min-width: 100%;
   overflow: hidden;
   margin: 0;

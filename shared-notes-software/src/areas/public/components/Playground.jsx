@@ -72,10 +72,13 @@ const Playground = ({
         NotesId: currentNotesId,
         NoteId: selectedNoteId,
       };
-      (payload)
+      // const start = performance.now();
+      console.log(payload)
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-      (res);
+      console.log(res);
 
+      // const end = performance.now();
+      // console.log("API call took", end - start, "ms");
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         setfullData(res?.data?.data || null);
@@ -120,18 +123,6 @@ const Playground = ({
     }
   }, [selectedNoteId, refresh]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     try {
-  //       getNotesDetails();
-
-  //     } catch (err) {
-  //       console.error("Version check failed");
-  //     }
-  //   }, 30000); // every 30 seconds
-
-  //   return () => clearInterval(interval);
-  // }, []);
 
   return (
     <>
