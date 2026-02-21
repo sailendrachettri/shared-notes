@@ -51,10 +51,8 @@ const Playground = ({
         NotesDetails: data || "",
         NotesId: currentNotesId,
       };
-      console.log(payload);
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
-      console.log(res);
 
       setCurrentNotesId(res?.data?.notes_id || null);
       setLastUpdatedAt(res?.data?.updated_at);
@@ -83,12 +81,11 @@ const Playground = ({
         NotesId: currentNotesId,
       };
       // const start = performance.now();
-      console.log(payload);
+
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
-      console.log(res);
 
       // const end = performance.now();
-      // console.log("API call took", end - start, "ms");
+      //
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         setfullData(res?.data?.data || null);

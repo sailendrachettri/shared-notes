@@ -68,7 +68,7 @@ const Sidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      console.log(res);
+
       setSidebarItems(res?.data?.data?.public || []);
       setPublicNotes(res?.data?.data?.public || []);
       setPrivateNotes(res?.data?.data?.private || []);
@@ -105,7 +105,6 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log(note);
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
@@ -115,7 +114,6 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log(subNote);
     setCurrentNotesId(subNote?.notes_id);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
@@ -134,7 +132,7 @@ const Sidebar = ({
       // (res);
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         toast.success("Note moved to Shared");
-        setRefresh(prev => !prev);
+        setRefresh((prev) => !prev);
       } else {
         toast.error("Can't move note at the momemt");
       }
