@@ -106,6 +106,7 @@ const Sidebar = ({
 
   const handleSelectNote = (note) => {
     console.log({ note });
+    console.log(note?.notes_id);
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
@@ -116,8 +117,9 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log({ subNote });
-    setCurrentNotesId(subNote?.notes_i);
+    console.log( subNote );
+    console.log(subNote?.notes_id);
+    setCurrentNotesId(subNote?.notes_id);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");

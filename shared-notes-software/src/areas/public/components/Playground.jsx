@@ -70,8 +70,10 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
+    console.log(currentNotesId)
+    console.log(selectedNoteType)
     if (!currentNotesId || !selectedNoteType) {
-      console.error("NotesId and notes type is required is Required");
+      toast.error("NotesId and notes type is required is Required");
       return;
     }
 
