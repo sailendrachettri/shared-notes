@@ -85,6 +85,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,
         });
+        setIsUserLoggedIn(true);
       } else {
         toast.error("Can't create user at the moment");
       }

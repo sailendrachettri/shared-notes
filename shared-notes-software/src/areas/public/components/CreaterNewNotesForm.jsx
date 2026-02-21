@@ -31,7 +31,7 @@ const CreaterNewNotesForm = ({
   const [title, setTitle] = useState("");
   const [pageReload, setPageReload] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [makeItPublic, setMakeItPublic] = useState(true);
+  const [makeItPublic, setMakeItPublic] = useState(false);
   const searchInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
@@ -40,6 +40,7 @@ const CreaterNewNotesForm = ({
 
     const store = await load("user-store.json", { autoSave: true });
     const user = await store.get("user");
+    // console.log(user);
 
     try {
       if (!title.trim()) return;
@@ -48,18 +49,28 @@ const CreaterNewNotesForm = ({
        * And if the user is not loggedin then it will be public by default
        */
       let user_decision;
-      if (makeItPublic) {
-        user_decision = null;
-      } else if (!makeItPublic && isUserLoggedIn) {
-        user_decision = user?.userId;
+      if (isUserLoggedIn) {
+        if (makeItPublic) {
+          user_decision = null;
+          // console.log("if");
+        } else if (!makeItPublic) {
+          user_decision = user?.userId;
+          // console.log("else if");
+        } else {
+          toast.error("Can't create notes at the moment");
+          return;
+        }
       }
+
+      // console.log(user_decision);
 
       const payload = {
         NoteTitle: title || null,
         UserId: user_decision || null,
       };
-
+      // console.log(payload);
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
+      // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");
@@ -73,6 +84,7 @@ const CreaterNewNotesForm = ({
 
       setTitle("");
       setIsOpen(false);
+      setMakeItPublic(false);
       toast.success("Note created successful!");
     } catch (error) {
       console.error("Not able to create new note");
@@ -81,7 +93,6 @@ const CreaterNewNotesForm = ({
       setTimeout(() => {
         setRefresh((prev) => !prev);
         setSubmitting(false);
-        setMakeItPublic(false);
       }, 500);
     }
   };
