@@ -492,7 +492,7 @@ const RichTextEditor = ({
 
               onTitleChange(text);
             }}
-            className="text-2xl xl:text-4xl font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
+            className="text-2xl xl:text-4xl capitalize font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
             data-placeholder="Untitled"
           >
           </div>
