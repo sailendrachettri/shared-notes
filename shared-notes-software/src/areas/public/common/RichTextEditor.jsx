@@ -265,6 +265,7 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    console.log(file);
 
     setUploading(true);
 
