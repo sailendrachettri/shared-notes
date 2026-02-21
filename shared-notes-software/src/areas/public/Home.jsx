@@ -47,6 +47,7 @@ const Home = ({
                 setSortBy={setSortBy}
                 setSortDirection={setSortDirection}
                 isUserLoggedIn={isUserLoggedIn}
+                setIsSubPage={setIsSubPage}
               />
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar

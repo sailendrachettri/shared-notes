@@ -26,6 +26,7 @@ const CreaterNewNotesForm = ({
   sortDirection,
   setSortDirection,
   isUserLoggedIn,
+  setIsSubPage
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -77,6 +78,7 @@ const CreaterNewNotesForm = ({
         setNoteHeading(res?.data?.note_title);
         setCurrentNotesId(res?.data?.notes_id);
         setActive(res?.data?.mst_note_id);
+        setIsSubPage(false);
         setSelectedNoteId(
           res?.data?.mst_note_id,
         ); /* mst_note_id is same as note_id same as note_or_sub_page_id */
