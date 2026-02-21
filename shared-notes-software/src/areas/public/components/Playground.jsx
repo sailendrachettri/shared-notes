@@ -70,8 +70,8 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
-    console.log(currentNotesId)
-    console.log(selectedNoteType)
+    // console.log(currentNotesId)
+    // console.log(selectedNoteType)
     if (!currentNotesId || !selectedNoteType) {
       toast.error("NotesId and notes type is required is Required");
       return;
@@ -104,8 +104,8 @@ const Playground = ({
   };
 
   const renameNoteTitle = async (newTitle) => {
-    console.log(selectedNoteId);
-    console.log(isSubPage);
+    // console.log(selectedNoteId);
+    // console.log(isSubPage);
     try {
       if (isSubPage) {
         const payload = {
@@ -113,18 +113,18 @@ const Playground = ({
           SupPageTitle: newTitle || noteHeading,
            Notestype: 'mst-note'
         };
-        console.log(payload);
+        // console.log(payload);
        const res =  await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
-       console.log(res);
+       // console.log(res);
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
           Notestype: 'mst-note'
         };
-        console.log(payload);
+        // console.log(payload);
         const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-        console.log(res);
+        // console.log(res);
       }
     } catch (error) {
       console.error("Not able to rename", error);

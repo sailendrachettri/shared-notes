@@ -41,7 +41,7 @@ const CreaterNewNotesForm = ({
 
     const store = await load("user-store.json", { autoSave: true });
     const user = await store.get("user");
-    // console.log(user);
+    // // console.log(user);
 
     try {
       if (!title.trim()) return;
@@ -53,25 +53,25 @@ const CreaterNewNotesForm = ({
       if (isUserLoggedIn) {
         if (makeItPublic) {
           user_decision = null;
-          // console.log("if");
+          // // console.log("if");
         } else if (!makeItPublic) {
           user_decision = user?.userId;
-          // console.log("else if");
+          // // console.log("else if");
         } else {
           toast.error("Can't create notes at the moment");
           return;
         }
       }
 
-      // console.log(user_decision);
+      // // console.log(user_decision);
 
       const payload = {
         NoteTitle: title || null,
         UserId: user_decision || null,
       };
-      // console.log(payload);
+      // // console.log(payload);
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      // console.log(res);
+      // // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");
