@@ -157,7 +157,7 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      res;
+      console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteId(res?.data?.sub_page_id);
@@ -165,6 +165,7 @@ const Sidebar = ({
         setNoteHeading(subPageTitle || "");
         setActive(res?.data?.sub_page_id);
         setSelectedNoteType("sub-page");
+        setIsSubPage(true);
       } else {
         toast.error("Can't create sub pages at the moment");
       }
@@ -208,7 +209,10 @@ const Sidebar = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  // (privateNotes);
+  console.log(privateNotes);
+  console.log(publicNotes);
+  console.log(privateNotes?.length);
+  console.log(publicNotes?.length);
 
   return (
     <>
@@ -220,7 +224,7 @@ const Sidebar = ({
           </div>
         ) : (
           <section className="h-full w-full ">
-            {publicNotes != null && publicNotes?.length > 0 ? (
+            {(publicNotes?.length > 0 || privateNotes?.length > 0) ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {isUserLoggedIn && (
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
@@ -355,7 +359,7 @@ const Sidebar = ({
                                     setDeleteNoteType("sub-page");
                                     setIsDeleteOpen(true);
                                   }}
-                                  className="group-hover:block hidden"
+                                      
                                 >
                                   <RiDeleteBinLine size={14} />
                                 </span>
@@ -415,9 +419,9 @@ const Sidebar = ({
 
                 {/* Shared notes */}
                 <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
-                  <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                 {publicNotes?.length > 0 && <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     Shared
-                  </div>
+                  </div>}
                   {publicNotes?.map((item) => {
                     const isOpen = openNotes[item?.note_id];
 
@@ -535,7 +539,7 @@ const Sidebar = ({
                                   setDeleteNoteType("sub-page");
                                   setIsDeleteOpen(true);
                                 }}
-                                className="group-hover:block hidden"
+                                    
                               >
                                 <RiDeleteBinLine size={14} />
                               </span>
