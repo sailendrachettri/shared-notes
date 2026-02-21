@@ -56,6 +56,7 @@ const RichTextEditor = ({
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const titleRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -159,27 +160,27 @@ const RichTextEditor = ({
   }, [editor]);
 
   useEffect(() => {
-  if (titleRef.current && heading !== titleRef.current.textContent) {
-    titleRef.current.textContent = heading || "";
-  }
-}, [heading]);
+    if (titleRef.current && heading !== titleRef.current.textContent) {
+      titleRef.current.textContent = heading || "";
+    }
+  }, [heading]);
 
   const handleChangeCoverClick = () => fileInputRef?.current?.click();
   const handleChangeIconClick = () => iconInputRef?.current?.click();
 
-  const handleFileSelected = async (e) => {
+  const handleChangeCover = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    file;
+
+    setUploading(true);
 
     try {
-      ("here");
       const formData = new FormData();
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      ("res ", res);
+
       const uploadedUrl = res.data[0];
 
       const payload =
@@ -193,11 +194,16 @@ const RichTextEditor = ({
           : CHANGE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-      res;
+
+      console.log(res);
+      console.log(payload);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
       setRefresh((prev) => !prev);
+      setTimeout(() => {
+        setUploading(false);
+      }, 1000);
     }
   };
 
@@ -259,16 +265,16 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    file;
+
+    setUploading(true);
 
     try {
-      ("here");
       const formData = new FormData();
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      ("res ", res);
+
       const uploadedUrl = res.data[0];
 
       const payload =
@@ -282,11 +288,15 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      res;
+      console.log(payload);
+      console.log(res);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
       setRefresh((prev) => !prev);
+      setTimeout(() => {
+        setUploading(false);
+      }, 1000);
     }
   };
 
@@ -346,8 +356,6 @@ const RichTextEditor = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  console.log(heading);
 
   return (
     <div className="notion-editor-wrapper">
@@ -472,7 +480,7 @@ const RichTextEditor = ({
         {/* Title */}
         <div className="pb-4">
           <div
-          ref={titleRef}
+            ref={titleRef}
             contentEditable
             suppressContentEditableWarning
             onInput={(e) => {
@@ -494,8 +502,7 @@ const RichTextEditor = ({
             }}
             className="text-2xl xl:text-4xl capitalize font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
             data-placeholder="Untitled"
-          >
-          </div>
+          ></div>
 
           {lastUpdatedAt && (
             <p className="text-xs xl:text-sm text-slate-400 mt-2">
@@ -525,11 +532,28 @@ const RichTextEditor = ({
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleFileSelected}
+          onChange={handleChangeCover}
           className="hidden"
           accept="image/*"
         />
       </div>
+
+      {uploading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl px-8 py-6 flex flex-col items-center gap-3">
+            {/* Spinner */}
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Message */}
+            <p className="text-gray-700 text-sm font-medium">
+              Upload in progress...
+            </p>
+            <p className="text-gray-500 text-xs">
+              Please wait while we securely upload your file.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
