@@ -105,7 +105,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log({note})
+    console.log({ note });
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
@@ -116,7 +116,7 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    console.log({subNote})
+    console.log({ subNote });
     setCurrentNotesId(subNote?.notes_i);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
@@ -582,8 +582,9 @@ const Sidebar = ({
                 </section>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full w-full text-slate-600 text-sm">
-                No notes found!
+              <div className="flex flex-col items-center justify-center text-center h-full w-full text-slate-600 text-sm gap-1">
+                <span className="font-medium text-lg">No notes yet</span>
+                <span className="text-slate-400">Create your first note using the button below.</span>
               </div>
             )}
           </section>
