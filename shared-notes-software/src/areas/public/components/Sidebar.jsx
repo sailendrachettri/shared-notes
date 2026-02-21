@@ -68,7 +68,7 @@ const Sidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_MST_NOTE_URL, payload);
-      // (res);
+      console.log(res);
       setSidebarItems(res?.data?.data?.public || []);
       setPublicNotes(res?.data?.data?.public || []);
       setPrivateNotes(res?.data?.data?.private || []);
@@ -105,7 +105,8 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    note;
+    console.log(note);
+    setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
@@ -114,7 +115,8 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    subNote;
+    console.log(subNote);
+    setCurrentNotesId(subNote?.notes_id);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");

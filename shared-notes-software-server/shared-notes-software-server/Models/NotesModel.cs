@@ -38,9 +38,9 @@
         public long? NotesId { get; set; }
     }
 
-    public class GetNotesModelDTO
+    public class GetNotesModelRequest
     {
-        public long? NotesId { get; set; }
-        public long NoteId { get; set; }
+        public string NotesType { get; set; }
+        public long NotesId { get; set; }
     }
 }

@@ -67,10 +67,15 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
+    if(!currentNotesId || !selectedNoteType){
+      console.error("NotesId and notes type is required is Required");
+      return;
+    }
+
     try {
       const payload = {
+        NotesType: selectedNoteType,
         NotesId: currentNotesId,
-        NoteId: selectedNoteId,
       };
       // const start = performance.now();
       console.log(payload)
@@ -118,10 +123,10 @@ const Playground = ({
   };
 
   useEffect(() => {
-    if (selectedNoteId != null) {
+    if (selectedNoteId != null && selectedNoteType != null) {
       getNotesDetails();
     }
-  }, [selectedNoteId, refresh]);
+  }, [selectedNoteId, refresh, selectedNoteType]);
 
 
   return (

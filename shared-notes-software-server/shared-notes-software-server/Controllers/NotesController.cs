@@ -16,19 +16,21 @@ namespace shared_notes_software_server.Controllers
         }
 
         [HttpPost("notes-details")]
-        public async Task<IActionResult> GetNotes([FromBody] GetNotesModelDTO request)
+        public async Task<IActionResult> GetNotes([FromBody] GetNotesModelRequest request)
         {
-            if (request.NoteId == 0)
-                return BadRequest("NoteId is required");
+            if (request.NotesId == 0 || string.IsNullOrWhiteSpace(request.NotesType))
+            {
+                return BadRequest("NotesId and NotesType are required");
+            }
 
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.get_notes_by_id(@notes_id_i, @note_id_i);",
+                "SELECT public.get_notes_by_id(@notes_type_i, @notes_id_i);",
                 cmd =>
                 {
+                    cmd.Parameters.AddWithValue("notes_type_i",
+                        request.NotesType);
                     cmd.Parameters.AddWithValue("notes_id_i",
-                        request.NotesId.HasValue ? request.NotesId.Value : (object)DBNull.Value);
-
-                    cmd.Parameters.AddWithValue("note_id_i", request.NoteId);
+                        request.NotesId);
                 }
             );
 
