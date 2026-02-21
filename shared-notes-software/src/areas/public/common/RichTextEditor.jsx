@@ -55,6 +55,7 @@ const RichTextEditor = ({
   const iconInputRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
+  const titleRef = useRef(null);
 
   const editor = useEditor({
     extensions: [
@@ -156,6 +157,12 @@ const RichTextEditor = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [editor]);
+
+  useEffect(() => {
+  if (titleRef.current && heading !== titleRef.current.textContent) {
+    titleRef.current.textContent = heading || "";
+  }
+}, [heading]);
 
   const handleChangeCoverClick = () => fileInputRef?.current?.click();
   const handleChangeIconClick = () => iconInputRef?.current?.click();
@@ -340,6 +347,8 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  console.log(heading);
+
   return (
     <div className="notion-editor-wrapper">
       {/* Cover Image Section - ALWAYS render this container */}
@@ -463,6 +472,7 @@ const RichTextEditor = ({
         {/* Title */}
         <div className="pb-4">
           <div
+          ref={titleRef}
             contentEditable
             suppressContentEditableWarning
             onInput={(e) => {
@@ -485,7 +495,6 @@ const RichTextEditor = ({
             className="text-2xl xl:text-4xl font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
             data-placeholder="Untitled"
           >
-            {heading && <span className="capitalize">{heading}</span>}
           </div>
 
           {lastUpdatedAt && (

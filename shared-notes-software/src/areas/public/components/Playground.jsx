@@ -102,19 +102,27 @@ const Playground = ({
   };
 
   const renameNoteTitle = async (newTitle) => {
+    console.log(selectedNoteId);
+    console.log(isSubPage);
     try {
       if (isSubPage) {
         const payload = {
           SubPageId: selectedNoteId,
           SupPageTitle: newTitle || noteHeading,
+           Notestype: 'mst-note'
         };
-        await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
+        console.log(payload);
+       const res =  await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
+       console.log(res);
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
+          Notestype: 'mst-note'
         };
-        await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
+        console.log(payload);
+        const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
+        console.log(res);
       }
     } catch (error) {
       console.error("Not able to rename", error);

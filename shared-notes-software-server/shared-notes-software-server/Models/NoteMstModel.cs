@@ -23,6 +23,7 @@
     {
         public long NoteId { get; set; }
         public string NoteTitle { get; set; }
+        public string NotesType { get; set; }
     }
     public class MakeNotePublicRequest
     {

@@ -105,16 +105,19 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
+    console.log({note})
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
     setNoteHeading(note?.note_title || "");
     setSelectedNoteId(note?.note_id);
     setActive(note?.note_id);
+    setIsSubPage(false);
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    setCurrentNotesId(subNote?.notes_id);
+    console.log({subNote})
+    setCurrentNotesId(subNote?.notes_i);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
     setNoteHeading(subNote?.sub_page_title || "");
