@@ -18,7 +18,7 @@ const Playground = ({
   setCurrentNotesId,
   isSubPage,
   selectedNoteType,
-  refresh
+  refresh,
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -42,14 +42,19 @@ const Playground = ({
   };
 
   const handleAutoSave = async (data) => {
+    if (!currentNotesId) {
+      console.error("Notes id cannot be null");
+      return;
+    }
     try {
       const payload = {
         NotesDetails: data || "",
-        NoteId: selectedNoteId,
         NotesId: currentNotesId,
       };
+      console.log(payload);
 
       const res = await axiosInstance.post(ADD_UPDATE_NOTES_URL, payload);
+      console.log(res);
 
       setCurrentNotesId(res?.data?.notes_id || null);
       setLastUpdatedAt(res?.data?.updated_at);
@@ -67,7 +72,7 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
-    if(!currentNotesId || !selectedNoteType){
+    if (!currentNotesId || !selectedNoteType) {
       console.error("NotesId and notes type is required is Required");
       return;
     }
@@ -78,7 +83,7 @@ const Playground = ({
         NotesId: currentNotesId,
       };
       // const start = performance.now();
-      console.log(payload)
+      console.log(payload);
       const res = await axiosInstance.post(GET_NOTES__DETAILS_URL, payload);
       console.log(res);
 
@@ -127,7 +132,6 @@ const Playground = ({
       getNotesDetails();
     }
   }, [selectedNoteId, refresh, selectedNoteType]);
-
 
   return (
     <>

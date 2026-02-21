@@ -21,7 +21,7 @@ namespace shared_notes_software_server.Controllers
             if (request.NotesId == 0 || string.IsNullOrWhiteSpace(request.NotesType))
             {
                 return BadRequest("NotesId and NotesType are required");
-            }
+            }   
 
             var jsonResult = await _db.ExecuteScalarAsync<string>(
                 "SELECT public.get_notes_by_id(@notes_type_i, @notes_id_i);",
@@ -62,19 +62,17 @@ namespace shared_notes_software_server.Controllers
         [HttpPost("add-update")]
         public async Task<IActionResult> AddNote([FromBody] AddUpdateNotesModelRequest request)
         {
-            // 🔐 Encrypt only notes_details
+            // Encrypt only notes_details
             var encryptedDetails = EncryptionHelper.Encrypt(request.NotesDetails);
 
             var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.add_update_notes_details(@notes_details_i, @note_id_i, @notes_id_i)",
+                "SELECT public.add_update_notes_details(@notes_details_i, @notes_id_i)",
                 cmd =>
                 {
                     cmd.Parameters.AddWithValue("notes_details_i",
                         encryptedDetails ?? (object)DBNull.Value);
 
-                    cmd.Parameters.AddWithValue("note_id_i", request.NoteId);
-                    cmd.Parameters.AddWithValue("notes_id_i",
-                        request.NotesId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("notes_id_i", request.NotesId );
                 });
 
             if (string.IsNullOrEmpty(jsonResult))

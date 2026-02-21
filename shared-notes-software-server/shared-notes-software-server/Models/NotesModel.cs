@@ -34,7 +34,6 @@
     public class AddUpdateNotesModelRequest
     {
         public string? NotesDetails { get; set; }
-        public long NoteId { get; set; }
         public long? NotesId { get; set; }
     }
 
