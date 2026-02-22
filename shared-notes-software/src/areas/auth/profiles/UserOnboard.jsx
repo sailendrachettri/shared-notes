@@ -34,7 +34,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       return toast.error("Please enter your full name");
     }
 
-    if (step === 2 && pin.length !== 4) {
+    if (step === 2 && pin?.length !== 4) {
       return toast.error("PIN must be 4 digits");
     }
 
@@ -66,7 +66,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       if (confirmPin.length !== 4) return toast.error("PIN must be 4 digits");
       if (pin !== confirmPin) return toast.error("PINs do not match");
 
-      const payload = { UserName: fullName, UserPassword: pin.toString() };
+      const payload = { UserName: fullName, UserPassword: pin?.toString() };
 
       const res = await axiosInstance.post(ADD_USER_URL, payload);
       // (res);
@@ -194,6 +194,11 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && fullName?.length >= 3) {
+                            handleNext();
+                          }
+                        }}
                         placeholder="Enter Full Name"
                         maxLength={10}
                         className="w-full pl-3 pr-3 py-2 border capitalize border-slate-200 rounded-2xl focus:outline-none focus:ring-1 focus:ring-primary"
@@ -225,9 +230,9 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                         </button>
                         <button
                           onClick={handleNext}
-                          disabled={pin.length !== 4}
+                          disabled={pin?.length !== 4}
                           className={`py-2 px-4 rounded-xl text-white transition ${
-                            pin.length === 4
+                            pin?.length === 4
                               ? "bg-primary hover:bg-primary/80"
                               : "bg-gray-300 cursor-not-allowed"
                           }`}
@@ -265,9 +270,25 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                 <section>
                   {/* List the users */}
                   <div className="p-3">
-                    <p className="text-xs ps-3 pb-2 uppercase text-gray-400 tracking-wider mb-3">
-                      Select a Profile
-                    </p>
+                    {allUsersList?.length > 0 ? (
+                      <p className="text-xs ps-3 pb-2 uppercase text-gray-400 tracking-wider mb-3">
+                        Select a Profile
+                      </p>
+                    ) : (
+                      <div className="text-center text-gray-400">
+                        <p>Don't have an account yet?</p>
+                        {
+                          <p
+                            onClick={() => {
+                              setSelectedType("signup");
+                            }}
+                            className="font-medium cursor-pointer hover:text-gray-500"
+                          >
+                            Create one
+                          </p>
+                        }
+                      </div>
+                    )}
 
                     <div className="grid grid-cols-4 gap-x-3 gap-y-5">
                       {allUsersList?.map((user) => {

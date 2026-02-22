@@ -259,11 +259,11 @@ const CreaterNewNotesForm = ({
                   </label>
                 </div>
               ) : (
-                <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 mb-4">
-                  <p className="text-sm text-primary font-medium">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100  mb-4">
+                  <p className="text-sm text-slate-500 font-medium">
                     You are creating a public note.
                   </p>
-                  <p className="text-xs text-primary/90 mt-1">
+                  <p className="text-xs text-slate-500 0 mt-1">
                     Anyone with access will be able to view it.
                   </p>
                 </div>

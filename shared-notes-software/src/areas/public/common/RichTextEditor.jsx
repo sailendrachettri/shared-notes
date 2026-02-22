@@ -513,7 +513,7 @@ const RichTextEditor = ({
         </div>
 
         {/* Editor Content */}
-        <div className="notion-editor-container relative">
+        <div className="notion-editor-container relative [&_.ProseMirror>p]:first-letter:uppercase">
           {editor && <FormattingMenu editor={editor} />}
           {editor && <TableMenu editor={editor} />}
           <EditorContent editor={editor} />
