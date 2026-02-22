@@ -36,7 +36,7 @@ const FormattingMenu = ({ editor }) => {
         return from !== to;
       }}
     >
-      <div className="flex items-center gap-1 bg-white shadow-lg rounded-lg p-2 border">
+      <div className="flex items-center gap-1 bg-white shadow-lg rounded-lg p-2 border border-slate-200">
 
         {/* Bold */}
         <button

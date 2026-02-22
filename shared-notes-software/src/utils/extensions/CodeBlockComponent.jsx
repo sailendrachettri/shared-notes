@@ -4,18 +4,34 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
 
 const CodeBlockComponent = ({ node, editor, getPos }) => {
   const language = node.attrs.language || "javascript";
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    setCopied(true);
-    await navigator.clipboard.writeText(node.textContent);
+    if (!node?.textContent) return;
 
-    setTimeout(() => {
+    try {
+      await navigator.clipboard.writeText(node.textContent);
+      setCopied(true);
+
+      // Optional: reset copied state after 2 seconds
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to copy text:", error);
       setCopied(false);
-    }, 2000);
+
+      // Optional: show user-friendly message
+      toast.error("Copy failed. Please try again.");
+    } finally {
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    }
   };
 
   const handleLanguageChange = (e) => {
