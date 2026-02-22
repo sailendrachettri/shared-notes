@@ -1,11 +1,21 @@
 import React from "react";
 import { NodeViewWrapper, NodeViewContent } from "@tiptap/react";
+import { useEffect } from "react";
+import { useState } from "react";
+import { IoCopyOutline } from "react-icons/io5";
+import { IoCheckmarkDoneOutline } from "react-icons/io5";
 
 const CodeBlockComponent = ({ node, editor, getPos }) => {
   const language = node.attrs.language || "javascript";
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
+    setCopied(true);
     await navigator.clipboard.writeText(node.textContent);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   const handleLanguageChange = (e) => {
@@ -24,26 +34,44 @@ const CodeBlockComponent = ({ node, editor, getPos }) => {
   return (
     <NodeViewWrapper className="relative group my-3">
       {/* Header */}
-      <div className="flex justify-between items-center bg-[#1e1e1e] text-xs text-gray-300 px-3 py-1 rounded-t-lg">
-        
+      <div className="flex justify-between items-center bg-[#1e1e1e] text-xs text-slate-100 px-3 py-1 rounded-t-lg">
         {/* 🔥 Dropdown instead of plain text */}
         <select
           value={language}
           onChange={handleLanguageChange}
-          className="bg-transparent text-gray-300 text-xs outline-none cursor-pointer"
+          className="bg-transparent  text-xs outline-none cursor-pointer opacity-0 group-hover:opacity-100 transition"
         >
-          <option value="javascript">JavaScript</option>
-          <option value="css">CSS</option>
-          <option value="html">HTML</option>
-          <option value="json">JSON</option>
-          <option value="sql">SQL</option>
+          <option className="text-slate-800 cursor-pointer" value="javascript">
+            JavaScript
+          </option>
+          <option className="text-slate-800 cursor-pointer" value="css">
+            CSS
+          </option>
+          <option className="text-slate-800 cursor-pointer" value="html">
+            HTML
+          </option>
+          <option className="text-slate-800 cursor-pointer" value="json">
+            JSON
+          </option>
+          <option className="text-slate-800 cursor-pointer" value="sql">
+            SQL
+          </option>
         </select>
 
         <button
           onClick={handleCopy}
           className="opacity-0 group-hover:opacity-100 transition"
         >
-          Copy
+          {copied ? (
+            <span className="flex items-center gap-x-1 flex-nowrap cursor-pointer">
+              <IoCheckmarkDoneOutline size={18} />
+              <span>Copied</span>
+            </span>
+          ) : (
+            <span className="flex items-center gap-x-1 flex-nowrap cursor-pointer">
+              <IoCopyOutline size={18} /> <span>Copy</span>
+            </span>
+          )}
         </button>
       </div>
 
