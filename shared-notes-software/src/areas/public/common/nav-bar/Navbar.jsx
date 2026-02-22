@@ -100,6 +100,7 @@ const Navbar = ({
                   onClick={() => {
                     setOpenRegistrationWindow(true);
                   }}
+                  className="ps-1"
                 >
                   (UNREGISTERED)
                 </span>
