@@ -9,7 +9,7 @@ import LoadingPage from "./utils/info-screen/LoadingPage";
 import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import UserOnboard from "./areas/auth/profiles/UserOnboard";
 import { load } from "@tauri-apps/plugin-store";
-
+import "highlight.js/styles/atom-one-dark.css";
 const appWindow = getCurrentWindow();
 
 function App() {

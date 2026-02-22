@@ -20,7 +20,8 @@ import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
 import { IoImageOutline } from "react-icons/io5";
 import { FaRegFaceSmileBeam } from "react-icons/fa6";
-
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import lowlight from "../../../utils/editor/codeHighlight";
 import { axiosInstance } from "../../../api/axios";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
@@ -63,6 +64,14 @@ const RichTextEditor = ({
       StarterKit.configure({
         heading: {
           levels: [1, 2, 3],
+        },
+        codeBlock: false,
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        defaultLanguage: "javascript",
+        HTMLAttributes: {
+          spellcheck: "false",
         },
       }),
       Underline,
