@@ -1,275 +1,180 @@
-import { useEffect } from "react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import { useState } from "react";
 
 const FormattingMenu = ({ editor }) => {
-  const [isTextSelected, setIsTextSelected] = useState(false);
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showHighlightPicker, setShowHighlightPicker] = useState(false);
-  const [showLinkInput, setShowLinkInput] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [showTextColor, setShowTextColor] = useState(false);
+  const [showHighlight, setShowHighlight] = useState(false);
 
-  useEffect(() => {
-    if (!editor) return;
+  if (!editor) return null;
 
-    const checkSelection = () => {
-      const { from, to } = editor.state.selection;
-      setIsTextSelected(from !== to);
-
-      if (from === to) {
-        setShowColorPicker(false);
-        setShowHighlightPicker(false);
-        setShowLinkInput(false);
-      }
-    };
-
-    editor.on("selectionUpdate", checkSelection);
-    editor.on("transaction", checkSelection);
-
-    return () => {
-      editor.off("selectionUpdate", checkSelection);
-      editor.off("transaction", checkSelection);
-    };
-  }, [editor]);
-
-  if (!editor || !isTextSelected) return null;
-
-  const colors = [
-    { name: "Default", value: "#000000" },
-    { name: "Red", value: "#ef4444" },
-    { name: "Orange", value: "#f97316" },
-    { name: "Yellow", value: "#eab308" },
-    { name: "Green", value: "#22c55e" },
-    { name: "Blue", value: "#3b82f6" },
-    { name: "Purple", value: "#a855f7" },
-    { name: "Pink", value: "#ec4899" },
+  const textColors = [
+    "#000000",
+    "#ef4444",
+    "#f97316",
+    "#eab308",
+    "#22c55e",
+    "#3b82f6",
+    "#a855f7",
+    "#ec4899",
   ];
 
-  const highlights = [
-    { name: "None", value: "" },
-    { name: "Yellow", value: "#fef08a" },
-    { name: "Green", value: "#bbf7d0" },
-    { name: "Blue", value: "#bfdbfe" },
-    { name: "Purple", value: "#e9d5ff" },
-    { name: "Pink", value: "#fbcfe8" },
-    { name: "Red", value: "#fecaca" },
+  const bgColors = [
+    "#fef08a",
+    "#bbf7d0",
+    "#bfdbfe",
+    "#e9d5ff",
+    "#fbcfe8",
+    "#fecaca",
   ];
-
-  const setLink = () => {
-    if (linkUrl) {
-      editor.chain().focus().setLink({ href: linkUrl }).run();
-      setLinkUrl("");
-      setShowLinkInput(false);
-    }
-  };
 
   return (
-    <div className="formatting-menu-wrapper">
-      <div className="formatting-menu">
+    <BubbleMenu
+      editor={editor}
+      tippyOptions={{ duration: 100 }}
+      shouldShow={({ editor }) => {
+        const { from, to } = editor.state.selection;
+        return from !== to;
+      }}
+    >
+      <div className="flex items-center gap-1 bg-white shadow-lg rounded-lg p-2 border">
+
         {/* Bold */}
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`formatting-button ${editor.isActive("bold") ? "is-active" : ""}`}
-          title="Bold (Ctrl+B)"
+          className={`px-2 ${editor.isActive("bold") ? "bg-gray-200" : ""}`}
         >
-          <strong>B</strong>
+          <b>B</b>
         </button>
 
         {/* Italic */}
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`formatting-button ${editor.isActive("italic") ? "is-active" : ""}`}
-          title="Italic (Ctrl+I)"
+          className={`px-2 ${editor.isActive("italic") ? "bg-gray-200" : ""}`}
         >
-          <em>I</em>
+          <i>I</i>
         </button>
 
         {/* Underline */}
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`formatting-button ${editor.isActive("underline") ? "is-active" : ""}`}
-          title="Underline (Ctrl+U)"
+          className={`px-2 ${editor.isActive("underline") ? "bg-gray-200" : ""}`}
         >
           <u>U</u>
         </button>
 
-        {/* Strikethrough */}
+        {/* Strike */}
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`formatting-button ${editor.isActive("strike") ? "is-active" : ""}`}
-          title="Strikethrough"
+          className={`px-2 ${editor.isActive("strike") ? "bg-gray-200" : ""}`}
         >
           <s>S</s>
         </button>
 
-        {/* Code */}
+        {/* Inline Code */}
         <button
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`formatting-button ${editor.isActive("code") ? "is-active" : ""}`}
-          title="Code (Ctrl+E)"
+          className={`px-2 ${editor.isActive("code") ? "bg-gray-200" : ""}`}
         >
           {"</>"}
         </button>
 
-        <div className="formatting-divider"></div>
+        <div className="w-px h-5 bg-gray-300 mx-1" />
 
         {/* Text Color */}
-        <div className="formatting-dropdown">
+        <div className="relative">
           <button
             onClick={() => {
-              setShowColorPicker(!showColorPicker);
-              setShowHighlightPicker(false);
-              setShowLinkInput(false);
+              setShowTextColor(!showTextColor);
+              setShowHighlight(false);
             }}
-            className="formatting-button"
-            title="Text color"
+            className="px-2"
           >
-            A
+            🎨
           </button>
-          {showColorPicker && (
-            <div className="color-picker">
-              {colors.map((color) => (
+
+          {showTextColor && (
+            <div className="absolute top-8 left-0 bg-white shadow-md p-2 rounded flex gap-1 flex-wrap w-40">
+              {textColors.map((color) => (
                 <button
-                  key={color.value}
+                  key={color}
                   onClick={() => {
-                    if (color.value === "#000000") {
-                      editor.chain().focus().unsetColor().run();
-                    } else {
-                      editor.chain().focus().setColor(color.value).run();
-                    }
-                    setShowColorPicker(false);
+                    editor.chain().focus().setColor(color).run();
+                    setShowTextColor(false);
                   }}
-                  className="color-option"
-                  style={{ backgroundColor: color.value }}
-                  title={color.name}
-                >
-                  {color.value === "#000000" && "×"}
-                </button>
+                  className="w-5 h-5 rounded-full border"
+                  style={{ backgroundColor: color }}
+                />
               ))}
             </div>
           )}
         </div>
 
         {/* Highlight */}
-        <div className="formatting-dropdown">
+        <div className="relative">
           <button
             onClick={() => {
-              setShowHighlightPicker(!showHighlightPicker);
-              setShowColorPicker(false);
-              setShowLinkInput(false);
+              setShowHighlight(!showHighlight);
+              setShowTextColor(false);
             }}
-            className="formatting-button"
-            title="Highlight"
+            className="px-2"
           >
             🖍
           </button>
-          {showHighlightPicker && (
-            <div className="color-picker">
-              {highlights.map((highlight) => (
+
+          {showHighlight && (
+            <div className="absolute top-8 left-0 bg-white shadow-md p-2 rounded flex gap-1 flex-wrap w-40">
+              {bgColors.map((color) => (
                 <button
-                  key={highlight.name}
+                  key={color}
                   onClick={() => {
-                    if (!highlight.value) {
-                      editor.chain().focus().unsetHighlight().run();
-                    } else {
-                      editor
-                        .chain()
-                        .focus()
-                        .setHighlight({ color: highlight.value })
-                        .run();
-                    }
-                    setShowHighlightPicker(false);
+                    editor.chain().focus().setHighlight({ color }).run();
+                    setShowHighlight(false);
                   }}
-                  className="color-option"
-                  style={{ backgroundColor: highlight.value || "#fff" }}
-                  title={highlight.name}
-                >
-                  {!highlight.value && "×"}
-                </button>
+                  className="w-5 h-5 rounded border"
+                  style={{ backgroundColor: color }}
+                />
               ))}
             </div>
           )}
         </div>
 
-        <div className="formatting-divider"></div>
+        <div className="w-px h-5 bg-gray-300 mx-1" />
 
-        {/* Link */}
-        <div className="formatting-dropdown">
-          <button
-            onClick={() => {
-              setShowLinkInput(!showLinkInput);
-              setShowColorPicker(false);
-              setShowHighlightPicker(false);
-              if (editor.isActive("link")) {
-                const href = editor.getAttributes("link").href;
-                setLinkUrl(href);
-              }
-            }}
-            className={`formatting-button ${editor.isActive("link") ? "is-active" : ""}`}
-            title="Add link"
-          >
-            🔗
-          </button>
-          {showLinkInput && (
-            <div className="link-input-wrapper">
-              <input
-                type="url"
-                placeholder="Enter URL"
-                value={linkUrl}
-                onChange={(e) => setLinkUrl(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    setLink();
-                  }
-                }}
-                className="link-input"
-                autoFocus
-              />
-              <button onClick={setLink} className="link-button">
-                ✓
-              </button>
-              {editor.isActive("link") && (
-                <button
-                  onClick={() => {
-                    editor.chain().focus().unsetLink().run();
-                    setLinkUrl("");
-                    setShowLinkInput(false);
-                  }}
-                  className="link-button link-remove"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="formatting-divider"></div>
-
-        {/* Text Alignment */}
+        {/* Alignment */}
         <button
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
-          className={`formatting-button ${editor.isActive({ textAlign: "left" }) ? "is-active" : ""}`}
-          title="Align left"
+          className={`px-2 ${editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""}`}
         >
           ⬅
         </button>
+
         <button
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
-          className={`formatting-button ${editor.isActive({ textAlign: "center" }) ? "is-active" : ""}`}
-          title="Align center"
+          className={`px-2 ${editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""}`}
         >
           ↔
         </button>
+
         <button
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
-          className={`formatting-button ${editor.isActive({ textAlign: "right" }) ? "is-active" : ""}`}
-          title="Align right"
+          className={`px-2 ${editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""}`}
         >
           ➡
         </button>
+
+        <div className="w-px h-5 bg-gray-300 mx-1" />
+
+        {/* Clear Formatting */}
+        <button
+          onClick={() =>
+            editor.chain().focus().clearNodes().unsetAllMarks().run()
+          }
+          className="px-2"
+        >
+          🧹
+        </button>
       </div>
-    </div>
+    </BubbleMenu>
   );
 };
 
