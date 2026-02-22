@@ -373,18 +373,18 @@ textarea {
 
 /* Code Block */
 /* Make highlight.js theme apply */
-.ProseMirror pre code {
+/* .ProseMirror pre code {
   display: block;
   padding: 0;
-}
+} */
 
 /* This is the missing piece */
-.ProseMirror pre code[class*="language-"] {
+/* .ProseMirror pre code[class*="language-"] {
   background: inherit;
-}
+} */
 
 /* Force hljs class styling */
-.ProseMirror pre code {
+/* .ProseMirror pre code {
   background: transparent;
 }
 
@@ -392,36 +392,36 @@ textarea {
   border-radius: 10px;
   padding: 1rem;
   overflow-x: auto;
-}
+} */
 
-.hljs {
+/* .hljs {
   display: block;
   padding: 1rem;
   border-radius: 10px;
-}
+} */
 
 /* Apply highlight.js base theme manually */
 .ProseMirror pre {
-  background: #282c34; /* atom-one-dark background */
+  background: #282c34;
   color: #abb2bf;
-  border-radius: 10px;
+  /* border-radius: 10px;
   padding: 1rem;
   margin: 1rem;
-  overflow-x: auto;
+  overflow-x: auto; */
 }
 
 /* Keep inline code normal */
-.ProseMirror p code {
+/* .ProseMirror p code {
   background: rgba(135, 131, 120, 0.15);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-}
+} */
 
 /* Remove background from nested code */
-.ProseMirror pre code {
+/* .ProseMirror pre code {
   background: transparent;
   padding: 0;
-}
+} */
 
 /* .notion-editor-content pre {
   background-color: #f9fafb;

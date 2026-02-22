@@ -20,8 +20,9 @@ import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
 import { IoImageOutline } from "react-icons/io5";
 import { FaRegFaceSmileBeam } from "react-icons/fa6";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+// import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import lowlight from "../../../utils/editor/codeHighlight";
+import { BubbleMenu } from "@tiptap/react/menus";
 import { axiosInstance } from "../../../api/axios";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
@@ -40,6 +41,7 @@ import defaultIcon from "../../../assets/pngs/logo.png";
 import toast from "react-hot-toast";
 import FormattingMenu from "../helpers/FormattingMenu";
 import TableMenu from "../helpers/TableMenu";
+import { CustomCodeBlock } from "../../../utils/extensions/CustomCodeBlock";
 
 const RichTextEditor = ({
   value,
@@ -67,12 +69,15 @@ const RichTextEditor = ({
         },
         codeBlock: false,
       }),
-      CodeBlockLowlight.configure({
+      // CodeBlockLowlight.configure({
+      //   lowlight,
+      //   defaultLanguage: "javascript",
+      //   HTMLAttributes: {
+      //     spellcheck: "false",
+      //   },
+      // }),
+      CustomCodeBlock.configure({
         lowlight,
-        defaultLanguage: "javascript",
-        HTMLAttributes: {
-          spellcheck: "false",
-        },
       }),
       Underline,
       TextStyle,
@@ -523,6 +528,7 @@ const RichTextEditor = ({
 
         {/* Editor Content */}
         <div className="notion-editor-container relative [&_.ProseMirror>p]:first-letter:uppercase">
+          
           {editor && <FormattingMenu editor={editor} />}
           {editor && <TableMenu editor={editor} />}
           <EditorContent editor={editor} />
