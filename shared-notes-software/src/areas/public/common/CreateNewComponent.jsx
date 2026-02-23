@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { BiSolidCommentAdd } from "react-icons/bi";
 import { FiFileText, FiLayers } from "react-icons/fi";
-import CreaterNewNotesForm from "../components/CreaterNewNotesForm";
+import CreaterNewNotesForm from "./CreaterNewNotesForm";
 import CreateNewWorkSpace from "./CreateNewWorkSpace";
 
 const CreateNewComponent = ({

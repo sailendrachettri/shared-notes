@@ -215,7 +215,7 @@ const CreaterNewNotesForm = ({
         {/* Click outside to close */}
         <div
           className="absolute inset-0 -z-10"
-          onClick={() => setIsOpen(false)}
+          onClick={() => {setSelectedTab(null); setIsOpen(false)}}
         />
       </div>
     </div>

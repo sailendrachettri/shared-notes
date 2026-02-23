@@ -2,7 +2,7 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Playground from "./components/Playground";
 import Footer from "./common/Footer";
-import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
+import CreaterNewNotesForm from "./common/CreaterNewNotesForm";
 import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
 import CreateNewComponent from "./common/CreateNewComponent";
 import { LuRefreshCw } from "react-icons/lu";
@@ -35,10 +35,6 @@ const Home = ({
   const [privateNotes, setPrivateNotes] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
 
- 
-
- 
-
   return (
     <div className="h-screen bg-gray-100 p-3">
       {/* Outer Card Container */}
@@ -49,16 +45,16 @@ const Home = ({
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
             <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
               {/* Search */}
-                <div className="mb-3 mt-5">
-                  <SearchSection
+              <div className="mb-3 mt-5">
+                <SearchSection
                   setSearchText={setSearchText}
                   setSortBy={setSortBy}
                   setSortDirection={setSortDirection}
                   sortBy={setSortBy}
                   sortDirection={sortDirection}
                   setRefresh={setRefresh}
-                  />
-                </div>
+                />
+              </div>
               <CreateNewComponent
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
