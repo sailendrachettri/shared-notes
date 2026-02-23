@@ -4,6 +4,14 @@ import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
 import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
+import CreateNewComponent from "./common/CreateNewComponent";
+import { LuRefreshCw } from "react-icons/lu";
+import { TbAbc } from "react-icons/tb";
+import { IoTimerOutline } from "react-icons/io5";
+import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
+import { HiOutlineSearch } from "react-icons/hi";
+import { useRef } from "react";
+import SearchSection from "./common/SearchSection";
 
 const Home = ({
   toggleSidebar,
@@ -27,6 +35,10 @@ const Home = ({
   const [privateNotes, setPrivateNotes] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
 
+ 
+
+ 
+
   return (
     <div className="h-screen bg-gray-100 p-3">
       {/* Outer Card Container */}
@@ -36,7 +48,17 @@ const Home = ({
           {/* Sidebar Card */}
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
             <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
-              <CreaterNewNotesForm
+              {/* Search */}
+                <div className="mb-3 mt-5">
+                  <SearchSection
+                  setSearchText={setSearchText}
+                  setSortBy={setSortBy}
+                  setSortDirection={setSortDirection}
+                  sortBy={setSortBy}
+                  sortDirection={sortDirection}
+                  />
+                </div>
+              <CreateNewComponent
                 setSearchText={setSearchText}
                 setRefresh={setRefresh}
                 setSelectedNoteId={setSelectedNoteId}
@@ -51,6 +73,7 @@ const Home = ({
                 isUserLoggedIn={isUserLoggedIn}
                 setIsSubPage={setIsSubPage}
               />
+
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <Sidebar
                   searchText={searchText}
