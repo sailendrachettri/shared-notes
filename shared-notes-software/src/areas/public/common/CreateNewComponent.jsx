@@ -51,6 +51,7 @@ const CreateNewComponent = ({
                   setSelectedTab={setSelectedTab}
                   isUserLoggedIn={isUserLoggedIn}
                   setIsSubPage={setIsSubPage}
+                  setRefresh={setRefresh}
                 />
               )}
 
