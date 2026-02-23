@@ -56,6 +56,7 @@ const Home = ({
                   setSortDirection={setSortDirection}
                   sortBy={setSortBy}
                   sortDirection={sortDirection}
+                  setRefresh={setRefresh}
                   />
                 </div>
               <CreateNewComponent
