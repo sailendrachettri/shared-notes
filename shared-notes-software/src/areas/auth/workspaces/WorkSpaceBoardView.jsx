@@ -36,21 +36,51 @@ import { MdOutlinePendingActions } from "react-icons/md";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
-  primary:   "#d25564",
+  primary: "#d25564",
   secondary: "#3e3e55",
-  ternary:   "#ffd788",
+  ternary: "#ffd788",
 };
 
 /* ─── Data ───────────────────────────────────────────────────────── */
 const initialTasks = [
-  { id: "1", title: "Design login page UI",      statusId: "todo",       priority: "High" },
-  { id: "2", title: "Build authentication API",  statusId: "inprogress", priority: "Medium" },
-  { id: "3", title: "Fix dashboard bugs",        statusId: "done",       priority: "Low" },
-  { id: "4", title: "Create database schema",    statusId: "todo",       priority: "High" },
-  { id: "5", title: "Integrate payment gateway", statusId: "inprogress", priority: "High" },
-  { id: "6", title: "Deploy to production",      statusId: "done",       priority: "Medium" },
-  { id: "7", title: "Write documentation",       statusId: "todo",       priority: "Low" },
-  { id: "8", title: "Improve performance",       statusId: "inprogress", priority: "Medium" },
+  {
+    id: "1",
+    title: "Design login page UI",
+    statusId: "todo",
+    priority: "High",
+  },
+  {
+    id: "2",
+    title: "Build authentication API",
+    statusId: "inprogress",
+    priority: "Medium",
+  },
+  { id: "3", title: "Fix dashboard bugs", statusId: "done", priority: "Low" },
+  {
+    id: "4",
+    title: "Create database schema",
+    statusId: "todo",
+    priority: "High",
+  },
+  {
+    id: "5",
+    title: "Integrate payment gateway",
+    statusId: "inprogress",
+    priority: "High",
+  },
+  {
+    id: "6",
+    title: "Deploy to production",
+    statusId: "done",
+    priority: "Medium",
+  },
+  { id: "7", title: "Write documentation", statusId: "todo", priority: "Low" },
+  {
+    id: "8",
+    title: "Improve performance",
+    statusId: "inprogress",
+    priority: "Medium",
+  },
 ];
 
 const COLUMNS = [
@@ -61,7 +91,7 @@ const COLUMNS = [
     accent: BRAND.primary,
     accentLight: "rgba(210,85,100,0.08)",
     accentBorder: "rgba(210,85,100,0.15)",
-    colBg: "#fdf8f8",           // barely-there rose
+    colBg: "#fdf8f8", // barely-there rose
     emptyDot: "rgba(210,85,100,0.18)",
   },
   {
@@ -71,33 +101,41 @@ const COLUMNS = [
     accent: BRAND.secondary,
     accentLight: "rgba(62,62,85,0.06)",
     accentBorder: "rgba(62,62,85,0.13)",
-    colBg: "#f7f7fb",           // barely-there navy
+    colBg: "#f7f7fb", // barely-there navy
     emptyDot: "rgba(62,62,85,0.15)",
   },
   {
     id: "done",
     label: "Done",
     Icon: FaCheckCircle,
-    accent: "#b8924a",          // readable gold
+    accent: "#b8924a", // readable gold
     accentLight: "rgba(255,215,136,0.18)",
     accentBorder: "rgba(184,146,74,0.2)",
-    colBg: "#fdfbf5",           // barely-there cream
+    colBg: "#fdfbf5", // barely-there cream
     emptyDot: "rgba(184,146,74,0.2)",
   },
 ];
 
+const PRIORITIES = ["High", "Medium", "Low"];
+
 const PRIORITY = {
-  High:   { color: "#c0394a", bg: "rgba(210,85,100,0.09)",  dot: "#d25564" },
-  Medium: { color: "#3e3e55", bg: "rgba(62,62,85,0.09)",    dot: "#3e3e55" },
-  Low:    { color: "#9a7a30", bg: "rgba(255,215,136,0.28)", dot: "#c9a030" },
+  High: { color: "#c0394a", bg: "rgba(210,85,100,0.09)", dot: "#d25564" },
+  Medium: { color: "#3e3e55", bg: "rgba(62,62,85,0.09)", dot: "#3e3e55" },
+  Low: { color: "#9a7a30", bg: "rgba(255,215,136,0.28)", dot: "#c9a030" },
 };
 
 let _uid = 200;
 
 /* ─── TaskCard ──────────────────────────────────────────────────── */
 function TaskCard({ task, overlay = false }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: task.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
 
   const style = { transform: CSS.Transform.toString(transform), transition };
   const p = PRIORITY[task.priority] ?? PRIORITY.Medium;
@@ -106,7 +144,7 @@ function TaskCard({ task, overlay = false }) {
     <div
       className={[
         "rounded-2xl p-4 select-none transition-all duration-150",
-        overlay   ? "scale-[1.04] rotate-1" : "",
+        overlay ? "scale-[1.04] rotate-1" : "",
         isDragging ? "opacity-25 scale-[0.97]" : "",
         !overlay && !isDragging ? "hover:-translate-y-0.5" : "",
       ].join(" ")}
@@ -116,8 +154,8 @@ function TaskCard({ task, overlay = false }) {
         boxShadow: overlay
           ? "0 24px 48px rgba(62,62,85,0.14)"
           : isDragging
-          ? "none"
-          : "0 1px 3px rgba(62,62,85,0.07), 0 4px 12px rgba(62,62,85,0.04)",
+            ? "none"
+            : "0 1px 3px rgba(62,62,85,0.07), 0 4px 12px rgba(62,62,85,0.04)",
       }}
     >
       <div className="flex items-start gap-2.5">
@@ -126,8 +164,12 @@ function TaskCard({ task, overlay = false }) {
           {...(!overlay ? attributes : {})}
           className="mt-0.5 flex-shrink-0 cursor-grab active:cursor-grabbing transition-colors"
           style={{ color: "rgba(62,62,85,0.2)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.5)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.2)")
+          }
         >
           <FaGripVertical size={12} />
         </span>
@@ -144,7 +186,10 @@ function TaskCard({ task, overlay = false }) {
           className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-wider"
           style={{ color: p.color, background: p.bg }}
         >
-          <span className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ background: p.dot }} />
+          <span
+            className="w-[5px] h-[5px] rounded-full flex-shrink-0"
+            style={{ background: p.dot }}
+          />
           {task.priority}
         </span>
       </div>
@@ -152,7 +197,11 @@ function TaskCard({ task, overlay = false }) {
   );
 
   if (overlay) return inner;
-  return <div ref={setNodeRef} style={style}>{inner}</div>;
+  return (
+    <div ref={setNodeRef} style={style}>
+      {inner}
+    </div>
+  );
 }
 
 /* ─── AddForm ───────────────────────────────────────────────────── */
@@ -181,50 +230,48 @@ function AddForm({ col, onAdd, onCancel }) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
+          }
           if (e.key === "Escape") onCancel();
         }}
-        className="w-full rounded-xl px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
-        style={{
-          background: col.accentLight,
-          border: `1px solid ${col.accentBorder}`,
-          color: BRAND.secondary,
-        }}
+        className="w-full rounded-xl border border-slate-200 px-3 py-2 focus:border-primary text-[13px] resize-none focus:outline-none placeholder-slate-300"
       />
-      <select
-        value={priority}
-        onChange={(e) => setPriority(e.target.value)}
-        className="rounded-xl px-3 py-1.5 text-[13px] cursor-pointer focus:outline-none"
-        style={{
-          background: col.accentLight,
-          border: `1px solid ${col.accentBorder}`,
-          color: BRAND.secondary,
-        }}
+      <div
+        className="inline-flex items-center justify-center flex-nowrap gap-x-3 rounded-xl p-1"
+        
       >
-        <option>High</option>
-        <option>Medium</option>
-        <option>Low</option>
-      </select>
-      <div className="flex items-center gap-2">
+        {PRIORITIES.map((level) => {
+          const isActive = priority === level;
+
+          return (
+            <button
+              key={level}
+              onClick={() => setPriority(level)}
+              className={`${isActive ? 'bg-primary text-white border-primary' : 'border-slate-200 text-slate-600'} px-3 py-1 text-[10px] cursor-pointer  border rounded-lg transition-all duration-150`}
+        
+            >
+              {level}
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-2 text-[11px] justify-center my-4">
         <button
           onClick={submit}
-          className="rounded-xl px-3.5 py-1.5 text-[11px] font-bold text-white hover:opacity-85 transition-opacity"
+          className="rounded-xl px-3.5 py-1.5  font-bold text-white hover:opacity-85 transition-opacity cursor-pointer"
           style={{ background: col.accent }}
         >
           Add task
         </button>
+
         <button
           onClick={onCancel}
-          className="rounded-xl p-1.5 transition-colors"
-          style={{
-            border: "1px solid rgba(62,62,85,0.12)",
-            color: "rgba(62,62,85,0.4)",
-            background: "rgba(62,62,85,0.03)",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(62,62,85,0.07)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(62,62,85,0.03)")}
+          className="rounded-xl p-1.5 transition-colors text-slate-600 border-slate-200 border px-3 cursor-pointer"
+         
         >
-          <FaTimes size={10} />
+          Cancle
         </button>
       </div>
     </div>
@@ -251,7 +298,9 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       {/* Thin accent top line */}
       <div
         className="h-[3px] w-full"
-        style={{ background: `linear-gradient(90deg, ${col.accent}, ${col.accent}88)` }}
+        style={{
+          background: `linear-gradient(90deg, ${col.accent}, ${col.accent}88)`,
+        }}
       />
 
       {/* Header */}
@@ -312,10 +361,13 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                   border: `1.5px dashed ${isOver ? col.accent : "rgba(62,62,85,0.15)"}`,
                 }}
               >
-                {isOver
-                  ? <span style={{ color: col.accent, fontSize: 14 }}>↓</span>
-                  : <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
-                }
+                {isOver ? (
+                  <span style={{ color: col.accent, fontSize: 14 }}>↓</span>
+                ) : (
+                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>
+                    +
+                  </span>
+                )}
               </span>
               <p
                 className="text-[11px] font-semibold"
@@ -324,7 +376,10 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
+                <p
+                  className="text-[10px]"
+                  style={{ color: "rgba(62,62,85,0.25)" }}
+                >
                   Add one below or drag a card in
                 </p>
               )}
@@ -334,7 +389,11 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           )}
 
           {addingIn === col.id && (
-            <AddForm col={col} onAdd={onAdd} onCancel={() => setAddingIn(null)} />
+            <AddForm
+              col={col}
+              onAdd={onAdd}
+              onCancel={() => setAddingIn(null)}
+            />
           )}
         </div>
       </SortableContext>
@@ -342,11 +401,13 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       {/* Footer */}
       {addingIn !== col.id && (
         <button
-          className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] font-semibold transition-all"
+          className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] cursor-pointer font-semibold transition-all"
           style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col.id)}
           onMouseEnter={(e) => (e.currentTarget.style.color = col.accent)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
+          }
         >
           <FaPlus size={8} />
           Add a task
@@ -364,7 +425,7 @@ export default function WorkSpaceBoardView() {
   const [addingIn, setAddingIn] = useState(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 6 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
   const getCol = (id) => {
@@ -378,13 +439,16 @@ export default function WorkSpaceBoardView() {
     setActiveTask(tasks.find((t) => t.id === active.id) ?? null);
 
   const onDragOver = ({ active, over }) => {
-    if (!over) { setOverColId(null); return; }
+    if (!over) {
+      setOverColId(null);
+      return;
+    }
     const ovCol = getCol(over.id);
     setOverColId(ovCol);
     const acCol = getCol(active.id);
     if (!ovCol || acCol === ovCol) return;
     setTasks((prev) =>
-      prev.map((t) => (t.id === active.id ? { ...t, statusId: ovCol } : t))
+      prev.map((t) => (t.id === active.id ? { ...t, statusId: ovCol } : t)),
     );
   };
 
@@ -409,21 +473,23 @@ export default function WorkSpaceBoardView() {
   };
 
   return (
-    <div
-      className="min-h-screen px-8 py-10"
-      style={{
-        // Warm near-white — barely tinted with brand cream
-        background: "#faf9f7",
-        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-      }}
-    >
+    <div className="min-h-screen px-8 py-10">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-1">
           {/* Three tiny brand-colored pills */}
-          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.primary }} />
-          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.secondary }} />
-          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.ternary }} />
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: BRAND.primary }}
+          />
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: BRAND.secondary }}
+          />
+          <span
+            className="w-2 h-2 rounded-full"
+            style={{ background: BRAND.ternary }}
+          />
           <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
             style={{ color: "rgba(62,62,85,0.35)" }}
