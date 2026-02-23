@@ -88,11 +88,11 @@ const COLUMNS = [
     id: "todo",
     label: "Todo",
     Icon: FaRegClock,
-    accent: BRAND.primary,
-    accentLight: "rgba(210,85,100,0.08)",
-    accentBorder: "rgba(210,85,100,0.15)",
-    colBg: "#fdf8f8", // barely-there rose
-    emptyDot: "rgba(210,85,100,0.18)",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb", // barely-there navy
+    emptyDot: "rgba(62,62,85,0.15)",
   },
   {
     id: "inprogress",
@@ -108,11 +108,11 @@ const COLUMNS = [
     id: "done",
     label: "Done",
     Icon: FaCheckCircle,
-    accent: "#b8924a", // readable gold
-    accentLight: "rgba(255,215,136,0.18)",
-    accentBorder: "rgba(184,146,74,0.2)",
-    colBg: "#fdfbf5", // barely-there cream
-    emptyDot: "rgba(184,146,74,0.2)",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb", // barely-there navy
+    emptyDot: "rgba(62,62,85,0.15)",
   },
 ];
 
