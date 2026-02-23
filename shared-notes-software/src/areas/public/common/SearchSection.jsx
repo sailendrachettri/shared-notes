@@ -7,11 +7,18 @@ import { IoTimerOutline } from "react-icons/io5";
 import { LuRefreshCw } from "react-icons/lu";
 import { TbAbc } from "react-icons/tb";
 
-const SearchSection = ({ setSearchText, setSortBy, setSortDirection, sortBy, sortDirection }) => {
-     const [pageReload, setPageReload] = useState(false);
+const SearchSection = ({
+  setSearchText,
+  setSortBy,
+  setSortDirection,
+  sortBy,
+  sortDirection,
+  setRefresh,
+}) => {
+  const [pageReload, setPageReload] = useState(false);
 
   const searchInputRef = useRef(null);
-  
+
   const handlePageRefresh = () => {
     setPageReload(true);
 
