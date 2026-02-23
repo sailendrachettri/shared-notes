@@ -45,7 +45,7 @@ const Home = ({
           <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
             <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
               {/* Search */}
-              <div className="mb-3 mt-5">
+              <div className="mb-3 mt-1">
                 <SearchSection
                   setSearchText={setSearchText}
                   setSortBy={setSortBy}
