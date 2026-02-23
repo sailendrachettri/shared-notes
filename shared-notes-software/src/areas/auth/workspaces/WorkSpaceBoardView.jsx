@@ -186,10 +186,7 @@ function TaskCard({ task, overlay = false }) {
           className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-wider"
           style={{ color: p.color, background: p.bg }}
         >
-          <span
-            className="w-[5px] h-[5px] rounded-full flex-shrink-0"
-            style={{ background: p.dot }}
-          />
+         
           {task.priority}
         </span>
       </div>
@@ -236,22 +233,26 @@ function AddForm({ col, onAdd, onCancel }) {
           }
           if (e.key === "Escape") onCancel();
         }}
-        className="w-full rounded-xl border border-slate-200 px-3 py-2 focus:border-primary text-[13px] resize-none focus:outline-none placeholder-slate-300"
+        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
       />
-      <div
-        className="inline-flex items-center justify-center flex-nowrap gap-x-3 rounded-xl p-1"
-        
-      >
+      <div className="inline-flex gap-1">
         {PRIORITIES.map((level) => {
           const isActive = priority === level;
+          const p = PRIORITY[level];
 
           return (
             <button
               key={level}
               onClick={() => setPriority(level)}
-              className={`${isActive ? 'bg-primary text-white border-primary' : 'border-slate-200 text-slate-600'} px-3 py-1 text-[10px] cursor-pointer  border rounded-lg transition-all duration-150`}
-        
+              className="px-3 py-1 text-[11px] rounded-lg border cursor-pointer border-slate-200 transition-all duration-150 flex items-center gap-1"
+              style={{
+                background: isActive ? p.bg : "transparent",
+                color: isActive ? p.color : "#64748b",
+                borderColor: isActive ? p.color : "#e2e8f0",
+                fontWeight: isActive ? 500 : 400,
+              }}
             >
+             
               {level}
             </button>
           );
@@ -269,7 +270,6 @@ function AddForm({ col, onAdd, onCancel }) {
         <button
           onClick={onCancel}
           className="rounded-xl p-1.5 transition-colors text-slate-600 border-slate-200 border px-3 cursor-pointer"
-         
         >
           Cancle
         </button>
@@ -327,7 +327,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
         </div>
         <button
           onClick={() => setAddingIn(col.id)}
-          className="w-7 h-7 flex items-center justify-center rounded-xl transition-all hover:scale-105"
+          className="w-7 h-7 flex items-center cursor-pointer justify-center rounded-xl transition-all hover:scale-105"
           style={{
             background: col.accentLight,
             color: col.accent,
@@ -478,18 +478,7 @@ export default function WorkSpaceBoardView() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-1">
           {/* Three tiny brand-colored pills */}
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{ background: BRAND.primary }}
-          />
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{ background: BRAND.secondary }}
-          />
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{ background: BRAND.ternary }}
-          />
+         
           <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
             style={{ color: "rgba(62,62,85,0.35)" }}
