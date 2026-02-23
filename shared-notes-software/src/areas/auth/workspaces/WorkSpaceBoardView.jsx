@@ -1,13 +1,11 @@
 /**
- * WorkSpaceBoardView — Brand Theme
+ * WorkSpaceBoardView — Soft Minimal Brand Theme
  * primary:   #d25564  (rose-red)
  * secondary: #3e3e55  (deep navy-slate)
  * ternary:   #ffd788  (warm gold)
  *
  * Install dependencies:
  *   npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities react-icons
- *
- * Tailwind CSS must be configured in your project.
  */
 
 import React, { useState } from "react";
@@ -38,62 +36,60 @@ import { MdOutlinePendingActions } from "react-icons/md";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
-  primary:   "#d25564",   // rose-red
-  secondary: "#3e3e55",   // deep navy-slate
-  ternary:   "#ffd788",   // warm gold
+  primary:   "#d25564",
+  secondary: "#3e3e55",
+  ternary:   "#ffd788",
 };
 
 /* ─── Data ───────────────────────────────────────────────────────── */
 const initialTasks = [
-  { id: "1", title: "Design login page UI",       statusId: "todo",       priority: "High" },
-  { id: "2", title: "Build authentication API",   statusId: "inprogress", priority: "Medium" },
-  { id: "3", title: "Fix dashboard bugs",         statusId: "done",       priority: "Low" },
-  { id: "4", title: "Create database schema",     statusId: "todo",       priority: "High" },
-  { id: "5", title: "Integrate payment gateway",  statusId: "inprogress", priority: "High" },
-  { id: "6", title: "Deploy to production",       statusId: "done",       priority: "Medium" },
-  { id: "7", title: "Write documentation",        statusId: "todo",       priority: "Low" },
-  { id: "8", title: "Improve performance",        statusId: "inprogress", priority: "Medium" },
+  { id: "1", title: "Design login page UI",      statusId: "todo",       priority: "High" },
+  { id: "2", title: "Build authentication API",  statusId: "inprogress", priority: "Medium" },
+  { id: "3", title: "Fix dashboard bugs",        statusId: "done",       priority: "Low" },
+  { id: "4", title: "Create database schema",    statusId: "todo",       priority: "High" },
+  { id: "5", title: "Integrate payment gateway", statusId: "inprogress", priority: "High" },
+  { id: "6", title: "Deploy to production",      statusId: "done",       priority: "Medium" },
+  { id: "7", title: "Write documentation",       statusId: "todo",       priority: "Low" },
+  { id: "8", title: "Improve performance",       statusId: "inprogress", priority: "Medium" },
 ];
 
-// Each column uses one of the brand colors as its accent
 const COLUMNS = [
   {
     id: "todo",
     label: "Todo",
     Icon: FaRegClock,
-    accent: BRAND.primary,           // rose-red
-    headerColor: "#b8404f",
-    accentBg: "rgba(210,85,100,0.07)",
-    accentBorder: "rgba(210,85,100,0.2)",
-    colBg: "#fff8f8",
+    accent: BRAND.primary,
+    accentLight: "rgba(210,85,100,0.08)",
+    accentBorder: "rgba(210,85,100,0.15)",
+    colBg: "#fdf8f8",           // barely-there rose
+    emptyDot: "rgba(210,85,100,0.18)",
   },
   {
     id: "inprogress",
     label: "In Progress",
     Icon: MdOutlinePendingActions,
-    accent: BRAND.secondary,         // deep navy-slate
-    headerColor: "#3e3e55",
-    accentBg: "rgba(62,62,85,0.06)",
-    accentBorder: "rgba(62,62,85,0.18)",
-    colBg: "#f5f5f9",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb",           // barely-there navy
+    emptyDot: "rgba(62,62,85,0.15)",
   },
   {
     id: "done",
     label: "Done",
     Icon: FaCheckCircle,
-    accent: "#c9a030",               // darker ternary so text is readable
-    headerColor: "#a07820",
-    accentBg: "rgba(255,215,136,0.2)",
-    accentBorder: "rgba(201,160,48,0.3)",
-    colBg: "#fffdf3",
+    accent: "#b8924a",          // readable gold
+    accentLight: "rgba(255,215,136,0.18)",
+    accentBorder: "rgba(184,146,74,0.2)",
+    colBg: "#fdfbf5",           // barely-there cream
+    emptyDot: "rgba(184,146,74,0.2)",
   },
 ];
 
-// Priority badges mapped to brand palette
 const PRIORITY = {
-  High:   { tag: "text-[#b8404f]",   bg: "rgba(210,85,100,0.10)",  dot: BRAND.primary },
-  Medium: { tag: "text-[#3e3e55]",   bg: "rgba(62,62,85,0.10)",    dot: BRAND.secondary },
-  Low:    { tag: "text-[#a07820]",   bg: "rgba(255,215,136,0.35)", dot: "#c9a030" },
+  High:   { color: "#c0394a", bg: "rgba(210,85,100,0.09)",  dot: "#d25564" },
+  Medium: { color: "#3e3e55", bg: "rgba(62,62,85,0.09)",    dot: "#3e3e55" },
+  Low:    { color: "#9a7a30", bg: "rgba(255,215,136,0.28)", dot: "#c9a030" },
 };
 
 let _uid = 200;
@@ -109,44 +105,46 @@ function TaskCard({ task, overlay = false }) {
   const inner = (
     <div
       className={[
-        "rounded-2xl p-4 border select-none transition-all duration-150",
-        overlay
-          ? "shadow-2xl scale-[1.04] rotate-1"
-          : isDragging
-          ? "opacity-30 scale-95"
-          : "hover:shadow-md hover:-translate-y-0.5",
+        "rounded-2xl p-4 select-none transition-all duration-150",
+        overlay   ? "scale-[1.04] rotate-1" : "",
+        isDragging ? "opacity-25 scale-[0.97]" : "",
+        !overlay && !isDragging ? "hover:-translate-y-0.5" : "",
       ].join(" ")}
       style={{
         background: "white",
-        borderColor: overlay ? BRAND.primary + "40" : "rgba(62,62,85,0.1)",
+        border: "1px solid rgba(62,62,85,0.08)",
         boxShadow: overlay
-          ? `0 20px 40px rgba(210,85,100,0.2)`
+          ? "0 24px 48px rgba(62,62,85,0.14)"
           : isDragging
           ? "none"
-          : "0 1px 4px rgba(62,62,85,0.08)",
+          : "0 1px 3px rgba(62,62,85,0.07), 0 4px 12px rgba(62,62,85,0.04)",
       }}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-2.5">
         <span
           {...(!overlay ? listeners : {})}
           {...(!overlay ? attributes : {})}
           className="mt-0.5 flex-shrink-0 cursor-grab active:cursor-grabbing transition-colors"
-          style={{ color: "rgba(62,62,85,0.25)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = BRAND.secondary)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.25)")}
+          style={{ color: "rgba(62,62,85,0.2)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
         >
-          <FaGripVertical size={13} />
+          <FaGripVertical size={12} />
         </span>
-        <p className="text-sm font-semibold leading-snug flex-1" style={{ color: BRAND.secondary }}>
+        <p
+          className="text-[13px] font-medium leading-snug flex-1 capitalize"
+          style={{ color: BRAND.secondary }}
+        >
           {task.title}
         </p>
       </div>
-      <div className="mt-3 flex justify-end">
+
+      <div className="mt-3.5 flex justify-end">
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider ${p.tag}`}
-          style={{ background: p.bg }}
+          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-wider"
+          style={{ color: p.color, background: p.bg }}
         >
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.dot }} />
+          <span className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ background: p.dot }} />
           {task.priority}
         </span>
       </div>
@@ -173,7 +171,7 @@ function AddForm({ col, onAdd, onCancel }) {
       style={{
         background: "white",
         border: `1px solid ${col.accentBorder}`,
-        boxShadow: "0 2px 8px rgba(62,62,85,0.08)",
+        boxShadow: "0 2px 12px rgba(62,62,85,0.06)",
       }}
     >
       <textarea
@@ -186,9 +184,9 @@ function AddForm({ col, onAdd, onCancel }) {
           if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
           if (e.key === "Escape") onCancel();
         }}
-        className="w-full rounded-xl px-3 py-2 text-sm resize-none focus:outline-none"
+        className="w-full rounded-xl px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
         style={{
-          background: col.accentBg,
+          background: col.accentLight,
           border: `1px solid ${col.accentBorder}`,
           color: BRAND.secondary,
         }}
@@ -196,9 +194,9 @@ function AddForm({ col, onAdd, onCancel }) {
       <select
         value={priority}
         onChange={(e) => setPriority(e.target.value)}
-        className="rounded-xl px-3 py-1.5 text-sm cursor-pointer focus:outline-none"
+        className="rounded-xl px-3 py-1.5 text-[13px] cursor-pointer focus:outline-none"
         style={{
-          background: col.accentBg,
+          background: col.accentLight,
           border: `1px solid ${col.accentBorder}`,
           color: BRAND.secondary,
         }}
@@ -207,20 +205,26 @@ function AddForm({ col, onAdd, onCancel }) {
         <option>Medium</option>
         <option>Low</option>
       </select>
-      <div className="flex items-center gap-2 mt-0.5">
+      <div className="flex items-center gap-2">
         <button
           onClick={submit}
-          className="rounded-xl px-3 py-1.5 text-xs font-black text-white shadow-sm hover:opacity-90 transition-opacity"
+          className="rounded-xl px-3.5 py-1.5 text-[11px] font-bold text-white hover:opacity-85 transition-opacity"
           style={{ background: col.accent }}
         >
           Add task
         </button>
         <button
           onClick={onCancel}
-          className="rounded-xl p-1.5 transition-colors hover:bg-slate-100"
-          style={{ border: `1px solid rgba(62,62,85,0.15)`, color: BRAND.secondary + "80" }}
+          className="rounded-xl p-1.5 transition-colors"
+          style={{
+            border: "1px solid rgba(62,62,85,0.12)",
+            color: "rgba(62,62,85,0.4)",
+            background: "rgba(62,62,85,0.03)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(62,62,85,0.07)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(62,62,85,0.03)")}
         >
-          <FaTimes size={11} />
+          <FaTimes size={10} />
         </button>
       </div>
     </div>
@@ -235,50 +239,54 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 
   return (
     <div
-      className="flex flex-col rounded-2xl overflow-hidden transition-all duration-200"
+      className="flex flex-col rounded-3xl overflow-hidden transition-all duration-200"
       style={{
-        background: isOver ? col.accentBg : col.colBg,
-        border: `1.5px solid ${isOver ? col.accent : "rgba(62,62,85,0.1)"}`,
+        background: isOver ? col.accentLight : col.colBg,
+        border: `1px solid ${isOver ? col.accent + "50" : "rgba(62,62,85,0.07)"}`,
         boxShadow: isOver
-          ? `0 0 0 3px ${col.accent}22, 0 8px 24px ${col.accent}18`
-          : "0 2px 16px rgba(62,62,85,0.07)",
+          ? `0 0 0 3px ${col.accent}18, 0 12px 32px ${col.accent}10`
+          : "0 2px 20px rgba(62,62,85,0.05)",
       }}
     >
-      {/* Thick accent top bar */}
-      <div className="h-1.5 w-full" style={{ background: col.accent }} />
+      {/* Thin accent top line */}
+      <div
+        className="h-[3px] w-full"
+        style={{ background: `linear-gradient(90deg, ${col.accent}, ${col.accent}88)` }}
+      />
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-4">
+      <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2">
-          <col.Icon size={15} style={{ color: col.accent }} />
           <span
-            className="text-[11px] font-black uppercase tracking-[0.12em]"
-            style={{ color: col.headerColor }}
+            className="flex items-center justify-center w-6 h-6 rounded-lg"
+            style={{ background: col.accentLight }}
+          >
+            <col.Icon size={12} style={{ color: col.accent }} />
+          </span>
+          <span
+            className="text-[11px] font-bold uppercase tracking-[0.1em]"
+            style={{ color: col.accent }}
           >
             {col.label}
           </span>
           <span
-            className="rounded-full px-2 py-0.5 text-[10px] font-black border"
-            style={{
-              color: col.accent,
-              background: col.accentBg,
-              borderColor: col.accentBorder,
-            }}
+            className="rounded-full w-5 h-5 flex items-center justify-center text-[9px] font-black"
+            style={{ background: col.accentLight, color: col.accent }}
           >
             {tasks.length}
           </span>
         </div>
         <button
           onClick={() => setAddingIn(col.id)}
-          className="rounded-xl p-1.5 border transition-all hover:shadow-sm"
+          className="w-7 h-7 flex items-center justify-center rounded-xl transition-all hover:scale-105"
           style={{
+            background: col.accentLight,
             color: col.accent,
-            borderColor: col.accentBorder,
-            background: "white",
+            border: `1px solid ${col.accentBorder}`,
           }}
           title="Add task"
         >
-          <FaPlus size={10} />
+          <FaPlus size={9} />
         </button>
       </div>
 
@@ -286,35 +294,38 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       <SortableContext items={ids} strategy={verticalListSortingStrategy}>
         <div
           ref={setDropRef}
-          className="px-3 pb-2 flex flex-col gap-2.5 flex-1 transition-all duration-200"
+          className="px-3 pb-2 flex flex-col gap-2 flex-1 transition-all duration-200"
           style={{ minHeight: isEmpty ? "130px" : "60px" }}
         >
           {isEmpty ? (
             <div
-              className="flex-1 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed py-8 gap-2 transition-all duration-200"
+              className="flex-1 flex flex-col items-center justify-center rounded-2xl border-dashed border-2 py-8 gap-2 transition-all duration-200"
               style={{
-                borderColor: isOver ? col.accent : "rgba(62,62,85,0.12)",
-                background: isOver ? col.accentBg : "rgba(255,255,255,0.6)",
+                borderColor: isOver ? col.accent + "60" : col.emptyDot,
+                background: isOver ? col.accentLight : "transparent",
               }}
             >
               <span
-                className="text-2xl transition-all duration-200"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
                 style={{
-                  color: isOver ? col.accent : "rgba(62,62,85,0.2)",
-                  filter: isOver ? `drop-shadow(0 0 5px ${col.accent}88)` : "none",
+                  background: isOver ? col.accentLight : "rgba(62,62,85,0.04)",
+                  border: `1.5px dashed ${isOver ? col.accent : "rgba(62,62,85,0.15)"}`,
                 }}
               >
-                {isOver ? "✦" : "◯"}
+                {isOver
+                  ? <span style={{ color: col.accent, fontSize: 14 }}>↓</span>
+                  : <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
+                }
               </span>
               <p
-                className="text-[11px] font-bold"
-                style={{ color: isOver ? col.headerColor : "rgba(62,62,85,0.4)" }}
+                className="text-[11px] font-semibold"
+                style={{ color: isOver ? col.accent : "rgba(62,62,85,0.35)" }}
               >
-                {isOver ? "Release to drop here" : "No tasks yet"}
+                {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.3)" }}>
-                  Drag a card here or add one below
+                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
+                  Add one below or drag a card in
                 </p>
               )}
             </div>
@@ -331,14 +342,14 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       {/* Footer */}
       {addingIn !== col.id && (
         <button
-          className="flex items-center gap-1.5 w-full px-4 py-3 text-[11px] font-semibold transition-colors"
-          style={{ color: col.accent + "99" }}
+          className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] font-semibold transition-all"
+          style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col.id)}
           onMouseEnter={(e) => (e.currentTarget.style.color = col.accent)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = col.accent + "99")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
         >
-          <FaPlus size={9} />
-          Add another task
+          <FaPlus size={8} />
+          Add a task
         </button>
       )}
     </div>
@@ -400,28 +411,38 @@ export default function WorkSpaceBoardView() {
   return (
     <div
       className="min-h-screen px-8 py-10"
-     
+      style={{
+        // Warm near-white — barely tinted with brand cream
+        background: "#faf9f7",
+        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+      }}
     >
-      {/* Page header */}
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <p
-            className="text-[10px] font-black uppercase tracking-[0.22em] mb-1"
-            style={{ color: BRAND.primary + "aa" }}
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-1">
+          {/* Three tiny brand-colored pills */}
+          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.primary }} />
+          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.secondary }} />
+          <span className="w-2 h-2 rounded-full" style={{ background: BRAND.ternary }} />
+          <span
+            className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
+            style={{ color: "rgba(62,62,85,0.35)" }}
           >
             Workspace
-          </p>
-          <h1
-            className="text-[1.9rem] font-black tracking-tight"
-            style={{ color: BRAND.secondary }}
-          >
-            Project Board
-          </h1>
-          <p className="text-sm mt-1" style={{ color: BRAND.secondary + "66" }}>
-            Drag cards between columns to update their status
-          </p>
+          </span>
         </div>
-
+        <h1
+          className="text-2xl font-black tracking-tight"
+          style={{ color: BRAND.secondary }}
+        >
+          Project Board
+        </h1>
+        <p
+          className="text-[12px] mt-0.5"
+          style={{ color: "rgba(62,62,85,0.4)" }}
+        >
+          Drag cards between columns to update status
+        </p>
       </div>
 
       <DndContext
@@ -431,7 +452,7 @@ export default function WorkSpaceBoardView() {
         onDragOver={onDragOver}
         onDragEnd={onDragEnd}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
           {COLUMNS.map((col) => (
             <Column
               key={col.id}
