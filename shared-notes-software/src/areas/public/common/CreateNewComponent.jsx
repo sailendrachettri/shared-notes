@@ -77,9 +77,9 @@ const CreateNewComponent = ({
                     onClick={() => {
                       setSelectedTab("notes");
                     }}
-                    className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
+                    className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary  transition-all duration-200 group"
                   >
-                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-3 group-hover:bg-blue-100 transition">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/5 text-primary mb-3 group-hover:bg-primary/10 transition">
                       <FiFileText size={22} />
                     </div>
 
@@ -96,9 +96,9 @@ const CreateNewComponent = ({
                     onClick={() => {
                       setSelectedTab("workspace");
                     }}
-                    className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
+                    className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary  transition-all duration-200 group"
                   >
-                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-50 text-purple-600 mb-3 group-hover:bg-purple-100 transition">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/5 text-primary mb-3 group-hover:bg-primary/10 transition">
                       <FiLayers size={22} />
                     </div>
 
