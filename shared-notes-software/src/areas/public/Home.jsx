@@ -3,6 +3,7 @@ import Sidebar from "./components/Sidebar";
 import Playground from "./components/Playground";
 import Footer from "./common/Footer";
 import CreaterNewNotesForm from "./components/CreaterNewNotesForm";
+import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
 
 const Home = ({
   toggleSidebar,
@@ -24,6 +25,7 @@ const Home = ({
   const [sortBy, setSortBy] = useState("created_at");
   const [publicNotes, setPublicNotes] = useState(null);
   const [privateNotes, setPrivateNotes] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -74,6 +76,7 @@ const Home = ({
                   setPublicNotes={setPublicNotes}
                   privateNotes={privateNotes}
                   setPrivateNotes={setPrivateNotes}
+                  setSelectedTab={setSelectedTab}
                 />
               </div>
             </div>
@@ -81,16 +84,20 @@ const Home = ({
 
           {/* Content Card */}
           <div className="flex-1 rounded-md overflow-y-auto hide-scrollbar mb-1">
-            <Playground
-              selectedNoteId={selectedNoteId}
-              noteHeading={noteHeading}
-              setRefresh={setRefresh}
-              currentNotesId={currentNotesId}
-              setCurrentNotesId={setCurrentNotesId}
-              isSubPage={isSubPage}
-              selectedNoteType={selectedNoteType}
-              refresh={refresh}
-            />
+            {selectedTab == "notes" && (
+              <Playground
+                selectedNoteId={selectedNoteId}
+                noteHeading={noteHeading}
+                setRefresh={setRefresh}
+                currentNotesId={currentNotesId}
+                setCurrentNotesId={setCurrentNotesId}
+                isSubPage={isSubPage}
+                selectedNoteType={selectedNoteType}
+                refresh={refresh}
+              />
+            )}
+
+            {selectedTab == "workspaces" && <WorkSpaceMain />}
           </div>
         </div>
 

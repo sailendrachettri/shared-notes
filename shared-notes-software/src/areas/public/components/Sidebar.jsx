@@ -14,6 +14,7 @@ import { LuBadgePlus } from "react-icons/lu";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import { load } from "@tauri-apps/plugin-store";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
+import WorkspacesSidebar from "../../auth/workspaces/WorkspacesSidebar";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -39,6 +40,7 @@ const Sidebar = ({
   setPublicNotes,
   privateNotes,
   setPrivateNotes,
+  setSelectedTab,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -114,6 +116,7 @@ const Sidebar = ({
     setSelectedNoteId(note?.note_id);
     setActive(note?.note_id);
     setIsSubPage(false);
+    setSelectedTab("notes");
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
@@ -126,6 +129,7 @@ const Sidebar = ({
     setSelectedNoteId(subNote?.sub_page_id);
     setActive(subNote?.sub_page_id);
     setIsSubPage(true);
+    setSelectedTab("notes");
   };
 
   const handleModeNoteItem = async () => {
@@ -226,7 +230,27 @@ const Sidebar = ({
           </div>
         ) : (
           <section className="h-full w-full ">
-            {(publicNotes?.length > 0 || privateNotes?.length > 0) ? (
+            {/* Workspaces */}
+            {isUserLoggedIn && (
+              <section className="pb-5">
+                <div
+                  onClick={() => {
+                    setSelectedTab("workspaces");
+                  }}
+                  className="ps-1 text-sm font-semibold text-slate-600"
+                >
+                  Workspaces
+                </div>
+
+                <div>
+                  <WorkspacesSidebar />
+                </div>
+              </section>
+            )}
+
+            {/* Notes */}
+
+            {publicNotes?.length > 0 || privateNotes?.length > 0 ? (
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {isUserLoggedIn && (
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
@@ -361,7 +385,6 @@ const Sidebar = ({
                                     setDeleteNoteType("sub-page");
                                     setIsDeleteOpen(true);
                                   }}
-                                      
                                 >
                                   <RiDeleteBinLine size={14} />
                                 </span>
@@ -421,9 +444,11 @@ const Sidebar = ({
 
                 {/* Shared notes */}
                 <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
-                 {publicNotes?.length > 0 && <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                    Shared
-                  </div>}
+                  {publicNotes?.length > 0 && (
+                    <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                      Shared
+                    </div>
+                  )}
                   {publicNotes?.map((item) => {
                     const isOpen = openNotes[item?.note_id];
 
@@ -541,7 +566,6 @@ const Sidebar = ({
                                   setDeleteNoteType("sub-page");
                                   setIsDeleteOpen(true);
                                 }}
-                                    
                               >
                                 <RiDeleteBinLine size={14} />
                               </span>
@@ -590,7 +614,9 @@ const Sidebar = ({
             ) : (
               <div className="flex flex-col items-center justify-center text-center h-full w-full text-slate-600 text-sm gap-1">
                 <span className="font-medium text-lg">No notes yet</span>
-                <span className="text-slate-400">Create your first note using the button below.</span>
+                <span className="text-slate-400">
+                  Create your first note using the button below.
+                </span>
               </div>
             )}
           </section>
