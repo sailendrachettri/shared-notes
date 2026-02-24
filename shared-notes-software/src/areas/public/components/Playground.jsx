@@ -111,16 +111,19 @@ const Playground = ({
         const payload = {
           SubPageId: selectedNoteId,
           SupPageTitle: newTitle || noteHeading,
-           Notestype: 'mst-note'
+          Notestype: "mst-note",
         };
         // console.log(payload);
-       const res =  await axiosInstance.post(RENAME_SUB_PAGE_TITLE_URL, payload);
-       // console.log(res);
+        const res = await axiosInstance.post(
+          RENAME_SUB_PAGE_TITLE_URL,
+          payload,
+        );
+        // console.log(res);
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
-          Notestype: 'mst-note'
+          Notestype: "mst-note",
         };
         // console.log(payload);
         const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
@@ -143,34 +146,28 @@ const Playground = ({
   return (
     <>
       <section>
-        {selectedNoteId ? (
-          <section className="relative">
-            <RichTextEditor
-              value={selectedFullDetails}
-              onChange={handleOnInputChange}
-              placeholder="Start writing your note..."
-              height="1080px"
-              heading={noteHeading}
-              lastUpdatedAt={lastUpdatedAt}
-              onTitleChange={renameNoteTitle}
-              selectedNoteId={selectedNoteId}
-              selectedNoteType={selectedNoteType}
-              fullData={fullData}
-              setRefresh={setRefresh}
-            />
+        <section className="relative">
+          <RichTextEditor
+            value={selectedFullDetails}
+            onChange={handleOnInputChange}
+            placeholder="Start writing your note..."
+            height="1080px"
+            heading={noteHeading}
+            lastUpdatedAt={lastUpdatedAt}
+            onTitleChange={renameNoteTitle}
+            selectedNoteId={selectedNoteId}
+            selectedNoteType={selectedNoteType}
+            fullData={fullData}
+            setRefresh={setRefresh}
+          />
 
-            {/* Custom Toast */}
-            {showToast && (
-              <div className="fixed bottom-6 right-6  text-slate-400 px-4 py-2 rounded-lg text-sm animate-fadeIn">
-                Auto saved ✓
-              </div>
-            )}
-          </section>
-        ) : (
-          <section>
-            <InfoScreen />
-          </section>
-        )}
+          {/* Custom Toast */}
+          {showToast && (
+            <div className="fixed bottom-6 right-6  text-slate-400 px-4 py-2 rounded-lg text-sm animate-fadeIn">
+              Auto saved ✓
+            </div>
+          )}
+        </section>
       </section>
     </>
   );

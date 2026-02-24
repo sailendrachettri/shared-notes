@@ -42,7 +42,7 @@ const Sidebar = ({
   setPrivateNotes,
   setSelectedTab,
   setSelectedWorkspaceId,
-  setSelectedWorkspaceName
+  setSelectedWorkspaceName,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -253,6 +253,10 @@ const Sidebar = ({
                     setSelectedWorkspaceId={setSelectedWorkspaceId}
                     setSelectedTab={setSelectedTab}
                     setSelectedWorkspaceName={setSelectedWorkspaceName}
+                    setCurrentNotesId={setCurrentNotesId}
+                    setSelectedNoteId={setSelectedNoteId}
+                    setActive={setActive}
+                    active={active}
                   />
                 </div>
               </section>

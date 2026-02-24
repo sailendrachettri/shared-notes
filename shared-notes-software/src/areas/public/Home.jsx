@@ -12,6 +12,7 @@ import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
 import { HiOutlineSearch } from "react-icons/hi";
 import { useRef } from "react";
 import SearchSection from "./common/SearchSection";
+import InfoScreen from "../../utils/info-screen/InfoScreen";
 
 const Home = ({
   toggleSidebar,
@@ -38,8 +39,8 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
 
   console.log(selectedTab);
-  console.log(selectedWorkspaceId)
-  console.log(selectedWorkspaceName)
+  console.log(selectedWorkspaceId);
+  console.log(selectedWorkspaceName);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -84,9 +85,9 @@ const Home = ({
                   setRefresh={setRefresh}
                   sidebarItems={sidebarItems}
                   setSidebarItems={setSidebarItems}
-                  setSelectedNoteId={setSelectedNoteId}
                   selectedNoteId={selectedNoteId}
                   setNoteHeading={setNoteHeading}
+                  setSelectedNoteId={setSelectedNoteId}
                   setCurrentNotesId={setCurrentNotesId}
                   setIsSubPage={setIsSubPage}
                   setSelectedNoteType={setSelectedNoteType}
@@ -126,7 +127,17 @@ const Home = ({
             )}
 
             {selectedTab == "workspaces" && selectedWorkspaceId && (
-              <WorkSpaceMain selectedWorkspaceId={selectedWorkspaceId} selectedWorkspaceName={selectedWorkspaceName} />
+              <WorkSpaceMain
+                selectedWorkspaceId={selectedWorkspaceId}
+                selectedWorkspaceName={selectedWorkspaceName}
+                
+              />
+            )}
+
+            {!selectedNoteId && !selectedWorkspaceId && (
+              <section>
+                <InfoScreen />
+              </section>
             )}
           </div>
         </div>
