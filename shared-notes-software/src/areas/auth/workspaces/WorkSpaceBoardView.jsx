@@ -33,7 +33,10 @@ import {
 } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { axiosInstance } from "../../../api/axios";
-import { GET_WORKSPACE_FULL_DETAILS_BY_ID_URL } from "../../../api/api_routes";
+import {
+  ADD_WORKSPACE_TASK_URL,
+  GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
+} from "../../../api/api_routes";
 import toast from "react-hot-toast";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
@@ -94,10 +97,14 @@ const PRIORITY = {
 
 const mapPriority = (priorityId) => {
   switch (priorityId) {
-    case 1: return "High";
-    case 2: return "Medium";
-    case 3: return "Low";
-    default: return "Medium";
+    case 1:
+      return "High";
+    case 2:
+      return "Medium";
+    case 3:
+      return "Low";
+    default:
+      return "Medium";
   }
 };
 
@@ -137,12 +144,19 @@ function TaskCard({ task, overlay = false }) {
           {...attributes}
           className="mt-0.5 shrink-0 cursor-grab active:cursor-grabbing transition-colors"
           style={{ color: "rgba(62,62,85,0.2)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.5)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.2)")
+          }
         >
           <FaGripVertical size={11} />
         </span>
-        <p className="text-[13px] font-semibold leading-snug flex-1" style={{ color: BRAND.secondary }}>
+        <p
+          className="text-[13px] font-semibold leading-snug flex-1"
+          style={{ color: BRAND.secondary }}
+        >
           {task.title}
         </p>
       </div>
@@ -197,7 +211,10 @@ function AddForm({ col, onAdd, onCancel }) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
+          }
           if (e.key === "Escape") onCancel();
         }}
         className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
@@ -265,7 +282,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       <div
         className="h-[3px] w-full"
         style={{
-          background: `linear-gradient(90deg, ${col?.accent ?? BRAND.secondary}, ${(col?.accent ?? BRAND.secondary)}88)`,
+          background: `linear-gradient(90deg, ${col?.accent ?? BRAND.secondary}, ${col?.accent ?? BRAND.secondary}88)`,
         }}
       />
 
@@ -332,7 +349,9 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? (
                   <span style={{ color: col?.accent, fontSize: 14 }}>↓</span>
                 ) : (
-                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
+                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>
+                    +
+                  </span>
                 )}
               </span>
               <p
@@ -342,7 +361,10 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
+                <p
+                  className="text-[10px]"
+                  style={{ color: "rgba(62,62,85,0.25)" }}
+                >
                   Add one below or drag a card in
                 </p>
               )}
@@ -352,7 +374,11 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           )}
 
           {addingIn === col?.id && (
-            <AddForm col={col} onAdd={onAdd} onCancel={() => setAddingIn(null)} />
+            <AddForm
+              col={col}
+              onAdd={onAdd}
+              onCancel={() => setAddingIn(null)}
+            />
           )}
         </div>
       </SortableContext>
@@ -363,8 +389,12 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] cursor-pointer font-semibold transition-all"
           style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col?.id)}
-          onMouseEnter={(e) => (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
+          }
         >
           <FaPlus size={8} />
           Add a task
@@ -393,14 +423,16 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
     return tasks.find((t) => t.id === id)?.statusId ?? null;
   };
 
-  const getTasksByCol = (colId) =>
-    tasks.filter((t) => t.statusId === colId);
+  const getTasksByCol = (colId) => tasks.filter((t) => t.statusId === colId);
 
   const onDragStart = ({ active }) =>
     setActiveTask(tasks.find((t) => t.id === active.id) ?? null);
 
   const onDragOver = ({ active, over }) => {
-    if (!over) { setOverColId(null); return; }
+    if (!over) {
+      setOverColId(null);
+      return;
+    }
     const ovCol = getCol(over.id);
     setOverColId(ovCol);
     const acCol = getCol(active.id);
@@ -422,12 +454,51 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
     });
   };
 
-  const handleAdd = (colId) => (title, priority) => {
-    setTasks((prev) => [
-      ...prev,
-      { id: String(++_uid), title, statusId: colId, priority },
-    ]);
-    setAddingIn(null);
+  const handleAdd = (colId) => async (title, priority) => {
+    try {
+      // Convert priority string → numeric ID
+      const priorityMap = {
+        High: 1,
+        Medium: 2,
+        Low: 3,
+      };
+
+      const payload = {
+        workspaceId: +selectedWorkspaceId,
+        workspaceColumnId: +colId,
+        title: title,
+        priorityId: priorityMap[priority],
+      };
+
+      const res = await axiosInstance.post(ADD_WORKSPACE_TASK_URL, payload);
+
+      const response = res.data;
+
+      if (!response.success) {
+        toast.error("Failed to create task");
+        return;
+      }
+
+      // Use returned task id + position from backend
+      const newTaskId = response.data.workspace_task_id;
+
+      // Optimistic UI update
+      setTasks((prev) => [
+        ...prev,
+        {
+          id: String(newTaskId),
+          title,
+          statusId: String(colId),
+          priority,
+        },
+      ]);
+
+      setAddingIn(null);
+      toast.success("Task added successfully");
+    } catch (error) {
+      console.error("Can't add the task at the moment", error);
+      toast.error("Can't add the task at the moment");
+    }
   };
 
   const handleGetWorkSpaceFullDetails = async () => {
@@ -505,7 +576,10 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         >
           Project Board
         </h1>
-        <p className="text-[12px] mt-0.5" style={{ color: "rgba(62,62,85,0.4)" }}>
+        <p
+          className="text-[12px] mt-0.5"
+          style={{ color: "rgba(62,62,85,0.4)" }}
+        >
           Drag cards between columns to update status
         </p>
       </div>
@@ -515,9 +589,14 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         <div className="flex items-center justify-center py-20">
           <div
             className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
-            style={{ borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}` }}
+            style={{
+              borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}`,
+            }}
           />
-          <span className="ml-3 text-sm" style={{ color: "rgba(62,62,85,0.4)" }}>
+          <span
+            className="ml-3 text-sm"
+            style={{ color: "rgba(62,62,85,0.4)" }}
+          >
             Loading workspace…
           </span>
         </div>
@@ -527,7 +606,10 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
       {!loading && columns.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <span className="text-4xl">📋</span>
-          <p className="text-[13px] font-semibold" style={{ color: "rgba(62,62,85,0.4)" }}>
+          <p
+            className="text-[13px] font-semibold"
+            style={{ color: "rgba(62,62,85,0.4)" }}
+          >
             No columns found for this workspace
           </p>
         </div>

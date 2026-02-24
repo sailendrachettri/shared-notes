@@ -15,6 +15,28 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("add-workspace-task")]
+        public async Task<IActionResult> AddNote([FromBody] AddWorkspaceTaskRequest request)
+        {
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                "SELECT public.add_workspace_task(@workspace_id, @workspace_column_id, @title, @priority_id)",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
+                    cmd.Parameters.AddWithValue("workspace_column_id", request.WorkspaceColumnId);
+                    cmd.Parameters.AddWithValue("title", request.Title);
+                    cmd.Parameters.AddWithValue("priority_id", request.PriorityId);
+                });
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return BadRequest("Function returned null");
+
+            var result = JsonSerializer.Deserialize<object>(jsonResult);
+
+            return Ok(result);
+        }
+
         [HttpPost("get-workspace-details")]
         public async Task<IActionResult> GetWorkspaceDetails(
             [FromBody] GetWorkspaceDetailsRequest request)

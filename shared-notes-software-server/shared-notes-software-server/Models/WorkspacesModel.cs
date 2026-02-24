@@ -2,6 +2,13 @@
 
 namespace shared_notes_software_server.Models
 {
+    public class AddWorkspaceTaskRequest
+    {
+       public long WorkspaceId { get; set; }
+       public long WorkspaceColumnId { get; set; }
+       public string Title { get; set; }
+       public long PriorityId { get; set; }
+    }
     public class GetWorkspaceDetailsRequest
     {
         public long WorkspaceId { get; set; }
