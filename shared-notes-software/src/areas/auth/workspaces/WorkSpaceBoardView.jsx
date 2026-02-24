@@ -229,7 +229,15 @@ function AddForm({ col, onAdd, onCancel }) {
         value={title}
         maxLength={80}
         minLength={4}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+
+          const formatted = value.replace(/(^\s*\w|(?<=\.)\s*\w)/g, (char) =>
+            char.toUpperCase(),
+          );
+
+          setTitle(formatted);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -426,7 +434,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 export default function WorkSpaceBoardView({
   selectedWorkspaceId,
   selectedWorkspaceName,
-  selectedWorkspaceMode
+  selectedWorkspaceMode,
 }) {
   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
@@ -708,7 +716,7 @@ export default function WorkSpaceBoardView({
       {/* Header */}
       <div className="mb-4 relative">
         <div className="absolute right-0">
-         <WorkspaceModeBadge  selectedWorkspaceMode={selectedWorkspaceMode}/>
+          <WorkspaceModeBadge selectedWorkspaceMode={selectedWorkspaceMode} />
         </div>
         <div className="flex items-center gap-2 mb-1">
           {/* <span
