@@ -94,10 +94,14 @@ const PRIORITY_ID_MAP = { High: 1, Medium: 2, Low: 3 };
 
 const mapPriority = (priorityId) => {
   switch (priorityId) {
-    case 1: return "High";
-    case 2: return "Medium";
-    case 3: return "Low";
-    default: return "Medium";
+    case 1:
+      return "High";
+    case 2:
+      return "Medium";
+    case 3:
+      return "Low";
+    default:
+      return "Medium";
   }
 };
 
@@ -162,8 +166,12 @@ function TaskCard({ task, overlay = false }) {
           {...attributes}
           className="mt-0.5 shrink-0 cursor-grab active:cursor-grabbing transition-colors"
           style={{ color: "rgba(62,62,85,0.2)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.5)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.2)")
+          }
         >
           <FaGripVertical size={11} />
         </span>
@@ -187,7 +195,11 @@ function TaskCard({ task, overlay = false }) {
   );
 
   if (overlay) return inner;
-  return <div ref={setNodeRef} style={style}>{inner}</div>;
+  return (
+    <div ref={setNodeRef} style={style}>
+      {inner}
+    </div>
+  );
 }
 
 /* ─── AddForm ───────────────────────────────────────────────────── */
@@ -218,7 +230,10 @@ function AddForm({ col, onAdd, onCancel }) {
         minLength={4}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
+          }
           if (e.key === "Escape") onCancel();
         }}
         className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
@@ -351,7 +366,9 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? (
                   <span style={{ color: col?.accent, fontSize: 14 }}>↓</span>
                 ) : (
-                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
+                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>
+                    +
+                  </span>
                 )}
               </span>
               <p
@@ -361,7 +378,10 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
+                <p
+                  className="text-[10px]"
+                  style={{ color: "rgba(62,62,85,0.25)" }}
+                >
                   Add one below or drag a card in
                 </p>
               )}
@@ -371,7 +391,11 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           )}
 
           {addingIn === col?.id && (
-            <AddForm col={col} onAdd={onAdd} onCancel={() => setAddingIn(null)} />
+            <AddForm
+              col={col}
+              onAdd={onAdd}
+              onCancel={() => setAddingIn(null)}
+            />
           )}
         </div>
       </SortableContext>
@@ -382,8 +406,12 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] cursor-pointer font-semibold transition-all"
           style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col?.id)}
-          onMouseEnter={(e) => (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
+          }
         >
           <FaPlus size={8} />
           Add a task
@@ -394,7 +422,10 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 }
 
 /* ─── Board ─────────────────────────────────────────────────────── */
-export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
+export default function WorkSpaceBoardView({
+  selectedWorkspaceId,
+  selectedWorkspaceName,
+}) {
   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
   const [overColId, setOverColId] = useState(null);
@@ -431,7 +462,10 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
   };
 
   const onDragOver = ({ active, over }) => {
-    if (!over) { setOverColId(null); return; }
+    if (!over) {
+      setOverColId(null);
+      return;
+    }
 
     const ovCol = getColId(over.id);
     setOverColId(ovCol);
@@ -668,21 +702,27 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
   }, [selectedWorkspaceId]);
 
   return (
-    <div className="min-h-screen px-8 py-10">
+    <div className="min-h-screen px-8 pb-10 pt-6">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="flex items-center gap-2 mb-1">
-          <span
+          {/* <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
             style={{ color: "rgba(62,62,85,0.35)" }}
           >
             Workspace
-          </span>
+          </span> */}
         </div>
-        <h1 className="text-2xl font-black tracking-tight" style={{ color: BRAND.secondary }}>
-          Project Board
+        <h1
+          className="text-2xl font-black tracking-tight capitalize"
+          style={{ color: BRAND.secondary }}
+        >
+          {selectedWorkspaceName || " Project Board"}
         </h1>
-        <p className="text-[12px] mt-0.5" style={{ color: "rgba(62,62,85,0.4)" }}>
+        <p
+          className="text-[12px] mt-0.5"
+          style={{ color: "rgba(62,62,85,0.4)" }}
+        >
           Drag cards between columns to update status
         </p>
       </div>
@@ -696,7 +736,10 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
               borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}`,
             }}
           />
-          <span className="ml-3 text-sm" style={{ color: "rgba(62,62,85,0.4)" }}>
+          <span
+            className="ml-3 text-sm"
+            style={{ color: "rgba(62,62,85,0.4)" }}
+          >
             Loading workspace…
           </span>
         </div>
@@ -706,7 +749,10 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
       {!loading && columns.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <span className="text-4xl">📋</span>
-          <p className="text-[13px] font-semibold" style={{ color: "rgba(62,62,85,0.4)" }}>
+          <p
+            className="text-[13px] font-semibold"
+            style={{ color: "rgba(62,62,85,0.4)" }}
+          >
             No columns found for this workspace
           </p>
         </div>

@@ -35,9 +35,11 @@ const Home = ({
   const [privateNotes, setPrivateNotes] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
+  const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
 
   console.log(selectedTab);
   console.log(selectedWorkspaceId)
+  console.log(selectedWorkspaceName)
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -102,6 +104,7 @@ const Home = ({
                   setPrivateNotes={setPrivateNotes}
                   setSelectedTab={setSelectedTab}
                   setSelectedWorkspaceId={setSelectedWorkspaceId}
+                  setSelectedWorkspaceName={setSelectedWorkspaceName}
                 />
               </div>
             </div>
@@ -123,7 +126,7 @@ const Home = ({
             )}
 
             {selectedTab == "workspaces" && selectedWorkspaceId && (
-              <WorkSpaceMain selectedWorkspaceId={selectedWorkspaceId} />
+              <WorkSpaceMain selectedWorkspaceId={selectedWorkspaceId} selectedWorkspaceName={selectedWorkspaceName} />
             )}
           </div>
         </div>
