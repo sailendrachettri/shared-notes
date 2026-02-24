@@ -15,6 +15,30 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("get-workspaces-list")]
+        public async Task<IActionResult> GetNotes([FromBody] GetWorspacesRequest request)
+        {
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                "SELECT public.get_workspace_item_list(@search_text, @sort_by, @sort_dir, @user_id);",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("search_text",
+                        request.SearchText ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("sort_by",
+                        request.SortBy ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("sort_dir",
+                        request.SortDirection ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("user_id",
+                        request.UserId ?? (object)DBNull.Value);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return BadRequest("No data returned from function");
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("add-workspace")]
         public async Task<IActionResult> AddNote([FromBody] AddWorkspacesRequest request)
         {

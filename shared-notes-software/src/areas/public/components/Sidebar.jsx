@@ -243,7 +243,12 @@ const Sidebar = ({
                 </div>
 
                 <div>
-                  <WorkspacesSidebar />
+                  <WorkspacesSidebar
+                    isUserLoggedIn={isUserLoggedIn}
+                    searchText={searchText}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                  />
                 </div>
               </section>
             )}

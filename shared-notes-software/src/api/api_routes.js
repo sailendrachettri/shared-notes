@@ -14,6 +14,7 @@ export const VIEW_UPLOADED_FILE_URL = 'https://localhost:44383/uploads'
 
 //#region  Workspaces
 export const ADD_WORKSPACE_URL = 'workspace/add-workspace'
+export const GET_WORKSPACES_LIST_URL = 'workspace/get-workspaces-list'
 
 // #endregion
 
