@@ -55,6 +55,7 @@ const Sidebar = ({
     useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
   const [deleteNoteType, setDeleteNoteType] = useState(null);
+  const [workspaceLength, setWorkspaceLength] = useState(0);
 
   const handleFetchAllItemList = async () => {
     const store = await load("user-store.json", { autoSave: true });
@@ -233,34 +234,39 @@ const Sidebar = ({
         ) : (
           <section className="h-full w-full ">
             {/* Workspaces */}
-            {isUserLoggedIn && (
-              <section className="pb-5">
-                <div
-                  onClick={() => {
-                    setSelectedTab("workspaces");
-                  }}
-                  className="ps-1 text-sm font-semibold text-slate-600"
-                >
-                  Workspaces
-                </div>
 
-                <div>
-                  <WorkspacesSidebar
-                    isUserLoggedIn={isUserLoggedIn}
-                    searchText={searchText}
-                    sortBy={sortBy}
-                    sortDirection={sortDirection}
-                    setSelectedWorkspaceId={setSelectedWorkspaceId}
-                    setSelectedTab={setSelectedTab}
-                    setSelectedWorkspaceName={setSelectedWorkspaceName}
-                    setCurrentNotesId={setCurrentNotesId}
-                    setSelectedNoteId={setSelectedNoteId}
-                    setActive={setActive}
-                    active={active}
-                  />
+            <section className="pb-5">
+              <div
+                onClick={() => {
+                  setSelectedTab("workspaces");
+                }}
+                className="ps-1 text-sm font-semibold text-slate-600"
+              >
+                Workspaces
+              </div>
+              {workspaceLength == 0 && (
+                <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
+                  <span>Create your workspace</span>
                 </div>
-              </section>
-            )}
+              )}
+
+              <div>
+                <WorkspacesSidebar
+                  isUserLoggedIn={isUserLoggedIn}
+                  searchText={searchText}
+                  sortBy={sortBy}
+                  sortDirection={sortDirection}
+                  setSelectedWorkspaceId={setSelectedWorkspaceId}
+                  setSelectedTab={setSelectedTab}
+                  setSelectedWorkspaceName={setSelectedWorkspaceName}
+                  setCurrentNotesId={setCurrentNotesId}
+                  setSelectedNoteId={setSelectedNoteId}
+                  setActive={setActive}
+                  active={active}
+                  setWorkspaceLength={setWorkspaceLength}
+                />
+              </div>
+            </section>
 
             {/* Notes */}
 
