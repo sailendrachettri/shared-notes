@@ -1,14 +1,13 @@
 /**
  * WorkSpaceBoardView — Soft Minimal Brand Theme
- * primary:   #d25564  (rose-red)
- * secondary: #3e3e55  (deep navy-slate)
- * ternary:   #ffd788  (warm gold)
+ * primary: #d25564 (rose-red)
+ * secondary: #3e3e55 (deep navy-slate)
+ * ternary: #ffd788 (warm gold)
  *
  * Install dependencies:
- *   npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities react-icons
+ * npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities react-icons
  */
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -36,7 +35,6 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { axiosInstance } from "../../../api/axios";
 import { GET_WORKSPACE_FULL_DETAILS_BY_ID_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
@@ -45,87 +43,62 @@ const BRAND = {
   ternary: "#ffd788",
 };
 
-/* ─── Data ───────────────────────────────────────────────────────── */
-const initialTasks = [
+/* ─── Column style config (cycled for dynamic columns) ─────────── */
+const COLUMN_STYLE_PRESETS = [
   {
-    id: "1",
-    title: "Design login page UI",
-    statusId: "todo",
-    priority: "High",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb",
+    emptyDot: "rgba(62,62,85,0.15)",
+    Icon: FaRegClock,
   },
   {
-    id: "2",
-    title: "Build authentication API",
-    statusId: "inprogress",
-    priority: "Medium",
-  },
-  { id: "3", title: "Fix dashboard bugs", statusId: "done", priority: "Low" },
-  {
-    id: "4",
-    title: "Create database schema",
-    statusId: "todo",
-    priority: "High",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb",
+    emptyDot: "rgba(62,62,85,0.15)",
+    Icon: MdOutlinePendingActions,
   },
   {
-    id: "5",
-    title: "Integrate payment gateway",
-    statusId: "inprogress",
-    priority: "High",
-  },
-  {
-    id: "6",
-    title: "Deploy to production",
-    statusId: "done",
-    priority: "Medium",
-  },
-  { id: "7", title: "Write documentation", statusId: "todo", priority: "Low" },
-  {
-    id: "8",
-    title: "Improve performance",
-    statusId: "inprogress",
-    priority: "Medium",
+    accent: BRAND.secondary,
+    accentLight: "rgba(62,62,85,0.06)",
+    accentBorder: "rgba(62,62,85,0.13)",
+    colBg: "#f7f7fb",
+    emptyDot: "rgba(62,62,85,0.15)",
+    Icon: FaCheckCircle,
   },
 ];
 
-const COLUMNS = [
-  {
-    id: "todo",
-    label: "Todo",
-    Icon: FaRegClock,
-    accent: BRAND.secondary,
-    accentLight: "rgba(62,62,85,0.06)",
-    accentBorder: "rgba(62,62,85,0.13)",
-    colBg: "#f7f7fb", // barely-there navy
-    emptyDot: "rgba(62,62,85,0.15)",
-  },
-  {
-    id: "inprogress",
-    label: "In Progress",
-    Icon: MdOutlinePendingActions,
-    accent: BRAND.secondary,
-    accentLight: "rgba(62,62,85,0.06)",
-    accentBorder: "rgba(62,62,85,0.13)",
-    colBg: "#f7f7fb", // barely-there navy
-    emptyDot: "rgba(62,62,85,0.15)",
-  },
-  {
-    id: "done",
-    label: "Done",
-    Icon: FaCheckCircle,
-    accent: BRAND.secondary,
-    accentLight: "rgba(62,62,85,0.06)",
-    accentBorder: "rgba(62,62,85,0.13)",
-    colBg: "#f7f7fb", // barely-there navy
-    emptyDot: "rgba(62,62,85,0.15)",
-  },
-];
+/**
+ * Merges an API column with a style preset.
+ * Index is used to cycle through presets if there are more columns than presets.
+ */
+const buildStyledColumn = (apiCol, index) => {
+  const preset = COLUMN_STYLE_PRESETS[index % COLUMN_STYLE_PRESETS.length];
+  return {
+    ...preset,
+    id: String(apiCol.workspace_column_id),
+    label: apiCol.column_name,
+    columnPosition: apiCol.column_position,
+  };
+};
 
 const PRIORITIES = ["High", "Medium", "Low"];
-
 const PRIORITY = {
   High: { color: "#c0394a", bg: "rgba(210,85,100,0.09)", dot: "#d25564" },
   Medium: { color: "#3e3e55", bg: "rgba(62,62,85,0.09)", dot: "#3e3e55" },
   Low: { color: "#9a7a30", bg: "rgba(255,215,136,0.28)", dot: "#c9a030" },
+};
+
+const mapPriority = (priorityId) => {
+  switch (priorityId) {
+    case 1: return "High";
+    case 2: return "Medium";
+    case 3: return "Low";
+    default: return "Medium";
+  }
 };
 
 let _uid = 200;
@@ -146,48 +119,41 @@ function TaskCard({ task, overlay = false }) {
 
   const inner = (
     <div
-      className={[
-        "rounded-2xl p-4 select-none transition-all duration-150",
-        overlay ? "scale-[1.04] rotate-1" : "",
-        isDragging ? "opacity-25 scale-[0.97]" : "",
-        !overlay && !isDragging ? "hover:-translate-y-0.5" : "",
-      ].join(" ")}
+      className="rounded-2xl p-3 flex flex-col gap-2 select-none"
       style={{
-        background: "white",
+        background: "#fff",
         border: "1px solid rgba(62,62,85,0.08)",
         boxShadow: overlay
-          ? "0 24px 48px rgba(62,62,85,0.14)"
-          : isDragging
-            ? "none"
-            : "0 1px 3px rgba(62,62,85,0.07), 0 4px 12px rgba(62,62,85,0.04)",
+          ? "0 12px 40px rgba(62,62,85,0.18)"
+          : "0 1px 6px rgba(62,62,85,0.05)",
+        opacity: isDragging ? 0.35 : 1,
+        cursor: overlay ? "grabbing" : "default",
       }}
     >
-      <div className="flex items-start gap-2.5">
+      {/* grip + title row */}
+      <div className="flex items-start gap-2">
         <span
-          {...(!overlay ? listeners : {})}
-          {...(!overlay ? attributes : {})}
-          className="mt-0.5 flex-shrink-0 cursor-grab active:cursor-grabbing transition-colors"
+          {...listeners}
+          {...attributes}
+          className="mt-0.5 shrink-0 cursor-grab active:cursor-grabbing transition-colors"
           style={{ color: "rgba(62,62,85,0.2)" }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.5)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.2)")
-          }
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
         >
-          <FaGripVertical size={12} />
+          <FaGripVertical size={11} />
         </span>
-        <p
-          className="text-[13px] font-medium leading-snug flex-1 capitalize"
-          style={{ color: BRAND.secondary }}
-        >
+        <p className="text-[13px] font-semibold leading-snug flex-1" style={{ color: BRAND.secondary }}>
           {task.title}
         </p>
       </div>
-
-      <div className="mt-3.5 flex justify-end">
+      {/* priority badge */}
+      <div className="flex items-center gap-1 pl-5">
         <span
-          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-wider"
+          className="w-1.5 h-1.5 rounded-full"
+          style={{ background: p.dot }}
+        />
+        <span
+          className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
         >
           {task.priority}
@@ -197,6 +163,7 @@ function TaskCard({ task, overlay = false }) {
   );
 
   if (overlay) return inner;
+
   return (
     <div ref={setNodeRef} style={style}>
       {inner}
@@ -218,9 +185,9 @@ function AddForm({ col, onAdd, onCancel }) {
     <div
       className="rounded-2xl p-3 flex flex-col gap-2"
       style={{
-        background: "white",
-        border: `1px solid ${col.accentBorder}`,
-        boxShadow: "0 2px 12px rgba(62,62,85,0.06)",
+        background: "#fff",
+        border: `1px solid ${col?.accentBorder ?? "rgba(62,62,85,0.13)"}`,
+        boxShadow: "0 2px 12px rgba(62,62,85,0.07)",
       }}
     >
       <textarea
@@ -230,10 +197,7 @@ function AddForm({ col, onAdd, onCancel }) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            submit();
-          }
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
           if (e.key === "Escape") onCancel();
         }}
         className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
@@ -242,7 +206,6 @@ function AddForm({ col, onAdd, onCancel }) {
         {PRIORITIES.map((level) => {
           const isActive = priority === level;
           const p = PRIORITY[level];
-
           return (
             <button
               key={level}
@@ -263,17 +226,16 @@ function AddForm({ col, onAdd, onCancel }) {
       <div className="flex items-center gap-2 text-[11px] justify-center my-4">
         <button
           onClick={submit}
-          className="rounded-xl px-3.5 py-1.5  font-bold text-white hover:opacity-85 transition-opacity cursor-pointer"
-          style={{ background: col.accent }}
+          className="rounded-xl px-3.5 py-1.5 font-bold text-white hover:opacity-85 transition-opacity cursor-pointer"
+          style={{ background: col?.accent ?? BRAND.secondary }}
         >
           Add task
         </button>
-
         <button
           onClick={onCancel}
           className="rounded-xl p-1.5 transition-colors text-slate-600 border-slate-200 border px-3 cursor-pointer"
         >
-          Cancle
+          Cancel
         </button>
       </div>
     </div>
@@ -282,18 +244,20 @@ function AddForm({ col, onAdd, onCancel }) {
 
 /* ─── Column ────────────────────────────────────────────────────── */
 function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
-  const ids = tasks.map((t) => t.id);
-  const isEmpty = tasks.length === 0 && addingIn !== col.id;
-  const { setNodeRef: setDropRef } = useDroppable({ id: col.id });
+  // tasks may be undefined/null while loading — always default to []
+  const safeTasks = tasks ?? [];
+  const ids = safeTasks.map((t) => t.id);
+  const isEmpty = safeTasks.length === 0 && addingIn !== col?.id;
+  const { setNodeRef: setDropRef } = useDroppable({ id: col?.id });
 
   return (
     <div
       className="flex flex-col rounded-3xl overflow-hidden transition-all duration-200"
       style={{
-        background: isOver ? col.accentLight : col.colBg,
-        border: `1px solid ${isOver ? col.accent + "50" : "rgba(62,62,85,0.07)"}`,
+        background: isOver ? col?.accentLight : col?.colBg,
+        border: `1px solid ${isOver ? (col?.accent ?? BRAND.secondary) + "50" : "rgba(62,62,85,0.07)"}`,
         boxShadow: isOver
-          ? `0 0 0 3px ${col.accent}18, 0 12px 32px ${col.accent}10`
+          ? `0 0 0 3px ${col?.accent ?? BRAND.secondary}18, 0 12px 32px ${col?.accent ?? BRAND.secondary}10`
           : "0 2px 20px rgba(62,62,85,0.05)",
       }}
     >
@@ -301,7 +265,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       <div
         className="h-[3px] w-full"
         style={{
-          background: `linear-gradient(90deg, ${col.accent}, ${col.accent}88)`,
+          background: `linear-gradient(90deg, ${col?.accent ?? BRAND.secondary}, ${(col?.accent ?? BRAND.secondary)}88)`,
         }}
       />
 
@@ -310,30 +274,30 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
         <div className="flex items-center gap-2">
           <span
             className="flex items-center justify-center w-6 h-6 rounded-lg"
-            style={{ background: col.accentLight }}
+            style={{ background: col?.accentLight }}
           >
-            <col.Icon size={12} style={{ color: col.accent }} />
+            {col?.Icon && <col.Icon size={12} style={{ color: col?.accent }} />}
           </span>
           <span
             className="text-[11px] font-bold uppercase tracking-[0.1em]"
-            style={{ color: col.accent }}
+            style={{ color: col?.accent }}
           >
-            {col.label}
+            {col?.label}
           </span>
           <span
             className="rounded-full w-5 h-5 flex items-center justify-center text-[9px] font-black"
-            style={{ background: col.accentLight, color: col.accent }}
+            style={{ background: col?.accentLight, color: col?.accent }}
           >
-            {tasks.length}
+            {safeTasks.length}
           </span>
         </div>
         <button
-          onClick={() => setAddingIn(col.id)}
+          onClick={() => setAddingIn(col?.id)}
           className="w-7 h-7 flex items-center cursor-pointer justify-center rounded-xl transition-all hover:scale-105"
           style={{
-            background: col.accentLight,
-            color: col.accent,
-            border: `1px solid ${col.accentBorder}`,
+            background: col?.accentLight,
+            color: col?.accent,
+            border: `1px solid ${col?.accentBorder}`,
           }}
           title="Add task"
         >
@@ -352,64 +316,55 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
             <div
               className="flex-1 flex flex-col items-center justify-center rounded-2xl border-dashed border-2 py-8 gap-2 transition-all duration-200"
               style={{
-                borderColor: isOver ? col.accent + "60" : col.emptyDot,
-                background: isOver ? col.accentLight : "transparent",
+                borderColor: isOver
+                  ? (col?.accent ?? BRAND.secondary) + "60"
+                  : col?.emptyDot,
+                background: isOver ? col?.accentLight : "transparent",
               }}
             >
               <span
                 className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
                 style={{
-                  background: isOver ? col.accentLight : "rgba(62,62,85,0.04)",
-                  border: `1.5px dashed ${isOver ? col.accent : "rgba(62,62,85,0.15)"}`,
+                  background: isOver ? col?.accentLight : "rgba(62,62,85,0.04)",
+                  border: `1.5px dashed ${isOver ? col?.accent : "rgba(62,62,85,0.15)"}`,
                 }}
               >
                 {isOver ? (
-                  <span style={{ color: col.accent, fontSize: 14 }}>↓</span>
+                  <span style={{ color: col?.accent, fontSize: 14 }}>↓</span>
                 ) : (
-                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>
-                    +
-                  </span>
+                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
                 )}
               </span>
               <p
                 className="text-[11px] font-semibold"
-                style={{ color: isOver ? col.accent : "rgba(62,62,85,0.35)" }}
+                style={{ color: isOver ? col?.accent : "rgba(62,62,85,0.35)" }}
               >
                 {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p
-                  className="text-[10px]"
-                  style={{ color: "rgba(62,62,85,0.25)" }}
-                >
+                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
                   Add one below or drag a card in
                 </p>
               )}
             </div>
           ) : (
-            tasks.map((task) => <TaskCard key={task.id} task={task} />)
+            safeTasks.map((task) => <TaskCard key={task.id} task={task} />)
           )}
 
-          {addingIn === col.id && (
-            <AddForm
-              col={col}
-              onAdd={onAdd}
-              onCancel={() => setAddingIn(null)}
-            />
+          {addingIn === col?.id && (
+            <AddForm col={col} onAdd={onAdd} onCancel={() => setAddingIn(null)} />
           )}
         </div>
       </SortableContext>
 
       {/* Footer */}
-      {addingIn !== col.id && (
+      {addingIn !== col?.id && (
         <button
           className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] cursor-pointer font-semibold transition-all"
           style={{ color: "rgba(62,62,85,0.35)" }}
-          onClick={() => setAddingIn(col.id)}
-          onMouseEnter={(e) => (e.currentTarget.style.color = col.accent)}
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
-          }
+          onClick={() => setAddingIn(col?.id)}
+          onMouseEnter={(e) => (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
         >
           <FaPlus size={8} />
           Add a task
@@ -421,30 +376,31 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 
 /* ─── Board ─────────────────────────────────────────────────────── */
 export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
-  const [tasks, setTasks] = useState(initialTasks);
+  // Start with empty arrays — tasks and columns will be populated from the API
+  const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
   const [overColId, setOverColId] = useState(null);
   const [addingIn, setAddingIn] = useState(null);
+  const [columns, setColumns] = useState([]); // styled columns (merged API + presets)
+  const [loading, setLoading] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
   const getCol = (id) => {
-    if (COLUMNS.some((c) => c.id === id)) return id;
+    if (columns.some((c) => c.id === id)) return id;
     return tasks.find((t) => t.id === id)?.statusId ?? null;
   };
 
-  const getTasksByCol = (colId) => tasks.filter((t) => t.statusId === colId);
+  const getTasksByCol = (colId) =>
+    tasks.filter((t) => t.statusId === colId);
 
   const onDragStart = ({ active }) =>
     setActiveTask(tasks.find((t) => t.id === active.id) ?? null);
 
   const onDragOver = ({ active, over }) => {
-    if (!over) {
-      setOverColId(null);
-      return;
-    }
+    if (!over) { setOverColId(null); return; }
     const ovCol = getCol(over.id);
     setOverColId(ovCol);
     const acCol = getCol(active.id);
@@ -480,16 +436,50 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         toast.error("Workspace Id is required");
         return;
       }
-      const payload = {
-        workspaceId: +selectedWorkspaceId,
-      };
+
+      setLoading(true);
+
       const res = await axiosInstance.post(
         GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
-        payload,
+        { workspaceId: +selectedWorkspaceId },
       );
-      console.log(res);
+
+      const response = res.data;
+
+      if (!response.success) {
+        toast.error("Failed to fetch workspace");
+        return;
+      }
+
+      const apiColumns = response?.data?.columns ?? [];
+
+      // Sort columns by position then build styled column objects
+      const sortedApiColumns = [...apiColumns].sort(
+        (a, b) => a.column_position - b.column_position,
+      );
+
+      const styledColumns = sortedApiColumns.map((col, index) =>
+        buildStyledColumn(col, index),
+      );
+
+      // Flatten all tasks from all columns (tasks array per column may be null/undefined)
+      const formattedTasks = sortedApiColumns.flatMap((col) => {
+        const colTasks = col?.tasks ?? []; // guard against null tasks array
+        return colTasks.map((task) => ({
+          id: String(task.workspace_task_id),
+          title: task.title,
+          statusId: String(col.workspace_column_id),
+          priority: mapPriority(task.priority_id),
+        }));
+      });
+
+      setColumns(styledColumns);
+      setTasks(formattedTasks);
     } catch (error) {
-      console.error("Can't get the workspace details", error);
+      console.error("Can't get workspace details", error);
+      toast.error("Something went wrong fetching workspace");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -502,8 +492,6 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-1">
-          {/* Three tiny brand-colored pills */}
-
           <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
             style={{ color: "rgba(62,62,85,0.35)" }}
@@ -517,39 +505,61 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         >
           Project Board
         </h1>
-        <p
-          className="text-[12px] mt-0.5"
-          style={{ color: "rgba(62,62,85,0.4)" }}
-        >
+        <p className="text-[12px] mt-0.5" style={{ color: "rgba(62,62,85,0.4)" }}>
           Drag cards between columns to update status
         </p>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragEnd={onDragEnd}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-          {COLUMNS.map((col) => (
-            <Column
-              key={col.id}
-              col={col}
-              tasks={getTasksByCol(col.id)}
-              isOver={overColId === col.id}
-              addingIn={addingIn}
-              setAddingIn={setAddingIn}
-              onAdd={handleAdd(col.id)}
-            />
-          ))}
+      {/* Loading state */}
+      {loading && (
+        <div className="flex items-center justify-center py-20">
+          <div
+            className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
+            style={{ borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}` }}
+          />
+          <span className="ml-3 text-sm" style={{ color: "rgba(62,62,85,0.4)" }}>
+            Loading workspace…
+          </span>
         </div>
+      )}
 
-        <DragOverlay dropAnimation={{ duration: 180, easing: "ease" }}>
-          {activeTask ? <TaskCard task={activeTask} overlay /> : null}
-        </DragOverlay>
-      </DndContext>
+      {/* Empty state — API returned no columns */}
+      {!loading && columns.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <span className="text-4xl">📋</span>
+          <p className="text-[13px] font-semibold" style={{ color: "rgba(62,62,85,0.4)" }}>
+            No columns found for this workspace
+          </p>
+        </div>
+      )}
+
+      {/* Board */}
+      {!loading && columns.length > 0 && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={onDragStart}
+          onDragOver={onDragOver}
+          onDragEnd={onDragEnd}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+            {columns.map((col) => (
+              <Column
+                key={col.id}
+                col={col}
+                tasks={getTasksByCol(col.id)}
+                isOver={overColId === col.id}
+                addingIn={addingIn}
+                setAddingIn={setAddingIn}
+                onAdd={handleAdd(col.id)}
+              />
+            ))}
+          </div>
+          <DragOverlay dropAnimation={{ duration: 180, easing: "ease" }}>
+            {activeTask ? <TaskCard task={activeTask} overlay /> : null}
+          </DragOverlay>
+        </DndContext>
+      )}
     </div>
   );
 }
