@@ -7,7 +7,7 @@
  * Install dependencies:
  * npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities react-icons
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -28,7 +28,6 @@ import {
   FaRegClock,
   FaCheckCircle,
   FaPlus,
-  FaTimes,
   FaGripVertical,
 } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
@@ -36,6 +35,7 @@ import { axiosInstance } from "../../../api/axios";
 import {
   ADD_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
+  UPDATE_WORKSPACE_TASK_POSITION_URL, // e.g. PUT /workspace/task/position
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 
@@ -74,10 +74,6 @@ const COLUMN_STYLE_PRESETS = [
   },
 ];
 
-/**
- * Merges an API column with a style preset.
- * Index is used to cycle through presets if there are more columns than presets.
- */
 const buildStyledColumn = (apiCol, index) => {
   const preset = COLUMN_STYLE_PRESETS[index % COLUMN_STYLE_PRESETS.length];
   return {
@@ -94,21 +90,44 @@ const PRIORITY = {
   Medium: { color: "#3e3e55", bg: "rgba(62,62,85,0.09)", dot: "#3e3e55" },
   Low: { color: "#9a7a30", bg: "rgba(255,215,136,0.28)", dot: "#c9a030" },
 };
+const PRIORITY_ID_MAP = { High: 1, Medium: 2, Low: 3 };
 
 const mapPriority = (priorityId) => {
   switch (priorityId) {
-    case 1:
-      return "High";
-    case 2:
-      return "Medium";
-    case 3:
-      return "Low";
-    default:
-      return "Medium";
+    case 1: return "High";
+    case 2: return "Medium";
+    case 3: return "Low";
+    default: return "Medium";
   }
 };
 
-let _uid = 200;
+/* ─── Position helpers ──────────────────────────────────────────── */
+const GAP = 1000; // spacing between task positions
+
+/**
+ * Calculates the midpoint position between two neighbors.
+ *
+ * | Scenario              | prevPos | nextPos | result              |
+ * |-----------------------|---------|---------|---------------------|
+ * | Only item in column   | null    | null    | GAP (1000)          |
+ * | Dropped at top        | null    | 2000    | 1000  (2000 / 2)    |
+ * | Dropped at bottom     | 5000    | null    | 6000  (5000 + GAP)  |
+ * | Dropped between items | 2000    | 3000    | 2500  (midpoint)    |
+ */
+const calcNewPosition = (prevPos, nextPos) => {
+  if (prevPos === null && nextPos === null) return GAP;
+  if (prevPos === null) return nextPos / 2;
+  if (nextPos === null) return prevPos + GAP;
+  return (prevPos + nextPos) / 2;
+};
+
+/**
+ * Re-indexes all tasks in a column with clean GAP spacing.
+ * Called when midpoint gap shrinks below 1 (too many reorders).
+ * Returns [{ id, task_position }] for every task in the column.
+ */
+const reindexColumn = (colTasks) =>
+  colTasks.map((t, i) => ({ id: t.id, task_position: (i + 1) * GAP }));
 
 /* ─── TaskCard ──────────────────────────────────────────────────── */
 function TaskCard({ task, overlay = false }) {
@@ -137,19 +156,14 @@ function TaskCard({ task, overlay = false }) {
         cursor: overlay ? "grabbing" : "default",
       }}
     >
-      {/* grip + title row */}
       <div className="flex items-start gap-2">
         <span
           {...listeners}
           {...attributes}
           className="mt-0.5 shrink-0 cursor-grab active:cursor-grabbing transition-colors"
           style={{ color: "rgba(62,62,85,0.2)" }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.5)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.2)")
-          }
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.5)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.2)")}
         >
           <FaGripVertical size={11} />
         </span>
@@ -160,12 +174,8 @@ function TaskCard({ task, overlay = false }) {
           {task.title}
         </p>
       </div>
-      {/* priority badge */}
       <div className="flex items-center gap-1 pl-5">
-        <span
-          className="w-1.5 h-1.5 rounded-full"
-          style={{ background: p.dot }}
-        />
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.dot }} />
         <span
           className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
@@ -177,12 +187,7 @@ function TaskCard({ task, overlay = false }) {
   );
 
   if (overlay) return inner;
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      {inner}
-    </div>
-  );
+  return <div ref={setNodeRef} style={style}>{inner}</div>;
 }
 
 /* ─── AddForm ───────────────────────────────────────────────────── */
@@ -211,10 +216,7 @@ function AddForm({ col, onAdd, onCancel }) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            submit();
-          }
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
           if (e.key === "Escape") onCancel();
         }}
         className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
@@ -227,7 +229,7 @@ function AddForm({ col, onAdd, onCancel }) {
             <button
               key={level}
               onClick={() => setPriority(level)}
-              className="px-3 py-1 text-[11px] rounded-lg border cursor-pointer border-slate-200 transition-all duration-150 flex items-center gap-1"
+              className="px-3 py-1 text-[11px] rounded-lg border cursor-pointer transition-all duration-150 flex items-center gap-1"
               style={{
                 background: isActive ? p.bg : "transparent",
                 color: isActive ? p.color : "#64748b",
@@ -261,7 +263,6 @@ function AddForm({ col, onAdd, onCancel }) {
 
 /* ─── Column ────────────────────────────────────────────────────── */
 function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
-  // tasks may be undefined/null while loading — always default to []
   const safeTasks = tasks ?? [];
   const ids = safeTasks.map((t) => t.id);
   const isEmpty = safeTasks.length === 0 && addingIn !== col?.id;
@@ -278,7 +279,6 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           : "0 2px 20px rgba(62,62,85,0.05)",
       }}
     >
-      {/* Thin accent top line */}
       <div
         className="h-[3px] w-full"
         style={{
@@ -349,9 +349,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? (
                   <span style={{ color: col?.accent, fontSize: 14 }}>↓</span>
                 ) : (
-                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>
-                    +
-                  </span>
+                  <span style={{ color: "rgba(62,62,85,0.25)", fontSize: 14 }}>+</span>
                 )}
               </span>
               <p
@@ -361,10 +359,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
                 {isOver ? "Drop here" : "No tasks yet"}
               </p>
               {!isOver && (
-                <p
-                  className="text-[10px]"
-                  style={{ color: "rgba(62,62,85,0.25)" }}
-                >
+                <p className="text-[10px]" style={{ color: "rgba(62,62,85,0.25)" }}>
                   Add one below or drag a card in
                 </p>
               )}
@@ -374,11 +369,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           )}
 
           {addingIn === col?.id && (
-            <AddForm
-              col={col}
-              onAdd={onAdd}
-              onCancel={() => setAddingIn(null)}
-            />
+            <AddForm col={col} onAdd={onAdd} onCancel={() => setAddingIn(null)} />
           )}
         </div>
       </SortableContext>
@@ -389,12 +380,8 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           className="flex items-center gap-1.5 w-full px-4 py-3.5 text-[11px] cursor-pointer font-semibold transition-all"
           style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col?.id)}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
-          }
+          onMouseEnter={(e) => (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(62,62,85,0.35)")}
         >
           <FaPlus size={8} />
           Add a task
@@ -406,72 +393,193 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 
 /* ─── Board ─────────────────────────────────────────────────────── */
 export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
-  // Start with empty arrays — tasks and columns will be populated from the API
   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
   const [overColId, setOverColId] = useState(null);
   const [addingIn, setAddingIn] = useState(null);
-  const [columns, setColumns] = useState([]); // styled columns (merged API + presets)
+  const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Snapshot of tasks before drag starts — used for rollback if API fails
+  const tasksSnapshot = useRef([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
 
-  const getCol = (id) => {
-    if (columns.some((c) => c.id === id)) return id;
-    return tasks.find((t) => t.id === id)?.statusId ?? null;
+  /* ── helpers ── */
+
+  // Given a dnd-kit id (could be a column id OR a task id), return the column id
+  const getColId = (dndId) => {
+    if (columns.some((c) => c.id === dndId)) return dndId;
+    return tasks.find((t) => t.id === dndId)?.statusId ?? null;
   };
 
-  const getTasksByCol = (colId) => tasks.filter((t) => t.statusId === colId);
+  // Returns tasks for a column sorted by task_position ascending
+  const getTasksByCol = (colId) =>
+    tasks
+      .filter((t) => t.statusId === colId)
+      .sort((a, b) => (a.task_position ?? 0) - (b.task_position ?? 0));
 
-  const onDragStart = ({ active }) =>
+  /* ── drag handlers ── */
+
+  const onDragStart = ({ active }) => {
+    tasksSnapshot.current = tasks; // snapshot for rollback on API failure
     setActiveTask(tasks.find((t) => t.id === active.id) ?? null);
+  };
 
   const onDragOver = ({ active, over }) => {
-    if (!over) {
-      setOverColId(null);
-      return;
-    }
-    const ovCol = getCol(over.id);
+    if (!over) { setOverColId(null); return; }
+
+    const ovCol = getColId(over.id);
     setOverColId(ovCol);
-    const acCol = getCol(active.id);
+
+    const acCol = getColId(active.id);
     if (!ovCol || acCol === ovCol) return;
+
+    // Optimistically move card to new column while dragging
     setTasks((prev) =>
       prev.map((t) => (t.id === active.id ? { ...t, statusId: ovCol } : t)),
     );
   };
 
-  const onDragEnd = ({ active, over }) => {
+  const onDragEnd = async ({ active, over }) => {
     setActiveTask(null);
     setOverColId(null);
-    if (!over || active.id === over.id) return;
+
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    const activeColId = getColId(activeId);
+    const targetColId = getColId(overId);
+
+    if (!activeColId || !targetColId) return;
+
+    // ── 1. Compute the reordered task list ───────────────────────────────────
+    let reordered = [];
+
     setTasks((prev) => {
-      const ai = prev.findIndex((t) => t.id === active.id);
-      const oi = prev.findIndex((t) => t.id === over.id);
-      if (ai === -1 || oi === -1) return prev;
-      return arrayMove(prev, ai, oi);
+      // Ensure task is assigned to the target column
+      const withColMoved = prev.map((t) =>
+        t.id === activeId ? { ...t, statusId: targetColId } : t,
+      );
+
+      const ai = withColMoved.findIndex((t) => t.id === activeId);
+      const oi = withColMoved.findIndex((t) => t.id === overId);
+
+      // Dropped directly onto a column droppable (empty column) — no reorder needed
+      if (oi === -1) {
+        reordered = withColMoved;
+        return withColMoved;
+      }
+
+      reordered = arrayMove(withColMoved, ai, oi);
+      return reordered;
     });
+
+    // ── 2. Find neighbors in the target column to compute new position ───────
+    const colTasksAfterMove = reordered
+      .filter((t) => t.statusId === targetColId)
+      .sort((a, b) => (a.task_position ?? 0) - (b.task_position ?? 0));
+
+    const movedIndex = colTasksAfterMove.findIndex((t) => t.id === activeId);
+    const prevTask = colTasksAfterMove[movedIndex - 1] ?? null;
+    const nextTask = colTasksAfterMove[movedIndex + 1] ?? null;
+
+    const prevPos = prevTask?.task_position ?? null;
+    const nextPos = nextTask?.task_position ?? null;
+    let newPosition = calcNewPosition(prevPos, nextPos);
+
+    // ── 3. Re-index the whole column if gap shrank below 1 ──────────────────
+    //       This keeps positions clean and prevents floating-point blowup.
+    let bulkUpdates = null;
+    if (prevPos !== null && nextPos !== null && nextPos - prevPos < 1) {
+      const reindexed = reindexColumn(colTasksAfterMove);
+      newPosition = reindexed[movedIndex].task_position;
+      bulkUpdates = reindexed;
+    }
+
+    // ── 4. Update task_position in local state ───────────────────────────────
+    setTasks((prev) => {
+      if (bulkUpdates) {
+        const updateMap = Object.fromEntries(
+          bulkUpdates.map((u) => [u.id, u.task_position]),
+        );
+        return prev.map((t) =>
+          updateMap[t.id] !== undefined
+            ? { ...t, task_position: updateMap[t.id] }
+            : t,
+        );
+      }
+      return prev.map((t) =>
+        t.id === activeId ? { ...t, task_position: newPosition } : t,
+      );
+    });
+
+    // ── 5. Persist to DB ─────────────────────────────────────────────────────
+    /*
+     * Expected API contract (PUT UPDATE_WORKSPACE_TASK_POSITION_URL):
+     *
+     * Request body:
+     * {
+     *   updates: [
+     *     {
+     *       workspaceTaskId: number,      -- task to update
+     *       workspaceColumnId: number,    -- new (or same) column
+     *       taskPosition: number          -- new fractional position value
+     *     },
+     *     ...                             -- extra items only on full re-index
+     *   ]
+     * }
+     *
+     * Success response: { success: true }
+     *
+     * The backend should do a bulk UPDATE:
+     *   UPDATE utbl_workspace_tasks
+     *   SET workspace_column_id = $col, task_position = $pos, updated_at = NOW()
+     *   WHERE workspace_task_id = $id
+     * for each entry in updates[].
+     */
+    try {
+      const updates = bulkUpdates
+        ? bulkUpdates.map((u) => ({
+            workspaceTaskId: +u.id,
+            workspaceColumnId: +targetColId,
+            taskPosition: u.task_position,
+          }))
+        : [
+            {
+              workspaceTaskId: +activeId,
+              workspaceColumnId: +targetColId,
+              taskPosition: newPosition,
+            },
+          ];
+
+      await axiosInstance.put(UPDATE_WORKSPACE_TASK_POSITION_URL, { updates });
+    } catch (error) {
+      console.error("Failed to save task position", error);
+      toast.error("Could not save new position — reverting");
+      setTasks(tasksSnapshot.current); // rollback
+    }
   };
 
+  /* ── add task ── */
   const handleAdd = (colId) => async (title, priority) => {
     try {
-      // Convert priority string → numeric ID
-      const priorityMap = {
-        High: 1,
-        Medium: 2,
-        Low: 3,
-      };
+      const colTasks = getTasksByCol(colId);
+      const lastPos = colTasks[colTasks.length - 1]?.task_position ?? 0;
 
       const payload = {
         workspaceId: +selectedWorkspaceId,
         workspaceColumnId: +colId,
-        title: title,
-        priorityId: priorityMap[priority],
+        title,
+        priorityId: PRIORITY_ID_MAP[priority],
+        taskPosition: lastPos + GAP, // always appended at bottom
       };
 
       const res = await axiosInstance.post(ADD_WORKSPACE_TASK_URL, payload);
-
       const response = res.data;
 
       if (!response.success) {
@@ -479,28 +587,28 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         return;
       }
 
-      // Use returned task id + position from backend
-      const newTaskId = response.data.workspace_task_id;
+      const newTask = response.data;
 
-      // Optimistic UI update
       setTasks((prev) => [
         ...prev,
         {
-          id: String(newTaskId),
+          id: String(newTask.workspace_task_id),
           title,
           statusId: String(colId),
           priority,
+          task_position: newTask.task_position ?? lastPos + GAP,
         },
       ]);
 
       setAddingIn(null);
-      toast.success("Task added successfully");
+      toast.success("Task added");
     } catch (error) {
-      console.error("Can't add the task at the moment", error);
-      toast.error("Can't add the task at the moment");
+      console.error("Can't add task", error);
+      toast.error("Can't add task at the moment");
     }
   };
 
+  /* ── fetch workspace ── */
   const handleGetWorkSpaceFullDetails = async () => {
     try {
       if (!selectedWorkspaceId) {
@@ -524,7 +632,6 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
 
       const apiColumns = response?.data?.columns ?? [];
 
-      // Sort columns by position then build styled column objects
       const sortedApiColumns = [...apiColumns].sort(
         (a, b) => a.column_position - b.column_position,
       );
@@ -533,14 +640,14 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
         buildStyledColumn(col, index),
       );
 
-      // Flatten all tasks from all columns (tasks array per column may be null/undefined)
       const formattedTasks = sortedApiColumns.flatMap((col) => {
-        const colTasks = col?.tasks ?? []; // guard against null tasks array
+        const colTasks = col?.tasks ?? [];
         return colTasks.map((task) => ({
           id: String(task.workspace_task_id),
           title: task.title,
           statusId: String(col.workspace_column_id),
           priority: mapPriority(task.priority_id),
+          task_position: task.task_position ?? 0, // ← keep DB position in state
         }));
       });
 
@@ -570,21 +677,15 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
             Workspace
           </span>
         </div>
-        <h1
-          className="text-2xl font-black tracking-tight"
-          style={{ color: BRAND.secondary }}
-        >
+        <h1 className="text-2xl font-black tracking-tight" style={{ color: BRAND.secondary }}>
           Project Board
         </h1>
-        <p
-          className="text-[12px] mt-0.5"
-          style={{ color: "rgba(62,62,85,0.4)" }}
-        >
+        <p className="text-[12px] mt-0.5" style={{ color: "rgba(62,62,85,0.4)" }}>
           Drag cards between columns to update status
         </p>
       </div>
 
-      {/* Loading state */}
+      {/* Loading */}
       {loading && (
         <div className="flex items-center justify-center py-20">
           <div
@@ -593,23 +694,17 @@ export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
               borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}`,
             }}
           />
-          <span
-            className="ml-3 text-sm"
-            style={{ color: "rgba(62,62,85,0.4)" }}
-          >
+          <span className="ml-3 text-sm" style={{ color: "rgba(62,62,85,0.4)" }}>
             Loading workspace…
           </span>
         </div>
       )}
 
-      {/* Empty state — API returned no columns */}
+      {/* Empty */}
       {!loading && columns.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <span className="text-4xl">📋</span>
-          <p
-            className="text-[13px] font-semibold"
-            style={{ color: "rgba(62,62,85,0.4)" }}
-          >
+          <p className="text-[13px] font-semibold" style={{ color: "rgba(62,62,85,0.4)" }}>
             No columns found for this workspace
           </p>
         </div>

@@ -2,6 +2,18 @@
 
 namespace shared_notes_software_server.Models
 {
+    public class UpdateWorkspaceTaskPositionRequest
+    {
+        public List<WorkspaceTaskPositionUpdate> Updates { get; set; } = new();
+    }
+
+    public class WorkspaceTaskPositionUpdate
+    {
+        public long WorkspaceTaskId { get; set; }
+        public long WorkspaceColumnId { get; set; }
+        public decimal TaskPosition { get; set; }
+        // Note: decimal is IMPORTANT because your frontend may send fractional positions
+    }
     public class AddWorkspaceTaskRequest
     {
        public long WorkspaceId { get; set; }

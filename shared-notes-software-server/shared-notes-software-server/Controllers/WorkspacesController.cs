@@ -15,6 +15,70 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPut("update-workspace-task-position")]
+        public async Task<IActionResult> UpdateWorkspaceTaskPosition(
+    [FromBody] UpdateWorkspaceTaskPositionRequest request)
+        {
+            if (request?.Updates == null || !request.Updates.Any())
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "No updates provided"
+                });
+
+            try
+            {
+                var sql = @"
+            UPDATE public.utbl_workspace_tasks t
+            SET
+                workspace_column_id = v.workspace_column_id,
+                task_position = v.task_position,
+                updated_at = NOW()
+            FROM (
+                VALUES ";
+
+                var parameters = new List<string>();
+                int index = 0;
+
+                foreach (var u in request.Updates)
+                {
+                    parameters.Add(
+                        $"(@taskId{index}, @colId{index}, @pos{index})"
+                    );
+                    index++;
+                }
+
+                sql += string.Join(",", parameters);
+
+                sql += @"
+            ) AS v(workspace_task_id, workspace_column_id, task_position)
+            WHERE t.workspace_task_id = v.workspace_task_id;
+        ";
+
+                await _db.ExecuteNonQueryAsync(sql, cmd =>
+                {
+                    for (int i = 0; i < request.Updates.Count; i++)
+                    {
+                        var u = request.Updates[i];
+
+                        cmd.Parameters.AddWithValue($"taskId{i}", u.WorkspaceTaskId);
+                        cmd.Parameters.AddWithValue($"colId{i}", u.WorkspaceColumnId);
+                        cmd.Parameters.AddWithValue($"pos{i}", u.TaskPosition);
+                    }
+                });
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
         [HttpPost("add-workspace-task")]
         public async Task<IActionResult> AddNote([FromBody] AddWorkspaceTaskRequest request)
         {

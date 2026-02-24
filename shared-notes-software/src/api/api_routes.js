@@ -17,6 +17,7 @@ export const ADD_WORKSPACE_URL = 'workspace/add-workspace'
 export const GET_WORKSPACES_LIST_URL = 'workspace/get-workspaces-list'
 export const GET_WORKSPACE_FULL_DETAILS_BY_ID_URL = 'workspace/get-workspace-details'
 export const ADD_WORKSPACE_TASK_URL = 'workspace/add-workspace-task'
+export const UPDATE_WORKSPACE_TASK_POSITION_URL = 'workspace/update-workspace-task-position'
 
 // #endregion
 
