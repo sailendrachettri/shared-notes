@@ -38,6 +38,7 @@ import {
   UPDATE_WORKSPACE_TASK_POSITION_URL, // e.g. PUT /workspace/task/position
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
+import WorkspaceModeBadge from "./WorkspaceModeBadge";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
@@ -425,6 +426,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 export default function WorkSpaceBoardView({
   selectedWorkspaceId,
   selectedWorkspaceName,
+  selectedWorkspaceMode
 }) {
   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
@@ -704,7 +706,10 @@ export default function WorkSpaceBoardView({
   return (
     <div className="min-h-screen px-8 pb-10 pt-6">
       {/* Header */}
-      <div className="mb-4">
+      <div className="mb-4 relative">
+        <div className="absolute right-0">
+         <WorkspaceModeBadge  selectedWorkspaceMode={selectedWorkspaceMode}/>
+        </div>
         <div className="flex items-center gap-2 mb-1">
           {/* <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"

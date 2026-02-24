@@ -18,12 +18,15 @@ const WorkspacesSidebar = ({
   setCurrentNotesId,
   setActive,
   active,
-  setWorkspaceLength
+  setWorkspaceLength,
+  setSelectedWordspaceMode
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
 
   const handleSelectWorkspace = (item) => {
+    console.log(item);
+    setSelectedWordspaceMode(item?.is_private ? 'private' : 'public')
     setCurrentNotesId(null);
     setSelectedNoteId(null);
     setActive(item?.workspace_id);

@@ -43,6 +43,7 @@ const Sidebar = ({
   setSelectedTab,
   setSelectedWorkspaceId,
   setSelectedWorkspaceName,
+  setSelectedWordspaceMode
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -264,6 +265,7 @@ const Sidebar = ({
                   setActive={setActive}
                   active={active}
                   setWorkspaceLength={setWorkspaceLength}
+                  setSelectedWordspaceMode={setSelectedWordspaceMode}
                 />
               </div>
             </section>

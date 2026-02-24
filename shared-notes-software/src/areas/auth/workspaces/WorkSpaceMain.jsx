@@ -1,6 +1,6 @@
 import WorkSpaceBoardView from "./WorkSpaceBoardView";
 
-const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName }) => {
+const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName, selectedWorkspaceMode }) => {
   console.log({ selectedWorkspaceId });
   return (
     <>
@@ -8,6 +8,7 @@ const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName }) => {
         <WorkSpaceBoardView
           selectedWorkspaceId={selectedWorkspaceId}
           selectedWorkspaceName={selectedWorkspaceName}
+          selectedWorkspaceMode={selectedWorkspaceMode}
         />
       </section>
     </>

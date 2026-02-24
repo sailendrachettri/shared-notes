@@ -37,10 +37,12 @@ const Home = ({
   const [selectedTab, setSelectedTab] = useState(null);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
+  const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
 
   console.log(selectedTab);
   console.log(selectedWorkspaceId);
   console.log(selectedWorkspaceName);
+  console.log(selectedWorkspaceMode);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -106,6 +108,7 @@ const Home = ({
                   setSelectedTab={setSelectedTab}
                   setSelectedWorkspaceId={setSelectedWorkspaceId}
                   setSelectedWorkspaceName={setSelectedWorkspaceName}
+                  setSelectedWordspaceMode={setSelectedWordspaceMode}
                 />
               </div>
             </div>
@@ -130,6 +133,7 @@ const Home = ({
               <WorkSpaceMain
                 selectedWorkspaceId={selectedWorkspaceId}
                 selectedWorkspaceName={selectedWorkspaceName}
+                selectedWorkspaceMode={selectedWorkspaceMode}
                 
               />
             )}
