@@ -266,6 +266,7 @@ const Sidebar = ({
                   active={active}
                   setWorkspaceLength={setWorkspaceLength}
                   setSelectedWordspaceMode={setSelectedWordspaceMode}
+                  refresh={refresh}
                 />
               </div>
             </section>

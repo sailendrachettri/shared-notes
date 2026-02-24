@@ -50,7 +50,7 @@ const BRAND = {
 /* ─── Column style config (cycled for dynamic columns) ─────────── */
 const COLUMN_STYLE_PRESETS = [
   {
-    accent: BRAND.secondary,
+    accent: BRAND?.secondary,
     accentLight: "rgba(62,62,85,0.06)",
     accentBorder: "rgba(62,62,85,0.13)",
     colBg: "#f7f7fb",
@@ -58,7 +58,7 @@ const COLUMN_STYLE_PRESETS = [
     Icon: FaRegClock,
   },
   {
-    accent: BRAND.secondary,
+    accent: BRAND?.secondary,
     accentLight: "rgba(62,62,85,0.06)",
     accentBorder: "rgba(62,62,85,0.13)",
     colBg: "#f7f7fb",
@@ -66,7 +66,7 @@ const COLUMN_STYLE_PRESETS = [
     Icon: MdOutlinePendingActions,
   },
   {
-    accent: BRAND.secondary,
+    accent: BRAND?.secondary,
     accentLight: "rgba(62,62,85,0.06)",
     accentBorder: "rgba(62,62,85,0.13)",
     colBg: "#f7f7fb",
@@ -177,8 +177,8 @@ function TaskCard({ task, overlay = false }) {
           <FaGripVertical size={11} />
         </span>
         <p
-          className="text-[13px] font-semibold leading-snug flex-1"
-          style={{ color: BRAND.secondary }}
+          className="text-[13px] font-semibold leading-snug flex-1 first-letter:capitalize"
+          style={{ color: BRAND?.secondary }}
         >
           {task.title}
         </p>
@@ -264,7 +264,7 @@ function AddForm({ col, onAdd, onCancel }) {
         <button
           onClick={submit}
           className="rounded-xl px-3.5 py-1.5 font-bold text-white hover:opacity-85 transition-opacity cursor-pointer"
-          style={{ background: col?.accent ?? BRAND.secondary }}
+          style={{ background: col?.accent ?? BRAND?.secondary }}
         >
           Add task
         </button>
@@ -291,16 +291,16 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
       className="flex flex-col rounded-3xl overflow-hidden transition-all duration-200"
       style={{
         background: isOver ? col?.accentLight : col?.colBg,
-        border: `1px solid ${isOver ? (col?.accent ?? BRAND.secondary) + "50" : "rgba(62,62,85,0.07)"}`,
+        border: `1px solid ${isOver ? (col?.accent ?? BRAND?.secondary) + "50" : "rgba(62,62,85,0.07)"}`,
         boxShadow: isOver
-          ? `0 0 0 3px ${col?.accent ?? BRAND.secondary}18, 0 12px 32px ${col?.accent ?? BRAND.secondary}10`
+          ? `0 0 0 3px ${col?.accent ?? BRAND?.secondary}18, 0 12px 32px ${col?.accent ?? BRAND?.secondary}10`
           : "0 2px 20px rgba(62,62,85,0.05)",
       }}
     >
       <div
         className="h-[3px] w-full"
         style={{
-          background: `linear-gradient(90deg, ${col?.accent ?? BRAND.secondary}, ${col?.accent ?? BRAND.secondary}88)`,
+          background: `linear-gradient(90deg, ${col?.accent ?? BRAND?.secondary}, ${col?.accent ?? BRAND?.secondary}88)`,
         }}
       />
 
@@ -314,7 +314,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
             {col?.Icon && <col.Icon size={12} style={{ color: col?.accent }} />}
           </span>
           <span
-            className="text-[11px] font-bold uppercase tracking-[0.1em]"
+            className="text-[11px] font-bold uppercase tracking-widest"
             style={{ color: col?.accent }}
           >
             {col?.label}
@@ -352,7 +352,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
               className="flex-1 flex flex-col items-center justify-center rounded-2xl border-dashed border-2 py-8 gap-2 transition-all duration-200"
               style={{
                 borderColor: isOver
-                  ? (col?.accent ?? BRAND.secondary) + "60"
+                  ? (col?.accent ?? BRAND?.secondary) + "60"
                   : col?.emptyDot,
                 background: isOver ? col?.accentLight : "transparent",
               }}
@@ -408,7 +408,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
           style={{ color: "rgba(62,62,85,0.35)" }}
           onClick={() => setAddingIn(col?.id)}
           onMouseEnter={(e) =>
-            (e.currentTarget.style.color = col?.accent ?? BRAND.secondary)
+            (e.currentTarget.style.color = col?.accent ?? BRAND?.secondary)
           }
           onMouseLeave={(e) =>
             (e.currentTarget.style.color = "rgba(62,62,85,0.35)")
@@ -446,7 +446,7 @@ export default function WorkSpaceBoardView({
 
   // Given a dnd-kit id (could be a column id OR a task id), return the column id
   const getColId = (dndId) => {
-    if (columns.some((c) => c.id === dndId)) return dndId;
+    if (columns?.some((c) => c.id === dndId)) return dndId;
     return tasks.find((t) => t.id === dndId)?.statusId ?? null;
   };
 
@@ -720,9 +720,9 @@ export default function WorkSpaceBoardView({
         </div>
         <h1
           className="text-2xl font-black tracking-tight capitalize"
-          style={{ color: BRAND.secondary }}
+          style={{ color: BRAND?.secondary }}
         >
-          {selectedWorkspaceName || " Project Board"}
+          {selectedWorkspaceName || "Project Board"}
         </h1>
         <p
           className="text-[12px] mt-0.5"
@@ -738,7 +738,7 @@ export default function WorkSpaceBoardView({
           <div
             className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
             style={{
-              borderColor: `${BRAND.secondary} transparent ${BRAND.secondary} ${BRAND.secondary}`,
+              borderColor: `${BRAND?.secondary} transparent ${BRAND?.secondary} ${BRAND?.secondary}`,
             }}
           />
           <span
@@ -751,7 +751,7 @@ export default function WorkSpaceBoardView({
       )}
 
       {/* Empty */}
-      {!loading && columns.length === 0 && (
+      {!loading && columns?.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <span className="text-4xl">📋</span>
           <p
@@ -764,7 +764,7 @@ export default function WorkSpaceBoardView({
       )}
 
       {/* Board */}
-      {!loading && columns.length > 0 && (
+      {!loading && columns?.length > 0 && (
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -773,7 +773,7 @@ export default function WorkSpaceBoardView({
           onDragEnd={onDragEnd}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-            {columns.map((col) => (
+            {columns?.map((col) => (
               <Column
                 key={col.id}
                 col={col}

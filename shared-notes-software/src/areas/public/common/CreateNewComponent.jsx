@@ -55,7 +55,7 @@ const CreateNewComponent = ({
                 />
               )}
 
-              {selectedTab == "workspace" && <CreateNewWorkSpace isUserLoggedIn={isUserLoggedIn} setSelectedTab={setSelectedTab} setIsOpen={setIsOpen}/>}
+              {selectedTab == "workspace" && <CreateNewWorkSpace setRefresh={setRefresh} isUserLoggedIn={isUserLoggedIn} setSelectedTab={setSelectedTab} setIsOpen={setIsOpen}/>}
             </section>
           ) : (
             <section className="fixed inset-0 z-50 flex items-center justify-center">

@@ -5,7 +5,12 @@ import { ADD_WORKSPACE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { load } from "@tauri-apps/plugin-store";
 
-const CreateNewWorkSpace = ({ setIsOpen, setSelectedTab, isUserLoggedIn }) => {
+const CreateNewWorkSpace = ({
+  setIsOpen,
+  setSelectedTab,
+  isUserLoggedIn,
+  setRefresh,
+}) => {
   const [submitting, setSubmitting] = useState(false);
   const [makeItPublic, setMakeItPublic] = useState(false);
   const [title, setTitle] = useState("");
@@ -50,6 +55,7 @@ const CreateNewWorkSpace = ({ setIsOpen, setSelectedTab, isUserLoggedIn }) => {
       setTimeout(() => {
         setSubmitting(false);
       }, 2000);
+      setRefresh((prev) => !prev);
     }
   };
   return (

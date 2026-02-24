@@ -19,14 +19,15 @@ const WorkspacesSidebar = ({
   setActive,
   active,
   setWorkspaceLength,
-  setSelectedWordspaceMode
+  setSelectedWordspaceMode,
+  refresh,
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
 
   const handleSelectWorkspace = (item) => {
     console.log(item);
-    setSelectedWordspaceMode(item?.is_private ? 'private' : 'public')
+    setSelectedWordspaceMode(item?.is_private ? "private" : "public");
     setCurrentNotesId(null);
     setSelectedNoteId(null);
     setActive(item?.workspace_id);
@@ -51,8 +52,11 @@ const WorkspacesSidebar = ({
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateWorkspaces(res?.data?.data?.private || null);
         setPublicWorkspaces(res?.data?.data?.public || null);
-        setWorkspaceLength(res?.data?.data?.public?.length || res?.data?.data?.private?.length || 0);
-
+        setWorkspaceLength(
+          res?.data?.data?.public?.length ||
+            res?.data?.data?.private?.length ||
+            0,
+        );
       }
     } catch (error) {
       console.error("not able to fetch workspaces list", error);
@@ -60,7 +64,7 @@ const WorkspacesSidebar = ({
   };
   useEffect(() => {
     handleGetWorkspacesList();
-  }, []);
+  }, [refresh]);
   console.log(privateWorkspaces);
   console.log(publicWorkspaces);
   return (
