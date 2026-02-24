@@ -33,6 +33,10 @@ import {
   FaGripVertical,
 } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
+import { axiosInstance } from "../../../api/axios";
+import { GET_WORKSPACE_FULL_DETAILS_BY_ID_URL } from "../../../api/api_routes";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
@@ -186,7 +190,6 @@ function TaskCard({ task, overlay = false }) {
           className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[9px] font-bold uppercase tracking-wider"
           style={{ color: p.color, background: p.bg }}
         >
-         
           {task.priority}
         </span>
       </div>
@@ -252,7 +255,6 @@ function AddForm({ col, onAdd, onCancel }) {
                 fontWeight: isActive ? 500 : 400,
               }}
             >
-             
               {level}
             </button>
           );
@@ -418,7 +420,7 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
 }
 
 /* ─── Board ─────────────────────────────────────────────────────── */
-export default function WorkSpaceBoardView() {
+export default function WorkSpaceBoardView({ selectedWorkspaceId }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [activeTask, setActiveTask] = useState(null);
   const [overColId, setOverColId] = useState(null);
@@ -472,13 +474,36 @@ export default function WorkSpaceBoardView() {
     setAddingIn(null);
   };
 
+  const handleGetWorkSpaceFullDetails = async () => {
+    try {
+      if (!selectedWorkspaceId) {
+        toast.error("Workspace Id is required");
+        return;
+      }
+      const payload = {
+        workspaceId: +selectedWorkspaceId,
+      };
+      const res = await axiosInstance.post(
+        GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
+        payload,
+      );
+      console.log(res);
+    } catch (error) {
+      console.error("Can't get the workspace details", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetWorkSpaceFullDetails();
+  }, [selectedWorkspaceId]);
+
   return (
     <div className="min-h-screen px-8 py-10">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-1">
           {/* Three tiny brand-colored pills */}
-         
+
           <span
             className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
             style={{ color: "rgba(62,62,85,0.35)" }}

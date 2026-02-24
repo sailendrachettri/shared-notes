@@ -1,14 +1,14 @@
-import WorkSpaceBoardView from "./WorkSpaceBoardView"
+import WorkSpaceBoardView from "./WorkSpaceBoardView";
 
-const WorkSpaceMain = () => {
+const WorkSpaceMain = ({ selectedWorkspaceId }) => {
+  console.log({selectedWorkspaceId});
   return (
     <>
-    
-    <section className="notion-editor-wrapper">
-        <WorkSpaceBoardView />
-    </section>
+      <section className="notion-editor-wrapper">
+        <WorkSpaceBoardView selectedWorkspaceId={selectedWorkspaceId}/>
+      </section>
     </>
-  )
-}
+  );
+};
 
-export default WorkSpaceMain
+export default WorkSpaceMain;

@@ -13,7 +13,7 @@ import { BiBarChartAlt2 } from "react-icons/bi";
 
 
 
-const WorkspacesSidebar = ({ searchText, sortBy, sortDirection }) => {
+const WorkspacesSidebar = ({ searchText, sortBy, sortDirection, setSelectedWorkspaceId, setSelectedTab }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
   const [active, setActive] = useState(null);
@@ -57,6 +57,8 @@ const WorkspacesSidebar = ({ searchText, sortBy, sortDirection }) => {
                     {/* Note Button */}<button
                       onClick={() => {
                         setActive(item?.workspace_id);
+                        setSelectedWorkspaceId(item?.workspace_id);
+                        setSelectedTab('workspaces');
                       }}
                       className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
                     ${
@@ -105,7 +107,6 @@ const WorkspacesSidebar = ({ searchText, sortBy, sortDirection }) => {
                   </div>
                 );
               })}
-              --------- public---------
               {/* Public workspaces */}
               {publicWorkspaces?.map((item, idx) => {
                 return (
@@ -114,6 +115,8 @@ const WorkspacesSidebar = ({ searchText, sortBy, sortDirection }) => {
                     <button
                       onClick={() => {
                         setActive(item?.workspace_id);
+                        setSelectedWorkspaceId(item?.workspace_id);
+                        setSelectedTab('workspaces');
                       }}
                       className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
                     ${

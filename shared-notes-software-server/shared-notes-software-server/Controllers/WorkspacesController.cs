@@ -15,6 +15,20 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("get-workspace-details")]
+        public async Task<IActionResult> GetWorkspaceDetails(
+            [FromBody] GetWorkspaceDetailsRequest request)
+        {
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                "SELECT public.get_workspace_details_by_id(@workspace_id);",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
+                });
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("get-workspaces-list")]
         public async Task<IActionResult> GetNotes([FromBody] GetWorspacesRequest request)
         {
