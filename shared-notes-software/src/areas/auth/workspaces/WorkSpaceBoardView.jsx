@@ -175,7 +175,7 @@ function TaskCard({ task, overlay = false }) {
         </p>
       </div>
       <div className="flex items-center gap-1 pl-5">
-        <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.dot }} />
+        {/* <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.dot }} /> */}
         <span
           className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
@@ -214,6 +214,8 @@ function AddForm({ col, onAdd, onCancel }) {
         rows={2}
         placeholder="Task title…"
         value={title}
+        maxLength={80}
+        minLength={4}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
