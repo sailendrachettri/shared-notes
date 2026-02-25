@@ -43,7 +43,7 @@ const Sidebar = ({
   setSelectedTab,
   setSelectedWorkspaceId,
   setSelectedWorkspaceName,
-  setSelectedWordspaceMode
+  setSelectedWordspaceMode,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -223,11 +223,6 @@ const Sidebar = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  // console.log(privateNotes);
-  // console.log(publicNotes);
-  // console.log(privateNotes?.length);
-  // console.log(publicNotes?.length);
-
   return (
     <>
       <aside className="h-full flex flex-col mt-2">
@@ -237,152 +232,152 @@ const Sidebar = ({
             <div className="loader"></div>
           </div>
         ) : (
-          <section className="h-full w-full ">
-            {/* Workspaces */}
-
-            <section className="pb-5">
-              <div
-                onClick={() => {
-                  setSelectedTab("workspaces");
-                }}
-                className="ps-1 text-sm font-semibold text-slate-600"
-              >
-                Workspaces
-              </div>
-              {workspaceLength == 0 && (
-                <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
-                  <span>Create your workspace</span>
+          <section>
+            {privateNotes?.length <= 0 &&
+              publicNotes?.length <= 0 &&
+              workspaceLength <= 0 && (
+                <div className="flex flex-col items-center justify-center text-center h-full w-full text-slate-600 text-sm gap-1">
+                  <span className="font-medium text-lg">No Details yet</span>
+                  <span className="text-slate-400">
+                    Create your first notes/workspace using the button below.
+                  </span>
                 </div>
               )}
 
-              <div>
-                <WorkspacesSidebar
-                  isUserLoggedIn={isUserLoggedIn}
-                  searchText={searchText}
-                  sortBy={sortBy}
-                  sortDirection={sortDirection}
-                  setSelectedWorkspaceId={setSelectedWorkspaceId}
-                  setSelectedTab={setSelectedTab}
-                  setSelectedWorkspaceName={setSelectedWorkspaceName}
-                  setCurrentNotesId={setCurrentNotesId}
-                  setSelectedNoteId={setSelectedNoteId}
-                  setActive={setActive}
-                  active={active}
-                  setWorkspaceLength={setWorkspaceLength}
-                  setSelectedWordspaceMode={setSelectedWordspaceMode}
-                  refresh={refresh}
-                />
-              </div>
-            </section>
+            <section className="h-full w-full ">
+              {/* Workspaces */}
 
-            {/* Notes */}
+              <section className="pb-5">
+                {workspaceLength > 0 && (
+                  <div
+                    onClick={() => {
+                      setSelectedTab("workspaces");
+                    }}
+                    className="ps-1 text-sm font-semibold text-slate-600"
+                  >
+                    Workspaces
+                  </div>
+                )}
 
-            {publicNotes?.length > 0 || privateNotes?.length > 0 ? (
+                <div>
+                  <WorkspacesSidebar
+                    isUserLoggedIn={isUserLoggedIn}
+                    searchText={searchText}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                    setSelectedWorkspaceId={setSelectedWorkspaceId}
+                    setSelectedTab={setSelectedTab}
+                    setSelectedWorkspaceName={setSelectedWorkspaceName}
+                    setCurrentNotesId={setCurrentNotesId}
+                    setSelectedNoteId={setSelectedNoteId}
+                    setActive={setActive}
+                    active={active}
+                    setWorkspaceLength={setWorkspaceLength}
+                    setSelectedWordspaceMode={setSelectedWordspaceMode}
+                    refresh={refresh}
+                  />
+                </div>
+              </section>
+
+              {/* Notes */}
+
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
-                {isUserLoggedIn && (
+                {isUserLoggedIn && privateNotes?.length > 0 && (
                   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     Private
                   </div>
                 )}
                 {/* Private Notes */}
-                {isUserLoggedIn && privateNotes?.length <= 0 ? (
-                  <div>
-                    <div className="capitalize text-xs ps-1 py-1.5 text-slate-600 flex items-center justify-start gap-x-1 flex-nowrap">
-                      {/* <LuBadgePlus size={16} />{" "}
-                      <span>Create Private Notes</span> */}
-                      <span>Your Private Notes</span>
-                    </div>
-                  </div>
-                ) : (
-                  <section>
-                    {privateNotes?.map((item) => {
-                      const isOpen = openNotes[item?.note_id];
 
-                      return (
-                        <div key={item?.note_id} className="relative my-2">
-                          {/* Note Button */}
-                          <button
-                            onClick={() => {
-                              handleSelectNote(item);
-                              setOpenNotes((prev) => ({
-                                ...prev,
-                                [item?.note_id]: !prev[item?.note_id],
-                              }));
-                            }}
-                            className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
+                <section>
+                  {privateNotes?.map((item) => {
+                    const isOpen = openNotes[item?.note_id];
+
+                    return (
+                      <div key={item?.note_id} className="relative my-2">
+                        {/* Note Button */}
+                        <button
+                          onClick={() => {
+                            handleSelectNote(item);
+                            setOpenNotes((prev) => ({
+                              ...prev,
+                              [item?.note_id]: !prev[item?.note_id],
+                            }));
+                          }}
+                          className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
             ${
               active === item?.note_id && selectedNoteType == "mst-note"
                 ? "bg-primary/10 text-primary"
                 : "text-gray-600 hover:bg-gray-50"
             }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              {/* Left Content */}
-                              <div className="flex items-center gap-2 min-w-0">
-                                <div className="relative">
-                                  <BiBookAlt
-                                    size={20}
-                                    className={`shrink-0 ${
-                                      active === item?.note_id &&
+                        >
+                          <div className="flex items-center justify-between">
+                            {/* Left Content */}
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div className="relative">
+                                <BiBookAlt
+                                  size={20}
+                                  className={`shrink-0 ${
+                                    active === item?.note_id &&
+                                    selectedNoteType == "mst-note"
+                                      ? "text-primary"
+                                      : "text-gray-400 group-hover:text-gray-600"
+                                  }`}
+                                />
+
+                                {/* Sub pages count */}
+                                {item?.sub_pages?.length > 0 ? (
+                                  <small
+                                    className={`$${
                                       selectedNoteType == "mst-note"
                                         ? "text-primary"
                                         : "text-gray-400 group-hover:text-gray-600"
-                                    }`}
-                                  />
-
-                                  {/* Sub pages count */}
-                                  {item?.sub_pages?.length > 0 ? (
-                                    <small
-                                      className={`$${
-                                        selectedNoteType == "mst-note"
-                                          ? "text-primary"
-                                          : "text-gray-400 group-hover:text-gray-600"
-                                      } text-[10px]   absolute top-px left-0.5 flex items-center justify-center h-4 w-4  p-px rounded-full`}
-                                    >
-                                      {item?.sub_pages?.length || ""}
-                                    </small>
-                                  ) : (
-                                    <span></span>
-                                  )}
-                                </div>
-
-                                <div className="truncate font-medium text-xs lg:text-sm">
-                                  {item?.note_title}
-                                </div>
+                                    } text-[10px]   absolute top-px left-0.5 flex items-center justify-center h-4 w-4  p-px rounded-full`}
+                                  >
+                                    {item?.sub_pages?.length || ""}
+                                  </small>
+                                ) : (
+                                  <span></span>
+                                )}
                               </div>
 
-                              {/* Three Dot Button */}
-                              <div
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenMenu(
-                                    openMenu === item?.note_id
-                                      ? null
-                                      : item?.note_id,
-                                  );
-                                }}
-                                className={`   ${
-                                  active === item?.note_id ? "block" : "hidden"
-                                } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
-                              >
-                                <PiDotsThreeVerticalBold size={16} />
+                              <div className="truncate font-medium text-xs lg:text-sm">
+                                {item?.note_title}
                               </div>
                             </div>
-                          </button>
 
-                          {/* Sub Pages Dropdown */}
-                          <div
-                            className={`ml-8 overflow-hidden transition-all duration-300 ${
-                              isOpen ? " opacity-100" : "max-h-0 opacity-0"
-                            }`}
-                          >
-                            {item?.sub_pages?.map((sub) => (
-                              <div
-                                onClick={() => {
-                                  handleSelectNoteFromSubPage(sub);
-                                }}
-                                key={sub?.sub_page_id}
-                                className={` group
+                            {/* Three Dot Button */}
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenMenu(
+                                  openMenu === item?.note_id
+                                    ? null
+                                    : item?.note_id,
+                                );
+                              }}
+                              className={`   ${
+                                active === item?.note_id ? "block" : "hidden"
+                              } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
+                            >
+                              <PiDotsThreeVerticalBold size={16} />
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* Sub Pages Dropdown */}
+                        <div
+                          className={`ml-8 overflow-hidden transition-all duration-300 ${
+                            isOpen ? " opacity-100" : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          {item?.sub_pages?.map((sub) => (
+                            <div
+                              onClick={() => {
+                                handleSelectNoteFromSubPage(sub);
+                              }}
+                              key={sub?.sub_page_id}
+                              className={` group
                                 flex items-center justify-between gap-2 my-1
                                 text-xs
                                 px-3 py-1.5
@@ -396,78 +391,77 @@ const Sidebar = ({
                                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                                 }
                               `}
-                              >
-                                <div className="flex items-center justify-start gap-x-1.5 flex-nowrap">
-                                  <div
-                                    className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1   rounded-full`}
-                                  ></div>
-                                  <span className="capitalize">
-                                    {sub?.sub_page_title}
-                                  </span>
-                                </div>
-                                <span
-                                  onClick={() => {
-                                    setDeleteItemId(sub?.sub_page_id);
-                                    setIsOpen(false);
-                                    setDeleteNoteType("sub-page");
-                                    setIsDeleteOpen(true);
-                                  }}
-                                >
-                                  <RiDeleteBinLine size={14} />
+                            >
+                              <div className="flex items-center justify-start gap-x-1.5 flex-nowrap">
+                                <div
+                                  className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "bg-primary" : "bg-gray-400"} w-1 h-1   rounded-full`}
+                                ></div>
+                                <span className="capitalize">
+                                  {sub?.sub_page_title}
                                 </span>
                               </div>
-                            ))}
-                          </div>
-
-                          {/* Dropdown Menu */}
-                          {openMenu === item?.note_id && (
-                            <div className="absolute right-2 top-10 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedNoteId(item?.note_id);
-                                  setIsOpen(true);
-                                  setOpenMenu(null);
-                                  setOpenNotes((prev) => ({
-                                    ...prev,
-                                    [item?.note_id]: true,
-                                  }));
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                              >
-                                Add sub-page
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setOpenMenu(false);
-                                  setIsGenericConfirmModalOpen(true);
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
-                              >
-                                Move to Shared
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setDeleteItemId(item?.note_id);
-                                  setOpenMenu(false);
-                                  setDeleteNoteType("mst-note");
+                              <span
+                                onClick={() => {
+                                  setDeleteItemId(sub?.sub_page_id);
+                                  setIsOpen(false);
+                                  setDeleteNoteType("sub-page");
                                   setIsDeleteOpen(true);
                                 }}
-                                className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
                               >
-                                Delete Note
-                              </button>
+                                <RiDeleteBinLine size={14} />
+                              </span>
                             </div>
-                          )}
+                          ))}
                         </div>
-                      );
-                    })}
-                  </section>
-                )}
+
+                        {/* Dropdown Menu */}
+                        {openMenu === item?.note_id && (
+                          <div className="absolute right-2 top-10 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedNoteId(item?.note_id);
+                                setIsOpen(true);
+                                setOpenMenu(null);
+                                setOpenNotes((prev) => ({
+                                  ...prev,
+                                  [item?.note_id]: true,
+                                }));
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                            >
+                              Add sub-page
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenMenu(false);
+                                setIsGenericConfirmModalOpen(true);
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
+                            >
+                              Move to Shared
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteItemId(item?.note_id);
+                                setOpenMenu(false);
+                                setDeleteNoteType("mst-note");
+                                setIsDeleteOpen(true);
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
+                            >
+                              Delete Note
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </section>
 
                 {/* Shared notes */}
                 <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
@@ -638,14 +632,7 @@ const Sidebar = ({
                   })}
                 </section>
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center text-center h-full w-full text-slate-600 text-sm gap-1">
-                <span className="font-medium text-lg">No notes yet</span>
-                <span className="text-slate-400">
-                  Create your first note using the button below.
-                </span>
-              </div>
-            )}
+            </section>
           </section>
         )}
       </aside>

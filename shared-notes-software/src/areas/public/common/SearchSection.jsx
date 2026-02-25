@@ -29,8 +29,8 @@ const SearchSection = ({
     }, 2000);
   };
 
-  console.log(sortBy)
-  console.log(sortDirection)
+  // console.log(sortBy)
+  // console.log(sortDirection)
   return (
     <>
       <section>

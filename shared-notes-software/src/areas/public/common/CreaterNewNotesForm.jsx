@@ -23,13 +23,12 @@ const CreaterNewNotesForm = ({
   setSelectedNoteType,
   isUserLoggedIn,
   setIsSubPage,
-  setSelectedTab
+  setSelectedTab,
 }) => {
   const [title, setTitle] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [makeItPublic, setMakeItPublic] = useState(false);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +36,6 @@ const CreaterNewNotesForm = ({
 
     const store = await load("user-store.json", { autoSave: true });
     const user = await store.get("user");
-    // // console.log(user);
 
     try {
       if (!title.trim()) return;
@@ -49,25 +47,20 @@ const CreaterNewNotesForm = ({
       if (isUserLoggedIn) {
         if (makeItPublic) {
           user_decision = null;
-          // // console.log("if");
         } else if (!makeItPublic) {
           user_decision = user?.userId;
-          // // console.log("else if");
         } else {
           toast.error("Can't create notes at the moment");
           return;
         }
       }
 
-      // // console.log(user_decision);
-
       const payload = {
         NoteTitle: title || null,
         UserId: user_decision || null,
       };
-      // // console.log(payload);
+
       const res = await axiosInstance.post(ADD_MST_NOTE_URL, payload);
-      // // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteType("mst-note");
@@ -94,8 +87,6 @@ const CreaterNewNotesForm = ({
       }, 500);
     }
   };
-
- 
 
   // Close on ESC
   useEffect(() => {
@@ -134,8 +125,6 @@ const CreaterNewNotesForm = ({
 
   return (
     <div>
-      
-
       <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
         <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative">
           <h3 className="text-lg font-semibold mb-4">Create New Note</h3>
@@ -215,7 +204,10 @@ const CreaterNewNotesForm = ({
         {/* Click outside to close */}
         <div
           className="absolute inset-0 -z-10"
-          onClick={() => {setSelectedTab(null); setIsOpen(false)}}
+          onClick={() => {
+            setSelectedTab(null);
+            setIsOpen(false);
+          }}
         />
       </div>
     </div>

@@ -26,7 +26,7 @@ const WorkspacesSidebar = ({
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
 
   const handleSelectWorkspace = (item) => {
-    console.log(item);
+    // console.log(item);
     setSelectedWordspaceMode(item?.is_private ? "private" : "public");
     setCurrentNotesId(null);
     setSelectedNoteId(null);
@@ -48,7 +48,7 @@ const WorkspacesSidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_WORKSPACES_LIST_URL, payload);
-      console.log(res);
+      // console.log(res);
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateWorkspaces(res?.data?.data?.private || null);
         setPublicWorkspaces(res?.data?.data?.public || null);
@@ -65,50 +65,52 @@ const WorkspacesSidebar = ({
   useEffect(() => {
     handleGetWorkspacesList();
   }, [refresh, sortBy, sortDirection, searchText]);
- 
+
+  console.log(privateWorkspaces);
+  console.log(publicWorkspaces);
+
   return (
     <>
       <section>
-        {publicWorkspaces?.length > 0 || privateWorkspaces?.length > 0 ? (
-          <div className="flex-1 overflow-y-auto space-y-1">
-            <section>
-              {/* Private workspaces */}
-              {privateWorkspaces?.map((item, idx) => {
-                return (
-                  <div key={idx} className="relative my-2">
-                    {/* Note Button */}
-                    <button
-                      onClick={() => {
-                        handleSelectWorkspace(item);
-                      }}
-                      className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
+        <div className="flex-1 overflow-y-auto space-y-1">
+          <section>
+            {/* Private workspaces */}
+            {privateWorkspaces?.map((item, idx) => {
+              return (
+                <div key={idx} className="relative my-2">
+                  {/* Note Button */}
+                  <button
+                    onClick={() => {
+                      handleSelectWorkspace(item);
+                    }}
+                    className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
                     ${
                       active === item?.workspace_id
                         ? "bg-primary/10 text-primary"
                         : "text-gray-600 hover:bg-gray-50"
                     }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        {/* Left Content */}
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="relative">
-                            <BiBarChartAlt2
-                              size={20}
-                              className={`shrink-0 ${
-                                active === item?.workspace_id
-                                  ? "text-primary"
-                                  : "text-gray-400 group-hover:text-gray-600"
-                              }`}
-                            />
-                          </div>
-
-                          <div className="truncate font-medium text-xs lg:text-sm">
-                            {item?.workspace_name}
-                          </div>
+                  >
+                    <div className="flex items-center justify-between">
+                      {/* Left Content */}
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="relative">
+                          <BiBarChartAlt2
+                            size={20}
+                            className={`shrink-0 ${
+                              active === item?.workspace_id
+                                ? "text-primary"
+                                : "text-gray-400 group-hover:text-gray-600"
+                            }`}
+                          />
                         </div>
 
-                        {/* Three Dot Button */}
-                        {/* <div
+                        <div className="truncate font-medium text-xs lg:text-sm">
+                          {item?.workspace_name}
+                        </div>
+                      </div>
+
+                      {/* Three Dot Button */}
+                      {/* <div
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setOpenMenu(
@@ -123,48 +125,48 @@ const WorkspacesSidebar = ({
                                       >
                                         <PiDotsThreeVerticalBold size={16} />
                                       </div> */}
-                      </div>
-                    </button>
-                  </div>
-                );
-              })}
-              {/* Public workspaces */}
-              {publicWorkspaces?.map((item, idx) => {
-                return (
-                  <div key={idx} className="relative my-2">
-                    {/* Note Button */}
-                    <button
-                      onClick={() => {
-                        handleSelectWorkspace(item);
-                      }}
-                      className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
+            {/* Public workspaces */}
+            {publicWorkspaces?.map((item, idx) => {
+              return (
+                <div key={idx} className="relative my-2">
+                  {/* Note Button */}
+                  <button
+                    onClick={() => {
+                      handleSelectWorkspace(item);
+                    }}
+                    className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
                     ${
                       active === item?.workspace_id
                         ? "bg-primary/10 text-primary"
                         : "text-gray-600 hover:bg-gray-50"
                     }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        {/* Left Content */}
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="relative">
-                            <BiBarChartAlt2
-                              size={20}
-                              className={`shrink-0 ${
-                                active === item?.workspace_id
-                                  ? "text-primary"
-                                  : "text-gray-400 group-hover:text-gray-600"
-                              }`}
-                            />
-                          </div>
-
-                          <div className="truncate font-medium text-xs lg:text-sm">
-                            {item?.workspace_name}
-                          </div>
+                  >
+                    <div className="flex items-center justify-between">
+                      {/* Left Content */}
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="relative">
+                          <BiBarChartAlt2
+                            size={20}
+                            className={`shrink-0 ${
+                              active === item?.workspace_id
+                                ? "text-primary"
+                                : "text-gray-400 group-hover:text-gray-600"
+                            }`}
+                          />
                         </div>
 
-                        {/* Three Dot Button */}
-                        {/* <div
+                        <div className="truncate font-medium text-xs lg:text-sm">
+                          {item?.workspace_name}
+                        </div>
+                      </div>
+
+                      {/* Three Dot Button */}
+                      {/* <div
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setOpenMenu(
@@ -179,21 +181,13 @@ const WorkspacesSidebar = ({
                                       >
                                         <PiDotsThreeVerticalBold size={16} />
                                       </div> */}
-                      </div>
-                    </button>
-                  </div>
-                );
-              })}
-            </section>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center h-full w-full text-slate-600 text-sm gap-1">
-            <span className="font-medium text-lg">No workspaces yet</span>
-            <span className="text-slate-400">
-              Create your first workspace using the button below.
-            </span>
-          </div>
-        )}
+                    </div>
+                  </button>
+                </div>
+              );
+            })}
+          </section>
+        </div>
       </section>
     </>
   );
