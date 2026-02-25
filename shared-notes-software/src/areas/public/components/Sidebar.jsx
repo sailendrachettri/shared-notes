@@ -196,6 +196,10 @@ const Sidebar = ({
     handleFetchAllItemList();
   }, [refresh, searchText, sortBy, sortDirection, isUserLoggedIn]);
 
+  console.log(searchText);
+  console.log(sortBy);
+  console.log(sortDirection);
+
   // Auto fetch
   useEffect(() => {
     const interval = setInterval(async () => {

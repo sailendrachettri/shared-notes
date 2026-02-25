@@ -7,7 +7,6 @@ import {
   RENAME_MST_NOTE_URL,
   RENAME_SUB_PAGE_TITLE_URL,
 } from "../../../api/api_routes";
-import InfoScreen from "../../../utils/info-screen/InfoScreen";
 import toast from "react-hot-toast";
 
 const Playground = ({
@@ -70,8 +69,7 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
-    // console.log(currentNotesId)
-    // console.log(selectedNoteType)
+   
     if (!currentNotesId || !selectedNoteType) {
       toast.error("NotesId and notes type is required is Required");
       return;
@@ -104,8 +102,6 @@ const Playground = ({
   };
 
   const renameNoteTitle = async (newTitle) => {
-    // console.log(selectedNoteId);
-    // console.log(isSubPage);
     try {
       if (isSubPage) {
         const payload = {
@@ -113,21 +109,20 @@ const Playground = ({
           SupPageTitle: newTitle || noteHeading,
           Notestype: "mst-note",
         };
-        // console.log(payload);
+      
         const res = await axiosInstance.post(
           RENAME_SUB_PAGE_TITLE_URL,
           payload,
         );
-        // console.log(res);
       } else {
         const payload = {
           NoteId: selectedNoteId,
           NoteTitle: newTitle || noteHeading,
           Notestype: "mst-note",
         };
-        // console.log(payload);
+        
         const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-        // console.log(res);
+     
       }
     } catch (error) {
       console.error("Not able to rename", error);

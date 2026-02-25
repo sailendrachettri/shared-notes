@@ -28,6 +28,9 @@ const SearchSection = ({
       setPageReload(false);
     }, 2000);
   };
+
+  console.log(sortBy)
+  console.log(sortDirection)
   return (
     <>
       <section>

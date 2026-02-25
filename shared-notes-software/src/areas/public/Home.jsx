@@ -39,11 +39,6 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
 
-  console.log(selectedTab);
-  console.log(selectedWorkspaceId);
-  console.log(selectedWorkspaceName);
-  console.log(selectedWorkspaceMode);
-
   return (
     <div className="h-screen bg-gray-100 p-3">
       {/* Outer Card Container */}
@@ -59,7 +54,7 @@ const Home = ({
                   setSearchText={setSearchText}
                   setSortBy={setSortBy}
                   setSortDirection={setSortDirection}
-                  sortBy={setSortBy}
+                  sortBy={sortBy}
                   sortDirection={sortDirection}
                   setRefresh={setRefresh}
                 />
