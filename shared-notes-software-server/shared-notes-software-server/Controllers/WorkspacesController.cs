@@ -58,6 +58,46 @@ namespace shared_notes_software_server.Controllers
             }
         }
 
+        [HttpPost("delete-workspace-task")]
+        public async Task<IActionResult> DeleteWorkspaceTask(
+    [FromBody] DeleteWorkspaceTaskRequest request)
+        {
+            if (request == null || request.WorkspaceTaskId <= 0)
+                return BadRequest("Invalid workspace id.");
+
+            try
+            {
+                var sql = @"
+            DELETE FROM public.utbl_workspace_tasks
+            WHERE workspace_task_id = @workspaceTaskId;";
+
+                var rowsAffected = await _db.ExecuteNonQueryAsync(
+                    sql,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@workspaceTaskId", request.WorkspaceTaskId);
+                    });
+
+                if (rowsAffected == 0)
+                    return NotFound("Workspace task not found.");
+
+                return Ok(new
+                {
+                    status = "DELETED",
+                    success = true,
+                    message = "Workspace task deleted successfully.",
+                    WorkspaceTaskId = request.WorkspaceTaskId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Something went wrong.",
+                    error = ex.Message
+                });
+            }
+        }
         [HttpPost("delete-workspace")]
         public async Task<IActionResult> DeleteWorkspace(
     [FromBody] DeleteWorkspaceRequest request)

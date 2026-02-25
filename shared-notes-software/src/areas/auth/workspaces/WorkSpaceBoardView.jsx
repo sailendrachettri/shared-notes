@@ -34,12 +34,14 @@ import { MdOutlinePendingActions } from "react-icons/md";
 import { axiosInstance } from "../../../api/axios";
 import {
   ADD_WORKSPACE_TASK_URL,
+  DELETE_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
   RENAME_WORKSPACE_URL,
   UPDATE_WORKSPACE_TASK_POSITION_URL, // e.g. PUT /workspace/task/position
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
+import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
@@ -136,7 +138,10 @@ const reindexColumn = (colTasks) =>
   colTasks.map((t, i) => ({ id: t.id, task_position: (i + 1) * GAP }));
 
 /* ─── TaskCard ──────────────────────────────────────────────────── */
-function TaskCard({ task, overlay = false }) {
+function TaskCard({ task, overlay = false, onDelete }) {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deletionWorkspaceTaskId, setDeletionWorkspaceTaskId] = useState(null);
+
   const {
     attributes,
     listeners,
@@ -151,7 +156,7 @@ function TaskCard({ task, overlay = false }) {
 
   const inner = (
     <div
-      className="rounded-2xl p-3 flex flex-col gap-2 select-none"
+      className="rounded-2xl p-3 flex flex-col gap-2 select-none group"
       style={{
         background: "#fff",
         border: "1px solid rgba(62,62,85,0.08)",
@@ -162,7 +167,7 @@ function TaskCard({ task, overlay = false }) {
         cursor: overlay ? "grabbing" : "default",
       }}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-">
         <span
           {...listeners}
           {...attributes}
@@ -178,28 +183,72 @@ function TaskCard({ task, overlay = false }) {
           <FaGripVertical size={11} />
         </span>
         <p
-          className="text-[13px] font-semibold leading-snug flex-1 first-letter:capitalize"
+          className="text-[13px] font-semibold leading-snug flex-1 first-letter:capitalize pl-2"
           style={{ color: BRAND?.secondary }}
         >
           {task.title}
         </p>
       </div>
-      <div className="flex items-center gap-1 pl-5">
-        {/* <span className="w-1.5 h-1.5 rounded-full" style={{ background: p.dot }} /> */}
+      <div className="flex items-center gap-1 justify-between px-3">
         <span
           className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
         >
           {task.priority}
         </span>
+        <div>
+          <span
+            onClick={() => {
+              setDeletionWorkspaceTaskId(task?.id);
+              setIsDeleteOpen(true);
+            }}
+            className="text-[10px] hidden group-hover:block cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
+          >
+            Delete
+          </span>
+        </div>
       </div>
     </div>
   );
+
+  const handleDeleteWorkSpaceTask = async () => {
+    if (!deletionWorkspaceTaskId) {
+      toast.error("Can't delete task at the moment");
+      return;
+    }
+    onDelete(deletionWorkspaceTaskId);
+
+    try {
+      console.log(deletionWorkspaceTaskId);
+      const payload = {
+        WorkspaceTaskId: +deletionWorkspaceTaskId,
+      };
+      const res = await axiosInstance.post(DELETE_WORKSPACE_TASK_URL, payload);
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "DELETED") {
+        toast.success("Task deleted successful");
+      }
+    } catch (error) {
+      console.error("Can't delete task at the moment", error);
+      toast.error("Can't delete task at the moment");
+    } finally {
+      setDeletionWorkspaceTaskId(null);
+      setIsDeleteOpen(false);
+    }
+  };
 
   if (overlay) return inner;
   return (
     <div ref={setNodeRef} style={style}>
       {inner}
+
+      <DeleteConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => handleDeleteWorkSpaceTask()}
+        title="Delete Task"
+        description="This task will be permanently removed."
+      />
     </div>
   );
 }
@@ -289,7 +338,15 @@ function AddForm({ col, onAdd, onCancel }) {
 }
 
 /* ─── Column ────────────────────────────────────────────────────── */
-function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
+function Column({
+  col,
+  tasks,
+  isOver,
+  addingIn,
+  setAddingIn,
+  onAdd,
+  onDelete,
+}) {
   const safeTasks = tasks ?? [];
   const ids = safeTasks.map((t) => t.id);
   const isEmpty = safeTasks.length === 0 && addingIn !== col?.id;
@@ -397,7 +454,9 @@ function Column({ col, tasks, isOver, addingIn, setAddingIn, onAdd }) {
               )}
             </div>
           ) : (
-            safeTasks.map((task) => <TaskCard key={task.id} task={task} />)
+            safeTasks.map((task) => (
+              <TaskCard key={task.id} task={task} onDelete={onDelete} />
+            ))
           )}
 
           {addingIn === col?.id && (
@@ -454,6 +513,10 @@ export default function WorkSpaceBoardView({
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
+
+  const handleDeleteTask = (taskId) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+  };
 
   /* ── helpers ── */
 
@@ -831,11 +894,20 @@ export default function WorkSpaceBoardView({
                 addingIn={addingIn}
                 setAddingIn={setAddingIn}
                 onAdd={handleAdd(col.id)}
+                onDelete={handleDeleteTask}
               />
             ))}
           </div>
           <DragOverlay dropAnimation={{ duration: 180, easing: "ease" }}>
-            {activeTask ? <TaskCard task={activeTask} overlay /> : null}
+            {activeTask ? (
+              <TaskCard
+                task={activeTask}
+                overlay
+                onDelete={(taskId) => {
+                  setTasks((prev) => prev.filter((t) => t.id !== taskId));
+                }}
+              />
+            ) : null}
           </DragOverlay>
         </DndContext>
       )}
