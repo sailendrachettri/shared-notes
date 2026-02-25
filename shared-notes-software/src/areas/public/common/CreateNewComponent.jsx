@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useState } from "react";
 import { BiSolidCommentAdd } from "react-icons/bi";
 import { FiFileText, FiLayers } from "react-icons/fi";
@@ -7,23 +7,18 @@ import CreateNewWorkSpace from "./CreateNewWorkSpace";
 
 const CreateNewComponent = ({
   setRefresh,
-  setSearchText,
   setSelectedNoteId,
   setCurrentNotesId,
   setNoteHeading,
   setActive,
   setSelectedNoteType,
-  sortBy,
-  setSortBy,
-  sortDirection,
-  setSortDirection,
+ 
   isUserLoggedIn,
   setIsSubPage,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState(null);
-  console.log(isOpen);
-  console.log(selectedTab)
+
   return (
     <>
       <button

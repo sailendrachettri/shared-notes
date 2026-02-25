@@ -64,9 +64,8 @@ const WorkspacesSidebar = ({
   };
   useEffect(() => {
     handleGetWorkspacesList();
-  }, [refresh]);
-  console.log(privateWorkspaces);
-  console.log(publicWorkspaces);
+  }, [refresh, sortBy, sortDirection, searchText]);
+ 
   return (
     <>
       <section>

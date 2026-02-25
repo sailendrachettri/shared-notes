@@ -60,17 +60,12 @@ const Home = ({
                 />
               </div>
               <CreateNewComponent
-                setSearchText={setSearchText}
                 setRefresh={setRefresh}
                 setSelectedNoteId={setSelectedNoteId}
                 setCurrentNotesId={setCurrentNotesId}
                 setNoteHeading={setNoteHeading}
                 setActive={setActive}
                 setSelectedNoteType={setSelectedNoteType}
-                sortBy={sortBy}
-                sortDirection={sortDirection}
-                setSortBy={setSortBy}
-                setSortDirection={setSortDirection}
                 isUserLoggedIn={isUserLoggedIn}
                 setIsSubPage={setIsSubPage}
               />
@@ -129,7 +124,6 @@ const Home = ({
                 selectedWorkspaceId={selectedWorkspaceId}
                 selectedWorkspaceName={selectedWorkspaceName}
                 selectedWorkspaceMode={selectedWorkspaceMode}
-                
               />
             )}
 
