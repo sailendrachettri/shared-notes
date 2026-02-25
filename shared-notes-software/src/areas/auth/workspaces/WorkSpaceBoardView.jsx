@@ -35,6 +35,7 @@ import { axiosInstance } from "../../../api/axios";
 import {
   ADD_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
+  RENAME_WORKSPACE_URL,
   UPDATE_WORKSPACE_TASK_POSITION_URL, // e.g. PUT /workspace/task/position
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
@@ -435,6 +436,8 @@ export default function WorkSpaceBoardView({
   selectedWorkspaceId,
   selectedWorkspaceName,
   selectedWorkspaceMode,
+
+  setRefresh,
 }) {
   const [tasks, setTasks] = useState([]);
   const [activeTask, setActiveTask] = useState(null);
@@ -442,6 +445,8 @@ export default function WorkSpaceBoardView({
   const [addingIn, setAddingIn] = useState(null);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const titleRef = useRef();
 
   // Snapshot of tasks before drag starts — used for rollback if API fails
   const tasksSnapshot = useRef([]);
@@ -654,6 +659,29 @@ export default function WorkSpaceBoardView({
     }
   };
 
+  const renameWorkspace = async (newTitle) => {
+    try {
+      const payload = {
+        WorkspaceId: selectedWorkspaceId,
+        WorkspaceName: newTitle,
+      };
+
+      const res = await axiosInstance.post(RENAME_WORKSPACE_URL, payload);
+      if (res.status == 200) {
+        // setTimeout(() => {
+        //   setSelectedWorkspaceName(newTitle);
+        // }, 500);
+      } else {
+        toast.error("Can't rename workspace");
+      }
+    } catch (error) {
+      console.error("not able to rename workspace");
+      toast.error("Can't rename workspace");
+    } finally {
+      setRefresh((prev) => !prev);
+    }
+  };
+
   /* ── fetch workspace ── */
   const handleGetWorkSpaceFullDetails = async () => {
     try {
@@ -718,20 +746,33 @@ export default function WorkSpaceBoardView({
         <div className="absolute right-0">
           <WorkspaceModeBadge selectedWorkspaceMode={selectedWorkspaceMode} />
         </div>
-        <div className="flex items-center gap-2 mb-1">
-          {/* <span
-            className="text-[9px] font-black uppercase tracking-[0.22em] ml-1"
-            style={{ color: "rgba(62,62,85,0.35)" }}
-          >
-            Workspace
-          </span> */}
-        </div>
-        <h1
-          className="text-2xl font-black tracking-tight capitalize"
+
+        <div
+          ref={titleRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={(e) => {
+            let text = e.currentTarget.textContent || "";
+
+            if (text.length > 45) {
+              text = text.slice(0, 45);
+              e.currentTarget.textContent = text;
+
+              const range = document.createRange();
+              const sel = window.getSelection();
+              range.selectNodeContents(e.currentTarget);
+              range.collapse(false);
+              sel?.removeAllRanges();
+              sel?.addRange(range);
+            }
+
+            renameWorkspace(text);
+          }}
+          className="text-2xl font-black tracking-tight capitalize outline-none"
           style={{ color: BRAND?.secondary }}
         >
           {selectedWorkspaceName || "Project Board"}
-        </h1>
+        </div>
         <p
           className="text-[12px] mt-0.5"
           style={{ color: "rgba(62,62,85,0.4)" }}

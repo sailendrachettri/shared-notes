@@ -2,6 +2,11 @@
 
 namespace shared_notes_software_server.Models
 {
+    public class RenameWorkspaceRequest
+    {
+        public long WorkspaceId { get; set; }
+        public string WorkspaceName { get; set; }
+    }
     public class DeleteWorkspaceRequest
     {
         public long WorkspaceId { get; set; }

@@ -27,7 +27,7 @@ const WorkspacesSidebar = ({
   setWorkspaceLength,
   setSelectedWordspaceMode,
   refresh,
-  setRefresh
+  setRefresh,
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
@@ -68,9 +68,10 @@ const WorkspacesSidebar = ({
       setDeletionWorkspaceId(null);
       setOpenMenu(null);
       setIsDeleteOpen(false);
-      setRefresh(prev => !prev);
+      setRefresh((prev) => !prev);
     }
   };
+
   const handleGetWorkspacesList = async () => {
     try {
       const store = await load("user-store.json", { autoSave: true });
@@ -97,11 +98,11 @@ const WorkspacesSidebar = ({
       console.error("not able to fetch workspaces list", error);
     }
   };
+
+
   useEffect(() => {
     handleGetWorkspacesList();
   }, [refresh, sortBy, sortDirection, searchText]);
-
- 
 
   return (
     <>

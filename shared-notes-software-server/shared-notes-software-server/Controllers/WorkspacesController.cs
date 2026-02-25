@@ -15,6 +15,49 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("rename-workspace")]
+        public async Task<IActionResult> RenameWorkspace(
+    [FromBody] RenameWorkspaceRequest request)
+        {
+            if (request == null || request.WorkspaceId <= 0)
+                return BadRequest("Invalid workspace id.");
+
+            try
+            {
+                var sql = @"
+            UPDATE public.utbl_workspaces
+            SET 
+                workspace_name = @workspaceName,
+                updated_at = NOW()
+            WHERE workspace_id = @workspaceId;";
+
+                var rowsAffected = await _db.ExecuteNonQueryAsync(
+                    sql,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@workspaceId", request.WorkspaceId);
+                        cmd.Parameters.AddWithValue("@workspaceName", request.WorkspaceName);
+                    });
+
+                if (rowsAffected == 0)
+                    return NotFound("Workspace not found.");
+
+                return Ok(new
+                {
+                    message = "Workspace name updated successfully.",
+                    workspaceId = request.WorkspaceId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Something went wrong.",
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpPost("delete-workspace")]
         public async Task<IActionResult> DeleteWorkspace(
     [FromBody] DeleteWorkspaceRequest request)

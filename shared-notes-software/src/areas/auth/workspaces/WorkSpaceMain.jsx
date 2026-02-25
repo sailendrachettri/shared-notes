@@ -1,7 +1,9 @@
 import WorkSpaceBoardView from "./WorkSpaceBoardView";
 
-const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName, selectedWorkspaceMode }) => {
+const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName, selectedWorkspaceMode, setRefresh }) => {
   // console.log({ selectedWorkspaceId });
+
+
   return (
     <>
       <section className="notion-editor-wrapper">
@@ -9,6 +11,7 @@ const WorkSpaceMain = ({ selectedWorkspaceId, selectedWorkspaceName, selectedWor
           selectedWorkspaceId={selectedWorkspaceId}
           selectedWorkspaceName={selectedWorkspaceName}
           selectedWorkspaceMode={selectedWorkspaceMode}
+          setRefresh={setRefresh}
         />
       </section>
     </>

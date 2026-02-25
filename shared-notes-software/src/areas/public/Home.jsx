@@ -121,6 +121,7 @@ const Home = ({
 
             {selectedTab == "workspaces" && selectedWorkspaceId && (
               <WorkSpaceMain
+              setRefresh={setRefresh}
                 selectedWorkspaceId={selectedWorkspaceId}
                 selectedWorkspaceName={selectedWorkspaceName}
                 selectedWorkspaceMode={selectedWorkspaceMode}

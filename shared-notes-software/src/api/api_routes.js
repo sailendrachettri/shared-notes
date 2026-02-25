@@ -19,6 +19,7 @@ export const GET_WORKSPACE_FULL_DETAILS_BY_ID_URL = 'workspace/get-workspace-det
 export const ADD_WORKSPACE_TASK_URL = 'workspace/add-workspace-task'
 export const UPDATE_WORKSPACE_TASK_POSITION_URL = 'workspace/update-workspace-task-position'
 export const DELETE_WORKSPACE_URL = 'workspace/delete-workspace'
+export const RENAME_WORKSPACE_URL = 'workspace/rename-workspace'
 
 // #endregion
 
