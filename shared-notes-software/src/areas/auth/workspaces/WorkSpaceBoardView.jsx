@@ -61,16 +61,16 @@ const COLUMN_STYLE_PRESETS = [
     Icon: FaRegClock,
   },
   {
-    accent: BRAND?.secondary,
-    accentLight: "rgba(62,62,85,0.06)",
+    accent: "#c3c079",
+    accentLight: "#f2f1e4",
     accentBorder: "rgba(62,62,85,0.13)",
     colBg: "#f7f7fb",
     emptyDot: "rgba(62,62,85,0.15)",
     Icon: MdOutlinePendingActions,
   },
   {
-    accent: BRAND?.secondary,
-    accentLight: "rgba(62,62,85,0.06)",
+    accent: "green",
+    accentLight: "#d8f4e5",
     accentBorder: "rgba(62,62,85,0.13)",
     colBg: "#f7f7fb",
     emptyDot: "rgba(62,62,85,0.15)",
@@ -353,29 +353,17 @@ function Column({
   const { setNodeRef: setDropRef } = useDroppable({ id: col?.id });
 
   return (
-    <div
-      className="flex flex-col rounded-3xl overflow-hidden transition-all duration-200"
-      style={{
-        background: isOver ? col?.accentLight : col?.colBg,
-        border: `1px solid ${isOver ? (col?.accent ?? BRAND?.secondary) + "50" : "rgba(62,62,85,0.07)"}`,
-        boxShadow: isOver
-          ? `0 0 0 3px ${col?.accent ?? BRAND?.secondary}18, 0 12px 32px ${col?.accent ?? BRAND?.secondary}10`
-          : "0 2px 20px rgba(62,62,85,0.05)",
-      }}
-    >
-      <div
-        className="h-[3px] w-full"
-        style={{
-          background: `linear-gradient(90deg, ${col?.accent ?? BRAND?.secondary}, ${col?.accent ?? BRAND?.secondary}88)`,
-        }}
-      />
+    <div className="flex  flex-col group rounded-xl overflow-hidden transition-all duration-200 bg-slate-50/60">
+      {/* <div className="h-0.75 w-full bg-slate-300/80" 
+      // style={{ background: col?.accent, color: col?.accent }}
+      /> */}
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+      <div className="flex  items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2">
           <span
             className="flex items-center justify-center w-6 h-6 rounded-lg"
-            style={{ background: col?.accentLight }}
+            // style={{ background: col?.accentLight }}
           >
             {col?.Icon && <col.Icon size={12} style={{ color: col?.accent }} />}
           </span>
@@ -386,20 +374,17 @@ function Column({
             {col?.label}
           </span>
           <span
-            className="rounded-full w-5 h-5 flex items-center justify-center text-[9px] font-black"
+            className="rounded-full w-5 h-5 flex items-center justify-center text-[9px] font-black bg-slate-50"
             style={{ background: col?.accentLight, color: col?.accent }}
           >
             {safeTasks.length}
           </span>
         </div>
+        
         <button
           onClick={() => setAddingIn(col?.id)}
-          className="w-7 h-7 flex items-center cursor-pointer justify-center rounded-xl transition-all hover:scale-105"
-          style={{
-            background: col?.accentLight,
-            color: col?.accent,
-            border: `1px solid ${col?.accentBorder}`,
-          }}
+          className="w-7 h-7 flex items-center invisible group-hover:visible cursor-pointer justify-center rounded-xl transition-all hover:scale-105 bg-slate-50 hover:bg-slate-100"
+          // style={{ background: col?.accentLight, color: col?.accent }}
           title="Add task"
         >
           <FaPlus size={9} />
@@ -423,13 +408,7 @@ function Column({
                 background: isOver ? col?.accentLight : "transparent",
               }}
             >
-              <span
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
-                style={{
-                  background: isOver ? col?.accentLight : "rgba(62,62,85,0.04)",
-                  border: `1.5px dashed ${isOver ? col?.accent : "rgba(62,62,85,0.15)"}`,
-                }}
-              >
+              <span className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 border-dashed border border-slate-300">
                 {isOver ? (
                   <span style={{ color: col?.accent, fontSize: 14 }}>↓</span>
                 ) : (
