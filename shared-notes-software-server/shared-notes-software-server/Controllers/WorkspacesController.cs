@@ -98,6 +98,51 @@ namespace shared_notes_software_server.Controllers
                 });
             }
         }
+
+        [HttpPost("move-workspace-to-public")]
+        public async Task<IActionResult> MoveWorkspaceToPublic(
+    [FromBody] MoveWorkspaceToPublicRequest request)
+        {
+            if (request == null || request.WorkspaceId <= 0)
+                return BadRequest("Invalid workspace id.");
+
+            try
+            {
+                var sql = @"
+            UPDATE public.utbl_workspaces
+            SET is_private = FALSE,
+                user_id = null,
+                updated_at = now()
+            WHERE workspace_id = @workspaceId;";
+
+                var rowsAffected = await _db.ExecuteNonQueryAsync(
+                    sql,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@workspaceId", request.WorkspaceId);
+                    });
+
+                if (rowsAffected == 0)
+                    return NotFound("Workspace cannot move to public.");
+
+                return Ok(new
+                {
+                    status = "UPDATED",
+                    success = true,
+                    message = "Workspace move to public successfully.",
+                    WorkspaceTaskId = request.WorkspaceId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Something went wrong.",
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpPost("delete-workspace")]
         public async Task<IActionResult> DeleteWorkspace(
     [FromBody] DeleteWorkspaceRequest request)

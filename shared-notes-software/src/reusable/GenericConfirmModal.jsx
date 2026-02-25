@@ -44,7 +44,7 @@ const GenericConfirmModal = ({
               <div className="mt-6 flex justify-end gap-3">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+                  className="px-4 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -54,7 +54,7 @@ const GenericConfirmModal = ({
                     onConfirm();
                     onClose();
                   }}
-                  className="px-4 py-2 text-sm rounded-lg bg-primary hover:bg-primary/90 text-white transition"
+                  className="px-4 py-2 text-sm rounded-lg bg-primary hover:bg-primary/90 text-white transition cursor-pointer"
                 >
                   Confirm
                 </button>

@@ -21,6 +21,7 @@ export const UPDATE_WORKSPACE_TASK_POSITION_URL = 'workspace/update-workspace-ta
 export const DELETE_WORKSPACE_URL = 'workspace/delete-workspace'
 export const DELETE_WORKSPACE_TASK_URL = 'workspace/delete-workspace-task'
 export const RENAME_WORKSPACE_URL = 'workspace/rename-workspace'
+export const MOVE_WORKSPACE_TO_PUBLIC_URL = 'workspace/move-workspace-to-public'
 
 // #endregion
 
