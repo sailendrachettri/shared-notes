@@ -29,7 +29,6 @@ const DeleteConfirmModal = ({
             className="fixed inset-0 flex items-center justify-center z-50"
           >
             <div className="bg-white dark:bg-gray-900 w-80 rounded-xl shadow-xl p-6">
-              
               {/* Title */}
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {title}
@@ -44,7 +43,7 @@ const DeleteConfirmModal = ({
               <div className="mt-6 flex justify-end gap-3">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+                  className="px-4 py-2 text-sm rounded-lg bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -54,12 +53,11 @@ const DeleteConfirmModal = ({
                     onConfirm();
                     onClose();
                   }}
-                  className="px-4 py-2 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition"
+                  className="px-4 py-2 text-sm rounded-lg bg-red-500 hover:bg-red-600 text-white transition cursor-pointer"
                 >
                   Delete
                 </button>
               </div>
-
             </div>
           </motion.div>
         </>

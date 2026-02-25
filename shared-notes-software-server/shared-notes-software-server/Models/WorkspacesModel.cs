@@ -2,6 +2,10 @@
 
 namespace shared_notes_software_server.Models
 {
+    public class DeleteWorkspaceRequest
+    {
+        public long WorkspaceId { get; set; }
+    }
     public class UpdateWorkspaceTaskPositionRequest
     {
         public List<WorkspaceTaskPositionUpdate> Updates { get; set; } = new();

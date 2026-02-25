@@ -1,11 +1,17 @@
 import React from "react";
 import { useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
-import { GET_WORKSPACES_LIST_URL } from "../../../api/api_routes";
+import {
+  DELETE_WORKSPACE_URL,
+  GET_WORKSPACES_LIST_URL,
+} from "../../../api/api_routes";
 import { load } from "@tauri-apps/plugin-store";
 import { useState } from "react";
 import { BiBookAlt } from "react-icons/bi";
 import { BiBarChartAlt2 } from "react-icons/bi";
+import { PiDotsThreeVerticalBold } from "react-icons/pi";
+import toast from "react-hot-toast";
+import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 
 const WorkspacesSidebar = ({
   searchText,
@@ -21,9 +27,13 @@ const WorkspacesSidebar = ({
   setWorkspaceLength,
   setSelectedWordspaceMode,
   refresh,
+  setRefresh
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deletionWorkspaceId, setDeletionWorkspaceId] = useState(null);
+  const [openMenu, setOpenMenu] = useState(null);
 
   const handleSelectWorkspace = (item) => {
     // console.log(item);
@@ -36,6 +46,31 @@ const WorkspacesSidebar = ({
     setSelectedWorkspaceName(item?.workspace_name || null);
   };
 
+  const handleDeleteWorkspace = async () => {
+    try {
+      if (!deletionWorkspaceId) {
+        toast.error("Can't delete workspace at the moment");
+        console.error("Workspace id is required");
+        return;
+      }
+      const payload = {
+        WorkspaceId: deletionWorkspaceId,
+      };
+      const res = await axiosInstance.post(DELETE_WORKSPACE_URL, payload);
+      console.log(res);
+      if (res?.status == 200) {
+        toast.success("Workspace deleted successful");
+      }
+    } catch (error) {
+      toast.error("Can't delete workspace at the moment");
+      console.error("not able to delete the workspace", error);
+    } finally {
+      setDeletionWorkspaceId(null);
+      setOpenMenu(null);
+      setIsDeleteOpen(false);
+      setRefresh(prev => !prev);
+    }
+  };
   const handleGetWorkspacesList = async () => {
     try {
       const store = await load("user-store.json", { autoSave: true });
@@ -66,8 +101,7 @@ const WorkspacesSidebar = ({
     handleGetWorkspacesList();
   }, [refresh, sortBy, sortDirection, searchText]);
 
-  console.log(privateWorkspaces);
-  console.log(publicWorkspaces);
+ 
 
   return (
     <>
@@ -110,23 +144,40 @@ const WorkspacesSidebar = ({
                       </div>
 
                       {/* Three Dot Button */}
-                      {/* <div
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setOpenMenu(
-                                            openMenu === item?.workspace_id
-                                              ? null
-                                              : item?.workspace_id,
-                                          );
-                                        }}
-                                        className={`   ${
-                                          active === item?.workspace_id ? "block" : "hidden"
-                                        } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
-                                      >
-                                        <PiDotsThreeVerticalBold size={16} />
-                                      </div> */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenu(
+                            openMenu === item?.workspace_id
+                              ? null
+                              : item?.workspace_id,
+                          );
+                        }}
+                        className={`   ${
+                          active === item?.workspace_id ? "block" : "hidden"
+                        } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
+                      >
+                        <PiDotsThreeVerticalBold size={16} />
+                      </div>
                     </div>
                   </button>
+
+                  {/* Dropdown Menu */}
+                  {openMenu === item?.workspace_id && (
+                    <div className="absolute right-2 top-10 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletionWorkspaceId(item?.workspace_id);
+                          setOpenMenu(null);
+                          setIsDeleteOpen(true);
+                        }}
+                        className="block w-full text-left px-4 py-2 cursor-pointer text-sm text-red-500 hover:bg-gray-50"
+                      >
+                        Delete Workspace
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -166,29 +217,54 @@ const WorkspacesSidebar = ({
                       </div>
 
                       {/* Three Dot Button */}
-                      {/* <div
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setOpenMenu(
-                                            openMenu === item?.workspace_id
-                                              ? null
-                                              : item?.workspace_id,
-                                          );
-                                        }}
-                                        className={`   ${
-                                          active === item?.workspace_id ? "block" : "hidden"
-                                        } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
-                                      >
-                                        <PiDotsThreeVerticalBold size={16} />
-                                      </div> */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenu(
+                            openMenu === item?.workspace_id
+                              ? null
+                              : item?.workspace_id,
+                          );
+                        }}
+                        className={`   ${
+                          active === item?.workspace_id ? "block" : "hidden"
+                        } transition-opacity duration-200 p-1 rounded hover:bg-gray-200`}
+                      >
+                        <PiDotsThreeVerticalBold size={16} />
+                      </div>
                     </div>
                   </button>
+
+                  {/* Dropdown Menu */}
+                  {openMenu === item?.workspace_id && (
+                    <div className="absolute right-2 top-10 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeletionWorkspaceId(item?.workspace_id);
+                          setOpenMenu(null);
+                          setIsDeleteOpen(true);
+                        }}
+                        className="block w-full text-left px-4 py-2 cursor-pointer text-sm text-red-500 hover:bg-gray-50"
+                      >
+                        Delete Workspace
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </section>
         </div>
       </section>
+
+      <DeleteConfirmModal
+        isOpen={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        onConfirm={() => handleDeleteWorkspace()}
+        title="Delete Workspace"
+        description="This workspace will be permanently removed."
+      />
     </>
   );
 };
