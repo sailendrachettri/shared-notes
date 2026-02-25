@@ -246,10 +246,10 @@ const Sidebar = ({
                 </div>
               )}
 
-            <section className="h-full w-full ">
+            <section className="h-full w-full">
               {/* Workspaces */}
 
-              <section className="pb-5">
+              <section>
                 {workspaceLength > 0 && (
                   <div
                     onClick={() => {

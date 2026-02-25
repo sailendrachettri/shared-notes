@@ -24,14 +24,14 @@ export default function WorkspaceModeBadge({
   return (
     <div className="relative group inline-flex">
       <span
-        className={`capitalize inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-semibold transition-all duration-200 cursor-default ${styles.bg} ${styles.text}`}
+        className={`capitalize inline-flex items-center gap-1.5 p-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-default ${styles.text}`}
       >
         {isPrivate ? (
-          <HiOutlineLockClosed className={`text-[13px] ${styles.iconColor}`} />
+          <HiOutlineLockClosed size={15} className={`text-[13px] ${styles.iconColor}`} />
         ) : (
-          <HiOutlineLockOpen className={`text-[13px] ${styles.iconColor}`} />
+          <HiOutlineLockOpen size={15} className={`text-[13px] ${styles.iconColor}`} />
         )}
-        {selectedWorkspaceMode}
+        {/* {selectedWorkspaceMode} */}
       </span>
 
       {/* Tooltip */}

@@ -30,6 +30,7 @@ const WorkspacesSidebar = ({
   setSelectedWordspaceMode,
   refresh,
   setRefresh,
+  isUserLoggedIn
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
@@ -135,7 +136,7 @@ const WorkspacesSidebar = ({
 
   useEffect(() => {
     handleGetWorkspacesList();
-  }, [refresh, sortBy, sortDirection, searchText]);
+  }, [refresh, sortBy, sortDirection, searchText, isUserLoggedIn]);
 
   return (
     <>
