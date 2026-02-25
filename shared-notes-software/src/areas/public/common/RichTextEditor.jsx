@@ -43,6 +43,7 @@ import FormattingMenu from "../helpers/FormattingMenu";
 import TableMenu from "../helpers/TableMenu";
 import { CustomCodeBlock } from "../../../utils/extensions/CustomCodeBlock";
 import UploadInProgress from "../../../utils/info-screen/UploadInProgress";
+import WorkspaceModeBadge from "../../auth/workspaces/WorkspaceModeBadge";
 
 const RichTextEditor = ({
   value,
@@ -54,6 +55,7 @@ const RichTextEditor = ({
   selectedNoteId,
   fullData,
   setRefresh,
+  selectedNotesMode,
 }) => {
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
@@ -494,42 +496,50 @@ const RichTextEditor = ({
         </section>
 
         {/* Title */}
-        <div className="pb-4">
-          <div
-            ref={titleRef}
-            contentEditable
-            suppressContentEditableWarning
-            onInput={(e) => {
-              let text = e.currentTarget.textContent || "";
+        <div className="pb-4 flex items-center justify-between">
+          <div className="">
+            <div
+              ref={titleRef}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) => {
+                let text = e.currentTarget.textContent || "";
 
-              if (text.length > 45) {
-                text = text.slice(0, 45);
-                e.currentTarget.textContent = text;
+                if (text.length > 45) {
+                  text = text.slice(0, 45);
+                  e.currentTarget.textContent = text;
 
-                const range = document.createRange();
-                const sel = window.getSelection();
-                range.selectNodeContents(e.currentTarget);
-                range.collapse(false);
-                sel?.removeAllRanges();
-                sel?.addRange(range);
-              }
+                  const range = document.createRange();
+                  const sel = window.getSelection();
+                  range.selectNodeContents(e.currentTarget);
+                  range.collapse(false);
+                  sel?.removeAllRanges();
+                  sel?.addRange(range);
+                }
 
-              onTitleChange(text);
-            }}
-            className="text-2xl xl:text-4xl capitalize font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
-            data-placeholder="Untitled"
-          ></div>
+                onTitleChange(text);
+              }}
+              className="text-2xl xl:text-4xl capitalize font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
+              data-placeholder="Untitled"
+            ></div>
 
-          {lastUpdatedAt && (
-            <p className="text-xs xl:text-sm text-slate-400 mt-2">
-              Edited {formatePrettyDateTime(lastUpdatedAt)}
-            </p>
-          )}
+            {lastUpdatedAt && (
+              <p className="text-xs xl:text-sm text-slate-400 mt-2">
+                Edited {formatePrettyDateTime(lastUpdatedAt)}
+              </p>
+            )}
+          </div>
+          <div>
+            <WorkspaceModeBadge
+              privateDesc={"Anyone with access can view this Notes."}
+              publicDesc={"Only you can access this Notes."}
+              selectedWorkspaceMode={selectedNotesMode}
+            />
+          </div>
         </div>
 
         {/* Editor Content */}
         <div className="notion-editor-container relative [&_.ProseMirror>p]:first-letter:uppercase">
-          
           {editor && <FormattingMenu editor={editor} />}
           {editor && <TableMenu editor={editor} />}
           <EditorContent editor={editor} />
@@ -555,9 +565,7 @@ const RichTextEditor = ({
         />
       </div>
 
-      {uploading && (
-        <UploadInProgress />
-      )}
+      {uploading && <UploadInProgress />}
     </div>
   );
 };

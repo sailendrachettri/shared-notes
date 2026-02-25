@@ -18,6 +18,7 @@ const Playground = ({
   isSubPage,
   selectedNoteType,
   refresh,
+  selectedNotesMode
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -154,6 +155,7 @@ const Playground = ({
             selectedNoteType={selectedNoteType}
             fullData={fullData}
             setRefresh={setRefresh}
+            selectedNotesMode={selectedNotesMode}
           />
 
           {/* Custom Toast */}

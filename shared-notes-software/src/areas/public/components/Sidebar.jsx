@@ -44,6 +44,7 @@ const Sidebar = ({
   setSelectedWorkspaceId,
   setSelectedWorkspaceName,
   setSelectedWordspaceMode,
+  setSelectedNotesMode,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -111,8 +112,9 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    // console.log({ note });
+    console.log({ note });
     // console.log(note?.notes_id);
+    
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);
@@ -300,6 +302,8 @@ const Sidebar = ({
                         <button
                           onClick={() => {
                             handleSelectNote(item);
+                            setSelectedNotesMode("private");
+                            
                             setOpenNotes((prev) => ({
                               ...prev,
                               [item?.note_id]: !prev[item?.note_id],
@@ -376,6 +380,7 @@ const Sidebar = ({
                             <div
                               onClick={() => {
                                 handleSelectNoteFromSubPage(sub);
+                                setSelectedNotesMode("private");
                               }}
                               key={sub?.sub_page_id}
                               className={` group
@@ -480,6 +485,7 @@ const Sidebar = ({
                         <button
                           onClick={() => {
                             handleSelectNote(item);
+                            setSelectedNotesMode("public");
                             setOpenNotes((prev) => ({
                               ...prev,
                               [item?.note_id]: !prev[item?.note_id],
@@ -531,6 +537,7 @@ const Sidebar = ({
                             <div
                               onClick={(e) => {
                                 e.stopPropagation();
+                                
                                 setOpenMenu(
                                   openMenu === item?.note_id
                                     ? null
@@ -555,6 +562,7 @@ const Sidebar = ({
                           {item?.sub_pages?.map((sub) => (
                             <div
                               onClick={() => {
+                                setSelectedNotesMode("public");
                                 handleSelectNoteFromSubPage(sub);
                               }}
                               key={sub?.sub_page_id}

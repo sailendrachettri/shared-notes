@@ -38,6 +38,7 @@ const Home = ({
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
+  const [selectedNotesMode, setSelectedNotesMode] = useState(null);
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -99,6 +100,7 @@ const Home = ({
                   setSelectedWorkspaceId={setSelectedWorkspaceId}
                   setSelectedWorkspaceName={setSelectedWorkspaceName}
                   setSelectedWordspaceMode={setSelectedWordspaceMode}
+                  setSelectedNotesMode={setSelectedNotesMode}
                 />
               </div>
             </div>
@@ -116,12 +118,13 @@ const Home = ({
                 isSubPage={isSubPage}
                 selectedNoteType={selectedNoteType}
                 refresh={refresh}
+                selectedNotesMode={selectedNotesMode}
               />
             )}
 
             {selectedTab == "workspaces" && selectedWorkspaceId && (
               <WorkSpaceMain
-              setRefresh={setRefresh}
+                setRefresh={setRefresh}
                 selectedWorkspaceId={selectedWorkspaceId}
                 selectedWorkspaceName={selectedWorkspaceName}
                 selectedWorkspaceMode={selectedWorkspaceMode}
