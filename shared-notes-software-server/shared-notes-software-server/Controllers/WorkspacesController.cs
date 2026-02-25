@@ -254,28 +254,44 @@ namespace shared_notes_software_server.Controllers
         [HttpPost("add-workspace-task")]
         public async Task<IActionResult> AddNote([FromBody] AddWorkspaceTaskRequest request)
         {
+            if (request == null || string.IsNullOrWhiteSpace(request.Title))
+                return BadRequest("Title is required");
 
-            var jsonResult = await _db.ExecuteScalarAsync<string>(
-                "SELECT public.add_workspace_task(@workspace_id, @workspace_column_id, @title, @priority_id)",
-                cmd =>
+            try
+            {
+                // 🔐 Encrypt title before sending to DB
+                var encryptedTitle = EncryptionHelper.Encrypt(request.Title);
+
+                var jsonResult = await _db.ExecuteScalarAsync<string>(
+                    "SELECT public.add_workspace_task(@workspace_id, @workspace_column_id, @title, @priority_id)",
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
+                        cmd.Parameters.AddWithValue("workspace_column_id", request.WorkspaceColumnId);
+                        cmd.Parameters.AddWithValue("title", encryptedTitle); // encrypted
+                        cmd.Parameters.AddWithValue("priority_id", request.PriorityId);
+                    });
+
+                if (string.IsNullOrEmpty(jsonResult))
+                    return BadRequest("Function returned null");
+
+                var result = JsonSerializer.Deserialize<object>(jsonResult);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
                 {
-                    cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
-                    cmd.Parameters.AddWithValue("workspace_column_id", request.WorkspaceColumnId);
-                    cmd.Parameters.AddWithValue("title", request.Title);
-                    cmd.Parameters.AddWithValue("priority_id", request.PriorityId);
+                    message = "Something went wrong",
+                    error = ex.Message
                 });
-
-            if (string.IsNullOrEmpty(jsonResult))
-                return BadRequest("Function returned null");
-
-            var result = JsonSerializer.Deserialize<object>(jsonResult);
-
-            return Ok(result);
+            }
         }
 
         [HttpPost("get-workspace-details")]
         public async Task<IActionResult> GetWorkspaceDetails(
-            [FromBody] GetWorkspaceDetailsRequest request)
+    [FromBody] GetWorkspaceDetailsRequest request)
         {
             var jsonResult = await _db.ExecuteScalarAsync<string>(
                 "SELECT public.get_workspace_details_by_id(@workspace_id);",
@@ -284,7 +300,38 @@ namespace shared_notes_software_server.Controllers
                     cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
                 });
 
-            return Content(jsonResult, "application/json");
+            if (string.IsNullOrEmpty(jsonResult))
+                return StatusCode(500, "Invalid response from database.");
+
+            // Deserialize into your existing DTO
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var response =
+                JsonSerializer.Deserialize<WorkspaceDetailsResponseDto>(jsonResult, options);
+
+            if (response?.Data?.Columns != null)
+            {
+                foreach (var column in response.Data.Columns)
+                {
+                    if (column.Tasks != null)
+                    {
+                        foreach (var task in column.Tasks)
+                        {
+                            if (!string.IsNullOrEmpty(task.Title))
+                            {
+                                task.Title = EncryptionHelper.Decrypt(task.Title); // 👈 your decrypt method
+                            }
+                        }
+                    }
+                }
+            }
+
+            var updatedJson = JsonSerializer.Serialize(response);
+
+            return Content(updatedJson, "application/json");
         }
 
         [HttpPost("get-workspaces-list")]

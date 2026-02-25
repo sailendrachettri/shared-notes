@@ -99,7 +99,7 @@ namespace shared_notes_software_server.Models
         public string? ColumnName { get; set; }
 
         [JsonPropertyName("column_position")]
-        public int ColumnPosition { get; set; }
+        public decimal ColumnPosition { get; set; }
 
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
@@ -126,7 +126,7 @@ namespace shared_notes_software_server.Models
         public int PriorityId { get; set; }
 
         [JsonPropertyName("task_position")]
-        public int TaskPosition { get; set; }
+        public decimal TaskPosition { get; set; }
 
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
