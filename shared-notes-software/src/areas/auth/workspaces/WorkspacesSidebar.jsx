@@ -140,7 +140,7 @@ const WorkspacesSidebar = ({
   return (
     <>
       <section>
-        <div className="flex-1 overflow-y-auto space-y-1 hide-scrollbar">
+        <div className="flex-1 space-y-1 hide-scrollbar">
           <section>
             {/* Private workspaces */}
             {privateWorkspaces?.map((item, idx) => {
