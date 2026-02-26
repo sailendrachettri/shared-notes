@@ -42,6 +42,7 @@ import {
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
+import WorkspaceStats from "./WorkspaceStats";
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
@@ -82,9 +83,9 @@ const buildStyledColumn = (apiCol, index) => {
   const preset = COLUMN_STYLE_PRESETS[index % COLUMN_STYLE_PRESETS.length];
   return {
     ...preset,
-    id: String(apiCol.workspace_column_id),
-    label: apiCol.column_name,
-    columnPosition: apiCol.column_position,
+    id: String(apiCol?.workspace_column_id),
+    label: apiCol?.column_name,
+    columnPosition: apiCol?.column_position,
   };
 };
 
@@ -380,7 +381,7 @@ function Column({
             {safeTasks.length}
           </span>
         </div>
-        
+
         <button
           onClick={() => setAddingIn(col?.id)}
           className="w-7 h-7 flex items-center invisible group-hover:visible cursor-pointer justify-center rounded-xl transition-all hover:scale-105 bg-slate-50 hover:bg-slate-100"
@@ -483,6 +484,7 @@ export default function WorkSpaceBoardView({
   const [addingIn, setAddingIn] = useState(null);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
+
 
   const titleRef = useRef();
 
@@ -761,7 +763,7 @@ export default function WorkSpaceBoardView({
         return colTasks.map((task) => ({
           id: String(task.workspace_task_id),
           title: task.title,
-          statusId: String(col.workspace_column_id),
+          statusId: String(col?.workspace_column_id),
           priority: mapPriority(task.priority_id),
           task_position: task.task_position ?? 0, // ← keep DB position in state
         }));
@@ -781,12 +783,24 @@ export default function WorkSpaceBoardView({
     handleGetWorkSpaceFullDetails();
   }, [selectedWorkspaceId]);
 
+
+
   return (
     <div className="min-h-screen p-5 xl:p-8">
       {/* Header */}
       <div className="mb-4 relative">
         <div className="absolute right-0">
-          <WorkspaceModeBadge privateDesc={'Only you can access this workspace.'} publicDesc={'Anyone with access can view this workspace.'} selectedWorkspaceMode={selectedWorkspaceMode} />
+          <div className="flex items-center justify-center gap-x-4 flex-nowrap ">
+            <WorkspaceStats
+          columns={columns}
+          tasks={tasks}
+          />
+          <WorkspaceModeBadge
+            privateDesc={"Only you can access this workspace."}
+            publicDesc={"Anyone with access can view this workspace."}
+            selectedWorkspaceMode={selectedWorkspaceMode}
+          />
+          </div>
         </div>
 
         <div
@@ -866,13 +880,13 @@ export default function WorkSpaceBoardView({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
             {columns?.map((col) => (
               <Column
-                key={col.id}
+                key={col?.id}
                 col={col}
-                tasks={getTasksByCol(col.id)}
-                isOver={overColId === col.id}
+                tasks={getTasksByCol(col?.id)}
+                isOver={overColId === col?.id}
                 addingIn={addingIn}
                 setAddingIn={setAddingIn}
-                onAdd={handleAdd(col.id)}
+                onAdd={handleAdd(col?.id)}
                 onDelete={handleDeleteTask}
               />
             ))}
