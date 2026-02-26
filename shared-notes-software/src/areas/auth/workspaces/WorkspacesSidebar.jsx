@@ -8,7 +8,6 @@ import {
 } from "../../../api/api_routes";
 import { load } from "@tauri-apps/plugin-store";
 import { useState } from "react";
-import { BiBookAlt } from "react-icons/bi";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
@@ -30,7 +29,7 @@ const WorkspacesSidebar = ({
   setSelectedWordspaceMode,
   refresh,
   setRefresh,
-  isUserLoggedIn
+  isUserLoggedIn,
 }) => {
   const [privateWorkspaces, setPrivateWorkspaces] = useState(null);
   const [publicWorkspaces, setPublicWorkspaces] = useState(null);
@@ -41,9 +40,9 @@ const WorkspacesSidebar = ({
     useState(false);
   const [selectedWorkspaceIdMoveToPublic, setSelectedWorkspaceIdMoveToPublic] =
     useState(null);
+    
 
   const handleSelectWorkspace = (item) => {
-    // console.log(item);
     setSelectedWordspaceMode(item?.is_private ? "private" : "public");
     setCurrentNotesId(null);
     setSelectedNoteId(null);
@@ -64,7 +63,7 @@ const WorkspacesSidebar = ({
         WorkspaceId: deletionWorkspaceId,
       };
       const res = await axiosInstance.post(DELETE_WORKSPACE_URL, payload);
-      console.log(res);
+      // console.log(res);
       if (res?.status == 200) {
         toast.success("Workspace deleted successful");
       }
@@ -91,7 +90,7 @@ const WorkspacesSidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_WORKSPACES_LIST_URL, payload);
-      // console.log(res);
+      
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateWorkspaces(res?.data?.data?.private || null);
         setPublicWorkspaces(res?.data?.data?.public || null);
@@ -120,7 +119,7 @@ const WorkspacesSidebar = ({
         MOVE_WORKSPACE_TO_PUBLIC_URL,
         payload,
       );
-      console.log(res);
+      // console.log(res);
       if (res?.data?.status == "UPDATED" && res?.data?.success == true) {
         toast.success("Workspace is public now");
       }

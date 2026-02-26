@@ -29,8 +29,6 @@ const SearchSection = ({
     }, 2000);
   };
 
-  // console.log(sortBy)
-  // console.log(sortDirection)
   return (
     <>
       <section>
@@ -45,7 +43,7 @@ const SearchSection = ({
               ref={searchInputRef}
               onChange={(e) => setSearchText(e.target.value)}
               type="text"
-              placeholder={`${pageReload ? "Syncing notes" : "Search (Ctrl+K)"} `}
+              placeholder={`${pageReload ? "Syncing..." : "Search (Ctrl+K)"} `}
               className="
         w-full
         pl-8 pr-4 py-2.5

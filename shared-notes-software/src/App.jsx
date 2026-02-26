@@ -20,6 +20,8 @@ function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [openRegistrationWindow, setOpenRegistrationWindow] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
+  const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
 
   const currrentEnvironment = window.location.host;
 
@@ -27,12 +29,14 @@ function App() {
     const store = await load("user-store.json", { autoSave: true });
     const user = await store.get("user");
     setUserData(user);
-
-    // console.info(user.isLoggedIn);
-    // console.info(user.userId);
-    // console.info(user.user_name);
-
     setIsUserLoggedIn(user?.isLoggedIn);
+
+    if (selectedWorkspaceMode == "private") {
+      /**
+       * If Private : when logout remove the workspace from the view
+       */
+      setSelectedWorkspaceId(null);
+    }
   };
 
   const handleServerNetworkCheck = async () => {
@@ -137,10 +141,14 @@ function App() {
       />
       <section>
         <Home
-        isUserLoggedIn={isUserLoggedIn}
+          isUserLoggedIn={isUserLoggedIn}
           autoFetchStatus={autoFetchStatus}
           setAutoFetchStatus={setAutoFetchStatus}
           toggleSidebar={toggleSidebar}
+          selectedWorkspaceId={selectedWorkspaceId}
+          setSelectedWorkspaceId={setSelectedWorkspaceId}
+          selectedWorkspaceMode={selectedWorkspaceMode}
+          setSelectedWordspaceMode={setSelectedWordspaceMode}
         />
       </section>
 

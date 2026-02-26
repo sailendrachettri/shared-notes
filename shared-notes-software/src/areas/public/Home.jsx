@@ -19,6 +19,9 @@ const Home = ({
   autoFetchStatus,
   setAutoFetchStatus,
   isUserLoggedIn,
+  selectedWorkspaceId,
+   setSelectedWorkspaceId,
+   selectedWorkspaceMode, setSelectedWordspaceMode
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -35,10 +38,12 @@ const Home = ({
   const [publicNotes, setPublicNotes] = useState(null);
   const [privateNotes, setPrivateNotes] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
+
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
-  const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
+
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
+
+  console.log(selectedWorkspaceMode);
 
   return (
     <div className="h-screen bg-gray-100 p-3">

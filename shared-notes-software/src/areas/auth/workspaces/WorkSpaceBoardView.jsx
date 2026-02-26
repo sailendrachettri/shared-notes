@@ -219,12 +219,12 @@ function TaskCard({ task, overlay = false, onDelete }) {
     onDelete(deletionWorkspaceTaskId);
 
     try {
-      console.log(deletionWorkspaceTaskId);
+      // console.log(deletionWorkspaceTaskId);
       const payload = {
         WorkspaceTaskId: +deletionWorkspaceTaskId,
       };
       const res = await axiosInstance.post(DELETE_WORKSPACE_TASK_URL, payload);
-      console.log(res);
+      // console.log(res);
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
         toast.success("Task deleted successful");
       }

@@ -212,8 +212,8 @@ const RichTextEditor = ({
         payload,
       );
 
-      // // console.log(res);
-      // // console.log(payload);
+      // // // console.log(res);
+      // // // console.log(payload);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -282,7 +282,7 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // // console.log(file);
+    // // // console.log(file);
 
     setUploading(true);
 
@@ -306,8 +306,8 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      // // console.log(payload);
-      // // console.log(res);
+      // // // console.log(payload);
+      // // // console.log(res);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
