@@ -24,7 +24,7 @@ export default function WorkspaceModeBadge({
   return (
     <div className="relative group inline-flex">
       <span
-        className={`capitalize inline-flex items-center gap-1.5 p-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-default ${styles.text}`}
+        className={`capitalize inline-flex opacity-45 items-center gap-1.5 p-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-default ${styles.text}`}
       >
         {isPrivate ? (
           <HiOutlineLockClosed size={15} className={`text-[13px] ${styles.iconColor}`} />
