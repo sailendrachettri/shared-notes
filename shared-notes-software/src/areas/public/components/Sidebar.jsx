@@ -252,7 +252,7 @@ const Sidebar = ({
                       onClick={() => {
                         setSelectedTab("workspaces");
                       }}
-                      className="ps-1 mb-2 text-sm font-semibold text-slate-600"
+                      className={`ps-1 pb-3 text-sm font-semibold text-slate-600`}
                     >
                       Workspaces
                     </div>
