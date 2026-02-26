@@ -1,13 +1,4 @@
-/**
- * WorkSpaceBoardView — Soft Minimal Brand Theme
- * primary: #d25564 (rose-red)
- * secondary: #3e3e55 (deep navy-slate)
- * ternary: #ffd788 (warm gold)
- *
- * Install dependencies:
- * npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities react-icons
- */
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -37,7 +28,7 @@ import {
   DELETE_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
   RENAME_WORKSPACE_URL,
-  UPDATE_WORKSPACE_TASK_POSITION_URL, // e.g. PUT /workspace/task/position
+  UPDATE_WORKSPACE_TASK_POSITION_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
@@ -113,16 +104,6 @@ const mapPriority = (priorityId) => {
 /* ─── Position helpers ──────────────────────────────────────────── */
 const GAP = 1000; // spacing between task positions
 
-/**
- * Calculates the midpoint position between two neighbors.
- *
- * | Scenario              | prevPos | nextPos | result              |
- * |-----------------------|---------|---------|---------------------|
- * | Only item in column   | null    | null    | GAP (1000)          |
- * | Dropped at top        | null    | 2000    | 1000  (2000 / 2)    |
- * | Dropped at bottom     | 5000    | null    | 6000  (5000 + GAP)  |
- * | Dropped between items | 2000    | 3000    | 2500  (midpoint)    |
- */
 const calcNewPosition = (prevPos, nextPos) => {
   if (prevPos === null && nextPos === null) return GAP;
   if (prevPos === null) return nextPos / 2;
@@ -130,11 +111,6 @@ const calcNewPosition = (prevPos, nextPos) => {
   return (prevPos + nextPos) / 2;
 };
 
-/**
- * Re-indexes all tasks in a column with clean GAP spacing.
- * Called when midpoint gap shrinks below 1 (too many reorders).
- * Returns [{ id, task_position }] for every task in the column.
- */
 const reindexColumn = (colTasks) =>
   colTasks.map((t, i) => ({ id: t.id, task_position: (i + 1) * GAP }));
 
@@ -220,12 +196,11 @@ function TaskCard({ task, overlay = false, onDelete }) {
     onDelete(deletionWorkspaceTaskId);
 
     try {
-      // console.log(deletionWorkspaceTaskId);
       const payload = {
         WorkspaceTaskId: +deletionWorkspaceTaskId,
       };
       const res = await axiosInstance.post(DELETE_WORKSPACE_TASK_URL, payload);
-      // console.log(res);
+
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
         toast.success("Task deleted successful");
       }
@@ -296,7 +271,7 @@ function AddForm({ col, onAdd, onCancel }) {
           }
           if (e.key === "Escape") onCancel();
         }}
-        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
+        className="w-full hide-scrollbar rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
       />
       <div className="inline-flex gap-1">
         {PRIORITIES.map((level) => {
@@ -345,6 +320,7 @@ function Column({
   isOver,
   addingIn,
   setAddingIn,
+  percentage = 0, 
   onAdd,
   onDelete,
 }) {
@@ -355,9 +331,23 @@ function Column({
 
   return (
     <div className="flex  flex-col group rounded-xl overflow-hidden transition-all duration-200 bg-slate-50/60">
-      {/* <div className="h-0.75 w-full bg-slate-300/80" 
-      // style={{ background: col?.accent, color: col?.accent }}
-      /> */}
+      {/* ─── Slim Progress Line ───────────────────────────── */}
+      <div className="w-full h-1 rounded-full bg-slate-200 overflow-hidden">
+        {percentage === 0 ? (
+          <div
+            className="w-full h-full border-none"
+            style={{ borderColor: col.accent }}
+          />
+        ) : (
+          <div
+            className="h-full transition-all duration-300"
+            style={{
+              width: `${percentage}%`,
+              background: col.accent,
+            }}
+          />
+        )}
+      </div>
 
       {/* Header */}
       <div className="flex  items-center justify-between px-4 pt-4 pb-3">
@@ -484,7 +474,7 @@ export default function WorkSpaceBoardView({
   const [addingIn, setAddingIn] = useState(null);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [percentageStats, setPercentageStats] = useState({});
 
   const titleRef = useRef();
 
@@ -613,30 +603,6 @@ export default function WorkSpaceBoardView({
       );
     });
 
-    // ── 5. Persist to DB ─────────────────────────────────────────────────────
-    /*
-     * Expected API contract (PUT UPDATE_WORKSPACE_TASK_POSITION_URL):
-     *
-     * Request body:
-     * {
-     *   updates: [
-     *     {
-     *       workspaceTaskId: number,      -- task to update
-     *       workspaceColumnId: number,    -- new (or same) column
-     *       taskPosition: number          -- new fractional position value
-     *     },
-     *     ...                             -- extra items only on full re-index
-     *   ]
-     * }
-     *
-     * Success response: { success: true }
-     *
-     * The backend should do a bulk UPDATE:
-     *   UPDATE utbl_workspace_tasks
-     *   SET workspace_column_id = $col, task_position = $pos, updated_at = NOW()
-     *   WHERE workspace_task_id = $id
-     * for each entry in updates[].
-     */
     try {
       const updates = bulkUpdates
         ? bulkUpdates.map((u) => ({
@@ -783,7 +749,8 @@ export default function WorkSpaceBoardView({
     handleGetWorkSpaceFullDetails();
   }, [selectedWorkspaceId]);
 
-
+  console.log(columns)
+  console.log(percentageStats)
 
   return (
     <div className="min-h-screen p-5 xl:p-8">
@@ -791,15 +758,12 @@ export default function WorkSpaceBoardView({
       <div className="mb-4 relative">
         <div className="absolute right-0">
           <div className="flex items-center justify-center gap-x-4 flex-nowrap ">
-            <WorkspaceStats
-          columns={columns}
-          tasks={tasks}
-          />
-          <WorkspaceModeBadge
-            privateDesc={"Only you can access this workspace."}
-            publicDesc={"Anyone with access can view this workspace."}
-            selectedWorkspaceMode={selectedWorkspaceMode}
-          />
+            <WorkspaceStats columns={columns} tasks={tasks} setPercentageStats={setPercentageStats}/>
+            <WorkspaceModeBadge
+              privateDesc={"Only you can access this workspace."}
+              publicDesc={"Anyone with access can view this workspace."}
+              selectedWorkspaceMode={selectedWorkspaceMode}
+            />
           </div>
         </div>
 
@@ -884,6 +848,7 @@ export default function WorkSpaceBoardView({
                 col={col}
                 tasks={getTasksByCol(col?.id)}
                 isOver={overColId === col?.id}
+                percentage={percentageStats[col.id] ?? 0}
                 addingIn={addingIn}
                 setAddingIn={setAddingIn}
                 onAdd={handleAdd(col?.id)}

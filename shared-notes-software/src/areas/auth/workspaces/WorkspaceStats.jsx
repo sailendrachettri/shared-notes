@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { GoDotFill } from "react-icons/go";
 
-
-const WorkspaceStats = ({ columns, tasks }) => {
+const WorkspaceStats = ({ columns, tasks, setPercentageStats }) => {
   const [stats, setStats] = useState({
     todo: 0,
     inProgress: 0,
@@ -22,7 +21,6 @@ const WorkspaceStats = ({ columns, tasks }) => {
 
     const countMap = {};
 
-    // Count tasks per column
     tasks.forEach((task) => {
       countMap[task.statusId] = (countMap[task.statusId] || 0) + 1;
     });
@@ -31,10 +29,12 @@ const WorkspaceStats = ({ columns, tasks }) => {
 
     columns.forEach((col) => {
       const count = countMap[col.id] || 0;
-      percentages[col.label] = Math.round((count / totalTasks) * 100);
+
+      percentages[col.id] = Math.round((count / totalTasks) * 100);
     });
 
     setStats(percentages);
+    setPercentageStats(percentages);
   }, [tasks, columns]);
 
   return (
@@ -45,7 +45,7 @@ const WorkspaceStats = ({ columns, tasks }) => {
           <div className="grid grid-cols-1">
             <div className="text-xs flex flex-wrap items-center gap-2 text-slate-400 font-medium">
               {columns.map((col, index) => {
-                const percentage = stats[col.label] ?? 0;
+                const percentage = stats[col.id] ?? 0;
 
                 return (
                   <React.Fragment key={col.id}>
@@ -60,7 +60,9 @@ const WorkspaceStats = ({ columns, tasks }) => {
                     </span>
 
                     {index !== columns.length - 1 && (
-                      <span className="opacity-40 text-slate-500"><GoDotFill size={8} /></span>
+                      <span className="opacity-40 text-slate-500">
+                        <GoDotFill size={8} />
+                      </span>
                     )}
                   </React.Fragment>
                 );
