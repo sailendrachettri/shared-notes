@@ -12,13 +12,13 @@ export default function WorkspaceModeBadge({
         bg: "bg-primary/10",
         text: "text-primary",
         iconColor: "text-primary",
-        tooltip: publicDesc || "Only you can access this page.",
+        tooltip: privateDesc || "Only you can access this page.",
       }
     : {
         bg: "bg-green-100",
         text: "text-green-600",
         iconColor: "text-green-600",
-        tooltip: privateDesc || "Anyone with access can view this page.",
+        tooltip:  publicDesc || "Anyone with access can view this page.",
       };
 
   return (

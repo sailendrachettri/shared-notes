@@ -782,11 +782,11 @@ export default function WorkSpaceBoardView({
   }, [selectedWorkspaceId]);
 
   return (
-    <div className="min-h-screen px-8 pb-10 pt-6">
+    <div className="min-h-screen p-5 xl:p-8">
       {/* Header */}
       <div className="mb-4 relative">
         <div className="absolute right-0">
-          <WorkspaceModeBadge selectedWorkspaceMode={selectedWorkspaceMode} />
+          <WorkspaceModeBadge privateDesc={'Only you can access this workspace.'} publicDesc={'Anyone with access can view this workspace.'} selectedWorkspaceMode={selectedWorkspaceMode} />
         </div>
 
         <div

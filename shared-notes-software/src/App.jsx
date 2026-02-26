@@ -70,7 +70,7 @@ function App() {
   useEffect(() => {
     const resizeAndCenter = async () => {
       if (serverStatus === true) {
-        await appWindow.setSize(new LogicalSize(1080, 650));
+        await appWindow.setSize(new LogicalSize(1180, 650));
       } else {
         await appWindow.setSize(new LogicalSize(480, 360));
       }
