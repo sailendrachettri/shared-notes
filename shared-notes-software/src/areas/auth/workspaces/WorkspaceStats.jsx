@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { GoDotFill } from "react-icons/go";
+
 
 const WorkspaceStats = ({ columns, tasks }) => {
   const [stats, setStats] = useState({
@@ -58,7 +60,7 @@ const WorkspaceStats = ({ columns, tasks }) => {
                     </span>
 
                     {index !== columns.length - 1 && (
-                      <span className="opacity-40">•</span>
+                      <span className="opacity-40 text-slate-500"><GoDotFill size={8} /></span>
                     )}
                   </React.Fragment>
                 );
