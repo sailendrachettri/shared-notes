@@ -75,6 +75,7 @@ const WorkspacesSidebar = ({
       setOpenMenu(null);
       setIsDeleteOpen(false);
       setRefresh((prev) => !prev);
+      setSelectedWorkspaceId(null);
     }
   };
 
