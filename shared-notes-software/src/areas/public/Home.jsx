@@ -43,7 +43,7 @@ const Home = ({
 
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
 
-  console.log(selectedWorkspaceMode);
+  // console.log(selectedWorkspaceMode);
 
   return (
     <div className="h-screen bg-gray-100 p-3">

@@ -39,7 +39,7 @@ const CreateNewWorkSpace = ({
         IsPrivate: user_decision ? true : false,
       };
       const res = await axiosInstance.post(ADD_WORKSPACE_URL, payload);
-      // // console.log(res);
+      // // // console.log(res);
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         toast.success("Workspace created successful");
         setIsOpen(false);

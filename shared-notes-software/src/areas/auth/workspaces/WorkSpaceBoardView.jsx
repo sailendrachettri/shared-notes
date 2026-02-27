@@ -306,7 +306,7 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
   const [priority, setPriority] = useState("Medium");
   const [userIds, setUserIds] = useState([]);
 
-  console.log(userNameOptions);
+  // console.log(userNameOptions);
 
   const submit = () => {
     if (!title.trim()) return;
@@ -801,9 +801,6 @@ export default function WorkSpaceBoardView({
 
       const res = await axiosInstance.post(RENAME_WORKSPACE_URL, payload);
       if (res.status == 200) {
-        // setTimeout(() => {
-        //   setSelectedWorkspaceName(newTitle);
-        // }, 500);
       } else {
         toast.error("Can't rename workspace");
       }
@@ -831,7 +828,7 @@ export default function WorkSpaceBoardView({
       );
 
       const response = res.data;
-      console.log(response);
+      // console.log(response);
 
       if (!response.success) {
         toast.error("Failed to fetch workspace");
@@ -885,54 +882,56 @@ export default function WorkSpaceBoardView({
   return (
     <div className="min-h-screen p-5 xl:p-8">
       {/* Header */}
-      <div className="mb-4 relative">
-        <div className="absolute right-0">
-          <div className="flex items-center justify-center gap-x-4 flex-nowrap ">
-            <WorkspaceStats
-              columns={columns}
-              tasks={tasks}
-              setPercentageStats={setPercentageStats}
-            />
-            <WorkspaceModeBadge
-              privateDesc={"Only you can access this workspace."}
-              publicDesc={"Anyone with access can view this workspace."}
-              selectedWorkspaceMode={selectedWorkspaceMode}
-            />
+      <div className="sticky top-0 z-40 bg-white">
+        <div className="mb-4 relative">
+          <div className="absolute right-0">
+            <div className="flex items-center justify-center gap-x-4 flex-nowrap ">
+              <WorkspaceStats
+                columns={columns}
+                tasks={tasks}
+                setPercentageStats={setPercentageStats}
+              />
+              <WorkspaceModeBadge
+                privateDesc={"Only you can access this workspace."}
+                publicDesc={"Anyone with access can view this workspace."}
+                selectedWorkspaceMode={selectedWorkspaceMode}
+              />
+            </div>
           </div>
+
+          <div
+            ref={titleRef}
+            contentEditable
+            suppressContentEditableWarning
+            onInput={(e) => {
+              let text = e.currentTarget.textContent || "";
+
+              if (text.length > 45) {
+                text = text.slice(0, 45);
+                e.currentTarget.textContent = text;
+
+                const range = document.createRange();
+                const sel = window.getSelection();
+                range.selectNodeContents(e.currentTarget);
+                range.collapse(false);
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+              }
+
+              renameWorkspace(text);
+            }}
+            className="text-2xl font-black tracking-tight capitalize outline-none"
+            style={{ color: BRAND?.secondary }}
+          >
+            {selectedWorkspaceName || "Project Board"}
+          </div>
+          <p
+            className="text-[12px] mt-0.5"
+            style={{ color: "rgba(62,62,85,0.4)" }}
+          >
+            Drag cards between columns to update status
+          </p>
         </div>
-
-        <div
-          ref={titleRef}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={(e) => {
-            let text = e.currentTarget.textContent || "";
-
-            if (text.length > 45) {
-              text = text.slice(0, 45);
-              e.currentTarget.textContent = text;
-
-              const range = document.createRange();
-              const sel = window.getSelection();
-              range.selectNodeContents(e.currentTarget);
-              range.collapse(false);
-              sel?.removeAllRanges();
-              sel?.addRange(range);
-            }
-
-            renameWorkspace(text);
-          }}
-          className="text-2xl font-black tracking-tight capitalize outline-none"
-          style={{ color: BRAND?.secondary }}
-        >
-          {selectedWorkspaceName || "Project Board"}
-        </div>
-        <p
-          className="text-[12px] mt-0.5"
-          style={{ color: "rgba(62,62,85,0.4)" }}
-        >
-          Drag cards between columns to update status
-        </p>
       </div>
 
       {/* Loading */}

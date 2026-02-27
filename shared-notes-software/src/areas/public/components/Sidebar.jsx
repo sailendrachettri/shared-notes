@@ -127,8 +127,8 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    // // console.log( subNote );
-    // // console.log(subNote?.notes_id);
+    // // // console.log( subNote );
+    // // // console.log(subNote?.notes_id);
     setCurrentNotesId(subNote?.notes_id);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
@@ -170,7 +170,7 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      // // console.log(res);
+      // // // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteId(res?.data?.sub_page_id);

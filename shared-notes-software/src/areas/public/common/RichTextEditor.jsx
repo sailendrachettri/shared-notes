@@ -212,8 +212,8 @@ const RichTextEditor = ({
         payload,
       );
 
-      // // // console.log(res);
-      // // // console.log(payload);
+      // // // // console.log(res);
+      // // // // console.log(payload);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -282,7 +282,7 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // // // console.log(file);
+    // // // // console.log(file);
 
     setUploading(true);
 
@@ -306,8 +306,8 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      // // // console.log(payload);
-      // // // console.log(res);
+      // // // // console.log(payload);
+      // // // // console.log(res);
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -496,7 +496,7 @@ const RichTextEditor = ({
         </section>
 
         {/* Title */}
-        <div className="pb-4 flex items-center justify-between">
+        <div className="pb-4 flex items-center justify-between sticky top-0 z-40 bg-white">
           <div className="">
             <div
               ref={titleRef}
@@ -519,7 +519,7 @@ const RichTextEditor = ({
 
                 onTitleChange(text);
               }}
-              className="text-2xl xl:text-4xl capitalize font-bold outline-none text-slate-800 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-300"
+              className="text-2xl font-black tracking-tight capitalize outline-none"
               data-placeholder="Untitled"
             ></div>
 
