@@ -35,6 +35,54 @@ import WorkspaceModeBadge from "./WorkspaceModeBadge";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import WorkspaceStats from "./WorkspaceStats";
 
+import Select from "react-select";
+
+const primary = "#d25564";
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected
+      ? primary
+      : state.isFocused
+        ? `${primary}20` // light transparent hover
+        : "white",
+    color: state.isSelected ? "white" : "#0f172a",
+    cursor: "pointer",
+  }),
+
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: `${primary}20`,
+  }),
+
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: primary,
+    fontWeight: 500,
+  }),
+
+  multiValueRemove: (provided) => ({
+    ...provided,
+    color: primary,
+    ":hover": {
+      backgroundColor: primary,
+      color: "white",
+    },
+  }),
+
+  control: (provided, state) => ({
+    ...provided,
+    borderWidth: "1px", // force 1px
+    borderStyle: "solid",
+    borderColor: primary, // always primary
+    boxShadow: "none", // remove thick focus ring
+    "&:hover": {
+      borderColor: primary, // keep consistent
+    },
+  }),
+};
+
 /* ─── Brand tokens ──────────────────────────────────────────────── */
 const BRAND = {
   primary: "#d25564",
@@ -230,9 +278,11 @@ function TaskCard({ task, overlay = false, onDelete }) {
 }
 
 /* ─── AddForm ───────────────────────────────────────────────────── */
-function AddForm({ col, onAdd, onCancel }) {
+function AddForm({ col, onAdd, onCancel, userNameOptions }) {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("Medium");
+
+  console.log(userNameOptions);
 
   const submit = () => {
     if (!title.trim()) return;
@@ -273,7 +323,8 @@ function AddForm({ col, onAdd, onCancel }) {
         }}
         className="w-full hide-scrollbar rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
       />
-      <div className="inline-flex gap-1">
+
+      <div className="inline-flex gap-1 my-2">
         {PRIORITIES.map((level) => {
           const isActive = priority === level;
           const p = PRIORITY[level];
@@ -294,6 +345,16 @@ function AddForm({ col, onAdd, onCancel }) {
           );
         })}
       </div>
+
+      <div className="text-xs">
+        <Select
+          options={userNameOptions}
+          isMulti
+          styles={customStyles}
+          placeholder="Select team members"
+        />
+      </div>
+
       <div className="flex items-center gap-2 text-[11px] justify-center my-4">
         <button
           onClick={submit}
@@ -320,9 +381,10 @@ function Column({
   isOver,
   addingIn,
   setAddingIn,
-  percentage = 0, 
+  percentage = 0,
   onAdd,
   onDelete,
+  userNameOptions,
 }) {
   const safeTasks = tasks ?? [];
   const ids = safeTasks.map((t) => t.id);
@@ -434,6 +496,7 @@ function Column({
               col={col}
               onAdd={onAdd}
               onCancel={() => setAddingIn(null)}
+              userNameOptions={userNameOptions}
             />
           )}
         </div>
@@ -465,7 +528,7 @@ export default function WorkSpaceBoardView({
   selectedWorkspaceId,
   selectedWorkspaceName,
   selectedWorkspaceMode,
-
+  allUsers,
   setRefresh,
 }) {
   const [tasks, setTasks] = useState([]);
@@ -475,6 +538,7 @@ export default function WorkSpaceBoardView({
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [percentageStats, setPercentageStats] = useState({});
+  const [userNameOptions, setUserNameOptions] = useState([]);
 
   const titleRef = useRef();
 
@@ -749,8 +813,13 @@ export default function WorkSpaceBoardView({
     handleGetWorkSpaceFullDetails();
   }, [selectedWorkspaceId]);
 
-  console.log(columns)
-  console.log(percentageStats)
+  useEffect(() => {
+    const data = allUsers?.map((obj) => ({
+      value: obj?.user_id,
+      label: obj?.user_name,
+    }));
+    setUserNameOptions(data);
+  }, [allUsers]);
 
   return (
     <div className="min-h-screen p-5 xl:p-8">
@@ -758,7 +827,11 @@ export default function WorkSpaceBoardView({
       <div className="mb-4 relative">
         <div className="absolute right-0">
           <div className="flex items-center justify-center gap-x-4 flex-nowrap ">
-            <WorkspaceStats columns={columns} tasks={tasks} setPercentageStats={setPercentageStats}/>
+            <WorkspaceStats
+              columns={columns}
+              tasks={tasks}
+              setPercentageStats={setPercentageStats}
+            />
             <WorkspaceModeBadge
               privateDesc={"Only you can access this workspace."}
               publicDesc={"Anyone with access can view this workspace."}
@@ -853,6 +926,7 @@ export default function WorkSpaceBoardView({
                 setAddingIn={setAddingIn}
                 onAdd={handleAdd(col?.id)}
                 onDelete={handleDeleteTask}
+                userNameOptions={userNameOptions}
               />
             ))}
           </div>
