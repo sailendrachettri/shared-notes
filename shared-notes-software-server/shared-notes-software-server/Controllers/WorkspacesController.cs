@@ -259,17 +259,31 @@ namespace shared_notes_software_server.Controllers
 
             try
             {
-                // 🔐 Encrypt title before sending to DB
+                // Encrypt title before sending to DB
                 var encryptedTitle = EncryptionHelper.Encrypt(request.Title);
 
                 var jsonResult = await _db.ExecuteScalarAsync<string>(
-                    "SELECT public.add_workspace_task(@workspace_id, @workspace_column_id, @title, @priority_id)",
+                    "SELECT public.add_workspace_task(@workspace_id, @workspace_column_id, @title, @priority_id, @assign_to_user)",
                     cmd =>
                     {
                         cmd.Parameters.AddWithValue("workspace_id", request.WorkspaceId);
                         cmd.Parameters.AddWithValue("workspace_column_id", request.WorkspaceColumnId);
                         cmd.Parameters.AddWithValue("title", encryptedTitle); // encrypted
                         cmd.Parameters.AddWithValue("priority_id", request.PriorityId);
+                        if (request.AssignToUsers != null && request.AssignToUsers.Any())
+                        {
+                            cmd.Parameters.AddWithValue(
+                                "assign_to_user",
+                                request.AssignToUsers.ToArray()
+                            );
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue(
+                                "assign_to_user",
+                                DBNull.Value
+                            );
+                        }
                     });
 
                 if (string.IsNullOrEmpty(jsonResult))

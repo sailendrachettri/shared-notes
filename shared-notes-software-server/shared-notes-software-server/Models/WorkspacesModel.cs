@@ -37,6 +37,7 @@ namespace shared_notes_software_server.Models
        public long WorkspaceColumnId { get; set; }
        public string Title { get; set; }
        public long PriorityId { get; set; }
+       public List<Guid>? AssignToUsers { get; set; }
     }
     public class GetWorkspaceDetailsRequest
     {
@@ -133,6 +134,21 @@ namespace shared_notes_software_server.Models
 
         [JsonPropertyName("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        [JsonPropertyName("assigned_users")]
+        public List<TaskAssignedUserDto>? AssignedUsers { get; set; }
+    }
+
+    public class TaskAssignedUserDto
+    {
+        [JsonPropertyName("task_mapping_id")]
+        public long TaskMappingId { get; set; }
+
+        [JsonPropertyName("user_id")]
+        public Guid UserId { get; set; }
+
+        [JsonPropertyName("user_name")]
+        public string UserName { get; set; } = null!;
     }
     public class GetWorspacesRequest
     {

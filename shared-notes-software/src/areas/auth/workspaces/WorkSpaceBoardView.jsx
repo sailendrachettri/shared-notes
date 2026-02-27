@@ -75,7 +75,7 @@ const customStyles = {
     ...provided,
     borderWidth: "1px", // force 1px
     borderStyle: "solid",
-    borderColor: primary, // always primary
+    // borderColor: primary, // always primary
     boxShadow: "none", // remove thick focus ring
     "&:hover": {
       borderColor: primary, // keep consistent
@@ -216,18 +216,30 @@ function TaskCard({ task, overlay = false, onDelete }) {
       </div>
       <div className="flex items-center gap-1 justify-between px-3">
         <span
-          className="text-[10px] font-bold px-2 py-0.5 rounded-lg"
+          className="text-[9px] font-medium px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
         >
           {task.priority}
         </span>
-        <div>
+        {task.assignedUsers?.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {task.assignedUsers.map((user) => (
+              <span
+                key={user.user_id}
+                className="text-[9px] px-2 py-0.5 capitalize rounded-full bg-slate-100 text-slate-600 font-medium"
+              >
+                {user.user_name}
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="invisible group-hover:visible">
           <span
             onClick={() => {
               setDeletionWorkspaceTaskId(task?.id);
               setIsDeleteOpen(true);
             }}
-            className="text-[10px] hidden group-hover:block cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
+            className="text-[9px] cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
           >
             Delete
           </span>
@@ -281,12 +293,13 @@ function TaskCard({ task, overlay = false, onDelete }) {
 function AddForm({ col, onAdd, onCancel, userNameOptions }) {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("Medium");
+  const [userIds, setUserIds] = useState([]);
 
   console.log(userNameOptions);
 
   const submit = () => {
     if (!title.trim()) return;
-    onAdd(title.trim(), priority);
+    onAdd(title.trim(), priority, userIds);
   };
 
   return (
@@ -352,6 +365,20 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
           isMulti
           styles={customStyles}
           placeholder="Select team members"
+          isOptionDisabled={() => userIds?.length >= 3}
+          onChange={(selectedOptions) => {
+            if (!selectedOptions) {
+              setUserIds([]);
+              return;
+            }
+
+            if (selectedOptions?.length <= 3) {
+              const ids = selectedOptions?.map((option) => option.value);
+              setUserIds(ids);
+            } else {
+              toast.error("You can select maximum 3 members");
+            }
+          }}
         />
       </div>
 
@@ -691,7 +718,7 @@ export default function WorkSpaceBoardView({
   };
 
   /* ── add task ── */
-  const handleAdd = (colId) => async (title, priority) => {
+  const handleAdd = (colId) => async (title, priority, userIds) => {
     try {
       const colTasks = getTasksByCol(colId);
       const lastPos = colTasks[colTasks.length - 1]?.task_position ?? 0;
@@ -702,6 +729,7 @@ export default function WorkSpaceBoardView({
         title,
         priorityId: PRIORITY_ID_MAP[priority],
         taskPosition: lastPos + GAP, // always appended at bottom
+        assignToUsers: userIds,
       };
 
       const res = await axiosInstance.post(ADD_WORKSPACE_TASK_URL, payload);
@@ -722,6 +750,7 @@ export default function WorkSpaceBoardView({
           statusId: String(colId),
           priority,
           task_position: newTask.task_position ?? lastPos + GAP,
+          assignedUsers: newTask.assigned_users ?? [],
         },
       ]);
 
@@ -772,6 +801,7 @@ export default function WorkSpaceBoardView({
       );
 
       const response = res.data;
+      console.log(response);
 
       if (!response.success) {
         toast.error("Failed to fetch workspace");
@@ -796,6 +826,7 @@ export default function WorkSpaceBoardView({
           statusId: String(col?.workspace_column_id),
           priority: mapPriority(task.priority_id),
           task_position: task.task_position ?? 0, // ← keep DB position in state
+          assignedUsers: task.assigned_users ?? [],
         }));
       });
 
