@@ -370,7 +370,7 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
         })}
       </div>
 
-      <div className="text-xs">
+      <div className="text-xs capitalize">
         <Select
           options={userNameOptions}
           isMulti
