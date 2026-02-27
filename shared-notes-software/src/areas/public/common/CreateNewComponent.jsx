@@ -63,7 +63,7 @@ const CreateNewComponent = ({
               {/* Modal */}
               <div className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 pb-10 z-10">
                 <h3 className="text-lg font-semibold text-slate-800 mb-6">
-                  Create
+                  What Would You Like to Create?
                 </h3>
 
                 <section className="grid grid-cols-2 gap-4">

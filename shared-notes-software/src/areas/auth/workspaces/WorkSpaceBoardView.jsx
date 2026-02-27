@@ -882,7 +882,7 @@ export default function WorkSpaceBoardView({
   return (
     <div className="min-h-screen p-5 xl:p-8">
       {/* Header */}
-      <div className="sticky top-0 z-40 bg-white">
+      <div className="sticky top-0 z-20 bg-white">
         <div className="mb-4 relative">
           <div className="absolute right-0">
             <div className="flex items-center justify-center gap-x-4 flex-nowrap ">

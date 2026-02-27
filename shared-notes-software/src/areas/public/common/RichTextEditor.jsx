@@ -496,7 +496,7 @@ const RichTextEditor = ({
         </section>
 
         {/* Title */}
-        <div className="pb-4 flex items-center justify-between sticky top-0 z-40 bg-white">
+        <div className="pb-4 flex items-center justify-between sticky top-0 z-20 bg-white">
           <div className="">
             <div
               ref={titleRef}
