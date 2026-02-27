@@ -214,13 +214,24 @@ function TaskCard({ task, overlay = false, onDelete }) {
           {task.title}
         </p>
       </div>
-      <div className="flex items-center gap-1 justify-between px-3">
+      <div className="flex items-center flex-wrap gap-1 justify-between px-3 mt-2">
         <span
           className="text-[9px] font-medium px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
         >
           {task.priority}
         </span>
+        <div className="invisible group-hover:visible lg:block hidden">
+          <span
+            onClick={() => {
+              setDeletionWorkspaceTaskId(task?.id);
+              setIsDeleteOpen(true);
+            }}
+            className="text-[9px] cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
+          >
+            Delete
+          </span>
+        </div>
         {task.assignedUsers?.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-1">
             {task.assignedUsers.map((user) => (
@@ -233,7 +244,7 @@ function TaskCard({ task, overlay = false, onDelete }) {
             ))}
           </div>
         )}
-        <div className="invisible group-hover:visible">
+        <div className="invisible group-hover:visible lg:hidden">
           <span
             onClick={() => {
               setDeletionWorkspaceTaskId(task?.id);
@@ -719,46 +730,65 @@ export default function WorkSpaceBoardView({
 
   /* ── add task ── */
   const handleAdd = (colId) => async (title, priority, userIds) => {
-    try {
-      const colTasks = getTasksByCol(colId);
-      const lastPos = colTasks[colTasks.length - 1]?.task_position ?? 0;
+    const tempId = `temp-${Date.now()}`;
 
+    const colTasks = getTasksByCol(colId);
+    const lastPos = colTasks[colTasks.length - 1]?.task_position ?? 0;
+    const optimisticPosition = lastPos + GAP;
+
+    // ✅ 1. Add immediately (optimistic)
+    const optimisticTask = {
+      id: tempId,
+      title,
+      statusId: String(colId),
+      priority,
+      task_position: optimisticPosition,
+      assignedUsers: userIds.map((id) => {
+        const user = userNameOptions.find((u) => u.value === id);
+        return {
+          user_id: id,
+          user_name: user?.label || "",
+        };
+      }),
+    };
+
+    setTasks((prev) => [...prev, optimisticTask]);
+    setAddingIn(null);
+
+    try {
       const payload = {
         workspaceId: +selectedWorkspaceId,
         workspaceColumnId: +colId,
         title,
         priorityId: PRIORITY_ID_MAP[priority],
-        taskPosition: lastPos + GAP, // always appended at bottom
         assignToUsers: userIds,
       };
 
       const res = await axiosInstance.post(ADD_WORKSPACE_TASK_URL, payload);
       const response = res.data;
 
-      if (!response.success) {
-        toast.error("Failed to create task");
-        return;
-      }
+      if (!response.success) throw new Error("Failed");
 
       const newTask = response.data;
 
-      setTasks((prev) => [
-        ...prev,
-        {
-          id: String(newTask.workspace_task_id),
-          title,
-          statusId: String(colId),
-          priority,
-          task_position: newTask.task_position ?? lastPos + GAP,
-          assignedUsers: newTask.assigned_users ?? [],
-        },
-      ]);
+      // 2. Replace temp task with real DB task
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === tempId
+            ? {
+                ...t,
+                id: String(newTask.workspace_task_id),
+                task_position: newTask.task_position,
+              }
+            : t,
+        ),
+      );
 
-      setAddingIn(null);
       toast.success("Task added");
     } catch (error) {
-      console.error("Can't add task", error);
-      toast.error("Can't add task at the moment");
+      console.error("Add failed", error);
+      setTasks((prev) => prev.filter((t) => t.id !== tempId));
+      toast.error("Failed to create task");
     }
   };
 
