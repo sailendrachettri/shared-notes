@@ -138,6 +138,62 @@ namespace shared_notes_software_server.Controllers
         }
 
 
+        [HttpPost("update-profile")]
+        public async Task<IActionResult> UpdateUserProfile(
+    [FromBody] UpdateUserProfileRequest request)
+        {
+            if (request.UserId == Guid.Empty)
+                return BadRequest("Invalid user id.");
+
+            var setClauses = new List<string>();
+
+            var user = await _db.ExecuteQuerySingleAsync<UserFullDetailsDto>(
+                BuildQuery(request, setClauses),
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("user_id", request.UserId);
+
+                    if (request.UserName != null)
+                        cmd.Parameters.AddWithValue("user_name", request.UserName);
+
+                    if (request.UserProfileUrl != null)
+                        cmd.Parameters.AddWithValue("profile_url", request.UserProfileUrl);
+                });
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(user);
+        }
+
+        private string BuildQuery(UpdateUserProfileRequest request, List<string> setClauses)
+        {
+            if (request.UserName != null)
+                setClauses.Add("user_name = @user_name");
+
+            if (request.UserProfileUrl != null)
+                setClauses.Add("profile_url = @profile_url");
+
+            if (setClauses.Count > 0)
+                setClauses.Add("updated_at = NOW()");
+
+            if (setClauses.Count == 0)
+                throw new Exception("Nothing to update.");
+
+            return $@"
+                UPDATE public.utbl_users
+                SET {string.Join(", ", setClauses)}
+                WHERE user_id = @user_id
+                RETURNING 
+                    user_id,
+                    user_name,
+                    created_at,
+                    updated_at,
+                    profile_url;
+            ";
+        }
+
+
 
 
 

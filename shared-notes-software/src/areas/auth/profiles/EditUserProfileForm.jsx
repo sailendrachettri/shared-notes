@@ -1,24 +1,70 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
+import { axiosInstance } from "../../../api/axios";
+import {
+  FILE_UPLOAD_URL,
+  UPDATE_USER_PROFILE_URL,
+} from "../../../api/api_routes";
+import toast from "react-hot-toast";
+import { load } from "@tauri-apps/plugin-store";
 
 const EditUserProfileForm = ({
   initialName = "",
   initialImage = null,
-  onSubmit,
-  onCancel,
+  setIsEditing,
 }) => {
   const [userName, setUserName] = useState(initialName);
   const [profileImage, setProfileImage] = useState(initialImage);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      user_name: userName.trim(),
-      profile_image: profileImage || null, // File object
-    };
+    const store = await load("user-store.json", { autoSave: true });
+    const user = await store.get("user");
+    console.log(user);
 
-    onSubmit(payload);
+    if (!user?.userId) {
+      toast.error("Unauthorized, Please login and try again.");
+      return;
+    }
+
+    try {
+      let fileRes;
+
+      if (profileImage) {
+        const formData = new FormData();
+        formData.append("files", profileImage);
+        fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      const uploadedUrl = fileRes?.data[0];
+
+      const payload = {
+        UserProfileUrl: uploadedUrl || null,
+        UserId: user?.userId,
+        UserName: userName.trim() || null,
+      };
+
+      const res = await axiosInstance.post(UPDATE_USER_PROFILE_URL, payload);
+      if (res?.status == 200) {
+        console.log(res);
+        await store.set("user", {
+          isLoggedIn: true,
+          userId: res?.data?.user_id,
+          user_name: res?.data?.user_name,
+          created_at: res?.data?.created_at,
+          updated_at: res?.data?.updated_at,
+          profile_url: res?.data?.profile_url,
+        });
+        toast.success("Profile updated successfully");
+        setIsEditing(false);
+      }
+    } catch (error) {
+      toast.error("Can't update the profile at the moment");
+      console.error("Can't update the profile at the moment", error);
+    }
   };
 
   return (
@@ -50,7 +96,7 @@ const EditUserProfileForm = ({
         <div className="flex gap-2 justify-center pt-2">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={() => setIsEditing(false)}
             className="px-4 py-2 text-sm rounded-lg bg-slate-100 hover:bg-slate-200 transition"
           >
             Cancel

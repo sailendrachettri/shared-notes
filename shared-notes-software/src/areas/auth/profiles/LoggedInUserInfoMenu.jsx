@@ -23,10 +23,11 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
       const userDetails = await storeInstance.get("user");
       setStore(storeInstance);
       setUser(userDetails);
+      console.log(userDetails)
     };
 
     loadUser();
-  }, []);
+  }, [isEditing]);
 
   if (!user) return null;
 
@@ -43,18 +44,6 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
     toast.success("Logged out successfully!");
   };
 
-  const handleSave = async () => {
-    const updatedUser = {
-      ...user,
-      profile_url: previewImage || user?.profile_url,
-    };
-
-    await store.set("user", updatedUser);
-    setUser(updatedUser);
-    setIsEditing(false);
-    toast.success("Profile updated!");
-  };
-
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -68,10 +57,6 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
     setPreviewImage(imageUrl);
   };
 
-  const handleEditFormSubmit = async (details) => {
-    console.log(details);
-  };
-
   return (
     <>
       <AnimatePresence>
@@ -79,7 +64,10 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.5 }}
           exit={{ opacity: 0 }}
-          onClick={(e) => { e.stopPropagation();setShowDetailsMenu(false)}}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDetailsMenu(false);
+          }}
           className="fixed inset-0 bg-black z-40"
         />
         <motion.div
@@ -93,7 +81,12 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
             <h2 className="text-xl font-bold flex items-center gap-2">
               <FaUser /> Profile Details
             </h2>
-            <button onClick={(e) => { e.stopPropagation(); setShowDetailsMenu(false)}}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDetailsMenu(false);
+              }}
+            >
               <FaTimes size={20} />
             </button>
           </div>
@@ -105,10 +98,7 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
               <EditUserProfileForm
                 initialName={user?.user_name}
                 initialImage={null}
-                onCancel={() => setIsEditing(false)}
-                onSubmit={(payload) => {
-                  handleEditFormSubmit(payload);
-                }}
+                setIsEditing={setIsEditing}
               />
             ) : (
               <section>
@@ -154,29 +144,21 @@ const LoggedInUserInfoMenu = ({ setIsUserLoggedIn, setShowDetailsMenu }) => {
                     </h3>
                   )}
 
-                  <p className="text-xs text-slate-400 lowercase">
-                    <span className="capitalize">Since </span> {user?.created_at &&
+                  <p className="text-xs text-slate-400">
+                    <span className="capitalize">Since </span>{" "}
+                    {user?.created_at &&
                       formatePrettyDateTime(user?.created_at)}
                   </p>
                 </div>
 
                 {/* Actions */}
                 <div className="mt-5 flex flex-col gap-2">
-                  {isEditing ? (
-                    <button
-                      onClick={handleSave}
-                      className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 transition"
-                    >
-                      <FiCheck /> Save Changes
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 transition"
-                    >
-                      <FiEdit2 /> Edit Profile
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 transition"
+                  >
+                    <FiEdit2 /> Edit Profile
+                  </button>
 
                   <button
                     onClick={handleLogoutUser}

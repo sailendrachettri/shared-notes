@@ -6,6 +6,7 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 //#region common
 export const CHECK_SERVER_NETWORK = "/network/check";
 export const ADD_USER_URL = "/user/add";
+export const UPDATE_USER_PROFILE_URL = "/user/update-profile";
 export const LOGIN_USER_URL = "/user/login";
 export const GET_ALL_USERS_URL = "/user/get-all-users";
 export const FILE_UPLOAD_URL = "/upload-files";

@@ -1,5 +1,11 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class UpdateUserProfileRequest
+    {
+        public string? UserProfileUrl { get; set; }
+        public Guid UserId { get; set; }
+        public string? UserName { get; set; }
+    }
     public class AddUserModel
     {
         public string UserName { get; set; }
