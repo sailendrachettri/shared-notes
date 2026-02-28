@@ -281,7 +281,7 @@ function TaskCard({ task, overlay = false, onDelete }) {
           >
             <RiDeleteBin6Line
               size={17}
-              className="text-red-400 hover:text-red-600 cursor-pointer"
+              className="text-slate-400 hover:text-slate-600 cursor-pointer"
             />
           </span>
         </div>
@@ -295,7 +295,7 @@ function TaskCard({ task, overlay = false, onDelete }) {
           >
             <RiDeleteBin6Line
               size={17}
-              className="text-red-400 hover:text-red-600 cursor-pointer"
+              className="text-slate-400 hover:text-slate-600 cursor-pointer"
             />
           </span>
         </div>
