@@ -83,6 +83,15 @@ const customStyles = {
       borderColor: primary, // keep consistent
     },
   }),
+  menuPortal: (base) => ({
+    ...base,
+    zIndex: 9999,
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    maxHeight: "160px",
+    overflowY: "auto",
+  }),
 };
 
 /* ─── Brand tokens ──────────────────────────────────────────────── */
@@ -394,6 +403,34 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
         className="w-full hide-scrollbar rounded-xl border border-slate-200 px-3 py-2 text-[13px] resize-none focus:outline-none placeholder-slate-300"
       />
 
+      <div className="text-xs capitalize">
+        <Select
+          options={userNameOptions}
+          isMulti
+          styles={customStyles}
+          menuPortalTarget={document.body}
+          menuPosition="fixed"
+          placeholder="Select team members"
+          classNames={{
+            menuList: () => "hide-scrollbar",
+          }}
+          isOptionDisabled={() => userIds?.length >= 5}
+          onChange={(selectedOptions) => {
+            if (!selectedOptions) {
+              setUserIds([]);
+              return;
+            }
+
+            if (selectedOptions?.length <= 5) {
+              const ids = selectedOptions?.map((option) => option.value);
+              setUserIds(ids);
+            } else {
+              toast.error("You can select maximum 5 members");
+            }
+          }}
+        />
+      </div>
+
       <div className="inline-flex gap-1 my-2">
         {PRIORITIES.map((level) => {
           const isActive = priority === level;
@@ -414,29 +451,6 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
             </button>
           );
         })}
-      </div>
-
-      <div className="text-xs capitalize">
-        <Select
-          options={userNameOptions}
-          isMulti
-          styles={customStyles}
-          placeholder="Select team members"
-          isOptionDisabled={() => userIds?.length >= 3}
-          onChange={(selectedOptions) => {
-            if (!selectedOptions) {
-              setUserIds([]);
-              return;
-            }
-
-            if (selectedOptions?.length <= 3) {
-              const ids = selectedOptions?.map((option) => option.value);
-              setUserIds(ids);
-            } else {
-              toast.error("You can select maximum 3 members");
-            }
-          }}
-        />
       </div>
 
       <div className="flex items-center gap-2 text-[11px] justify-center my-4">
@@ -1021,7 +1035,7 @@ export default function WorkSpaceBoardView({
           onDragOver={onDragOver}
           onDragEnd={onDragEnd}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start pb-16">
             {columns?.map((col) => (
               <Column
                 key={col?.id}

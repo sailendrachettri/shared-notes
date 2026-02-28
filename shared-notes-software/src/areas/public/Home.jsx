@@ -138,9 +138,9 @@ const Home = ({
         </div>
 
         {/* Footer Card */}
-        <div className="px-6 py-1 ">
+        {/* <div className="px-6 py-1 ">
           <Footer />
-        </div>
+        </div> */}
       </div>
     </div>
   );
