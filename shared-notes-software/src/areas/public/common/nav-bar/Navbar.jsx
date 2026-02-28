@@ -76,7 +76,7 @@ const Navbar = ({
         <div className="flex items-center gap-2 ">
           <img src={logo} className="h-6 w-auto " />
           <span className="text-sm font-medium">
-            SharedNotes 
+            SharedNotes
             <span
               className="font-medium text-slate-800"
               data-tauri-drag-region={false}
@@ -88,12 +88,11 @@ const Navbar = ({
                   className="ps-5 capitalize"
                 >
                   {getGreeting()}, {userData?.user_name || "Guest"}
-                  {showDetailsMenu && (
-                    <LoggedInUserInfoMenu
-                      setIsUserLoggedIn={setIsUserLoggedIn}
-                      setShowDetailsMenu={setShowDetailsMenu}
-                    />
-                  )}
+                  <LoggedInUserInfoMenu
+                    setIsUserLoggedIn={setIsUserLoggedIn}
+                    setShowDetailsMenu={setShowDetailsMenu}
+                    showDetailsMenu={showDetailsMenu}
+                  />
                 </span>
               ) : (
                 <span
