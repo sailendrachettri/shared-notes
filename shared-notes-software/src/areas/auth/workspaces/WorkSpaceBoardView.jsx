@@ -264,7 +264,9 @@ function TaskCard({ task, overlay = false, onDelete }) {
                   {/* Tooltip (ONLY active hovered user) */}
                   {hoveredUserId === user?.user_id && (
                     <div className="absolute  bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-slate-900 text-white text-xs px-2 py-1 rounded-md shadow-lg pointer-events-none">
-                      <span className="first-letter:uppercase block">{user?.user_name}</span>
+                      <span className="first-letter:uppercase block">
+                        {user?.user_name}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -788,10 +790,12 @@ export default function WorkSpaceBoardView({
       priority,
       task_position: optimisticPosition,
       assignedUsers: userIds.map((id) => {
-        const user = userNameOptions.find((u) => u.value === id);
+        const fullUser = allUsers?.find((u) => u.user_id === id);
+
         return {
           user_id: id,
-          user_name: user?.label || "",
+          user_name: fullUser?.user_name || "",
+          profile_url: fullUser?.profile_url || null,
         };
       }),
     };
@@ -872,7 +876,6 @@ export default function WorkSpaceBoardView({
       );
 
       const response = res.data;
-      //
 
       if (!response.success) {
         toast.error("Failed to fetch workspace");
