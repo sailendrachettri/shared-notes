@@ -10,6 +10,7 @@ import {
   FILE_UPLOAD_URL,
   GET_ALL_USERS_URL,
   LOGIN_USER_URL,
+  VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { load } from "@tauri-apps/plugin-store";
@@ -28,6 +29,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userProfileImage, setUserProfileImage] = useState("");
+  console.log(allUsersList);
 
   const steps = ["Basic Info", "Set PIN", "Confirm PIN"];
 
@@ -336,14 +338,22 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                             {/* Avatar */}
                             <div
                               className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-semibold 
-          transition-all duration-200
-          ${
-            isSelected
-              ? "bg-primary text-white scale-110 ring-1 shadow-md"
-              : "bg-gray-400 text-white group-hover:bg-gray-600 group-hover:scale-105"
-          }`}
+                                          transition-all duration-200 overflow-hidden
+                                          ${
+                                            isSelected
+                                              ? "bg-primary text-white scale-110 ring-1 shadow-md opacity-100"
+                                              : "bg-gray-400 text-white group-hover:bg-gray-600 group-hover:scale-105 opacity-80"
+                                          }`}
                             >
-                              {user?.user_name?.charAt(0)?.toUpperCase() || "G"}
+                              {user?.profile_url ? (
+                                <img
+                                  src={`${VIEW_UPLOADED_FILE_URL}/${user?.profile_url}`}
+                                  alt={user?.user_name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                user?.user_name?.charAt(0)?.toUpperCase() || "G"
+                              )}
                             </div>
 
                             {/* Full Name */}
