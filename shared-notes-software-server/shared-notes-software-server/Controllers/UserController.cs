@@ -79,7 +79,7 @@ namespace shared_notes_software_server.Controllers
             try
             {
                 string sql = @"
-            SELECT user_id, user_password, user_name
+            SELECT user_id, user_password, user_name, created_at, updated_at, profile_url
             FROM public.utbl_users
             WHERE user_id = @user_id;
         ";
@@ -120,7 +120,10 @@ namespace shared_notes_software_server.Controllers
                     success = true,
                     message = "Login successful",
                     user_id = user.user_id,
-                    user_name = user.user_name
+                    user_name = user.user_name,
+                    created_at = user?.created_at,
+                    updated_at = user?.updated_at,
+                    profile_url = user?.profile_url
                 });
             }
             catch (Exception ex)

@@ -75,7 +75,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       });
 
       const uploadedUrl = fileRes?.data[0];
-    
 
       const payload = {
         UserName: fullName,
@@ -98,6 +97,9 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
           isLoggedIn: true,
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,
+          created_at: res?.data?.created_at,
+          updated_at: res?.data?.updated_at,
+          profile_url: res?.data?.profile_url,
         });
         setIsUserLoggedIn(true);
       } else {
@@ -122,7 +124,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-      // (res);
+      console.log(res);
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
         const store = await load("user-store.json", { autoSave: true });
@@ -130,6 +132,9 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
           isLoggedIn: true,
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,
+          created_at: res?.data?.created_at,
+          updated_at: res?.data?.updated_at,
+          profile_url: res?.data?.profile_url,
         });
         toast.success("Credential verified");
         onClose();
@@ -147,7 +152,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   useEffect(() => {
     handleGetAllUsers();
   }, [selectedUserId, submitting]);
-
 
   return (
     <AnimatePresence>

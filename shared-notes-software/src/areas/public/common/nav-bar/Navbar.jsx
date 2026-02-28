@@ -84,7 +84,7 @@ const Navbar = ({
             >
               {isUserLoggedIn ? (
                 <span
-                  onClick={() => setShowDetailsMenu((prev) => !prev)}
+                  onClick={() => setShowDetailsMenu(true)}
                   className="ps-5 capitalize"
                 >
                   {getGreeting()}, {userData?.user_name || "Guest"}
