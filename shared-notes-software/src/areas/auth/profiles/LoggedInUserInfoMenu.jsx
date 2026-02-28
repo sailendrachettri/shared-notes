@@ -163,14 +163,14 @@ const LoggedInUserInfoMenu = ({
                     <div className="mt-5 flex flex-col gap-2">
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 transition"
+                        className="flex items-center justify-center cursor-pointer gap-2 w-full py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 transition"
                       >
                         <FiEdit2 /> Edit Profile
                       </button>
 
                       <button
                         onClick={handleLogoutUser}
-                        className="flex items-center justify-center gap-2 w-full py-2 text-sm font-medium rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+                        className="flex items-center justify-center cursor-pointer gap-2 w-full py-2 text-sm font-medium rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
                       >
                         <IoPowerSharp /> Log Out
                       </button>

@@ -97,14 +97,14 @@ const EditUserProfileForm = ({
           <button
             type="button"
             onClick={() => setIsEditing(false)}
-            className="px-4 py-2 text-sm rounded-lg bg-slate-100 hover:bg-slate-200 transition"
+            className="px-4 py-2 text-sm rounded-lg bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
           >
             Cancel
           </button>
 
           <button
             type="submit"
-            className="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:opacity-90 transition"
+            className="px-4 py-2 text-sm rounded-lg bg-primary text-white hover:opacity-90 transition cursor-pointer"
           >
             Save Changes
           </button>
