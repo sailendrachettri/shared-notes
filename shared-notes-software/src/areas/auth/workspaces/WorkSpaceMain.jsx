@@ -10,7 +10,6 @@ const WorkSpaceMain = ({
   selectedWorkspaceMode,
   setRefresh,
 }) => {
-  // // // console.log({ selectedWorkspaceId });
   const [allUsers, setAllUsers] = useState([]);
 
   const handleGetAllUsers = async () => {

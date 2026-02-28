@@ -336,7 +336,7 @@ namespace shared_notes_software_server.Controllers
                         {
                             if (!string.IsNullOrEmpty(task.Title))
                             {
-                                task.Title = EncryptionHelper.Decrypt(task.Title); // 👈 your decrypt method
+                                task.Title = EncryptionHelper.Decrypt(task.Title); //  your decrypt method
                             }
                         }
                     }

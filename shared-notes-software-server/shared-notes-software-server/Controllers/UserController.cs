@@ -24,7 +24,8 @@ namespace shared_notes_software_server.Controllers
                     user_id,
                     user_name,
                     created_at,
-                    updated_at
+                    updated_at,
+                    profile_url
                   FROM public.utbl_users
                   ORDER BY user_name"
                 );

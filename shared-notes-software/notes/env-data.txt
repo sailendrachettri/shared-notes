@@ -3,3 +3,7 @@ VITE_DEV_API_URL=https://localhost:44383/api/v1
 
 VITE_ENV_TYPE=development
 # VITE_ENV_TYPE=production
+
+
+
+# check the api_routes file for image path

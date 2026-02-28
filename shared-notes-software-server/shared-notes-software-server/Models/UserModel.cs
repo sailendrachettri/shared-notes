@@ -20,6 +20,7 @@
         public string user_name { get; set; } = string.Empty;
         public DateTime created_at { get; set; }
         public DateTime? updated_at { get; set; }
+        public string? profile_url { get; set; }
     }
 
 

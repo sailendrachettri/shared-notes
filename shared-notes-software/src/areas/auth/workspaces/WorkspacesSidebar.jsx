@@ -63,7 +63,7 @@ const WorkspacesSidebar = ({
         WorkspaceId: deletionWorkspaceId,
       };
       const res = await axiosInstance.post(DELETE_WORKSPACE_URL, payload);
-      // // console.log(res);
+      
       if (res?.status == 200) {
         toast.success("Workspace deleted successful");
       }
@@ -120,7 +120,7 @@ const WorkspacesSidebar = ({
         MOVE_WORKSPACE_TO_PUBLIC_URL,
         payload,
       );
-      // // console.log(res);
+      
       if (res?.data?.status == "UPDATED" && res?.data?.success == true) {
         toast.success("Workspace is public now");
       }

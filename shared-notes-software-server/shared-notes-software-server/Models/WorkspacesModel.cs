@@ -149,6 +149,10 @@ namespace shared_notes_software_server.Models
 
         [JsonPropertyName("user_name")]
         public string UserName { get; set; } = null!;
+
+        [JsonPropertyName("profile_url")]
+        public string ProfileUrl { get; set; } = null!;
+
     }
     public class GetWorspacesRequest
     {

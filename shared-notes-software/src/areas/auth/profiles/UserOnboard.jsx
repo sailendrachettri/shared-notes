@@ -75,7 +75,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       });
 
       const uploadedUrl = fileRes?.data[0];
-      console.log(uploadedUrl);
+    
 
       const payload = {
         UserName: fullName,
@@ -148,7 +148,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
     handleGetAllUsers();
   }, [selectedUserId, submitting]);
 
-  console.log(userProfileImage);
 
   return (
     <AnimatePresence>

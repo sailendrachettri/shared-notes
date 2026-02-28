@@ -29,6 +29,7 @@ import {
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
   RENAME_WORKSPACE_URL,
   UPDATE_WORKSPACE_TASK_POSITION_URL,
+  VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
@@ -167,6 +168,7 @@ const reindexColumn = (colTasks) =>
 function TaskCard({ task, overlay = false, onDelete }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deletionWorkspaceTaskId, setDeletionWorkspaceTaskId] = useState(null);
+  const [hoveredUserId, setHoveredUserId] = useState(null);
 
   const {
     attributes,
@@ -175,10 +177,10 @@ function TaskCard({ task, overlay = false, onDelete }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id });
+  } = useSortable({ id: task?.id });
 
   const style = { transform: CSS.Transform.toString(transform), transition };
-  const p = PRIORITY[task.priority] ?? PRIORITY.Medium;
+  const p = PRIORITY[task?.priority] ?? PRIORITY.Medium;
 
   const inner = (
     <div
@@ -212,7 +214,7 @@ function TaskCard({ task, overlay = false, onDelete }) {
           className="text-[13px] font-semibold leading-snug flex-1 first-letter:capitalize pl-2"
           style={{ color: BRAND?.secondary }}
         >
-          {task.title}
+          {task?.title}
         </p>
       </div>
       <div className="flex items-center flex-wrap gap-1 justify-between px-3 mt-2">
@@ -220,40 +222,81 @@ function TaskCard({ task, overlay = false, onDelete }) {
           className="text-[9px] font-medium px-2 py-0.5 rounded-lg"
           style={{ color: p.color, background: p.bg }}
         >
-          {task.priority}
+          {task?.priority}
         </span>
+
+        {/* User profile Icons in every task */}
+        {task?.assignedUsers?.length > 0 && (
+          <div className="flex items-center mt-2 invisible group-hover:visible">
+            {task?.assignedUsers.map((user, index) => {
+              const hasImage = !!user?.profile_url;
+
+              const initials = user?.user_name
+                ?.split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2);
+
+              return (
+                <div
+                  key={user?.user_id}
+                  className="relative"
+                  style={{
+                    marginLeft: index === 0 ? 0 : -10,
+                    zIndex: hoveredUserId === user?.user_id ? 50 : index,
+                  }}
+                  onMouseEnter={() => setHoveredUserId(user?.user_id)}
+                  onMouseLeave={() => setHoveredUserId(null)}
+                >
+                  {/* Avatar */}
+                  <div className="w-8 h-8 capitalize rounded-full border-2 border-white bg-slate-200 overflow-hidden flex items-center justify-center text-[10px] font-semibold text-slate-700 shadow-sm transition-transform duration-150 hover:scale-110 cursor-pointer">
+                    {hasImage ? (
+                      <img
+                        src={`${VIEW_UPLOADED_FILE_URL}/${user?.profile_url}`}
+                        alt={user?.user_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      initials
+                    )}
+                  </div>
+
+                  {/* Tooltip (ONLY active hovered user) */}
+                  {hoveredUserId === user?.user_id && (
+                    <div className="absolute  bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-slate-900 text-white text-xs px-2 py-1 rounded-md shadow-lg pointer-events-none">
+                      <span className="first-letter:uppercase block">{user?.user_name}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
         <div className="invisible group-hover:visible lg:block hidden">
           <span
             onClick={() => {
               setDeletionWorkspaceTaskId(task?.id);
               setIsDeleteOpen(true);
             }}
-            
           >
-            <RiDeleteBin6Line size={17} className="text-red-500 hover:text-red-600 cursor-pointer" />
+            <RiDeleteBin6Line
+              size={17}
+              className="text-red-400 hover:text-red-600 cursor-pointer"
+            />
           </span>
         </div>
-        {task.assignedUsers?.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1">
-            {task.assignedUsers.map((user) => (
-              <span
-                key={user.user_id}
-                className="text-[9px] px-2 py-0.5 capitalize rounded-full bg-slate-100 text-slate-600 font-medium"
-              >
-                {user.user_name}
-              </span>
-            ))}
-          </div>
-        )}
+
         <div className="invisible group-hover:visible lg:hidden">
           <span
             onClick={() => {
               setDeletionWorkspaceTaskId(task?.id);
               setIsDeleteOpen(true);
             }}
-            className="text-[9px] cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
           >
-            Delete
+            <RiDeleteBin6Line
+              size={17}
+              className="text-red-400 hover:text-red-600 cursor-pointer"
+            />
           </span>
         </div>
       </div>
@@ -307,7 +350,7 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
   const [priority, setPriority] = useState("Medium");
   const [userIds, setUserIds] = useState([]);
 
-  // console.log(userNameOptions);
+  //
 
   const submit = () => {
     if (!title.trim()) return;
@@ -526,7 +569,7 @@ function Column({
             </div>
           ) : (
             safeTasks.map((task) => (
-              <TaskCard key={task.id} task={task} onDelete={onDelete} />
+              <TaskCard key={task?.id} task={task} onDelete={onDelete} />
             ))
           )}
 
@@ -829,7 +872,7 @@ export default function WorkSpaceBoardView({
       );
 
       const response = res.data;
-      // console.log(response);
+      //
 
       if (!response.success) {
         toast.error("Failed to fetch workspace");
@@ -849,12 +892,12 @@ export default function WorkSpaceBoardView({
       const formattedTasks = sortedApiColumns.flatMap((col) => {
         const colTasks = col?.tasks ?? [];
         return colTasks.map((task) => ({
-          id: String(task.workspace_task_id),
-          title: task.title,
+          id: String(task?.workspace_task_id),
+          title: task?.title,
           statusId: String(col?.workspace_column_id),
-          priority: mapPriority(task.priority_id),
-          task_position: task.task_position ?? 0, // ← keep DB position in state
-          assignedUsers: task.assigned_users ?? [],
+          priority: mapPriority(task?.priority_id),
+          task_position: task?.task_position ?? 0, // ← keep DB position in state
+          assignedUsers: task?.assigned_users ?? [],
         }));
       });
 
