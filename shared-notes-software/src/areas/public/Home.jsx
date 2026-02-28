@@ -2,15 +2,9 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Playground from "./components/Playground";
 import Footer from "./common/Footer";
-import CreaterNewNotesForm from "./common/CreaterNewNotesForm";
 import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
 import CreateNewComponent from "./common/CreateNewComponent";
-import { LuRefreshCw } from "react-icons/lu";
-import { TbAbc } from "react-icons/tb";
-import { IoTimerOutline } from "react-icons/io5";
-import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
-import { HiOutlineSearch } from "react-icons/hi";
-import { useRef } from "react";
+
 import SearchSection from "./common/SearchSection";
 import InfoScreen from "../../utils/info-screen/InfoScreen";
 

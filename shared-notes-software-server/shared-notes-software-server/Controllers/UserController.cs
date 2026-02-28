@@ -47,7 +47,7 @@ namespace shared_notes_software_server.Controllers
             string hashedPassword = PasswordHelper.HashPassword(request.UserPassword);
 
             // 2. Call PostgreSQL function (returns JSON)
-            string sql = "SELECT public.add_user(@user_name_i, @user_password_i);";
+            string sql = "SELECT public.add_user(@user_name_i, @user_password_i, @profile_url);";
 
             string jsonResult = await _db.ExecuteScalarAsync<string>(
                 sql,
@@ -55,6 +55,7 @@ namespace shared_notes_software_server.Controllers
                 {
                     cmd.Parameters.AddWithValue("user_name_i", request.UserName);
                     cmd.Parameters.AddWithValue("user_password_i", hashedPassword);
+                    cmd.Parameters.AddWithValue("profile_url", request.ProfileUrl);
                 }
             );
 

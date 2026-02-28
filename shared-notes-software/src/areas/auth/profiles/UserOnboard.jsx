@@ -7,15 +7,16 @@ import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { axiosInstance } from "../../../api/axios";
 import {
   ADD_USER_URL,
+  FILE_UPLOAD_URL,
   GET_ALL_USERS_URL,
   LOGIN_USER_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import { load } from "@tauri-apps/plugin-store";
-import { FaUserPlus, FaSignInAlt } from "react-icons/fa";
 import AuthToggle from "./AuthToggle";
 import { useEffect } from "react";
 import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
+import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
 
 export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");
@@ -26,8 +27,9 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [selectedType, setSelectedType] = useState("signup");
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [userProfileImage, setUserProfileImage] = useState("");
 
-  const steps = ["Full Name", "Set PIN", "Confirm PIN"];
+  const steps = ["Basic Info", "Set PIN", "Confirm PIN"];
 
   const handleNext = () => {
     if (step === 1 && !fullName.trim()) {
@@ -66,10 +68,22 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       if (confirmPin.length !== 4) return toast.error("PIN must be 4 digits");
       if (pin !== confirmPin) return toast.error("PINs do not match");
 
-      const payload = { UserName: fullName, UserPassword: pin?.toString() };
+      const formData = new FormData();
+      formData.append("files", userProfileImage);
+      let fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const uploadedUrl = fileRes?.data[0];
+      console.log(uploadedUrl);
+
+      const payload = {
+        UserName: fullName,
+        UserPassword: pin?.toString(),
+        ProfileUrl: uploadedUrl || "",
+      };
 
       const res = await axiosInstance.post(ADD_USER_URL, payload);
-      // (res);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setIsUserLoggedIn(true);
@@ -133,6 +147,8 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   useEffect(() => {
     handleGetAllUsers();
   }, [selectedUserId, submitting]);
+
+  console.log(userProfileImage);
 
   return (
     <AnimatePresence>
@@ -203,6 +219,14 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
                         maxLength={10}
                         className="w-full pl-3 pr-3 py-2 border capitalize border-slate-200 rounded-2xl focus:outline-none focus:ring-1 focus:ring-primary"
                       />
+
+                      {fullName?.length >= 3 && (
+                        <ProfileImageUpload
+                          setUserProfileImage={setUserProfileImage}
+                          userProfileImage={userProfileImage}
+                        />
+                      )}
+
                       <div className="flex justify-between mt-4">
                         <div /> {/* Empty to align next button right */}
                         {fullName?.length >= 3 && (

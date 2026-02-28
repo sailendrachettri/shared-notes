@@ -36,6 +36,7 @@ import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import WorkspaceStats from "./WorkspaceStats";
 
 import Select from "react-select";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const primary = "#d25564";
 
@@ -227,9 +228,9 @@ function TaskCard({ task, overlay = false, onDelete }) {
               setDeletionWorkspaceTaskId(task?.id);
               setIsDeleteOpen(true);
             }}
-            className="text-[9px] cursor-pointer px-2 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-full"
+            
           >
-            Delete
+            <RiDeleteBin6Line size={17} className="text-red-500 hover:text-red-600 cursor-pointer" />
           </span>
         </div>
         {task.assignedUsers?.length > 0 && (
