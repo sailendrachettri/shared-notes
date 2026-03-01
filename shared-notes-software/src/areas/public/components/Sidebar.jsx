@@ -219,8 +219,7 @@ const Sidebar = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  console.log(privateNotes?.length);
-  console.log(publicNotes?.length);
+  
 
   return (
     <>

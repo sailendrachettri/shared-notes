@@ -20,7 +20,7 @@ const InfoScreen = () => {
 
       {/* Main Heading */}
       <h1 className="text-lg font-bold text-gray-600 mb-4">
-        Shared Notes
+        SharedNotes
       </h1>
 
       {/* Short Keywords */}

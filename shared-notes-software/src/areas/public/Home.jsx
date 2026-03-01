@@ -7,6 +7,23 @@ import CreateNewComponent from "./common/CreateNewComponent";
 
 import SearchSection from "./common/SearchSection";
 import InfoScreen from "../../utils/info-screen/InfoScreen";
+import { BiBarChartAlt2, BiBookAlt } from "react-icons/bi";
+import { BsWindowSidebar } from "react-icons/bs";
+import { TbNotification } from "react-icons/tb";
+import { BsChatSquareDots } from "react-icons/bs";
+import { RiNotificationLine } from "react-icons/ri";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { BsUiChecksGrid } from "react-icons/bs";
+import { HiOutlineViewGrid } from "react-icons/hi";
+import { MdOutlineNotificationsNone } from "react-icons/md";
+import { IoHomeOutline } from "react-icons/io5";
+import { GrNotification } from "react-icons/gr";
+
+
+
+
+
+
 
 const Home = ({
   toggleSidebar,
@@ -14,8 +31,9 @@ const Home = ({
   setAutoFetchStatus,
   isUserLoggedIn,
   selectedWorkspaceId,
-   setSelectedWorkspaceId,
-   selectedWorkspaceMode, setSelectedWordspaceMode
+  setSelectedWorkspaceId,
+  selectedWorkspaceMode,
+  setSelectedWordspaceMode,
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -32,115 +50,146 @@ const Home = ({
   const [publicNotes, setPublicNotes] = useState(null);
   const [privateNotes, setPrivateNotes] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
-
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
-
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
-
+  const [selectedMiniTab, setSelectedMiniTab] = useState("notes-workspaces");
 
   return (
     <div className="h-screen bg-gray-100 p-3">
       {/* Outer Card Container */}
-      <div className="h-full flex flex-col gap-3">
-        {/* Main Section */}
-        <div className="flex flex-1 gap-3 overflow-hidden ">
-          {/* Sidebar Card */}
-          <section className={`${toggleSidebar ? "hidden" : "visible"} mb-10`}>
-            <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
-              {/* Search */}
-              <div className="mb-3 mt-1">
-                <SearchSection
-                  setSearchText={setSearchText}
-                  setSortBy={setSortBy}
-                  setSortDirection={setSortDirection}
-                  sortBy={sortBy}
-                  sortDirection={sortDirection}
-                  setRefresh={setRefresh}
-                />
-              </div>
-              <CreateNewComponent
-                setRefresh={setRefresh}
-                setSelectedNoteId={setSelectedNoteId}
-                setCurrentNotesId={setCurrentNotesId}
-                setNoteHeading={setNoteHeading}
-                setActive={setActive}
-                setSelectedNoteType={setSelectedNoteType}
-                isUserLoggedIn={isUserLoggedIn}
-                setIsSubPage={setIsSubPage}
-              />
+      <div className="h-full flex flex-row gap-3">
+        <section className="max-w-16 mb-10 bg-white rounded-md px-2.5">
+          <div
+            onClick={() => {
+              setSelectedMiniTab("home");
+            }}
+            className={`${selectedMiniTab == "home" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+          >
+            <IoHomeOutline size={24} />
+          </div>
+          <div
+            onClick={() => {
+              setSelectedMiniTab("notes-workspaces");
+            }}
+            className={`${selectedMiniTab == "notes-workspaces" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+          >
+            <HiOutlineViewGrid size={24} />
+          </div>
+          <div
+            onClick={() => {
+              setSelectedMiniTab("remainders");
+            }}
+            className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+          >
+            <GrNotification size={24} />
+          </div>
+        </section>
 
-              <div className="flex-1 overflow-y-auto hide-scrollbar">
-                <Sidebar
-                  searchText={searchText}
-                  refresh={refresh}
+        {/* Main Section */}
+        {selectedMiniTab == "notes-workspaces" && (
+          <div className="flex flex-1 gap-3 overflow-hidden ">
+            {/* Sidebar Card */}
+            <section
+              className={`${toggleSidebar ? "hidden" : "visible"} mb-10`}
+            >
+              <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
+                {/* Search */}
+                <div className="mb-3 mt-1">
+                  <SearchSection
+                    setSearchText={setSearchText}
+                    setSortBy={setSortBy}
+                    setSortDirection={setSortDirection}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                    setRefresh={setRefresh}
+                  />
+                </div>
+                <CreateNewComponent
                   setRefresh={setRefresh}
-                  sidebarItems={sidebarItems}
-                  setSidebarItems={setSidebarItems}
-                  selectedNoteId={selectedNoteId}
-                  setNoteHeading={setNoteHeading}
                   setSelectedNoteId={setSelectedNoteId}
                   setCurrentNotesId={setCurrentNotesId}
-                  setIsSubPage={setIsSubPage}
-                  setSelectedNoteType={setSelectedNoteType}
-                  selectedNoteType={selectedNoteType}
-                  active={active}
+                  setNoteHeading={setNoteHeading}
                   setActive={setActive}
-                  sortBy={sortBy}
-                  sortDirection={sortDirection}
-                  autoFetchStatus={autoFetchStatus}
-                  setAutoFetchStatus={setAutoFetchStatus}
+                  setSelectedNoteType={setSelectedNoteType}
                   isUserLoggedIn={isUserLoggedIn}
-                  publicNotes={publicNotes}
-                  setPublicNotes={setPublicNotes}
-                  privateNotes={privateNotes}
-                  setPrivateNotes={setPrivateNotes}
-                  setSelectedTab={setSelectedTab}
-                  setSelectedWorkspaceId={setSelectedWorkspaceId}
-                  setSelectedWorkspaceName={setSelectedWorkspaceName}
-                  setSelectedWordspaceMode={setSelectedWordspaceMode}
-                  setSelectedNotesMode={setSelectedNotesMode}
+                  setIsSubPage={setIsSubPage}
                 />
+
+                <div className="flex-1 overflow-y-auto hide-scrollbar">
+                  <Sidebar
+                    searchText={searchText}
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                    sidebarItems={sidebarItems}
+                    setSidebarItems={setSidebarItems}
+                    selectedNoteId={selectedNoteId}
+                    setNoteHeading={setNoteHeading}
+                    setSelectedNoteId={setSelectedNoteId}
+                    setCurrentNotesId={setCurrentNotesId}
+                    setIsSubPage={setIsSubPage}
+                    setSelectedNoteType={setSelectedNoteType}
+                    selectedNoteType={selectedNoteType}
+                    active={active}
+                    setActive={setActive}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                    autoFetchStatus={autoFetchStatus}
+                    setAutoFetchStatus={setAutoFetchStatus}
+                    isUserLoggedIn={isUserLoggedIn}
+                    publicNotes={publicNotes}
+                    setPublicNotes={setPublicNotes}
+                    privateNotes={privateNotes}
+                    setPrivateNotes={setPrivateNotes}
+                    setSelectedTab={setSelectedTab}
+                    setSelectedWorkspaceId={setSelectedWorkspaceId}
+                    setSelectedWorkspaceName={setSelectedWorkspaceName}
+                    setSelectedWordspaceMode={setSelectedWordspaceMode}
+                    setSelectedNotesMode={setSelectedNotesMode}
+                  />
+                </div>
               </div>
+            </section>
+
+            {/* Content Card */}
+            <div className="flex-1 rounded-md overflow-y-auto max-h-[93vh] hide-scrollbar mb-10">
+              {selectedTab == "notes" && (
+                <Playground
+                  selectedNoteId={selectedNoteId}
+                  noteHeading={noteHeading}
+                  setRefresh={setRefresh}
+                  currentNotesId={currentNotesId}
+                  setCurrentNotesId={setCurrentNotesId}
+                  isSubPage={isSubPage}
+                  selectedNoteType={selectedNoteType}
+                  refresh={refresh}
+                  selectedNotesMode={selectedNotesMode}
+                />
+              )}
+
+              {selectedTab == "workspaces" && selectedWorkspaceId && (
+                <WorkSpaceMain
+                  setRefresh={setRefresh}
+                  selectedWorkspaceId={selectedWorkspaceId}
+                  selectedWorkspaceName={selectedWorkspaceName}
+                  selectedWorkspaceMode={selectedWorkspaceMode}
+                />
+              )}
+
+              {!selectedNoteId && !selectedWorkspaceId && (
+                <section>
+                  <InfoScreen />
+                </section>
+              )}
             </div>
-          </section>
-
-          {/* Content Card */}
-          <div className="flex-1 rounded-md overflow-y-auto max-h-[93vh] hide-scrollbar mb-10">
-            {selectedTab == "notes" && (
-              <Playground
-                selectedNoteId={selectedNoteId}
-                noteHeading={noteHeading}
-                setRefresh={setRefresh}
-                currentNotesId={currentNotesId}
-                setCurrentNotesId={setCurrentNotesId}
-                isSubPage={isSubPage}
-                selectedNoteType={selectedNoteType}
-                refresh={refresh}
-                selectedNotesMode={selectedNotesMode}
-              />
-            )}
-
-            {selectedTab == "workspaces" && selectedWorkspaceId && (
-              <WorkSpaceMain
-                setRefresh={setRefresh}
-                selectedWorkspaceId={selectedWorkspaceId}
-                selectedWorkspaceName={selectedWorkspaceName}
-                selectedWorkspaceMode={selectedWorkspaceMode}
-              />
-            )}
-
-            {!selectedNoteId && !selectedWorkspaceId && (
-              <section>
-                <InfoScreen />
-              </section>
-            )}
           </div>
-        </div>
+        )}
 
-        {/* Footer Card */}
-        {/* <div className="px-6 py-1 ">
-          <Footer />
-        </div> */}
+        {selectedMiniTab == "remainders" && (
+          <div>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus,
+            praesentium.
+          </div>
+        )}
       </div>
     </div>
   );
