@@ -20,15 +20,15 @@ const CategoryHeading = ({
 
         <section>
           <div className="group-hover:hidden">
-            <span
+           {size > 0 && <span
               className="inline-flex items-center justify-center 
                    min-w-5 h-5 px-1.5
                    bg-primary/5 text-primary/60
                    text-[10px] font-semibold 
                    rounded-full"
             >
-              {size > 0 && size}
-            </span>
+              { size}
+            </span>}
           </div>
 
           <div

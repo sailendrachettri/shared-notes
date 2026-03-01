@@ -320,7 +320,7 @@ const Sidebar = ({
               {/* Notes */}
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {isUserLoggedIn && privateNotes?.length > 0 && (
-                   <CategoryHeading
+                  <CategoryHeading
                     OnclickOne={null}
                     OnclickTwo={() => setTogglePrivate((prev) => !prev)}
                     categoryHeaing={"Private"}
@@ -468,6 +468,7 @@ const Sidebar = ({
                                     </span>
                                   </div>
                                   <span
+                                    className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "visible" : "invisible"}`}
                                     onClick={() => {
                                       setDeleteItemId(sub?.sub_page_id);
                                       setIsOpen(false);
@@ -536,13 +537,13 @@ const Sidebar = ({
                 <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
                   {publicNotes?.length > 0 && (
                     <CategoryHeading
-                    OnclickOne={null}
-                    OnclickTwo={() => setTogglePublic((prev) => !prev)}
-                    categoryHeaing={"Shared"}
-                    toggle={togglePublic}
-                    size={publicNotes?.length || 0}
-                    key={3}
-                  />
+                      OnclickOne={null}
+                      OnclickTwo={() => setTogglePublic((prev) => !prev)}
+                      categoryHeaing={"Shared"}
+                      toggle={togglePublic}
+                      size={publicNotes?.length || 0}
+                      key={3}
+                    />
                     // <div className="flex flex-nowrap justify-between items-center">
                     //   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
                     //     Shared
@@ -680,6 +681,7 @@ const Sidebar = ({
                                     </span>
                                   </div>
                                   <span
+                                    className={`${active === sub?.sub_page_id && selectedNoteType == "sub-page" ? "visible" : "invisible"}`}
                                     onClick={() => {
                                       setDeleteItemId(sub?.sub_page_id);
                                       setIsOpen(false);
