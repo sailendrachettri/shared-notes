@@ -87,7 +87,7 @@ const EditUserProfileForm = ({
           placeholder="Enter your name"
           className="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm capitalize focus:outline-none focus:border-primary"
           required
-          maxLength={12}
+          maxLength={10}
         />
       </div>
 
