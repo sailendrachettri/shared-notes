@@ -61,7 +61,6 @@ const customStyles = {
   multiValueLabel: (provided) => ({
     ...provided,
     color: primary,
-    fontWeight: 500,
   }),
 
   multiValueRemove: (provided) => ({
