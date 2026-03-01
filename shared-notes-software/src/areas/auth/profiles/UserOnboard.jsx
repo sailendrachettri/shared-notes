@@ -108,7 +108,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         toast.error("Can't create user at the moment");
       }
 
-      // ("Final Payload:", payload);
+      
     } catch (error) {
       console.error("not able to create user", error);
       toast.error("Can't create at the moment");
