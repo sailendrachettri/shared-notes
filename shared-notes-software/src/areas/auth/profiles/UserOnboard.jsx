@@ -29,7 +29,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userProfileImage, setUserProfileImage] = useState("");
-  console.log(allUsersList);
+  
 
   const steps = ["Basic Info", "Set PIN", "Confirm PIN"];
 
@@ -126,7 +126,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-      console.log(res);
+      
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
         const store = await load("user-store.json", { autoSave: true });

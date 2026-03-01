@@ -21,7 +21,7 @@ const EditUserProfileForm = ({
 
     const store = await load("user-store.json", { autoSave: true });
     const user = await store.get("user");
-    console.log(user);
+  
 
     if (!user?.userId) {
       toast.error("Unauthorized, Please login and try again.");
@@ -49,7 +49,7 @@ const EditUserProfileForm = ({
 
       const res = await axiosInstance.post(UPDATE_USER_PROFILE_URL, payload);
       if (res?.status == 200) {
-        console.log(res);
+
         await store.set("user", {
           isLoggedIn: true,
           userId: res?.data?.user_id,

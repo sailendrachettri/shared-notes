@@ -27,7 +27,6 @@ const LoggedInUserInfoMenu = ({
       const userDetails = await storeInstance.get("user");
       setStore(storeInstance);
       setUser(userDetails);
-      console.log(userDetails);
     };
 
     loadUser();
