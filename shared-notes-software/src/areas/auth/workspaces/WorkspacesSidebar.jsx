@@ -40,7 +40,6 @@ const WorkspacesSidebar = ({
     useState(false);
   const [selectedWorkspaceIdMoveToPublic, setSelectedWorkspaceIdMoveToPublic] =
     useState(null);
-    
 
   const handleSelectWorkspace = (item) => {
     setSelectedWordspaceMode(item?.is_private ? "private" : "public");
@@ -63,7 +62,7 @@ const WorkspacesSidebar = ({
         WorkspaceId: deletionWorkspaceId,
       };
       const res = await axiosInstance.post(DELETE_WORKSPACE_URL, payload);
-      
+
       if (res?.status == 200) {
         toast.success("Workspace deleted successful");
       }
@@ -91,13 +90,12 @@ const WorkspacesSidebar = ({
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_WORKSPACES_LIST_URL, payload);
-      
+
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateWorkspaces(res?.data?.data?.private || null);
         setPublicWorkspaces(res?.data?.data?.public || null);
         setWorkspaceLength(
-          res?.data?.data?.public?.length ||
-            res?.data?.data?.private?.length ||
+          res?.data?.data?.public?.length + res?.data?.data?.private?.length ||
             0,
         );
       }
@@ -120,7 +118,7 @@ const WorkspacesSidebar = ({
         MOVE_WORKSPACE_TO_PUBLIC_URL,
         payload,
       );
-      
+
       if (res?.data?.status == "UPDATED" && res?.data?.success == true) {
         toast.success("Workspace is public now");
       }

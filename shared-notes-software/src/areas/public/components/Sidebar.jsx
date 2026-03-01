@@ -10,12 +10,12 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
 import { BiBookAlt } from "react-icons/bi";
-import { LuBadgePlus } from "react-icons/lu";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import { load } from "@tauri-apps/plugin-store";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
 import WorkspacesSidebar from "../../auth/workspaces/WorkspacesSidebar";
 import { IoIosArrowUp } from "react-icons/io";
+import CategoryHeading from "../../../reusable/headings/CategoryHeading";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -127,8 +127,6 @@ const Sidebar = ({
   };
 
   const handleSelectNoteFromSubPage = (subNote) => {
-    
-    
     setCurrentNotesId(subNote?.notes_id);
     setSelectedNoteType("sub-page");
     setOpenMenu(null);
@@ -170,7 +168,6 @@ const Sidebar = ({
         NoteId: selectedNoteId,
       };
       const res = await axiosInstance.post(ADD_SUB_PAGE_DETAILS_URL, payload);
-      
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setSelectedNoteId(res?.data?.sub_page_id);
@@ -222,6 +219,9 @@ const Sidebar = ({
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  console.log(privateNotes?.length);
+  console.log(publicNotes?.length);
+
   return (
     <>
       <aside className="h-full flex flex-col mt-2">
@@ -245,31 +245,53 @@ const Sidebar = ({
 
             <section className="h-full w-full group">
               {/* Workspaces */}
-              <section>
+              <section className="pb-3">
                 {workspaceLength > 0 && (
-                  <div className="flex flex-nowrap justify-between items-center">
-                    <div
-                      onClick={() => {
-                        setSelectedTab("workspaces");
-                      }}
-                      className={`ps-1 pb-3 text-sm font-semibold text-slate-600`}
-                    >
-                      Workspaces
-                    </div>
+                  <CategoryHeading
+                    OnclickOne={() => setSelectedTab("workspaces")}
+                    OnclickTwo={() => setToggleWorkspace((prev) => !prev)}
+                    categoryHeaing={"Workspaces"}
+                    toggle={toggleWorkspace}
+                    size={workspaceLength}
+                    key={1}
+                  />
+                  // <div className="flex flex-nowrap justify-between items-center min-h-7">
+                  //   <div
+                  //     onClick={() => {
+                  //       setSelectedTab("workspaces");
+                  //     }}
+                  //     className={`ps-1 text-sm font-semibold text-slate-600`}
+                  //   >
+                  //     Workspaces
+                  //   </div>
 
-                    <div
-                      className="invisible group-hover:visible text-slate-400"
-                      onClick={() => {
-                        setToggleWorkspace((prev) => !prev);
-                      }}
-                    >
-                      {toggleWorkspace ? (
-                        <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                      ) : (
-                        <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                      )}
-                    </div>
-                  </div>
+                  //   <section>
+                  //     <div className="group-hover:hidden">
+                  //       <span
+                  //         className="inline-flex items-center justify-center
+                  //  min-w-[20px] h-5 px-1.5
+                  //  bg-primary/10 text-primary
+                  //  text-[10px] font-semibold
+                  //  rounded-full"
+                  //       >
+                  //         {publicNotes?.length}
+                  //       </span>
+                  //     </div>
+
+                  //     <div
+                  //       className="hidden group-hover:block text-slate-400"
+                  //       onClick={() => {
+                  //         setToggleWorkspace((prev) => !prev);
+                  //       }}
+                  //     >
+                  //       {toggleWorkspace ? (
+                  //         <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
+                  //       ) : (
+                  //         <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
+                  //       )}
+                  //     </div>
+                  //   </section>
+                  // </div>
                 )}
 
                 {toggleWorkspace && (
@@ -298,23 +320,32 @@ const Sidebar = ({
               {/* Notes */}
               <div className="flex-1 overflow-y-auto space-y-1 min-h-[80vh] pb-10">
                 {isUserLoggedIn && privateNotes?.length > 0 && (
-                  <div className="flex flex-nowrap justify-between items-center">
-                    <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                      Private
-                    </div>
-                    <div
-                      className="invisible group-hover:visible text-slate-400"
-                      onClick={() => {
-                        setTogglePrivate((prev) => !prev);
-                      }}
-                    >
-                      {togglePrivate ? (
-                        <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                      ) : (
-                        <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                      )}
-                    </div>
-                  </div>
+                   <CategoryHeading
+                    OnclickOne={null}
+                    OnclickTwo={() => setTogglePrivate((prev) => !prev)}
+                    categoryHeaing={"Private"}
+                    toggle={togglePrivate}
+                    size={privateNotes?.length || 0}
+                    key={2}
+                  />
+
+                  // <div className="flex flex-nowrap justify-between items-center">
+                  //   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                  //     Private
+                  //   </div>
+                  //   <div
+                  //     className="invisible group-hover:visible text-slate-400"
+                  //     onClick={() => {
+                  //       setTogglePrivate((prev) => !prev);
+                  //     }}
+                  //   >
+                  //     {togglePrivate ? (
+                  //       <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
+                  //     ) : (
+                  //       <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
+                  //     )}
+                  //   </div>
+                  // </div>
                 )}
 
                 {/* Private Notes */}
@@ -504,23 +535,31 @@ const Sidebar = ({
                 {/* Shared notes */}
                 <section className={`${isUserLoggedIn ? "mt-3" : ""}`}>
                   {publicNotes?.length > 0 && (
-                    <div className="flex flex-nowrap justify-between items-center">
-                      <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                        Shared
-                      </div>
-                      <div
-                        className="invisible group-hover:visible text-slate-400"
-                        onClick={() => {
-                          setTogglePublic((prev) => !prev);
-                        }}
-                      >
-                        {togglePublic ? (
-                          <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                        ) : (
-                          <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                        )}
-                      </div>
-                    </div>
+                    <CategoryHeading
+                    OnclickOne={null}
+                    OnclickTwo={() => setTogglePublic((prev) => !prev)}
+                    categoryHeaing={"Shared"}
+                    toggle={togglePublic}
+                    size={publicNotes?.length || 0}
+                    key={3}
+                  />
+                    // <div className="flex flex-nowrap justify-between items-center">
+                    //   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
+                    //     Shared
+                    //   </div>
+                    //   <div
+                    //     className="invisible group-hover:visible text-slate-400"
+                    //     onClick={() => {
+                    //       setTogglePublic((prev) => !prev);
+                    //     }}
+                    //   >
+                    //     {togglePublic ? (
+                    //       <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
+                    //     ) : (
+                    //       <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
+                    //     )}
+                    //   </div>
+                    // </div>
                   )}
 
                   {togglePublic && (

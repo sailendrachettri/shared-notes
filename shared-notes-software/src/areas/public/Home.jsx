@@ -45,7 +45,7 @@ const Home = ({
         {/* Main Section */}
         <div className="flex flex-1 gap-3 overflow-hidden ">
           {/* Sidebar Card */}
-          <section className={`${toggleSidebar ? "hidden" : "visible"} mb-1`}>
+          <section className={`${toggleSidebar ? "hidden" : "visible"} mb-10`}>
             <div className="w-72 h-full  bg-white rounded-md px-4 flex flex-col hidden md:flex">
               {/* Search */}
               <div className="mb-3 mt-1">
@@ -105,7 +105,7 @@ const Home = ({
           </section>
 
           {/* Content Card */}
-          <div className="flex-1 rounded-md overflow-y-auto hide-scrollbar mb-1">
+          <div className="flex-1 rounded-md overflow-y-auto max-h-[93vh] hide-scrollbar mb-10">
             {selectedTab == "notes" && (
               <Playground
                 selectedNoteId={selectedNoteId}
