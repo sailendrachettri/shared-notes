@@ -1,27 +1,14 @@
 import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Playground from "./components/Playground";
-import Footer from "./common/Footer";
 import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
 import CreateNewComponent from "./common/CreateNewComponent";
-
 import SearchSection from "./common/SearchSection";
 import InfoScreen from "../../utils/info-screen/InfoScreen";
-import { BiBarChartAlt2, BiBookAlt } from "react-icons/bi";
-import { BsWindowSidebar } from "react-icons/bs";
-import { TbNotification } from "react-icons/tb";
-import { BsChatSquareDots } from "react-icons/bs";
-import { RiNotificationLine } from "react-icons/ri";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { BsUiChecksGrid } from "react-icons/bs";
 import { HiOutlineViewGrid } from "react-icons/hi";
-import { MdOutlineNotificationsNone } from "react-icons/md";
-import { IoHomeOutline } from "react-icons/io5";
-import { GrNotification } from "react-icons/gr";
 import { TbMailPlus } from "react-icons/tb";
 import { BiBell } from "react-icons/bi";
-
-
+import { TiHomeOutline } from "react-icons/ti";
 
 const Home = ({
   toggleSidebar,
@@ -63,7 +50,7 @@ const Home = ({
             }}
             className={`${selectedMiniTab == "home" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
           >
-            <IoHomeOutline size={24} />
+            <TiHomeOutline size={24} />
           </div>
           <div
             onClick={() => {
