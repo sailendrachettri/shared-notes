@@ -9,6 +9,7 @@ import { HiOutlineViewGrid } from "react-icons/hi";
 import { TbMailPlus } from "react-icons/tb";
 import { BiBell } from "react-icons/bi";
 import { TiHomeOutline } from "react-icons/ti";
+import DashboardMain from "../dashboard/DashboardMain";
 
 const Home = ({
   toggleSidebar,
@@ -46,9 +47,9 @@ const Home = ({
         <section className="max-w-16 mb-10 bg-white rounded-md px-2.5">
           <div
             onClick={() => {
-              setSelectedMiniTab("home");
+              setSelectedMiniTab("dashboard");
             }}
-            className={`${selectedMiniTab == "home" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+            className={`${selectedMiniTab == "dashboard" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
           >
             <TiHomeOutline size={24} />
           </div>
@@ -78,8 +79,12 @@ const Home = ({
           </div>
         </section>
 
-        {selectedMiniTab == "home" && <div>welcome home</div>}
-        
+        {selectedMiniTab == "dashboard" && (
+          <div className="w-full">
+            <DashboardMain />
+          </div>
+        )}
+
         {selectedMiniTab == "notes-workspaces" && (
           <div className="flex flex-1 gap-3 overflow-hidden ">
             {/* Sidebar Card */}
