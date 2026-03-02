@@ -2,9 +2,9 @@ import DashboardHead from "./DashboardHead";
 import { useState } from "react";
 import { load } from "@tauri-apps/plugin-store";
 import { useEffect } from "react";
-import DashboardProgressAndUpcoming from "./DashboardProgressAndUpcoming";
 import OverviewDashboard from "./OverviewDashboard";
 import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
+import ActiveProjectsSection from "./ActiveProjectsSection";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -31,7 +31,15 @@ const DashboardMain = () => {
 
           <OverviewDashboard />
 
-          <DashboardProgressAndUpcoming />
+          <div className="grid grid-cols-6 gap-6 w-full">
+            <div className="col-span-4">
+              <ActiveProjectsSection />
+            </div>
+
+            <div className="col-span-2">
+              <UpcomingRemindersOverview />
+            </div>
+          </div>
         </div>
       </section>
     </>

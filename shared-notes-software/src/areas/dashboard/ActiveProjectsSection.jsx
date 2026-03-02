@@ -1,6 +1,4 @@
-import React from "react";
 import { FiTrendingUp, FiFolder } from "react-icons/fi";
-import { BiBarChartAlt2 } from "react-icons/bi";
 
 const ActiveProjectsSection = () => {
   // Dummy Data
