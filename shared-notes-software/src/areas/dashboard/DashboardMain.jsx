@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import OverviewDashboard from "./OverviewDashboard";
 import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
 import ActiveProjectsSection from "./ActiveProjectsSection";
+import RecentNotesSection from "./RecentNotesSection";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -25,7 +26,7 @@ const DashboardMain = () => {
 
   return (
     <>
-      <section className="bg-white rounded-md p-6 h-full w-full">
+      <section className="bg-white rounded-md p-6 h-full w-full ">
         <div className="flex flex-col gap-6">
           <DashboardHead userData={userData} />
 
@@ -40,6 +41,8 @@ const DashboardMain = () => {
               <UpcomingRemindersOverview />
             </div>
           </div>
+
+          <RecentNotesSection />
         </div>
       </section>
     </>
