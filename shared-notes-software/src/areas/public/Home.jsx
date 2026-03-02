@@ -18,10 +18,8 @@ import { HiOutlineViewGrid } from "react-icons/hi";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { IoHomeOutline } from "react-icons/io5";
 import { GrNotification } from "react-icons/gr";
-
-
-
-
+import { TbMailPlus } from "react-icons/tb";
+import { BiBell } from "react-icons/bi";
 
 
 
@@ -81,11 +79,20 @@ const Home = ({
             }}
             className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
           >
-            <GrNotification size={24} />
+            <TbMailPlus size={24} />
+          </div>
+          <div
+            onClick={() => {
+              setSelectedMiniTab("notifications");
+            }}
+            className={`${selectedMiniTab == "notifications" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+          >
+            <BiBell size={24} />
           </div>
         </section>
 
-        {/* Main Section */}
+        {selectedMiniTab == "home" && <div>welcome home</div>}
+        
         {selectedMiniTab == "notes-workspaces" && (
           <div className="flex flex-1 gap-3 overflow-hidden ">
             {/* Sidebar Card */}
