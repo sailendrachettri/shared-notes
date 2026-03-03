@@ -3,6 +3,11 @@ export const GET_NOTES__DETAILS_URL = "/notes/notes-details";
 export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 //#endregion
 
+// #region Reports
+export const GET_USER_DASHBOARD_REPORTS_URL = '/reports/user/dashboard'
+
+// #endregion
+
 //#region common
 export const CHECK_SERVER_NETWORK = "/network/check";
 export const ADD_USER_URL = "/user/add";

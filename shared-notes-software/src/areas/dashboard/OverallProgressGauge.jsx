@@ -1,8 +1,8 @@
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect } from "react";
 
-const OverallProgressGauge = ({ submissionValue = 89 }) => {
-  const progress = Math.min(Math.max(submissionValue, 0), 100);
+const OverallProgressGauge = ({ progressValue = 0 }) => {
+  const progress = Math.min(Math.max(progressValue, 0), 100);
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => Math.round(latest));
 
@@ -120,11 +120,11 @@ const OverallProgressGauge = ({ submissionValue = 89 }) => {
             className="absolute bottom-0 flex justify-center origin-bottom"
             style={{ width: 2, height: radius - 10 }}
           >
-            <div className="w-[2px] h-full bg-primary rounded-full shadow-lg shadow-primary/50"></div>
+            <div className={`${progress > 0 ? 'bg-primary': 'bg-slate-200'} w-0.5 h-full rounded-full shadow-lg shadow-primary/50`}></div>
           </motion.div>
 
           {/* Center pivot */}
-          <div className="absolute bottom-0 w-4 h-4 bg-primary rounded-full border-4 border-gray-800 shadow-lg"></div>
+          <div className={`${progress > 0 ? 'bg-primary border-slate-800': 'bg-slate-200 border-slate-400'} absolute bottom-0 w-4 h-4  rounded-full border-4  shadow-lg`}></div>
         </div>
 
         {/* Digital readout */}
@@ -132,7 +132,7 @@ const OverallProgressGauge = ({ submissionValue = 89 }) => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-2 text-4xl font-bold font-mono text-primary bg-clip-text "
+          className={`${progress > 0 ? 'text-primary': 'text-slate-200'} mt-2 text-4xl font-bold font-mono  bg-clip-text`}
         >
          <motion.span>{rounded}</motion.span>%
         </motion.div>

@@ -7,6 +7,8 @@ import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
 import ActiveProjectsSection from "./ActiveProjectsSection";
 import RecentNotesSection from "./RecentNotesSection";
 import OverallProgressGauge from "./OverallProgressGauge";
+import { GET_USER_DASHBOARD_REPORTS_URL } from "../../api/api_routes";
+import { axiosInstance } from "../../api/axios";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -21,8 +23,24 @@ const DashboardMain = () => {
     }
   };
 
+  const [userFullReport, setUserFullReport] = useState([]);
+
+  const handleGetUserFullReport = async () => {
+    try {
+      const url = `${GET_USER_DASHBOARD_REPORTS_URL}/${userData?.userId}`;
+
+      const res = await axiosInstance.get(url);
+      console.log(res);
+      setUserFullReport(res?.data || []);
+      console.log(res?.data?.overall_completion_percentage)
+    } catch (error) {
+      console.error("not able to fetch user report", error);
+    }
+  };
+
   useEffect(() => {
     handleGetUserInfo();
+    handleGetUserFullReport();
   }, []);
 
   return (
@@ -32,20 +50,20 @@ const DashboardMain = () => {
           <DashboardHead userData={userData} />
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
-              <OverviewDashboard />
+              <OverviewDashboard userFullReport={userFullReport}/>
             </div>
             <div className="col-span-2">
-              <UpcomingRemindersOverview />
+              <UpcomingRemindersOverview userFullReport={userFullReport}/>
             </div>
           </div>
 
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
-              <ActiveProjectsSection />
+              <ActiveProjectsSection userFullReport={userFullReport}/>
             </div>
 
             <div className="col-span-2">
-              <OverallProgressGauge value={89.66} />
+              <OverallProgressGauge progressValue={userFullReport?.overall_completion_percentage || 0} />
             </div>
           </div>
 
