@@ -1,39 +1,15 @@
 import { FiTrendingUp, FiFolder } from "react-icons/fi";
 
-const ActiveProjectsSection = () => {
-  // Dummy Data
-  const workspaces = [
-    {
-      id: 1,
-      name: "Shared Notes Redesign",
-      progress: 72,
-      members: [
-        "https://i.pravatar.cc/150?img=12",
-        "https://i.pravatar.cc/150?img=32",
-        "https://i.pravatar.cc/150?img=45",
-      ],
-    },
-    {
-      id: 2,
-      name: "Marketing Strategy 2026",
-      progress: 45,
-      members: [
-        "https://i.pravatar.cc/150?img=15",
-        "https://i.pravatar.cc/150?img=18",
-      ],
-    },
-    {
-      id: 3,
-      name: "Mobile App Planning",
-      progress: 88,
-      members: [
-        "https://i.pravatar.cc/150?img=22",
-        "https://i.pravatar.cc/150?img=28",
-        "https://i.pravatar.cc/150?img=30",
-        "https://i.pravatar.cc/150?img=35",
-      ],
-    },
-  ];
+const ActiveProjectsSection = ({userFullReport}) => {
+ console.log(userFullReport)
+
+ const getCompletedPercentage = (workspace) => {
+  const completed = workspace?.columns?.find(col =>
+    ["done", "completed"].includes(col.column_name?.toLowerCase())
+  );
+
+  return completed?.percentage ?? 0;
+};
 
   return (
     <div className="bg-white col-span-4 rounded-2xl p-5 shadow-sm border border-slate-200">
@@ -49,21 +25,22 @@ const ActiveProjectsSection = () => {
 
       {/* Project List */}
       <div className="flex flex-col gap-5">
-        {workspaces.map((workspace) => (
-          <div key={workspace.id} className="flex flex-col gap-2">
+        {userFullReport?.workspace_progress?.map((workspace, idx) => (
+          
+          <div key={idx} className="flex flex-col gap-2">
             {/* Top Row */}
             <div className="flex justify-between items-center">
               {/* Left */}
               <div className="flex items-center gap-2 text-slate-700 font-medium">
                 <FiFolder className="text-slate-500" />
-                <span className="text-sm">{workspace.name}</span>
+                <span className="text-sm">{workspace?.workspace_name}</span>
               </div>
 
               {/* Right - Avatars + % */}
               <div className="flex items-center gap-3">
                 {/* Stacked Avatars */}
                 <div className="flex -space-x-2">
-                  {workspace.members.slice(0, 3).map((avatar, index) => (
+                  {workspace?.members?.slice(0, 3).map((avatar, index) => (
                     <img
                       key={index}
                       src={avatar}
@@ -72,7 +49,7 @@ const ActiveProjectsSection = () => {
                     />
                   ))}
 
-                  {workspace.members.length > 3 && (
+                  {workspace?.members?.length > 3 && (
                     <div className="w-6 h-6 rounded-full bg-slate-200 text-[10px] flex items-center justify-center border-2 border-white text-slate-600">
                       +{workspace.members.length - 3}
                     </div>
@@ -81,7 +58,7 @@ const ActiveProjectsSection = () => {
 
                 {/* Percentage */}
                 <span className="text-xs font-semibold text-slate-600">
-                  {workspace.progress}%
+                  {getCompletedPercentage(workspace)}%
                 </span>
               </div>
             </div>
@@ -90,7 +67,7 @@ const ActiveProjectsSection = () => {
             <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full bg-primary transition-all duration-500"
-                style={{ width: `${workspace.progress}%` }}
+                 style={{ width: `${getCompletedPercentage(workspace)}%` }}
               />
             </div>
           </div>
