@@ -32,14 +32,11 @@ const UpcomingRemindersOverview = () => {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 h-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <FiClock className="text-slate-600" />
-          <h2 className="text-sm font-semibold text-slate-800">
-            Upcoming
-          </h2>
+      <div className="flex items-center gap-3 mb-5">
+        <div className="p-2 rounded-xl bg-slate-100">
+          <FiClock className="text-slate-600 text-lg" />
         </div>
-        {/* <span className="text-xs text-slate-500">Top 3</span> */}
+        <h2 className="text-lg font-semibold text-slate-800">Upcoming</h2>
       </div>
 
       {/* Reminder List */}
