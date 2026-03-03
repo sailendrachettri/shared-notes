@@ -23,6 +23,9 @@ namespace shared_notes_software_server.Models
         [JsonPropertyName("workspace_name")]
         public string? WorkspaceName { get; set; }
 
+        [JsonPropertyName("members")]
+        public List<WorkspaceMember>? Members { get; set; }
+
         [JsonPropertyName("columns")]
         public List<WorkspaceColumn>? Columns { get; set; }
     }
@@ -64,5 +67,17 @@ namespace shared_notes_software_server.Models
 
         [JsonPropertyName("total_inprogress_tasks")]
         public int TotalInProgressTasks { get; set; }
+    }
+
+    public class WorkspaceMember
+    {
+        [JsonPropertyName("user_id")]
+        public Guid UserId { get; set; }
+
+        [JsonPropertyName("user_name")]
+        public string? UserName { get; set; }
+
+        [JsonPropertyName("profile_url")]
+        public string? ProfileUrl { get; set; }
     }
 }
