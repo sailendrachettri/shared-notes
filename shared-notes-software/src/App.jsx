@@ -149,6 +149,8 @@ function App() {
           setSelectedWorkspaceId={setSelectedWorkspaceId}
           selectedWorkspaceMode={selectedWorkspaceMode}
           setSelectedWordspaceMode={setSelectedWordspaceMode}
+          setIsUserLoggedIn={setIsUserLoggedIn}
+          userData ={userData}
         />
       </section>
 

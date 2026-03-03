@@ -10,16 +10,19 @@ import { TbMailPlus } from "react-icons/tb";
 import { BiBell } from "react-icons/bi";
 import { TiHomeOutline } from "react-icons/ti";
 import DashboardMain from "../dashboard/DashboardMain";
+import MiniMenu from "../tabs/MiniMenu";
 
 const Home = ({
   toggleSidebar,
   autoFetchStatus,
   setAutoFetchStatus,
   isUserLoggedIn,
+  setIsUserLoggedIn,
   selectedWorkspaceId,
   setSelectedWorkspaceId,
   selectedWorkspaceMode,
   setSelectedWordspaceMode,
+  userData
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -44,40 +47,13 @@ const Home = ({
     <div className="h-screen bg-gray-100 p-3">
       {/* Outer Card Container */}
       <div className="h-full flex flex-row gap-3">
-        <section className="max-w-16 mb-10 bg-white rounded-md px-2.5">
-          <div
-            onClick={() => {
-              setSelectedMiniTab("dashboard");
-            }}
-            className={`${selectedMiniTab == "dashboard" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
-          >
-            <TiHomeOutline size={24} />
-          </div>
-          <div
-            onClick={() => {
-              setSelectedMiniTab("notes-workspaces");
-            }}
-            className={`${selectedMiniTab == "notes-workspaces" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
-          >
-            <HiOutlineViewGrid size={24} />
-          </div>
-          <div
-            onClick={() => {
-              setSelectedMiniTab("remainders");
-            }}
-            className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
-          >
-            <TbMailPlus size={24} />
-          </div>
-          <div
-            onClick={() => {
-              setSelectedMiniTab("notifications");
-            }}
-            className={`${selectedMiniTab == "notifications" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
-          >
-            <BiBell size={24} />
-          </div>
-        </section>
+        <MiniMenu
+          selectedMiniTab={selectedMiniTab}
+          setSelectedMiniTab={setSelectedMiniTab}
+          setIsUserLoggedIn={setIsUserLoggedIn}
+          userData={userData}
+          isUserLoggedIn={isUserLoggedIn}
+        />
 
         {selectedMiniTab == "dashboard" && (
           <div className="w-full mb-10 overflow-y-auto bg-white hide-scrollbar">

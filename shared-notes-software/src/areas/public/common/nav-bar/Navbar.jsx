@@ -26,8 +26,7 @@ const Navbar = ({
 }) => {
   const appWindow = getCurrentWindow();
   const [isMaximized, setIsMaximized] = useState(false);
-  const [showDetailsMenu, setShowDetailsMenu] = useState(false);
-  const menuRef = useRef(null);
+
 
   useEffect(() => {
     const checkMaximized = async () => {
@@ -54,17 +53,7 @@ const Navbar = ({
 
   const close = () => appWindow.close();
 
-  // Close when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowDetailsMenu(false);
-      }
-    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <>
@@ -80,21 +69,8 @@ const Navbar = ({
             <span
               className="font-medium text-slate-800"
               data-tauri-drag-region={false}
-              ref={menuRef}
             >
-              {isUserLoggedIn ? (
-                <span
-                  onClick={() => setShowDetailsMenu(true)}
-                  className="ps-5 capitalize"
-                >
-                  {getGreeting()}, {userData?.user_name || "Guest"}
-                  <LoggedInUserInfoMenu
-                    setIsUserLoggedIn={setIsUserLoggedIn}
-                    setShowDetailsMenu={setShowDetailsMenu}
-                    showDetailsMenu={showDetailsMenu}
-                  />
-                </span>
-              ) : (
+              {!isUserLoggedIn && (
                 <span
                   onClick={() => {
                     setOpenRegistrationWindow(true);
