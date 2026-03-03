@@ -1,49 +1,35 @@
 import React from "react";
 import { FiFileText, FiGrid, FiCheckSquare } from "react-icons/fi";
 
-const OverviewDashboard = () => {
-  const stats = [
-    {
-      id: 1,
-      title: "Shared Notes",
-      value: 4,
-      icon: <FiFileText className="text-xl" />,
-    },
-    {
-      id: 2,
-      title: "Private Notes",
-      value: 8,
-      icon: <FiFileText className="text-xl" />,
-    },
-    {
-      id: 3,
-      title: "Workspaces",
-      value: 8,
-      icon: <FiGrid className="text-xl" />,
-    },
-    {
-      id: 4,
-      title: "Active Projects",
-      value: 2,
-      icon: <FiCheckSquare className="text-xl" />,
-    },
+const OverviewDashboard = ({ userFullReport }) => {
+  console.log(userFullReport);
+  const counts = userFullReport?.dashboard_counts;
+
+  const dashboardCards = [
+    // { label: "Total Workspaces", value: counts?.total_workspaces ?? 0 },
+    { label: "Total Assigned Tasks", value: counts?.total_assigned_tasks ?? 0 },
+    // { label: "Public Notes", value: counts?.total_public_notes ?? 0 },
+    { label: "Pending Tasks", value: counts?.total_pending_tasks ?? 0 },
+    { label: "In Progress Tasks", value: counts?.total_inprogress_tasks ?? 0 },
+    { label: "Active Projects", value: counts?.total_active_projects ?? 0 },
+    { label: "Private Notes", value: counts?.total_private_notes ?? 0 },
   ];
 
   return (
     <div className="grid grid-cols-3 gap-5 w-full">
-      {stats.map((item) => (
+      {dashboardCards?.map((item, idx) => (
         <div
-          key={item.id}
+          key={idx}
           className="group w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200"
         >
           <div className="flex items-center justify-between w-full ">
             {/* Left Content */}
             <div className="flex flex-col">
               <span className="text-sm text-slate-500 font-medium text-nowrap">
-                {item.title}
+                {item?.label}
               </span>
               <span className="text-3xl font-semibold text-slate-800 mt-1">
-                {item.value}
+                {item?.value}
               </span>
             </div>
           </div>

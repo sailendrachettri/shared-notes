@@ -12,6 +12,7 @@ import { axiosInstance } from "../../api/axios";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
+  const [userFullReport, setUserFullReport] = useState([]);
 
   const handleGetUserInfo = async () => {
     try {
@@ -23,16 +24,14 @@ const DashboardMain = () => {
     }
   };
 
-  const [userFullReport, setUserFullReport] = useState([]);
-
   const handleGetUserFullReport = async () => {
+    console.log(userData);
     try {
       const url = `${GET_USER_DASHBOARD_REPORTS_URL}/${userData?.userId}`;
 
       const res = await axiosInstance.get(url);
-      console.log(res);
+
       setUserFullReport(res?.data || []);
-      console.log(res?.data?.overall_completion_percentage)
     } catch (error) {
       console.error("not able to fetch user report", error);
     }
@@ -41,7 +40,7 @@ const DashboardMain = () => {
   useEffect(() => {
     handleGetUserInfo();
     handleGetUserFullReport();
-  }, []);
+  }, [userData?.userId]);
 
   return (
     <>
@@ -50,20 +49,24 @@ const DashboardMain = () => {
           <DashboardHead userData={userData} />
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
-              <OverviewDashboard userFullReport={userFullReport}/>
+              <OverviewDashboard userFullReport={userFullReport} />
             </div>
             <div className="col-span-2">
-              <UpcomingRemindersOverview userFullReport={userFullReport}/>
+              <UpcomingRemindersOverview userFullReport={userFullReport} />
             </div>
           </div>
 
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
-              <ActiveProjectsSection userFullReport={userFullReport}/>
+              <ActiveProjectsSection userFullReport={userFullReport} />
             </div>
 
             <div className="col-span-2">
-              <OverallProgressGauge progressValue={userFullReport?.overall_completion_percentage || 0} />
+              <OverallProgressGauge
+                progressValue={
+                  userFullReport?.overall_completion_percentage || 0
+                }
+              />
             </div>
           </div>
 
