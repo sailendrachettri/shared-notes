@@ -32,14 +32,14 @@ const OverallProgressGauge = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       whileHover={{ scale: 1.01, boxShadow: "0 25px 35px -12px rgba(0,0,0,0.3)" }}
-      className="bg-linear-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 shadow-xl p-6 w-[360px] text-white"
+      className="bg-linear-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 shadow-xl p-6  text-white"
     >
      
 
 
       {/* Gauge */}
       <div className="relative flex flex-col items-center">
-        <div className="relative flex justify-center items-end h-[140px]">
+        <div className="relative flex justify-center items-end ">
           <svg width={size} height={size / 2} viewBox={`0 0 ${size} ${size / 2}`}>
             {/* Background arc */}
             <path

@@ -30,9 +30,14 @@ const DashboardMain = () => {
       <section className="bg-white rounded-md p-6 h-full w-full">
         <div className="flex flex-col gap-6 pb-16">
           <DashboardHead userData={userData} />
-          <OverallProgressGauge value={89.66} />
-
-          <OverviewDashboard />
+          <div className="grid grid-cols-6 gap-6 w-full">
+            <div className="col-span-4">
+              <OverviewDashboard />
+            </div>
+            <div className="col-span-2">
+              <UpcomingRemindersOverview />
+            </div>
+          </div>
 
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
@@ -40,7 +45,7 @@ const DashboardMain = () => {
             </div>
 
             <div className="col-span-2">
-              <UpcomingRemindersOverview />
+              <OverallProgressGauge value={89.66} />
             </div>
           </div>
 
