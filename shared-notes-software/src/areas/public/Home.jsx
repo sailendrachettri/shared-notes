@@ -80,7 +80,7 @@ const Home = ({
         </section>
 
         {selectedMiniTab == "dashboard" && (
-          <div className="w-full mb-10">
+          <div className="w-full mb-10 overflow-y-auto bg-white hide-scrollbar">
             <DashboardMain />
           </div>
         )}

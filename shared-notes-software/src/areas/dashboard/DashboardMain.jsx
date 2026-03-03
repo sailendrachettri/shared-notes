@@ -6,6 +6,7 @@ import OverviewDashboard from "./OverviewDashboard";
 import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
 import ActiveProjectsSection from "./ActiveProjectsSection";
 import RecentNotesSection from "./RecentNotesSection";
+import OverallProgressGauge from "./OverallProgressGauge";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -26,9 +27,10 @@ const DashboardMain = () => {
 
   return (
     <>
-      <section className="bg-white rounded-md p-6 h-full w-full ">
-        <div className="flex flex-col gap-6">
+      <section className="bg-white rounded-md p-6 h-full w-full">
+        <div className="flex flex-col gap-6 pb-16">
           <DashboardHead userData={userData} />
+          <OverallProgressGauge value={89.66} />
 
           <OverviewDashboard />
 
