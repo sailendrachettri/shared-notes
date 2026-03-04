@@ -125,7 +125,7 @@ export default function RemindersApp() {
       {/* ================= SIDEBAR ================= */}
       <aside className="w-64 bg-white  flex flex-col rounded-md ">
         {/* Brand */}
-        <div className="p-6 flex items-center gap-3 border-b border-slate-200 shadow-sm">
+        <div className="px-6 py-4 flex items-center gap-3 border-b border-slate-200 shadow-sm">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
             <FiBell />
           </div>
@@ -148,8 +148,8 @@ export default function RemindersApp() {
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition
                 ${
                   active
-                    ? "bg-blue-50 text-primary font-semibold"
-                    : "hover:bg-slate-100 text-slate-500 cursor-pointer"
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "hover:bg-primary/5 text-slate-500 cursor-pointer"
                 }`}
               >
                 <Icon size={16} />
@@ -172,7 +172,7 @@ export default function RemindersApp() {
       {/* ================= MAIN ================= */}
       <main className="flex-1 flex flex-col bg-white rounded-md">
         {/* Header */}
-        <div className="px-8 py-6 border-b border-slate-200 shadow-sm flex justify-between items-center">
+        <div className="px-6 py-4 border-b border-slate-200 shadow-sm flex justify-between items-center">
           <div>
             <h2 className="text-lg font-bold">Events & Remainders</h2>
             <p className="text-xs text-slate-400">
@@ -312,7 +312,7 @@ export default function RemindersApp() {
                     onChange={(e) =>
                       setForm((f) => ({ ...f, title: e.target.value }))
                     }
-                    className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                    className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
                   />
                 </div>
 
@@ -371,7 +371,7 @@ export default function RemindersApp() {
                   </button>
 
                   <button
-                    onClick={() => setShowForm(false)}
+                    onClick={() =>{ setShowForm(false); setError("")}}
                     className="flex-1 border border-slate-300 text-slate-600 py-2.5 rounded-xl hover:bg-slate-100 transition cursor-pointer"
                   >
                     Cancel
