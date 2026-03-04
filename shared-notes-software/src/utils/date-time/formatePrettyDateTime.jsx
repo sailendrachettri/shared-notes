@@ -50,3 +50,21 @@ export function formatePrettyDateTime(input) {
     ? `${day} ${month} at ${time}`
     : `${day} ${month} ${year} at ${time}`;
 }
+
+export function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export function formatTime(timeStr) {
+  if (!timeStr) return null;
+
+  const date = new Date(`1970-01-01T${timeStr}`);
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}

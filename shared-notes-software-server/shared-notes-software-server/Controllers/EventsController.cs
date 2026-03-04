@@ -25,22 +25,27 @@ namespace shared_notes_software_server.Controllers
                 return BadRequest(new { success = false, message = "UserId is required" });
 
             string sql = @"
-        SELECT 
-            event_id        AS ""EventId"",
-            event_category_id AS ""EventCategoryId"",
-            event_title     AS ""EventTitle"",
-            user_id         AS ""UserId"",
-            event_time      AS ""EventTime"",
-            event_date      AS ""EventDate"",
-            is_deleted      AS ""IsDeleted"",
-            created_at      AS ""CreatedAt"",
-            updated_at      AS ""UpdatedAt""
-        FROM public.utbl_events
-        WHERE user_id = @user_id_i
-        AND is_deleted = false
-        AND (@event_category_id_i IS NULL 
-             OR event_category_id = @event_category_id_i)
-        ORDER BY event_date, event_time;
+                    SELECT 
+                e.event_id              AS ""EventId"",
+                e.event_category_id     AS ""EventCategoryId"",
+                c.event_category_name   AS ""EventCategoryName"",
+                e.event_title           AS ""EventTitle"",
+                e.user_id               AS ""UserId"",
+                e.event_time            AS ""EventTime"",
+                e.event_date            AS ""EventDate"",
+                e.is_deleted            AS ""IsDeleted"",
+                e.created_at            AS ""CreatedAt"",
+                e.updated_at            AS ""UpdatedAt""
+            FROM public.utbl_events e
+            LEFT JOIN public.utbl_mst_events_category c
+                ON e.event_category_id = c.event_category_id
+            WHERE e.user_id = @user_id_i
+            AND e.is_deleted = false
+            AND (
+                  @event_category_id_i  = 9999
+                  OR e.event_category_id = @event_category_id_i
+                )
+            ORDER BY e.event_date, e.event_time;
     ";
 
             var events = await _db.ExecuteQueryListAsync<EventResponseDTO>(

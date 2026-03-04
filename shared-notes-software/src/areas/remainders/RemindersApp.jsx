@@ -33,7 +33,7 @@ import { axiosInstance } from "../../api/axios";
 /* ---------- Constants ---------- */
 
 const CATEGORIES = [
-  { id: null, label: "All Events", icon: FiBell },
+  { id: 9999, label: "All Events", icon: FiBell },
   { id: 1, label: "Holidays", icon: FiSun },
   { id: 2, label: "Meetings", icon: FiUsers },
   { id: 3, label: "Work", icon: FiBriefcase },
@@ -44,19 +44,11 @@ const CATEGORIES = [
   { id: 8, label: "General", icon: FiLayers },
 ];
 
-function formatDate(d) {
-  return new Date(d + "T00:00:00").toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
 /* ===================================================== */
 
 export default function RemindersApp({ userData }) {
   const [events, setEvents] = useState([]);
-  const [activeCategory, setCategory] = useState(null);
+  const [activeCategory, setCategory] = useState(9999); // default
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [eventsDetails, setEventDetails] = useState([]);
@@ -77,11 +69,13 @@ export default function RemindersApp({ userData }) {
       return;
     }
 
+    console.log(activeCategory);
+
     try {
       const res = await axiosInstance.get(GET_EVENTS_URL, {
         params: {
           userId: userData.userId,
-          eventCategoryId: activeCategory || undefined,
+          eventCategoryId: activeCategory || 9999,
         },
       });
 
