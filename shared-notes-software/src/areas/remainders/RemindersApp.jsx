@@ -25,6 +25,7 @@ import {
 import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
 import { BiSolidCommentAdd } from "react-icons/bi";
 import AddEventForm from "./AddEventForm";
+import EventCard from "./EventCard";
 
 /* ---------- Constants ---------- */
 
@@ -61,7 +62,7 @@ function formatDate(d) {
 
 /* ===================================================== */
 
-export default function RemindersApp() {
+export default function RemindersApp({userData}) {
   const [events, setEvents] = useState([]);
   const [activeCategory, setCategory] = useState("all");
   const [search, setSearch] = useState("");
@@ -171,66 +172,17 @@ export default function RemindersApp() {
               </div>
             )}
 
-            {filtered.map((ev) => (
-              <div
+            {[1,2,3,4].map((ev) => (
+              <EventCard
                 key={ev.id}
-                className={`bg-white p-5 rounded-2xl border hover:shadow-md transition flex justify-between items-start
-                ${ev.done ? "opacity-60" : ""}
-                `}
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3
-                      className={`font-semibold ${ev.done ? "line-through" : ""}`}
-                    >
-                      {ev.title}
-                    </h3>
-                    {daysFromNow(ev.date) === "Today" && (
-                      <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">
-                        Today
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <FiCalendar size={14} />
-                      {formatDate(ev.date)}
-                    </span>
-                    {ev.time && (
-                      <span className="flex items-center gap-1">
-                        <FiClock size={14} />
-                        {ev.time}
-                      </span>
-                    )}
-                    {ev.location && (
-                      <span className="flex items-center gap-1">
-                        <FiMapPin size={14} />
-                        {ev.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => toggleDone(ev.id)}
-                    className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100"
-                  >
-                    <FiCheck size={14} />
-                  </button>
-                  <button
-                    onClick={() => deleteEv(ev.id)}
-                    className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
-                  >
-                    <FiTrash2 size={14} />
-                  </button>
-                </div>
-              </div>
+                event={ev}
+                onToggleDone={toggleDone}
+                onDelete={deleteEv}
+              />
             ))}
           </div>
 
-          {showForm && <AddEventForm setShowForm={setShowForm} />}
+          {showForm && <AddEventForm userData={userData} setShowForm={setShowForm} />}
         </div>
       </main>
     </div>

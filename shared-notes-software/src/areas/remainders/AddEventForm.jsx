@@ -2,6 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
+import { axiosInstance } from "../../api/axios";
+import { ADD_EVENT_URL } from "../../api/api_routes";
+import toast from "react-hot-toast";
 
 function emptyForm() {
   return {
@@ -15,10 +18,11 @@ function emptyForm() {
   };
 }
 
-const AddEventForm = ({ setShowForm }) => {
+const AddEventForm = ({ setShowForm, userData }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [form, setForm] = useState(emptyForm());
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const categoryOptions = [
     { value: 1, label: "Holidays" },
@@ -32,15 +36,43 @@ const AddEventForm = ({ setShowForm }) => {
   ];
 
   const handleSubmit = async () => {
-    console.log("submitted");
-    if (!form.title.trim()) return setError("Title required");
-    if (!form.date) return setError("Date required");
+    setSubmitting(true);
 
-    setEvents((prev) => [...prev, { ...form, id: Date.now(), done: false }]);
+    try {
+      console.log(form);
+      if (!form.title.trim()) return setError("Title required");
+      if (!form.date) return setError("Date required");
 
-    setForm(emptyForm());
-    setShowForm(false);
-    setError("");
+      if (!userData?.userId) {
+        toast.error("Please login and try again");
+        return;
+      }
+      const payload = {
+        UserId: userData?.userId,
+        EventTitle: form?.title,
+        EventDate: form?.date,
+        EventCategoryId: selectedCategory?.value,
+        EventTime: form.time ? `${form.time}:00` : null,
+      };
+
+      const res = await axiosInstance.post(ADD_EVENT_URL, payload);
+
+      if (res?.data?.success == true && res?.data?.status == "CREATED") {
+        toast.success(res?.data?.message || "Event created successful");
+        setForm(emptyForm());
+        setShowForm(false);
+        setError("");
+      } else {
+        toast.error("Can't create event at the moment");
+      }
+    } catch (error) {
+      console.error("not able to add event", error);
+      toast.error("Can't create event at the moment");
+    } finally {
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 500);
+    }
   };
 
   return (
@@ -142,12 +174,13 @@ const AddEventForm = ({ setShowForm }) => {
             {/* Buttons */}
             <div className="flex gap-3 pt-2">
               <button
+                disabled={submitting}
                 onClick={() => {
                   handleSubmit();
                 }}
-                className="flex-1 bg-primary text-white py-2.5 rounded-xl hover:opacity-90 transition font-medium cursor-pointer"
+                className={`${submitting ? "bg-slate-300 text-slate-600" : "bg-primary text-white"} flex-1 py-2.5 rounded-xl hover:opacity-90 transition font-medium cursor-pointer`}
               >
-                Save Event
+                {submitting ? "Saving..." : "Save Event"}
               </button>
 
               <button

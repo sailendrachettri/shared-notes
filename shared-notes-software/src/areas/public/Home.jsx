@@ -158,7 +158,7 @@ const Home = ({
 
         {selectedMiniTab == "remainders" && (
           <div className="w-full mb-10">
-           <RemindersApp />
+           <RemindersApp userData={userData}/>
           </div>
         )}
       </div>

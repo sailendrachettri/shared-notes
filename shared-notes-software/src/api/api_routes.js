@@ -8,6 +8,11 @@ export const GET_USER_DASHBOARD_REPORTS_URL = '/reports/user/dashboard'
 
 // #endregion
 
+//#region Events
+export const ADD_EVENT_URL = '/events/add-event'
+
+// #endregion
+
 //#region common
 export const CHECK_SERVER_NETWORK = "/network/check";
 export const ADD_USER_URL = "/user/add";
