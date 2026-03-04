@@ -28,19 +28,16 @@ function formatDate(d) {
 
 /* ===================================================== */
 
-export default function EventCard({
-  event,
-  onToggleDone,
-  onDelete,
-}) {
-  const isToday = daysFromNow(event.date) === "Today";
+export default function EventCard({ event, onToggleDone, onDelete }) {
+  console.log(event);
+  const isToday = daysFromNow(event?.date) === "Today";
 
   return (
     <div
       className={`bg-white p-5 rounded-2xl border border-slate-200 
       hover:shadow-md transition-all duration-200 
       flex justify-between items-start
-      ${event.done ? "opacity-60" : ""}
+      ${event?.done ? "opacity-60" : ""}
       `}
     >
       {/* Left Content */}
@@ -49,10 +46,10 @@ export default function EventCard({
         <div className="flex items-center gap-2 mb-2">
           <h3
             className={`font-semibold text-slate-800 ${
-              event.done ? "line-through" : ""
+              event?.done ? "line-through" : ""
             }`}
           >
-            {event.title}
+            {event?.eventTitle}
           </h3>
 
           {isToday && (
@@ -66,20 +63,20 @@ export default function EventCard({
         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
           <span className="flex items-center gap-1">
             <FiCalendar size={14} />
-            {formatDate(event.date)}
+            {formatDate(event?.eventDate)}
           </span>
 
-          {event.time && (
+          {event?.eventDate && (
             <span className="flex items-center gap-1">
               <FiClock size={14} />
-              {event.time}
+              {event?.eventDate}
             </span>
           )}
 
-          {event.location && (
+          {event?.location && (
             <span className="flex items-center gap-1">
               <FiMapPin size={14} />
-              {event.location}
+              {event?.location}
             </span>
           )}
         </div>
@@ -88,14 +85,14 @@ export default function EventCard({
       {/* Right Actions */}
       <div className="flex gap-2 ml-4">
         <button
-          onClick={() => onToggleDone(event.id)}
+          onClick={() => onToggleDone(event?.id)}
           className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition"
         >
           <FiCheck size={14} />
         </button>
 
         <button
-          onClick={() => onDelete(event.id)}
+          onClick={() => onDelete(event?.id)}
           className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
         >
           <FiTrash2 size={14} />

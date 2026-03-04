@@ -8,6 +8,9 @@ import InfoScreen from "../../utils/info-screen/InfoScreen";
 import DashboardMain from "../dashboard/DashboardMain";
 import MiniMenu from "../tabs/MiniMenu";
 import RemindersApp from "../remainders/RemindersApp";
+import { useEffect } from "react";
+import { axiosInstance } from "../../api/axios";
+import { GET_EVENTS_URL } from "../../api/api_routes";
 
 const Home = ({
   toggleSidebar,
@@ -19,7 +22,7 @@ const Home = ({
   setSelectedWorkspaceId,
   selectedWorkspaceMode,
   setSelectedWordspaceMode,
-  userData
+  userData,
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -39,6 +42,7 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
   const [selectedMiniTab, setSelectedMiniTab] = useState("notes-workspaces");
+
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -158,7 +162,7 @@ const Home = ({
 
         {selectedMiniTab == "remainders" && (
           <div className="w-full mb-10">
-           <RemindersApp userData={userData}/>
+            <RemindersApp userData={userData} />
           </div>
         )}
       </div>

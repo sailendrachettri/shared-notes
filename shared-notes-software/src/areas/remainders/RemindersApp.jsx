@@ -26,31 +26,23 @@ import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
 import { BiSolidCommentAdd } from "react-icons/bi";
 import AddEventForm from "./AddEventForm";
 import EventCard from "./EventCard";
+import { useEffect } from "react";
+import { GET_EVENTS_URL } from "../../api/api_routes";
+import { axiosInstance } from "../../api/axios";
 
 /* ---------- Constants ---------- */
 
 const CATEGORIES = [
-  { id: "all", label: "All Events", icon: FiBell },
-  { id: "holiday", label: "Holidays", icon: FiSun },
-  { id: "meeting", label: "Meetings", icon: FiUsers },
-  { id: "work", label: "Work", icon: FiBriefcase },
-  { id: "project", label: "Projects", icon: FiFolder },
-  { id: "event", label: "Events", icon: FiCalendar },
-  { id: "personal", label: "Personal", icon: FiUser },
-  { id: "general", label: "General", icon: FiLayers },
+  { id: null, label: "All Events", icon: FiBell },
+  { id: 1, label: "Holidays", icon: FiSun },
+  { id: 2, label: "Meetings", icon: FiUsers },
+  { id: 3, label: "Work", icon: FiBriefcase },
+  { id: 4, label: "Tasks", icon: FiBriefcase },
+  { id: 5, label: "Projects", icon: FiFolder },
+  { id: 6, label: "Events", icon: FiCalendar },
+  { id: 7, label: "Personal", icon: FiUser },
+  { id: 8, label: "General", icon: FiLayers },
 ];
-
-const TODAY = new Date().toISOString().split("T")[0];
-
-/* ---------- Helper Functions ---------- */
-
-function daysFromNow(dateStr) {
-  const diff = Math.ceil((new Date(dateStr) - new Date(TODAY)) / 86400000);
-  if (diff === 0) return "Today";
-  if (diff === 1) return "Tomorrow";
-  if (diff < 0) return `${Math.abs(diff)}d overdue`;
-  return `In ${diff} days`;
-}
 
 function formatDate(d) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-IN", {
@@ -62,17 +54,12 @@ function formatDate(d) {
 
 /* ===================================================== */
 
-export default function RemindersApp({userData}) {
+export default function RemindersApp({ userData }) {
   const [events, setEvents] = useState([]);
-  const [activeCategory, setCategory] = useState("all");
+  const [activeCategory, setCategory] = useState(null);
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
-
-  const filtered = events.filter((e) => {
-    const mc = activeCategory === "all" || e.category === activeCategory;
-    const ms = e.title.toLowerCase().includes(search.toLowerCase());
-    return mc && ms;
-  });
+  const [eventsDetails, setEventDetails] = useState([]);
 
   function toggleDone(id) {
     setEvents((ev) =>
@@ -83,6 +70,36 @@ export default function RemindersApp({userData}) {
   function deleteEv(id) {
     setEvents((ev) => ev.filter((e) => e.id !== id));
   }
+
+  const handleFetchAllEvents = async () => {
+    if (!userData?.userId) {
+      console.log("Unauthorized user");
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.get(GET_EVENTS_URL, {
+        params: {
+          userId: userData.userId,
+          eventCategoryId: activeCategory || undefined,
+        },
+      });
+
+      if (res?.data?.success == true && res?.data?.status == "FETCHED") {
+        setEventDetails(res?.data?.data || []);
+      } else {
+        setEventDetails([]);
+      }
+
+      console.log(res.data);
+    } catch (error) {
+      console.log("Not able to fetch events details", error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchAllEvents();
+  }, [userData?.userId, activeCategory]);
 
   return (
     <div className="h-full flex gap-3 bg-slate-100 font-sans text-slate-800">
@@ -165,14 +182,14 @@ export default function RemindersApp({userData}) {
         <div className="flex-1 overflow-y-auto p-8 flex gap-8">
           {/* Event List */}
           <div className="flex-1 space-y-4">
-            {filtered.length === 0 && (
+            {eventsDetails?.length === 0 && (
               <div className="text-center text-slate-400 mt-20">
                 <FiCalendar size={36} className="mx-auto mb-3 opacity-30" />
                 No events found
               </div>
             )}
 
-            {[1,2,3,4].map((ev) => (
+            {eventsDetails?.map((ev) => (
               <EventCard
                 key={ev.id}
                 event={ev}
@@ -182,7 +199,9 @@ export default function RemindersApp({userData}) {
             ))}
           </div>
 
-          {showForm && <AddEventForm userData={userData} setShowForm={setShowForm} />}
+          {showForm && (
+            <AddEventForm userData={userData} setShowForm={setShowForm} />
+          )}
         </div>
       </main>
     </div>

@@ -62,7 +62,31 @@ public class DbHelper
                 var val = reader[colName];
                 if (val == DBNull.Value) continue;
 
-                prop.SetValue(obj, val);
+                var targetType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+                try
+                {
+                    if (targetType == typeof(DateTime) && val is DateTimeOffset dto)
+                    {
+                        prop.SetValue(obj, dto.DateTime);
+                    }
+                    else if (targetType == typeof(DateTimeOffset) && val is DateTime dt)
+                    {
+                        prop.SetValue(obj, new DateTimeOffset(dt));
+                    }
+                    else if (targetType == typeof(TimeSpan) && val is TimeSpan ts)
+                    {
+                        prop.SetValue(obj, ts);
+                    }
+                    else
+                    {
+                        prop.SetValue(obj, Convert.ChangeType(val, targetType));
+                    }
+                }
+                catch
+                {
+                    // Optional: log conversion issue
+                }
             }
 
             list.Add(obj);

@@ -12,4 +12,17 @@
         public long EventCategoryId { get; set; }
         public TimeSpan? EventTime { get; set; }
     }
+
+    public class EventResponseDTO
+    {
+        public long EventId { get; set; }
+        public long EventCategoryId { get; set; }
+        public string EventTitle { get; set; }
+        public Guid UserId { get; set; }
+        public TimeSpan? EventTime { get; set; }
+        public DateTime EventDate { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+    }
 }

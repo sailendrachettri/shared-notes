@@ -16,6 +16,67 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpGet("get-events")]
+        public async Task<IActionResult> GetEvents(
+    [FromQuery] Guid userId,
+    [FromQuery] long? eventCategoryId)
+        {
+            if (userId == Guid.Empty)
+                return BadRequest(new { success = false, message = "UserId is required" });
+
+            string sql = @"
+        SELECT 
+            event_id        AS ""EventId"",
+            event_category_id AS ""EventCategoryId"",
+            event_title     AS ""EventTitle"",
+            user_id         AS ""UserId"",
+            event_time      AS ""EventTime"",
+            event_date      AS ""EventDate"",
+            is_deleted      AS ""IsDeleted"",
+            created_at      AS ""CreatedAt"",
+            updated_at      AS ""UpdatedAt""
+        FROM public.utbl_events
+        WHERE user_id = @user_id_i
+        AND is_deleted = false
+        AND (@event_category_id_i IS NULL 
+             OR event_category_id = @event_category_id_i)
+        ORDER BY event_date, event_time;
+    ";
+
+            var events = await _db.ExecuteQueryListAsync<EventResponseDTO>(
+                sql,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("user_id_i", NpgsqlDbType.Uuid, userId);
+
+                    if (eventCategoryId.HasValue)
+                        cmd.Parameters.AddWithValue(
+                            "event_category_id_i",
+                            NpgsqlDbType.Bigint,
+                            eventCategoryId.Value
+                        );
+                    else
+                        cmd.Parameters.AddWithValue(
+                            "event_category_id_i",
+                            DBNull.Value
+                        );
+                }
+            );
+
+            // 🔐 Decrypt titles after fetching
+            foreach (var ev in events)
+            {
+                ev.EventTitle = EncryptionHelper.Decrypt(ev.EventTitle);
+            }
+
+            return Ok(new
+            {
+                success = true,
+                status = "FETCHED",
+                data = events
+            });
+        }
+
         [HttpPost("add-event")]
         public async Task<IActionResult> AddEvent([FromBody] AddEventsRequest request)
         {
