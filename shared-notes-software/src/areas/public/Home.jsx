@@ -5,12 +5,9 @@ import WorkSpaceMain from "../auth/workspaces/WorkSpaceMain";
 import CreateNewComponent from "./common/CreateNewComponent";
 import SearchSection from "./common/SearchSection";
 import InfoScreen from "../../utils/info-screen/InfoScreen";
-import { HiOutlineViewGrid } from "react-icons/hi";
-import { TbMailPlus } from "react-icons/tb";
-import { BiBell } from "react-icons/bi";
-import { TiHomeOutline } from "react-icons/ti";
 import DashboardMain from "../dashboard/DashboardMain";
 import MiniMenu from "../tabs/MiniMenu";
+import RemindersApp from "../remainders/RemindersApp";
 
 const Home = ({
   toggleSidebar,
@@ -160,9 +157,8 @@ const Home = ({
         )}
 
         {selectedMiniTab == "remainders" && (
-          <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-            praesentium.
+          <div className="w-full mb-10">
+           <RemindersApp />
           </div>
         )}
       </div>
