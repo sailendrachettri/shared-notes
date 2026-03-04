@@ -1,10 +1,29 @@
 import { useState } from "react";
 import {
-  FiBell, FiPlus, FiTrash2, FiCalendar, FiClock,
-  FiFlag, FiSun, FiSearch, FiEdit3, FiX, FiCheck,
-  FiAlertCircle, FiChevronRight, FiMapPin, FiUsers,
-  FiTrendingUp, FiGift
+  FiBell,
+  FiPlus,
+  FiTrash2,
+  FiCalendar,
+  FiClock,
+  FiFlag,
+  FiSun,
+  FiSearch,
+  FiEdit3,
+  FiX,
+  FiCheck,
+  FiAlertCircle,
+  FiChevronRight,
+  FiMapPin,
+  FiUsers,
+  FiTrendingUp,
+  FiGift,
+  FiUser,
+  FiLayers,
+  FiFolder,
+  FiBriefcase,
 } from "react-icons/fi";
+import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
+import { BiSolidCommentAdd } from "react-icons/bi";
 
 /* ---------- Constants ---------- */
 
@@ -12,12 +31,24 @@ const CATEGORIES = [
   { id: "all", label: "All Events", icon: FiBell },
   { id: "holiday", label: "Holidays", icon: FiSun },
   { id: "meeting", label: "Meetings", icon: FiUsers },
-  { id: "deadline", label: "Deadlines", icon: FiFlag },
-  { id: "project", label: "Projects", icon: FiTrendingUp },
-  { id: "personal", label: "Personal", icon: FiGift },
+  { id: "work", label: "Work", icon: FiBriefcase },
+  { id: "project", label: "Projects", icon: FiFolder },
+  { id: "event", label: "Events", icon: FiCalendar },
+  { id: "personal", label: "Personal", icon: FiUser },
+  { id: "general", label: "General", icon: FiLayers },
 ];
 
-const PRIORITY = ["Low", "Medium", "High"];
+const categoryOptions = [
+  { value: "holiday", label: "Holidays" },
+  { value: "meeting", label: "Meetings" },
+  { value: "work", label: "Work" },
+  { value: "task", label: "Tasks" },
+  { value: "project", label: "Projects" },
+  { value: "event", label: "Events" },
+  { value: "personal", label: "Personal" },
+  { value: "general", label: "General" },
+];
+
 const TODAY = new Date().toISOString().split("T")[0];
 
 /* ---------- Helper Functions ---------- */
@@ -59,6 +90,8 @@ export default function RemindersApp() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm());
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  console.log(selectedCategory);
 
   const filtered = events.filter((e) => {
     const mc = activeCategory === "all" || e.category === activeCategory;
@@ -70,10 +103,7 @@ export default function RemindersApp() {
     if (!form.title.trim()) return setError("Title required");
     if (!form.date) return setError("Date required");
 
-    setEvents((prev) => [
-      ...prev,
-      { ...form, id: Date.now(), done: false },
-    ]);
+    setEvents((prev) => [...prev, { ...form, id: Date.now(), done: false }]);
 
     setForm(emptyForm());
     setShowForm(false);
@@ -82,9 +112,7 @@ export default function RemindersApp() {
 
   function toggleDone(id) {
     setEvents((ev) =>
-      ev.map((e) =>
-        e.id === id ? { ...e, done: !e.done } : e
-      )
+      ev.map((e) => (e.id === id ? { ...e, done: !e.done } : e)),
     );
   }
 
@@ -94,24 +122,22 @@ export default function RemindersApp() {
 
   return (
     <div className="h-full flex gap-3 bg-slate-100 font-sans text-slate-800">
-
       {/* ================= SIDEBAR ================= */}
       <aside className="w-64 bg-white  flex flex-col rounded-md ">
-
         {/* Brand */}
         <div className="p-6 flex items-center gap-3 border-b border-slate-200 shadow-sm">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
             <FiBell />
           </div>
           <div>
-            <h1 className="font-bold text-lg">EventPulse</h1>
+            <h1 className="font-bold text-lg">SharedNotes</h1>
             <p className="text-xs text-slate-400">Smart Reminder</p>
           </div>
         </div>
 
         {/* Categories */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES?.map((cat) => {
             const Icon = cat.icon;
             const active = activeCategory === cat.id;
 
@@ -120,10 +146,11 @@ export default function RemindersApp() {
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition
-                ${active
+                ${
+                  active
                     ? "bg-blue-50 text-primary font-semibold"
-                    : "hover:bg-slate-100 text-slate-500"
-                  }`}
+                    : "hover:bg-slate-100 text-slate-500 cursor-pointer"
+                }`}
               >
                 <Icon size={16} />
                 {cat.label}
@@ -132,27 +159,22 @@ export default function RemindersApp() {
           })}
         </div>
 
-        {/* Add Button */}
-        <div className="p-4">
-          <button
-            onClick={() => setShowForm(true)}
-            className="w-full bg-primary text-white py-2 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 transition"
-          >
-            <FiPlus />
-            Add Event
-          </button>
-        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="h-12 w-12 absolute bottom-20 left-62 z-40 cursor-pointer rounded-full bg-primary  text-white py-2  shadow-lg shadow-primary/40 hover:shadow-primary/80 duration-150 transition"
+        >
+          <span className="flex items-center justify-center gap-x-2 flex-nowrap">
+            <BiSolidCommentAdd size={20} />
+          </span>
+        </button>
       </aside>
 
       {/* ================= MAIN ================= */}
       <main className="flex-1 flex flex-col bg-white rounded-md">
-
         {/* Header */}
         <div className="px-8 py-6 border-b border-slate-200 shadow-sm flex justify-between items-center">
           <div>
-            <h2 className="text-lg font-bold">
-              Upcoming Events
-            </h2>
+            <h2 className="text-lg font-bold">Events & Remainders</h2>
             <p className="text-xs text-slate-400">
               {new Date().toLocaleDateString("en-IN", {
                 weekday: "long",
@@ -177,7 +199,6 @@ export default function RemindersApp() {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-8 flex gap-8">
-
           {/* Event List */}
           <div className="flex-1 space-y-4">
             {filtered.length === 0 && (
@@ -196,7 +217,9 @@ export default function RemindersApp() {
               >
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className={`font-semibold ${ev.done ? "line-through" : ""}`}>
+                    <h3
+                      className={`font-semibold ${ev.done ? "line-through" : ""}`}
+                    >
                       {ev.title}
                     </h3>
                     {daysFromNow(ev.date) === "Today" && (
@@ -244,54 +267,117 @@ export default function RemindersApp() {
             ))}
           </div>
 
-          {/* Add Form */}
           {showForm && (
-            <div className="w-80 bg-white rounded-2xl border shadow-lg p-6 space-y-4">
-              <h3 className="font-bold text-lg">
-                Add Event
-              </h3>
-
-              {error && (
-                <div className="bg-red-50 text-red-600 text-sm p-2 rounded-lg flex items-center gap-2">
-                  <FiAlertCircle size={14} />
-                  {error}
-                </div>
-              )}
-
-              <input
-                placeholder="Event title"
-                value={form.title}
-                onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))}
-                className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm(f => ({ ...f, date: e.target.value }))}
-                className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <input
-                type="time"
-                value={form.time}
-                onChange={(e) => setForm(f => ({ ...f, time: e.target.value }))}
-                className="w-full border rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              <button
-                onClick={submit}
-                className="w-full bg-primary text-white py-2 rounded-xl hover:bg-blue-700 transition"
-              >
-                Save Event
-              </button>
-
-              <button
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              {/* Overlay */}
+              <div
+                className="absolute inset-0 bg-black/40"
                 onClick={() => setShowForm(false)}
-                className="w-full text-slate-400 text-sm hover:text-slate-600"
+              />
+
+              {/* Modal */}
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-[420px] bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 px-8 pb-10 space-y-5 animate-in fade-in zoom-in duration-200"
               >
-                Cancel
-              </button>
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold text-slate-800">
+                    Add New Event
+                  </h3>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg flex items-center gap-2">
+                    <FiAlertCircle size={16} />
+                    {error}
+                  </div>
+                )}
+
+                {/* Title */}
+                <div>
+                  <label className="text-sm text-slate-500 mb-1 block">
+                    Event Title
+                  </label>
+                  <input
+                    placeholder="Enter event title"
+                    value={form.title}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, title: e.target.value }))
+                    }
+                    className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                  />
+                </div>
+
+                {/* Category */}
+                <div>
+                  <label className="text-sm text-slate-500 mb-1 block">
+                    Event Type
+                  </label>
+                  <DropdownReusable
+                    options={categoryOptions}
+                    setSelectedOption={setSelectedCategory}
+                    selectedOption={selectedCategory}
+                    isMultiple={false}
+                    placeholder="Select event type"
+                  />
+                </div>
+
+                {/* Date & Time Row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-slate-500 mb-1 block">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      value={form.date}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, date: e.target.value }))
+                      }
+                      className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-slate-500 mb-1 block">
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      value={form.time}
+                      onChange={(e) =>
+                        setForm((f) => ({ ...f, time: e.target.value }))
+                      }
+                      className="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                    />
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={submit}
+                    className="flex-1 bg-primary text-white py-2.5 rounded-xl hover:opacity-90 transition font-medium cursor-pointer"
+                  >
+                    Save Event
+                  </button>
+
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="flex-1 border border-slate-300 text-slate-600 py-2.5 rounded-xl hover:bg-slate-100 transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
