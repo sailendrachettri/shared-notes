@@ -16,6 +16,51 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("delete-event")]
+        public async Task<IActionResult> DeleteEvent(
+    [FromBody] DeleteEventRequest request)
+        {
+            if (request == null || request.EventId <= 0)
+                return BadRequest("Invalid event id.");
+
+            try
+            {
+                var sql = @"
+            UPDATE public.utbl_events
+            SET 
+                is_deleted = TRUE,
+                updated_at = NOW()
+            WHERE event_id = @event_id
+            AND user_id = @user_id
+            ";
+
+                var rowsAffected = await _db.ExecuteNonQueryAsync(
+                    sql,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("@event_id", request.EventId);
+                        cmd.Parameters.AddWithValue("@user_id", request.UserId);
+                    });
+
+                if (rowsAffected == 0)
+                    return NotFound("Event not found.");
+
+                return Ok(new
+                {
+                    message = "Workspace deleted successfully.",
+                    workspaceId = request.EventId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Something went wrong.",
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpGet("get-events")]
         public async Task<IActionResult> GetEvents(
     [FromQuery] Guid userId,
@@ -41,6 +86,7 @@ namespace shared_notes_software_server.Controllers
                 ON e.event_category_id = c.event_category_id
             WHERE e.user_id = @user_id_i
             AND e.is_deleted = false
+            AND e.event_date >= CURRENT_DATE - INTERVAL '15 days'
             AND (
                   @event_category_id_i  = 9999
                   OR e.event_category_id = @event_category_id_i

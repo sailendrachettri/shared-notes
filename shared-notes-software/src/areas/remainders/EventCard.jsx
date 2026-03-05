@@ -3,6 +3,11 @@ import {
   formatDate,
   formatTime,
 } from "../../utils/date-time/formatePrettyDateTime";
+import { useState } from "react";
+import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
+import toast from "react-hot-toast";
+import { axiosInstance } from "../../api/axios";
+import { DELETE_EVENT_URL } from "../../api/api_routes";
 
 /* ---------- Helpers ---------- */
 
@@ -23,74 +28,78 @@ function daysFromNow(dateStr) {
 
 /* ===================================================== */
 
-export default function EventCard({ event, onDelete }) {
+export default function EventCard({
+  event,
+  setDeleteEventId,
+  setShowDeleteModal,
+}) {
   const dayLabel = daysFromNow(event?.eventDate);
+
   const isToday = dayLabel === "Today";
 
   return (
     <div
       className="
-        bg-white p-5 rounded-2xl border border-slate-200
-        hover:shadow-lg hover:-translate-y-0.5
-        transition-all duration-200
-        flex justify-between items-start
-      "
+    bg-white px-4 py-3 rounded-xl border border-slate-200
+    hover:shadow-md hover:-translate-y-[1px]
+    transition-all duration-200
+    flex justify-between items-center
+  "
     >
-      {/* LEFT CONTENT */}
-      <div className="flex-1">
-        {/* Title + Today Badge */}
-        <div className="flex items-center gap-2 mb-2">
-          <h3 className="font-semibold text-slate-800 text-base first-letter:capitalize">
+      {/* LEFT SIDE */}
+      <div className="flex-1 min-w-0">
+        {/* Title Row */}
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium text-slate-800 text-sm truncate first-letter:capitalize">
             {event?.eventTitle}
           </h3>
 
           {isToday && (
-            <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
+            <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
               Today
             </span>
           )}
         </div>
 
-        {/* Category Badge */}
-        {event?.eventCategoryName && (
-          <div className="mb-2">
-            <span
-              className="inline-flex items-center gap-1 text-xs 
-              bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full"
-            >
-              <FiTag size={12} />
-              {event.eventCategoryName}
-            </span>
-          </div>
-        )}
-
-        {/* Meta Info */}
-        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+        {/* Meta Row (single line) */}
+        <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 flex-wrap">
           <span className="flex items-center gap-1">
-            <FiCalendar size={14} />
+            <FiCalendar size={12} />
             {formatDate(event?.eventDate)}
           </span>
 
           {event?.eventTime && (
             <span className="flex items-center gap-1">
-              <FiClock size={14} />
+              <FiClock size={12} />
               {formatTime(event?.eventTime)}
             </span>
           )}
 
-          <span className="text-xs text-slate-400">{dayLabel}</span>
+          {event?.eventCategoryName && (
+            <span className="flex items-center gap-1 text-indigo-600">
+              <FiTag size={12} />
+              {event.eventCategoryName}
+            </span>
+          )}
+
+          <span className="text-[10px] text-slate-400">{dayLabel}</span>
         </div>
       </div>
 
-      {/* RIGHT ACTION */}
-      <div className="ml-4">
-        <button
-          onClick={() => onDelete(event?.eventId)}
-          className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
-        >
-          <FiTrash2 size={14} />
-        </button>
-      </div>
+      {/* RIGHT SIDE */}
+      <button
+        onClick={() => {
+          setDeleteEventId(event?.eventId);
+          setShowDeleteModal(true);
+        }}
+        className="
+      ml-3 p-2 rounded-lg 
+      text-slate-400 hover:text-red-600 cursor-pointer 
+      hover:bg-red-50 transition
+    "
+      >
+        <FiTrash2 size={14} />
+      </button>
     </div>
   );
 }

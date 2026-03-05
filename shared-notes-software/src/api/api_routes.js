@@ -11,6 +11,7 @@ export const GET_USER_DASHBOARD_REPORTS_URL = '/reports/user/dashboard'
 //#region Events
 export const ADD_EVENT_URL = '/events/add-event'
 export const GET_EVENTS_URL = '/events/get-events'
+export const DELETE_EVENT_URL = '/events/delete-event'
 
 // #endregion
 

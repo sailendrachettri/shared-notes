@@ -6,6 +6,8 @@ import { axiosInstance } from "../../api/axios";
 import { ADD_EVENT_URL } from "../../api/api_routes";
 import toast from "react-hot-toast";
 
+const today = new Date().toISOString().split("T")[0];
+
 function emptyForm() {
   return {
     title: "",
@@ -18,7 +20,13 @@ function emptyForm() {
   };
 }
 
-const AddEventForm = ({ setShowForm, userData }) => {
+const AddEventForm = ({
+  setShowForm,
+  userData,
+  setRefresh,
+  setCategory,
+  setCategoryName,
+}) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [form, setForm] = useState(emptyForm());
   const [error, setError] = useState("");
@@ -60,6 +68,8 @@ const AddEventForm = ({ setShowForm, userData }) => {
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         toast.success(res?.data?.message || "Event created successful");
         setForm(emptyForm());
+        setCategory(selectedCategory?.value);
+        setCategoryName(selectedCategory?.label);
         setShowForm(false);
         setError("");
       } else {
@@ -72,6 +82,8 @@ const AddEventForm = ({ setShowForm, userData }) => {
       setTimeout(() => {
         setSubmitting(false);
       }, 500);
+
+      setRefresh((prev) => !prev);
     }
   };
 
@@ -119,6 +131,7 @@ const AddEventForm = ({ setShowForm, userData }) => {
               <input
                 placeholder="Enter event title"
                 value={form.title}
+                maxLength={100}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, title: e.target.value }))
                 }
@@ -148,7 +161,9 @@ const AddEventForm = ({ setShowForm, userData }) => {
                 </label>
                 <input
                   type="date"
+                  min={today}
                   value={form.date}
+                  max={new Date()}
                   onChange={(e) =>
                     setForm((f) => ({ ...f, date: e.target.value }))
                   }
@@ -162,7 +177,6 @@ const AddEventForm = ({ setShowForm, userData }) => {
                 </label>
                 <input
                   type="time"
-                  value={form.time}
                   onChange={(e) =>
                     setForm((f) => ({ ...f, time: e.target.value }))
                   }

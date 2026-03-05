@@ -4,6 +4,12 @@
     {
     }
 
+    public class DeleteEventRequest
+    {
+        public Guid UserId { get; set; }
+        public long EventId { get; set; }
+    }
+
     public class AddEventsRequest
     {
         public Guid UserId { get; set; }

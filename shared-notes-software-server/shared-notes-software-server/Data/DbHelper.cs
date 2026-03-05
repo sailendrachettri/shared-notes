@@ -66,17 +66,29 @@ public class DbHelper
 
                 try
                 {
-                    if (targetType == typeof(DateTime) && val is DateTimeOffset dto)
+                    if (targetType == typeof(DateTime))
                     {
-                        prop.SetValue(obj, dto.DateTime);
+                        if (val is DateTimeOffset dto)
+                            prop.SetValue(obj, dto.DateTime);
+                        else
+                            prop.SetValue(obj, Convert.ChangeType(val, targetType));
                     }
-                    else if (targetType == typeof(DateTimeOffset) && val is DateTime dt)
+                    else if (targetType == typeof(DateTimeOffset))
                     {
-                        prop.SetValue(obj, new DateTimeOffset(dt));
+                        if (val is DateTime dt)
+                            prop.SetValue(obj, new DateTimeOffset(dt));
+                        else
+                            prop.SetValue(obj, Convert.ChangeType(val, targetType));
                     }
-                    else if (targetType == typeof(TimeSpan) && val is TimeSpan ts)
+                    else if (targetType == typeof(TimeSpan))
                     {
-                        prop.SetValue(obj, ts);
+                        //  HANDLE ALL TIME SHAPES
+                        if (val is TimeSpan ts)
+                            prop.SetValue(obj, ts);
+                        else if (val is DateTime dt)
+                            prop.SetValue(obj, dt.TimeOfDay);
+                        else if (val is DateTimeOffset dto)
+                            prop.SetValue(obj, dto.TimeOfDay);
                     }
                     else
                     {
@@ -85,7 +97,7 @@ public class DbHelper
                 }
                 catch
                 {
-                    // Optional: log conversion issue
+                    // log if you want
                 }
             }
 

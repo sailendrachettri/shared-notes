@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import LoggedInUserInfoMenu from "../auth/profiles/LoggedInUserInfoMenu";
 import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
+import { IoCalendarOutline } from "react-icons/io5";
 
 const MiniMenu = ({
   selectedMiniTab,
@@ -59,16 +60,16 @@ const MiniMenu = ({
           }}
           className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
-          <TbMailPlus size={24} />
+          <IoCalendarOutline size={22} />
         </div>
-        <div
+        {/* <div
           onClick={() => {
             setSelectedMiniTab("notifications");
           }}
           className={`${selectedMiniTab == "notifications" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
           <BiBell size={24} />
-        </div>
+        </div> */}
 
         {/* User */}
         {isUserLoggedIn && (
