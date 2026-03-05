@@ -18,7 +18,7 @@ export default function WorkspaceModeBadge({
         bg: "bg-green-100",
         text: "text-green-600",
         iconColor: "text-green-600",
-        tooltip:  publicDesc || "Anyone with access can view this page.",
+        tooltip: publicDesc || "Anyone with access can view this page.",
       };
 
   return (
@@ -27,9 +27,15 @@ export default function WorkspaceModeBadge({
         className={`capitalize inline-flex opacity-45 items-center gap-1.5 p-2 rounded-full text-xs font-semibold transition-all duration-200 cursor-default ${styles.text}`}
       >
         {isPrivate ? (
-          <HiOutlineLockClosed size={15} className={`text-[13px] ${styles.iconColor}`} />
+          <HiOutlineLockClosed
+            size={15}
+            className={`text-[13px] ${styles.iconColor}`}
+          />
         ) : (
-          <HiOutlineLockOpen size={15} className={`text-[13px] ${styles.iconColor}`} />
+          <HiOutlineLockOpen
+            size={15}
+            className={`text-[13px] ${styles.iconColor}`}
+          />
         )}
         {/* {selectedWorkspaceMode} */}
       </span>

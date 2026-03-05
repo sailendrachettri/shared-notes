@@ -20,6 +20,7 @@ import { MdOutlineTaskAlt } from "react-icons/md";
 import { IoCalendarOutline } from "react-icons/io5";
 import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
 import toast from "react-hot-toast";
+import WorkspaceModeBadge from "../auth/workspaces/WorkspaceModeBadge";
 
 /* ---------- Constants ---------- */
 
@@ -228,8 +229,15 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
             <div>
               {eventsDetails?.length > 0 && (
                 <section className="mb-6">
-                  <div className="pb-3 text-sm lg:text-lg font-semibold text-slate-600">
-                    {activeCategoryName}
+                  <div className="flex itec justify-between">
+                    <div className="pb-3 text-sm lg:text-lg font-semibold text-slate-600">
+                      {activeCategoryName}
+                    </div>
+                    <WorkspaceModeBadge
+                      privateDesc={"Only you can access this event."}
+                      publicDesc={""}
+                      selectedWorkspaceMode={"private"}
+                    />
                   </div>
                   {eventsDetails?.map((ev) => (
                     <div key={ev.user_id} className="pb-4">
