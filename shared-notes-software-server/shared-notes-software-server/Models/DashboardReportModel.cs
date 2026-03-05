@@ -11,8 +11,29 @@ namespace shared_notes_software_server.Models
         [JsonPropertyName("dashboard_counts")]
         public DashboardCounts? DashboardCounts { get; set; }
 
+        [JsonPropertyName("upcoming_events")]
+        public List<UpcomingEvent>? UpcomingEvents { get; set; }
+
         [JsonPropertyName("overall_completion_percentage")]
         public decimal OverallCompletionPercentage { get; set; }
+    }
+
+    public class UpcomingEvent
+    {
+        [JsonPropertyName("event_id")]
+        public long EventId { get; set; }
+
+        [JsonPropertyName("event_title")]
+        public string? EventName { get; set; }
+
+        [JsonPropertyName("event_date")]
+        public DateTime EventDate { get; set; }
+
+        [JsonPropertyName("event_time")]
+        public string? EventTime { get; set; }
+
+        [JsonPropertyName("event_category_name")]
+        public string? EventCategoryName { get; set; }
     }
 
     public class WorkspaceProgress
@@ -80,4 +101,6 @@ namespace shared_notes_software_server.Models
         [JsonPropertyName("profile_url")]
         public string? ProfileUrl { get; set; }
     }
+
+
 }

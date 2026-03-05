@@ -76,7 +76,7 @@ export default function EventCard({
           )}
 
           {event?.eventCategoryName && (
-            <span className="flex items-center gap-1 text-indigo-600">
+            <span className="flex items-center gap-1 text-slate-400">
               <FiTag size={12} />
               {event.eventCategoryName}
             </span>

@@ -25,11 +25,11 @@ const DashboardMain = () => {
   };
 
   const handleGetUserFullReport = async () => {
-    console.log(userData);
     try {
       const url = `${GET_USER_DASHBOARD_REPORTS_URL}/${userData?.userId}`;
 
       const res = await axiosInstance.get(url);
+      console.log(res);
 
       setUserFullReport(res?.data || []);
     } catch (error) {
@@ -49,10 +49,10 @@ const DashboardMain = () => {
           <DashboardHead userData={userData} />
           <div className="grid grid-cols-6 gap-6 w-full">
             <div className="col-span-4">
-              <OverviewDashboard userFullReport={userFullReport} />
+              <UpcomingRemindersOverview userFullReport={userFullReport} />
             </div>
             <div className="col-span-2">
-              <UpcomingRemindersOverview userFullReport={userFullReport} />
+              <OverviewDashboard userFullReport={userFullReport} />
             </div>
           </div>
 
