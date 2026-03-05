@@ -131,7 +131,7 @@ const AddEventForm = ({
               <input
                 placeholder="Enter event title"
                 value={form.title}
-                maxLength={50}
+                maxLength={80}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, title: e.target.value }))
                 }
