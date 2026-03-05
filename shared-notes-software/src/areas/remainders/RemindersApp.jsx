@@ -192,7 +192,7 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 shadow-sm flex justify-between items-center">
           <div>
-            <h2 className="text-lg font-bold">Events & Remainders</h2>
+            <h2 className="text-lg font-bold">Events Manager</h2>
             <p className="text-xs text-slate-400">
               {new Date().toLocaleDateString("en-IN", {
                 weekday: "long",

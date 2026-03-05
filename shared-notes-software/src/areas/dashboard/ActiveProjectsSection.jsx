@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiTrendingUp, FiFolder } from "react-icons/fi";
 import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
+import { BiBarChartAlt2 } from "react-icons/bi";
 
 const ActiveProjectsSection = ({ userFullReport }) => {
   const [hovered, setHovered] = useState({
@@ -37,23 +38,12 @@ const ActiveProjectsSection = ({ userFullReport }) => {
             <div className="flex justify-between items-center">
               {/* Left */}
               <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <FiFolder className="text-slate-500" />
+                <BiBarChartAlt2 className="text-slate-500" />
                 <span className="text-sm">{workspace?.workspace_name}</span>
               </div>
 
               {/* Right - Avatars + % */}
               <div className="flex items-center gap-3">
-                {/* Stacked Avatars */}
-                {/* <div className="flex -space-x-2">
-                  {workspace?.members?.map((avatar, index) => (
-                    <img
-                      key={index}
-                      src={avatar}
-                      alt="member"
-                      className="w-6 h-6 rounded-full border-2 border-white object-cover"
-                    />
-                  ))}
-                </div> */}
 
                 {/* User profile Icons in every projects */}
                 {workspace?.members?.length > 0 && (
