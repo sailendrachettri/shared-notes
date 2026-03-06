@@ -3,6 +3,7 @@ import { FiTrendingUp } from "react-icons/fi";
 import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import DashboardHeading from "../../reusable/headings/DashboardHeading";
+import ProgressBar from "../../reusable/animations/ProgressBar";
 
 const ActiveProjectsSection = ({ userFullReport }) => {
   const [hovered, setHovered] = useState({
@@ -19,10 +20,17 @@ const ActiveProjectsSection = ({ userFullReport }) => {
   };
 
   return (
-    <div className="bg-white col-span-4 rounded-2xl p-5 shadow-sm border border-slate-200">
+    <div className="bg-white col-span-4 rounded-2xl p-5 group shadow-sm border border-slate-200">
       {/* Header */}
-
-      <DashboardHeading Icon={FiTrendingUp} title={"Assigned Tasks & In Progress"} />
+      <div className="flex">
+        <DashboardHeading
+          Icon={FiTrendingUp}
+          title={"Assigned Tasks & In Progress"}
+        />
+        <div className="mt-1 ms-10 invisible group-hover:visible bg-primary/5 text-primary rounded-full px-3 py-1 text-xs h-fit opacity-70">
+          {userFullReport?.workspace_progress?.length || 0} workspaces
+        </div>
+      </div>
 
       {/* Project List */}
       <div className="flex flex-col gap-5 max-h-48 overflow-y-auto hide-scrollbar">
@@ -114,12 +122,7 @@ const ActiveProjectsSection = ({ userFullReport }) => {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full bg-primary transition-all duration-500"
-                style={{ width: `${getCompletedPercentage(workspace)}%` }}
-              />
-            </div>
+            <ProgressBar value={getCompletedPercentage(workspace)} />
           </div>
         ))}
       </div>

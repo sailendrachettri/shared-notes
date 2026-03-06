@@ -1,3 +1,5 @@
+import AnimatedCount from "../../reusable/animations/AnimatedCount";
+
 const OverviewDashboard = ({ userFullReport }) => {
   const counts = userFullReport?.dashboard_counts;
 
@@ -25,7 +27,11 @@ const OverviewDashboard = ({ userFullReport }) => {
                 {item?.label}
               </span>
               <span className="text-2xl font-semibold text-slate-800 mt-1">
-                {item?.value}
+                <AnimatedCount
+                  value={item?.value}
+                  duration={1.5}
+                  className=""
+                />
               </span>
             </div>
           </div>
