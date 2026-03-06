@@ -57,8 +57,18 @@ const UpcomingRemindersOverview = ({ userFullReport }) => {
       {/* Reminder List */}
       <div className="flex flex-col">
         {reminders.length === 0 && (
-          <div className="text-xs text-slate-500 py-3">
-            No upcoming reminders
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <div className="text-sm font-medium text-slate-700">
+              No upcoming reminders
+            </div>
+
+            <div className="text-xs text-slate-500 mt-1">
+              Stay on track by scheduling your events and reminders.
+            </div>
+
+            {/* <div className="text-xs text-slate-400 mt-3">
+              Configure your event calendar from the sidebar.
+            </div> */}
           </div>
         )}
 

@@ -39,7 +39,7 @@ const ActiveProjectsSection = ({ userFullReport }) => {
               {/* Left */}
               <div className="flex items-center gap-2 text-slate-700 font-medium">
                 <BiBarChartAlt2 className="text-slate-500" />
-                <span className="text-sm">{workspace?.workspace_name}</span>
+                <span className="text-sm first-letter:capitalize">{workspace?.workspace_name}</span>
               </div>
 
               {/* Right - Avatars + % */}
