@@ -1,5 +1,6 @@
 import React from "react";
 import { FiClock } from "react-icons/fi";
+import DashboardHeading from "../../reusable/headings/DashboardHeading";
 
 const UpcomingRemindersOverview = ({ userFullReport }) => {
   const reminders = userFullReport?.upcoming_events || [];
@@ -47,12 +48,7 @@ const UpcomingRemindersOverview = ({ userFullReport }) => {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 h-full">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-2 rounded-xl bg-slate-100">
-          <FiClock className="text-slate-600 text-lg" />
-        </div>
-        <h2 className="text-lg font-semibold text-slate-800">Upcoming</h2>
-      </div>
+      <DashboardHeading Icon={FiClock} title={"Upcoming"} />
 
       {/* Reminder List */}
       <div className="flex flex-col">
@@ -65,10 +61,6 @@ const UpcomingRemindersOverview = ({ userFullReport }) => {
             <div className="text-xs text-slate-500 mt-1">
               Stay on track by scheduling your events and reminders.
             </div>
-
-            {/* <div className="text-xs text-slate-400 mt-3">
-              Configure your event calendar from the sidebar.
-            </div> */}
           </div>
         )}
 

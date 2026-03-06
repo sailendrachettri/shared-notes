@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiTrendingUp, FiFolder } from "react-icons/fi";
 import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
 import { BiBarChartAlt2 } from "react-icons/bi";
+import DashboardHeading from "../../reusable/headings/DashboardHeading";
 
 const ActiveProjectsSection = ({ userFullReport }) => {
   const [hovered, setHovered] = useState({
@@ -21,17 +22,11 @@ const ActiveProjectsSection = ({ userFullReport }) => {
   return (
     <div className="bg-white col-span-4 rounded-2xl p-5 shadow-sm border border-slate-200">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-2 rounded-xl bg-slate-100">
-          <FiTrendingUp className="text-slate-600 text-lg" />
-        </div>
-        <h2 className="text-lg font-semibold text-slate-800">
-          Assigned & In Progress
-        </h2>
-      </div>
+
+      <DashboardHeading Icon={FiTrendingUp} title={"Assigned & In Progress"} />
 
       {/* Project List */}
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 max-h-40 overflow-y-auto hide-scrollbar">
         {userFullReport?.workspace_progress?.map((workspace, idx) => (
           <div key={workspace?.workspace_id} className="flex flex-col gap-2">
             {/* Top Row */}
@@ -39,15 +34,16 @@ const ActiveProjectsSection = ({ userFullReport }) => {
               {/* Left */}
               <div className="flex items-center gap-2 text-slate-700 font-medium">
                 <BiBarChartAlt2 className="text-slate-500" />
-                <span className="text-sm first-letter:capitalize">{workspace?.workspace_name}</span>
+                <span className="text-sm first-letter:capitalize">
+                  {workspace?.workspace_name}
+                </span>
               </div>
 
               {/* Right - Avatars + % */}
               <div className="flex items-center gap-3">
-
                 {/* User profile Icons in every projects */}
                 {workspace?.members?.length > 0 && (
-                  <div className="flex items-center mt-2">
+                  <div className="flex items-center">
                     {workspace?.members?.map((user, index) => {
                       const hasImage = !!user?.profile_url;
 
