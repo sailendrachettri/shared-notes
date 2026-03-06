@@ -21,7 +21,7 @@ const OverviewDashboard = ({ userFullReport }) => {
           <div className="flex items-center justify-between w-full ">
             {/* Left Content */}
             <div className="flex flex-col">
-              <span className="text-sm text-slate-500 font-medium">
+              <span className="text-xs 2xl:text-sm text-slate-500 font-medium">
                 {item?.label}
               </span>
               <span className="text-2xl font-semibold text-slate-800 mt-1">
