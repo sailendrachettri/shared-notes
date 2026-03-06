@@ -21,6 +21,7 @@ import { IoCalendarOutline } from "react-icons/io5";
 import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "../auth/workspaces/WorkspaceModeBadge";
+import NoResultFound from "../../utils/info-screen/NoResultFound";
 
 /* ---------- Constants ---------- */
 
@@ -220,10 +221,10 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
           {/* Event List */}
           <div className="flex-1 space-y-4">
             {eventsDetails?.length === 0 && dueEvents?.length === 0 && (
-              <div className="text-center text-slate-400 mt-20">
-                <FiCalendar size={36} className="mx-auto mb-3 opacity-30" />
-                No events found
-              </div>
+              <NoResultFound
+                title="No reminders yet"
+                desc="Create reminders from the calendar to keep track of upcoming events."
+              />
             )}
 
             <div>
