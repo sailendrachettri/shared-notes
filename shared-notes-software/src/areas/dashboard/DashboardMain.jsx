@@ -9,6 +9,7 @@ import RecentNotesSection from "./RecentNotesSection";
 import OverallProgressGauge from "./OverallProgressGauge";
 import { GET_USER_DASHBOARD_REPORTS_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
+import Footer from "../public/common/Footer";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -70,7 +71,11 @@ const DashboardMain = () => {
             </div>
           </div>
 
-          <RecentNotesSection />
+          <div className="pt-16">
+            <Footer />
+          </div>
+
+          {/* <RecentNotesSection /> */}
         </div>
       </section>
     </>

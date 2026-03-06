@@ -3,11 +3,11 @@ const OverviewDashboard = ({ userFullReport }) => {
 
   const dashboardCards = [
     // { label: "Total Workspaces", value: counts?.total_workspaces ?? 0 },
-    { label: "Total Assigned Tasks", value: counts?.total_assigned_tasks ?? 0 },
+    // { label: "Total Assigned Tasks", value: counts?.total_assigned_tasks ?? 0 },
     // { label: "Public Notes", value: counts?.total_public_notes ?? 0 },
     { label: "Pending Tasks", value: counts?.total_pending_tasks ?? 0 },
     { label: "In Progress Tasks", value: counts?.total_inprogress_tasks ?? 0 },
-    { label: "Active Projects", value: counts?.total_active_projects ?? 0 },
+    { label: "Active Workspaces", value: counts?.total_active_projects ?? 0 },
     // { label: "Private Notes", value: counts?.total_private_notes ?? 0 },
   ];
 

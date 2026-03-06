@@ -62,14 +62,6 @@ const MiniMenu = ({
         >
           <IoCalendarOutline size={22} />
         </div>
-        {/* <div
-          onClick={() => {
-            setSelectedMiniTab("notifications");
-          }}
-          className={`${selectedMiniTab == "notifications" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
-        >
-          <BiBell size={24} />
-        </div> */}
 
         {/* User */}
         {isUserLoggedIn && (

@@ -23,7 +23,7 @@ const CreateNewComponent = ({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="h-12 w-12 absolute bottom-16 left-56 z-40 cursor-pointer rounded-full bg-primary  text-white py-2  shadow-lg shadow-primary/40 hover:shadow-primary/80 duration-150 transition"
+        className="h-12 w-12 absolute bottom-16 left-64 z-40 cursor-pointer rounded-full bg-primary  text-white py-2  shadow-lg shadow-primary/40 hover:shadow-primary/80 duration-150 transition"
       >
         <span className="flex items-center justify-center gap-x-2 flex-nowrap">
           <BiSolidCommentAdd size={20} />

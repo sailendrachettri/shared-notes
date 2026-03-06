@@ -239,8 +239,8 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
                       selectedWorkspaceMode={"private"}
                     />
                   </div>
-                  {eventsDetails?.map((ev) => (
-                    <div key={ev.user_id} className="pb-4">
+                  {eventsDetails?.map((ev, idx) => (
+                    <div key={idx} className="pb-4">
                       <EventCard
                         key={ev.user_id}
                         event={ev}
@@ -269,8 +269,8 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
                     </p>
                   </div>
 
-                  {dueEvents?.map((ev) => (
-                    <div key={ev.user_id} className="pb-4">
+                  {dueEvents?.map((ev, idx) => (
+                    <div key={idx} className="pb-4">
                       <EventCard
                         key={ev.user_id}
                         event={ev}
