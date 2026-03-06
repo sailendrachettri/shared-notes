@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import OverviewDashboard from "./OverviewDashboard";
 import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
 import ActiveProjectsSection from "./ActiveProjectsSection";
-import RecentNotesSection from "./RecentNotesSection";
 import OverallProgressGauge from "./OverallProgressGauge";
 import { GET_USER_DASHBOARD_REPORTS_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
@@ -30,7 +29,7 @@ const DashboardMain = () => {
       const url = `${GET_USER_DASHBOARD_REPORTS_URL}/${userData?.userId}`;
 
       const res = await axiosInstance.get(url);
-      console.log(res);
+    
 
       setUserFullReport(res?.data || []);
     } catch (error) {

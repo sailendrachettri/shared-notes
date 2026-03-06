@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useState } from "react";
 import { FiAlertCircle } from "react-icons/fi";
 import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
@@ -47,7 +47,6 @@ const AddEventForm = ({
     setSubmitting(true);
 
     try {
-      console.log(form);
       if (!form.title.trim()) return setError("Title required");
       if (!form.date) return setError("Date required");
 

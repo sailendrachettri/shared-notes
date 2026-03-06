@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiTrendingUp, FiFolder } from "react-icons/fi";
+import { FiTrendingUp } from "react-icons/fi";
 import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import DashboardHeading from "../../reusable/headings/DashboardHeading";
@@ -9,7 +9,6 @@ const ActiveProjectsSection = ({ userFullReport }) => {
     workspaceId: null,
     userId: null,
   });
-  console.log(userFullReport);
 
   const getCompletedPercentage = (workspace) => {
     const completed = workspace?.columns?.find((col) =>
@@ -23,7 +22,7 @@ const ActiveProjectsSection = ({ userFullReport }) => {
     <div className="bg-white col-span-4 rounded-2xl p-5 shadow-sm border border-slate-200">
       {/* Header */}
 
-      <DashboardHeading Icon={FiTrendingUp} title={"Assigned & In Progress"} />
+      <DashboardHeading Icon={FiTrendingUp} title={"Assigned Tasks & In Progress"} />
 
       {/* Project List */}
       <div className="flex flex-col gap-5 max-h-48 overflow-y-auto hide-scrollbar">

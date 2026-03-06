@@ -81,7 +81,7 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
 
   const handleFetchAllEvents = async () => {
     if (!userData?.userId) {
-      console.log("Unauthorized user");
+      console.error("Unauthorized user");
       return;
     }
 
@@ -128,7 +128,7 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
         setDueEvents([]);
       }
     } catch (error) {
-      console.log("Not able to fetch events details", error);
+      console.error("Not able to fetch events details", error);
     }
   };
 
