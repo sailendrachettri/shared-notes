@@ -203,17 +203,6 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
               })}
             </p>
           </div>
-
-          {/* Search */}
-          <div className="flex items-center bg-slate-100 px-4 py-2 rounded-xl w-80">
-            <FiSearch className="text-slate-400" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search events..."
-              className="bg-transparent ml-2 w-full outline-none text-sm"
-            />
-          </div>
         </div>
 
         {/* Content */}
