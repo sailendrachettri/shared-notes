@@ -62,7 +62,7 @@ const DashboardMain = () => {
               <ActiveProjectsSection userFullReport={userFullReport} />
             </div>
 
-            <div className="col-span-2">
+            <div className="col-span-2 rounded-2xl p-5 shadow-sm border border-slate-200 flex items-center justify-center">
               <OverallProgressGauge
                 progressValue={
                   userFullReport?.overall_completion_percentage || 0

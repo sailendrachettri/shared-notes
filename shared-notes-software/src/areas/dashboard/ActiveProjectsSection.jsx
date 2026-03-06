@@ -26,8 +26,8 @@ const ActiveProjectsSection = ({ userFullReport }) => {
       <DashboardHeading Icon={FiTrendingUp} title={"Assigned & In Progress"} />
 
       {/* Project List */}
-      <div className="flex flex-col gap-5 max-h-40 overflow-y-auto hide-scrollbar">
-        {userFullReport?.workspace_progress?.map((workspace, idx) => (
+      <div className="flex flex-col gap-5 max-h-48 overflow-y-auto hide-scrollbar">
+        {userFullReport?.workspace_progress?.map((workspace) => (
           <div key={workspace?.workspace_id} className="flex flex-col gap-2">
             {/* Top Row */}
             <div className="flex justify-between items-center">

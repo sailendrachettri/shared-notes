@@ -37,11 +37,7 @@ const OverallProgressGauge = ({ progressValue = 0 }) => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      whileHover={{
-        scale: 1.01,
-        boxShadow: "0 25px 35px -12px rgba(0,0,0,0.3)",
-      }}
-      className=" bg-white rounded-2xl p-5 shadow-sm border border-slate-200 h-full"
+      className="h-fit"
     >
       {/* Gauge */}
       <div className="relative flex flex-col items-center">
