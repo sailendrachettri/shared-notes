@@ -108,19 +108,34 @@ const OverallProgressGauge = ({ progressValue = 0 }) => {
             </defs>
           </svg>
 
-          {/* Needle – rotates left→right in sync with arc */}
+          {/* Needle */}
           <motion.div
             initial={{ rotate: -90 }}
             animate={{ rotate: needleRotation }}
             transition={{ duration: 2.2, ease: "easeOut" }}
-            className="absolute bottom-0 flex justify-center origin-bottom"
-            style={{ width: 2, height: radius - 10 }}
+            className="absolute bottom-1.5 flex justify-center origin-bottom"
+            style={{ width: radius, height: radius - 10 }}
           >
-            <div className={`${progress > 0 ? 'bg-primary': 'bg-slate-200'} w-0.5 h-full rounded-full shadow-lg shadow-primary/50`}></div>
+            <div className="relative flex justify-center items-end w-full h-full">
+              {/* V Shape Needle */}
+              <div
+                className={`${
+                  progress > 0 ? "border-primary" : "border-slate-300"
+                } w-0 h-0 border-l-[6px] border-r-[6px] border-b-80 border-l-transparent border-r-transparent`}
+              ></div>
+            </div>
           </motion.div>
 
-          {/* Center pivot */}
-          <div className={`${progress > 0 ? 'bg-primary border-slate-800': 'bg-slate-200 border-slate-400'} absolute bottom-0 w-4 h-4  rounded-full border-4  shadow-lg`}></div>
+          {/* Center Pivot */}
+          <div
+            className={`${
+              progress > 0
+                ? "bg-primary border-white shadow-primary/40"
+                : "bg-slate-300 border-slate-400"
+            } absolute bottom-0 w-5 h-5 rounded-full border-[5px] shadow-lg flex items-center justify-center`}
+          >
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+          </div>
         </div>
 
         {/* Digital readout */}
@@ -128,9 +143,9 @@ const OverallProgressGauge = ({ progressValue = 0 }) => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className={`${progress > 0 ? 'text-primary': 'text-slate-200'} mt-2 text-4xl font-bold font-mono  bg-clip-text`}
+          className={`${progress > 0 ? "text-primary" : "text-slate-200"} mt-2 text-4xl font-bold font-mono  bg-clip-text`}
         >
-         <motion.span>{rounded}</motion.span>%
+          <motion.span>{rounded}</motion.span>%
         </motion.div>
         <span className="text-xs text-gray-400 tracking-wider mt-1 uppercase">
           OVERALL TASK PROGRESS
