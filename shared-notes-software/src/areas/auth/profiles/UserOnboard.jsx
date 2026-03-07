@@ -13,11 +13,11 @@ import {
   VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { load } from "@tauri-apps/plugin-store";
 import AuthToggle from "./AuthToggle";
 import { useEffect } from "react";
 import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
 import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
+import { setItem } from "../../../api/storage";
 
 export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");
@@ -29,7 +29,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userProfileImage, setUserProfileImage] = useState("");
-  
 
   const steps = ["Basic Info", "Set PIN", "Confirm PIN"];
 
@@ -93,9 +92,9 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         setFullName("");
         setPin("");
         setConfirmPin("");
-        setStep(1);
-        const store = await load("user-store.json", { autoSave: true });
-        await store.set("user", {
+        setStep(1); 
+       
+        await setItem("user", {
           isLoggedIn: true,
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,
@@ -107,8 +106,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
       } else {
         toast.error("Can't create user at the moment");
       }
-
-      
     } catch (error) {
       console.error("not able to create user", error);
       toast.error("Can't create at the moment");
@@ -126,11 +123,10 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
         UserPassword: pinCode,
       };
       const res = await axiosInstance.post(LOGIN_USER_URL, payload);
-      
+
       if (res?.data?.success == true) {
         setIsUserLoggedIn(true);
-        const store = await load("user-store.json", { autoSave: true });
-        await store.set("user", {
+        await setItem("user", {
           isLoggedIn: true,
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,

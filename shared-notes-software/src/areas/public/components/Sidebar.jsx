@@ -11,11 +11,11 @@ import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
 import { BiBookAlt } from "react-icons/bi";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
-import { load } from "@tauri-apps/plugin-store";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
 import WorkspacesSidebar from "../../auth/workspaces/WorkspacesSidebar";
 import { IoIosArrowUp } from "react-icons/io";
 import CategoryHeading from "../../../reusable/headings/CategoryHeading";
+import { getItem } from "../../../api/storage";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -64,8 +64,7 @@ const Sidebar = ({
   const [togglePublic, setTogglePublic] = useState(true);
 
   const handleFetchAllItemList = async () => {
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+     const user = await getItem("user");
 
     /**
      * sort_by_i TEXT,      -- 'title' or 'created_at'
@@ -160,8 +159,7 @@ const Sidebar = ({
 
   const handleAddSubPage = async () => {
     setSubmitting(true);
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+    const user = await getItem("user");
     try {
       const payload = {
         SubPageTitle: subPageTitle,
@@ -218,8 +216,6 @@ const Sidebar = ({
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
-
-  
 
   return (
     <>

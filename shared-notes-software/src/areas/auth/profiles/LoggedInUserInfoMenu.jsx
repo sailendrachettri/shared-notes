@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { load } from "@tauri-apps/plugin-store";
 import toast from "react-hot-toast";
 import { IoPowerSharp } from "react-icons/io5";
 import { FiEdit2, FiCheck } from "react-icons/fi";
@@ -9,13 +8,13 @@ import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDat
 import { AnimatePresence, motion } from "framer-motion";
 import { FaUser } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import { getItem, removeItem } from "../../../api/storage";
 
 const LoggedInUserInfoMenu = ({
   setIsUserLoggedIn,
   setShowDetailsMenu,
   showDetailsMenu,
 }) => {
-  const [store, setStore] = useState(null);
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
@@ -23,9 +22,7 @@ const LoggedInUserInfoMenu = ({
 
   useEffect(() => {
     const loadUser = async () => {
-      const storeInstance = await load("user-store.json", { autoSave: true });
-      const userDetails = await storeInstance.get("user");
-      setStore(storeInstance);
+      const userDetails = await getItem("user");
       setUser(userDetails);
     };
 
@@ -41,7 +38,7 @@ const LoggedInUserInfoMenu = ({
     .toUpperCase();
 
   const handleLogoutUser = async () => {
-    await store.delete("user");
+    await removeItem("user");
     setIsUserLoggedIn(false);
     setShowDetailsMenu(false);
     toast.success("Logged out successfully!");

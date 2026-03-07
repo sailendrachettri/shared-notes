@@ -6,13 +6,13 @@ import {
   GET_WORKSPACES_LIST_URL,
   MOVE_WORKSPACE_TO_PUBLIC_URL,
 } from "../../../api/api_routes";
-import { load } from "@tauri-apps/plugin-store";
 import { useState } from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import toast from "react-hot-toast";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
+import { getItem } from "../../../api/storage";
 
 const WorkspacesSidebar = ({
   searchText,
@@ -80,8 +80,7 @@ const WorkspacesSidebar = ({
 
   const handleGetWorkspacesList = async () => {
     try {
-      const store = await load("user-store.json", { autoSave: true });
-      const user = await store.get("user");
+      const user = await getItem("user");
 
       const payload = {
         SearchText: searchText || null,

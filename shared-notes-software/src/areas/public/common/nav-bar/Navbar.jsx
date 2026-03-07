@@ -1,4 +1,3 @@
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import logo from "../../../../assets/pngs/logo.png";
 import {
   VscChromeMinimize,
@@ -8,12 +7,11 @@ import {
   VscLayoutSidebarLeft,
   VscLayoutSidebarLeftOff,
 } from "react-icons/vsc";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import LoggedInUserInfoMenu from "../../../auth/profiles/LoggedInUserInfoMenu";
-import { useRef } from "react";
 import { getGreeting } from "../../../../utils/greets/greetingHelper";
+import { isTauri } from "../../../../api/platform";
 
 const Navbar = ({
   setToggleSidebar,
@@ -24,98 +22,98 @@ const Navbar = ({
   userData,
   setIsUserLoggedIn,
 }) => {
-  const appWindow = getCurrentWindow();
+
+  const [appWindow, setAppWindow] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
 
-
   useEffect(() => {
-    const checkMaximized = async () => {
-      const maximized = await appWindow.isMaximized();
+    if (!isTauri()) return;
+
+    const initWindow = async () => {
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+
+      const win = getCurrentWindow();
+      setAppWindow(win);
+
+      const maximized = await win.isMaximized();
       setIsMaximized(maximized);
+
+      const unlisten = await win.onResized(async () => {
+        const maximized = await win.isMaximized();
+        setIsMaximized(maximized);
+      });
+
+      return () => unlisten();
     };
 
-    checkMaximized();
-
-    const unlisten = appWindow.onResized(checkMaximized);
-
-    return () => {
-      unlisten.then((f) => f());
-    };
+    initWindow();
   }, []);
 
-  const minimize = () => appWindow.minimize();
+  const minimize = () => appWindow?.minimize();
 
   const maximize = async () => {
+    if (!appWindow) return;
+
     await appWindow.toggleMaximize();
     const maximized = await appWindow.isMaximized();
     setIsMaximized(maximized);
   };
 
-  const close = () => appWindow.close();
-
-
+  const close = () => appWindow?.close();
 
   return (
-    <>
-      <div
-        data-tauri-drag-region
-        className="h-8 flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950 select-none"
-      >
-        {/* Left side - Logo */}
-        <div className="flex items-center gap-2 ">
-          <img src={logo} className="h-6 w-auto " />
-          <span className="text-sm font-medium">
-            SharedNotes
+    <div
+      data-tauri-drag-region={isTauri() ? true : undefined}
+      className="h-8 flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950 select-none"
+    >
+      {/* Left */}
+      <div className="flex items-center gap-2">
+        <img src={logo} className="h-6 w-auto" />
+        <span className="text-sm font-medium">
+          SharedNotes
+          {!isUserLoggedIn && (
             <span
-              className="font-medium text-slate-800"
-              data-tauri-drag-region={false}
+              onClick={() => setOpenRegistrationWindow(true)}
+              className="ps-1"
             >
-              {!isUserLoggedIn && (
-                <span
-                  onClick={() => {
-                    setOpenRegistrationWindow(true);
-                  }}
-                  className="ps-1"
-                >
-                  (UNREGISTERED)
-                </span>
-              )}
+              (UNREGISTERED)
             </span>
-          </span>
-        </div>
-
-        <div>
-          {autoFetchStatus && (
-            <div className="text-sm text-slate-600">
-              Auto Syncing{" "}
-              <span className="sync-loader">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </div>
           )}
-        </div>
+        </span>
+      </div>
 
-        {/* Right side - Window Controls */}
-        <div className="flex h-full gap-x-3 items-center">
-          <div>
-            <span
-              data-tauri-drag-region={false}
-              onClick={() => {
-                setToggleSidebar((prev) => !prev);
-              }}
-            >
-              {toggleSidebar ? (
-                <VscLayoutSidebarLeftOff />
-              ) : (
-                <VscLayoutSidebarLeft />
-              )}
+      {/* Sync status */}
+      <div>
+        {autoFetchStatus && (
+          <div className="text-sm text-slate-600">
+            Auto Syncing
+            <span className="sync-loader">
+              <span></span>
+              <span></span>
+              <span></span>
             </span>
           </div>
+        )}
+      </div>
+
+      {/* Right */}
+      <div className="flex h-full gap-x-3 items-center">
+
+        <span
+          onClick={() => setToggleSidebar((prev) => !prev)}
+        >
+          {toggleSidebar ? (
+            <VscLayoutSidebarLeftOff />
+          ) : (
+            <VscLayoutSidebarLeft />
+          )}
+        </span>
+
+        {/* Window Controls (Tauri only) */}
+        {isTauri() && (
           <div className="flex h-full items-center">
+
             <button
-              data-tauri-drag-region={false}
               onClick={minimize}
               className="w-10 h-full flex items-center justify-center hover:bg-zinc-300"
             >
@@ -123,7 +121,6 @@ const Navbar = ({
             </button>
 
             <button
-              data-tauri-drag-region={false}
               onClick={maximize}
               className="w-12 h-full flex items-center justify-center hover:bg-zinc-300"
             >
@@ -135,16 +132,17 @@ const Navbar = ({
             </button>
 
             <button
-              data-tauri-drag-region={false}
               onClick={close}
               className="w-12 h-full flex items-center justify-center hover:bg-red-600 hover:text-white"
             >
               <VscChromeClose size={14} />
             </button>
+
           </div>
-        </div>
+        )}
+
       </div>
-    </>
+    </div>
   );
 };
 

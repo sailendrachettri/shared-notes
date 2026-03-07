@@ -1,6 +1,5 @@
 import DashboardHead from "./DashboardHead";
 import { useState } from "react";
-import { load } from "@tauri-apps/plugin-store";
 import { useEffect } from "react";
 import OverviewDashboard from "./OverviewDashboard";
 import UpcomingRemindersOverview from "./UpcomingRemindersOverview";
@@ -9,6 +8,7 @@ import OverallProgressGauge from "./OverallProgressGauge";
 import { GET_USER_DASHBOARD_REPORTS_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
 import Footer from "../public/common/Footer";
+import { getItem } from "../../api/storage";
 
 const DashboardMain = () => {
   const [userData, setUserData] = useState(null);
@@ -16,8 +16,7 @@ const DashboardMain = () => {
 
   const handleGetUserInfo = async () => {
     try {
-      const store = await load("user-store.json", { autoSave: true });
-      const user = await store.get("user");
+      const user = await getItem("user");
       setUserData(user);
     } catch (error) {
       console.error("not able get the user details", error);

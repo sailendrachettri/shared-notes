@@ -6,11 +6,11 @@ import { axiosInstance } from "./api/axios";
 import { CHECK_SERVER_NETWORK } from "./api/api_routes";
 import ServerNotFound from "./utils/info-screen/ServerNotFound";
 import LoadingPage from "./utils/info-screen/LoadingPage";
-import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
+// import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import UserOnboard from "./areas/auth/profiles/UserOnboard";
-import { load } from "@tauri-apps/plugin-store";
 import "highlight.js/styles/atom-one-dark.css";
-const appWindow = getCurrentWindow();
+import { getItem } from "./api/storage";
+// const appWindow = getCurrentWindow();
 
 function App() {
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -26,8 +26,8 @@ function App() {
   const currrentEnvironment = window.location.host;
 
   const handleLoadUser = async () => {
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+    const user = await getItem("user");
+    
     setUserData(user);
     setIsUserLoggedIn(user?.isLoggedIn);
 
@@ -71,17 +71,17 @@ function App() {
   }, []);
 
   // Control window size based on server status
-  useEffect(() => {
-    const resizeAndCenter = async () => {
-      if (serverStatus === true) {
-        await appWindow.setSize(new LogicalSize(1180, 650));
-      } else {
-        await appWindow.setSize(new LogicalSize(480, 360));
-      }
-    };
+  // useEffect(() => {
+  //   const resizeAndCenter = async () => {
+  //     if (serverStatus === true) {
+  //       await appWindow.setSize(new LogicalSize(1180, 650));
+  //     } else {
+  //       await appWindow.setSize(new LogicalSize(480, 360));
+  //     }
+  //   };
 
-    resizeAndCenter();
-  }, [serverStatus]);
+  //   resizeAndCenter();
+  // }, [serverStatus]);
 
   // Keyboard shortcut to refresh block
   useEffect(() => {

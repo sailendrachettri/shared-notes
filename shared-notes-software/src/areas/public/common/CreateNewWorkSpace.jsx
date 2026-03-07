@@ -3,7 +3,7 @@ import { useState } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_WORKSPACE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { load } from "@tauri-apps/plugin-store";
+import { getItem } from "../../../api/storage";
 
 const CreateNewWorkSpace = ({
   setIsOpen,
@@ -18,8 +18,7 @@ const CreateNewWorkSpace = ({
   const handleAddWorkspace = async () => {
     setSubmitting(true);
 
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+     const user = await getItem("user");
 
     let user_decision;
     if (isUserLoggedIn) {

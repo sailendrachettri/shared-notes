@@ -6,7 +6,7 @@ import {
   UPDATE_USER_PROFILE_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { load } from "@tauri-apps/plugin-store";
+import { getItem } from "../../../api/storage";
 
 const EditUserProfileForm = ({
   initialName = "",
@@ -19,8 +19,7 @@ const EditUserProfileForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+   const user = await getItem("user");
   
 
     if (!user?.userId) {

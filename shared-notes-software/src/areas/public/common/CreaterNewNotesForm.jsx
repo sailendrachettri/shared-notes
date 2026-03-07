@@ -2,16 +2,7 @@ import { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { HiOutlineSearch } from "react-icons/hi";
-
-import { BiSolidCommentAdd } from "react-icons/bi";
-import { TbAbc } from "react-icons/tb";
-import { IoTimerOutline } from "react-icons/io5";
-import { FaArrowUpLong } from "react-icons/fa6";
-import { FaArrowDownLong } from "react-icons/fa6";
-import { LuRefreshCw } from "react-icons/lu";
-import { load } from "@tauri-apps/plugin-store";
-import { useRef } from "react";
+import { getItem } from "../../../api/storage";
 
 const CreaterNewNotesForm = ({
   setIsOpen,
@@ -34,8 +25,7 @@ const CreaterNewNotesForm = ({
     e.preventDefault();
     setSubmitting(true);
 
-    const store = await load("user-store.json", { autoSave: true });
-    const user = await store.get("user");
+    const user = await getItem("user");
 
     try {
       if (!title.trim()) return;
