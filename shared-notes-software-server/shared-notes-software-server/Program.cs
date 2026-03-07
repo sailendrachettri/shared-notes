@@ -65,6 +65,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseCors("AllowViteDevServer");
+app.UseDefaultFiles();
 app.UseStaticFiles();
 
 var uploadPath = Path.Combine(builder.Environment.ContentRootPath, "uploadedFiles");
