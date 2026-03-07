@@ -1,10 +1,5 @@
-import React from "react";
-import { BiBell } from "react-icons/bi";
 import { HiOutlineViewGrid } from "react-icons/hi";
-import { TbMailPlus } from "react-icons/tb";
 import { TiHomeOutline } from "react-icons/ti";
-
-import { PiGearBold } from "react-icons/pi";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
@@ -21,7 +16,6 @@ const MiniMenu = ({
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);
-
 
   // Close when clicking outside
   useEffect(() => {
@@ -68,14 +62,7 @@ const MiniMenu = ({
           <div className="absolute bottom-5 left-3.5">
             <div
               onClick={() => setShowDetailsMenu(true)}
-              className="w-8 h-8 rounded-full overflow-hidden 
-               cursor-pointer 
-               ring-2 ring-white 
-               shadow-lg 
-               hover:scale-105 
-               transition-all duration-200
-               flex items-center justify-center
-               bg-primary/10 text-white text-xs font-semibold"
+              className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-primary/10 ring-2 ring-white"
             >
               {userData?.profile_url ? (
                 <img
@@ -84,7 +71,18 @@ const MiniMenu = ({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                userData?.user_name?.charAt(0)?.toUpperCase() || "U"
+                <span
+                  className="w-8 h-8 rounded-full overflow-hidden 
+               cursor-pointer 
+               ring-2 ring-white 
+               shadow-lg 
+               hover:scale-105 
+               transition-all duration-200
+               flex items-center justify-center
+               bg-primary  text-white text-xs font-semibold"
+                >
+                  {userData?.user_name?.charAt(0)?.toUpperCase() || "U"}
+                </span>
               )}
             </div>
           </div>

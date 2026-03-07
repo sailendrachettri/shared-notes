@@ -8,6 +8,7 @@ import InfoScreen from "../../utils/info-screen/InfoScreen";
 import DashboardMain from "../dashboard/DashboardMain";
 import MiniMenu from "../tabs/MiniMenu";
 import RemindersApp from "../remainders/RemindersApp";
+import LoginRequired from "../../utils/info-screen/LoginRequired";
 
 const Home = ({
   toggleSidebar,
@@ -20,12 +21,12 @@ const Home = ({
   selectedWorkspaceMode,
   setSelectedWordspaceMode,
   userData,
+  setOpenRegistrationWindow,
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [refresh, setRefresh] = useState(null);
   const [searchText, setSearchText] = useState(null);
-
   const [noteHeading, setNoteHeading] = useState("");
   const [currentNotesId, setCurrentNotesId] = useState(null);
   const [isSubPage, setIsSubPage] = useState(false);
@@ -54,7 +55,16 @@ const Home = ({
 
         {selectedMiniTab == "dashboard" && (
           <div className="w-full mb-10 overflow-y-auto bg-white hide-scrollbar">
-            <DashboardMain />
+            {isUserLoggedIn ? (
+              <DashboardMain />
+            ) : (
+              <LoginRequired
+                description="You must sign in to view this page."
+                onLoginClick={() => {
+                  setOpenRegistrationWindow(true);
+                }}
+              />
+            )}
           </div>
         )}
 
@@ -159,6 +169,7 @@ const Home = ({
         {selectedMiniTab == "remainders" && (
           <div className="w-full mb-10">
             <RemindersApp
+              setOpenRegistrationWindow={setOpenRegistrationWindow}
               userData={userData}
               setRefresh={setRefresh}
               refresh={refresh}

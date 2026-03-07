@@ -7,7 +7,7 @@ const DashboardHead = ({ userData }) => {
         {/* Greeting */}
         <h1 className="text-xl lg:text-3xl font-semibold tracking-tight text-slate-800">
           {getGreeting()},
-          <span className="ml-2 text-primary bg-clip-text">
+          <span className="ml-2 text-primary bg-clip-text capitalize">
             {userData?.user_name || "Guest"}
           </span>
         </h1>

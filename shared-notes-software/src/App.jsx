@@ -151,6 +151,7 @@ function App() {
           setSelectedWordspaceMode={setSelectedWordspaceMode}
           setIsUserLoggedIn={setIsUserLoggedIn}
           userData ={userData}
+          setOpenRegistrationWindow={setOpenRegistrationWindow}
         />
       </section>
 

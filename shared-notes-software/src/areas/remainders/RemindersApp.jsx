@@ -22,6 +22,7 @@ import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "../auth/workspaces/WorkspaceModeBadge";
 import NoResultFound from "../../utils/info-screen/NoResultFound";
+import LoginRequired from "../../utils/info-screen/LoginRequired";
 
 /* ---------- Constants ---------- */
 
@@ -39,15 +40,16 @@ const CATEGORIES = [
 
 /* ===================================================== */
 
-export default function RemindersApp({ userData, setRefresh, refresh }) {
+export default function RemindersApp({ userData, setRefresh, refresh, setOpenRegistrationWindow }) {
   const [activeCategory, setCategory] = useState(9999); // default
   const [activeCategoryName, setCategoryName] = useState("All Events"); // default
-  const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [eventsDetails, setEventDetails] = useState([]);
   const [dueEvents, setDueEvents] = useState([]);
   const [deleteEventId, setDeleteEventId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+ 
 
   const handleDeteteEvent = async () => {
     try {
@@ -135,6 +137,15 @@ export default function RemindersApp({ userData, setRefresh, refresh }) {
   useEffect(() => {
     handleFetchAllEvents();
   }, [userData?.userId, activeCategory, refresh]);
+
+   if (!userData?.userId) {
+    return (
+      <LoginRequired
+        description="You must sign in to view this page."
+        onLoginClick={()=>{setOpenRegistrationWindow(true)}}
+      />
+    );
+  }
 
   return (
     <div className="h-full flex gap-3 bg-slate-100 font-sans text-slate-800">
