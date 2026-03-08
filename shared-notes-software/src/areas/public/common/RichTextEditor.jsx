@@ -22,7 +22,6 @@ import { IoImageOutline } from "react-icons/io5";
 import { FaRegFaceSmileBeam } from "react-icons/fa6";
 // import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import lowlight from "../../../utils/editor/codeHighlight";
-import { BubbleMenu } from "@tiptap/react/menus";
 import { axiosInstance } from "../../../api/axios";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
@@ -525,9 +524,11 @@ const RichTextEditor = ({
             )}
           </div>
 
-          <div>
-            <InviteUserToPrivateNotes />
-          </div>
+          {selectedNotesMode == "private" && (
+            <div>
+              <InviteUserToPrivateNotes selectedNoteId={selectedNoteId}/>
+            </div>
+          )}
 
           <div>
             <WorkspaceModeBadge

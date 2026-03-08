@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { HiOutlineUserAdd, HiOutlineX, HiOutlineSearch } from "react-icons/hi";
-import { GET_ALL_USERS_URL } from "../../../api/api_routes";
+import {
+  GET_ALL_USERS_URL,
+  INVITE_USER_IN_PRIVATE_NOTE_URL,
+} from "../../../api/api_routes";
 import { axiosInstance } from "../../../api/axios";
+import toast from "react-hot-toast";
+import { getItem } from "../../../api/storage";
 
 const mockInvitedUsers = [
   { id: 1, name: "John Doe", avatar: "" },
@@ -13,10 +18,45 @@ const mockInvitedUsers = [
 
 const MAX_VISIBLE = 3;
 
-const InviteUserToPrivateNotes = () => {
+const InviteUserToPrivateNotes = ({ selectedNoteId }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [allUsersList, setAllUsersList] = useState([]);
+
+  const handleInvitePeople = async (invitedUser) => {
+    try {
+      console.log(invitedUser);
+      const user = await getItem("user");
+
+      if (!invitedUser?.user_id || !user?.userId) {
+        toast.error("User is invalid");
+      }
+
+      const payload = {
+        UserId: invitedUser?.user_id,
+        NoteId: selectedNoteId,
+        InvitedBy: user?.userId,
+      };
+      const res = await axiosInstance.post(
+        INVITE_USER_IN_PRIVATE_NOTE_URL,
+        payload,
+      );
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "CREATED") {
+        toast.success("Invitation sent successfully");
+      } else if (
+        res?.data?.success == false &&
+        res?.data?.status == "ALREADY_EXISTS"
+      ) {
+        toast.error(res?.data?.message || "Something went wrong");
+      } else {
+        toast.error("Not able to send invitation");
+      }
+    } catch (error) {
+      console.error("not able to send invitation", error);
+      toast.error("Not able to send invitation");
+    }
+  };
 
   const handleGetAllUsers = async () => {
     try {
@@ -135,10 +175,17 @@ const InviteUserToPrivateNotes = () => {
                           </div>
                         )}
 
-                        <span className="text-sm capitalize">{user?.user_name}</span>
+                        <span className="text-sm capitalize">
+                          {user?.user_name}
+                        </span>
                       </div>
 
-                      <button className="text-sm px-3 py-1 bg-primary text-white rounded-md hover:opacity-90">
+                      <button
+                        onClick={() => {
+                          handleInvitePeople(user);
+                        }}
+                        className="text-sm px-3 py-1 bg-primary text-white rounded-md hover:opacity-90"
+                      >
                         Invite
                       </button>
                     </div>
