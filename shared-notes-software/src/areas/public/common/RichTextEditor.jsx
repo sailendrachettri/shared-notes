@@ -44,6 +44,7 @@ import { CustomCodeBlock } from "../../../utils/extensions/CustomCodeBlock";
 import UploadInProgress from "../../../utils/info-screen/UploadInProgress";
 import WorkspaceModeBadge from "../../auth/workspaces/WorkspaceModeBadge";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
+import InviteUserToPrivateNotes from "./InviteUserToPrivateNotes";
 
 const RichTextEditor = ({
   value,
@@ -211,9 +212,6 @@ const RichTextEditor = ({
           : CHANGE_COVER_IMAGE_SUB_PAGE_URL,
         payload,
       );
-
-      
-      
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -282,7 +280,6 @@ const RichTextEditor = ({
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
 
     setUploading(true);
 
@@ -306,8 +303,6 @@ const RichTextEditor = ({
           : CHANGE_COVER_ICON_SUB_PAGE_URL,
         payload,
       );
-      
-      
     } catch (err) {
       console.error("Cover upload failed:", err);
     } finally {
@@ -529,6 +524,11 @@ const RichTextEditor = ({
               </p>
             )}
           </div>
+
+          <div>
+            <InviteUserToPrivateNotes />
+          </div>
+
           <div>
             <WorkspaceModeBadge
               privateDesc={"Only you can access this Notes."}

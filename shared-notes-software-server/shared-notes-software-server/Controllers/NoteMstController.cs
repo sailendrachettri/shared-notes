@@ -15,6 +15,28 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("invite-user")]
+        public async Task<IActionResult> AddInvitation([FromBody] AddNoteInvitationRequest request)
+        {
+            if (request.UserId == Guid.Empty)
+                return BadRequest("Invalid UserId");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                "SELECT public.add_notes_invitation(@user_id_i, @note_id_i, @invited_by_i)",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("user_id_i", request.UserId);
+                    cmd.Parameters.AddWithValue("note_id_i", request.NoteId);
+                    cmd.Parameters.AddWithValue("invited_by_i", request.InvitedBy);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return BadRequest("Function returned null");
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("list")]
         public async Task<IActionResult> GetNotes([FromBody] GetNoteRequest request)
         {

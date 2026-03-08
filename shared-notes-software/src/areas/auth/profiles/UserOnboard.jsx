@@ -55,7 +55,6 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const handleGetAllUsers = async () => {
     try {
       const res = await axiosInstance.get(GET_ALL_USERS_URL);
-      // (res);
       setAllUsersList(res?.data || []);
     } catch (error) {
       console.error("Not able to fetch users", error);

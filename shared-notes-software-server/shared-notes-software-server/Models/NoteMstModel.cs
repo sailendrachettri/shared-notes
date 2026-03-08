@@ -1,5 +1,11 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class AddNoteInvitationRequest
+    {
+        public long NoteId { get; set; }
+        public Guid UserId { get; set; }        // invited user
+        public Guid InvitedBy { get; set; }     // who invited
+    }
     public class AddNoteRequest
     {
         public Guid? UserId { get; set; }
