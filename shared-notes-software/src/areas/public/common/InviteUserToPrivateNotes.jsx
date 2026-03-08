@@ -184,7 +184,7 @@ const InviteUserToPrivateNotes = ({ selectedNoteId }) => {
                         onClick={() => {
                           handleInvitePeople(user);
                         }}
-                        className="text-sm px-3 py-1 bg-primary text-white rounded-md hover:opacity-90"
+                        className="text-sm px-3 py-1 bg-primary cursor-pointer text-white rounded-md hover:opacity-90"
                       >
                         Invite
                       </button>

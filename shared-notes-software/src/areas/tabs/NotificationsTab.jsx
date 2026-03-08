@@ -1,16 +1,67 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../api/axios";
-import { INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL } from "../../api/api_routes";
+import {
+  INVITE_USER_NOTE_ACCEPT_REJECT_URL,
+  INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL,
+} from "../../api/api_routes";
 import toast from "react-hot-toast";
 import { HiOutlineCheck, HiOutlineX } from "react-icons/hi";
 import { formatePrettyDateTime } from "../../utils/date-time/formatePrettyDateTime";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 import { CapitalizedFirstChar } from "../../utils/string-formate/CapitalizedFirstChar";
 import { GetNameInitials } from "../../utils/string-formate/GetNameInitials";
+import GenericConfirmModal from "../../reusable/GenericConfirmModal";
 
 const NotificationsTab = ({ userData, setRefresh, refresh }) => {
   const [notesInviteDetails, setNotesInviteDetails] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [inviteActionType, setInviteActionType] = useState(null);
+  const [selectedInvitationNoteId, setSelectedInvitationNoteId] =
+    useState(null);
+  const [isGenericConfirmModalOpen, setIsGenericConfirmModalOpen] =
+    useState(false);
+  const [selectedInviteNoteUserId, setSelectedInviteNoteUserId] =
+    useState(null);
+
+  const handleAcceptOrRejectNoteInvitation = async () => {
+    try {
+      if (!userData?.userId) {
+        toast.error("Please login and try again");
+        return;
+      }
+
+      if (!inviteActionType) {
+        toast.error("Please select action");
+        return;
+      }
+
+      if (!selectedInvitationNoteId) {
+        toast.error("Invalid Note Id");
+        return;
+      }
+
+      const payload = {
+        UserId: selectedInviteNoteUserId,
+        NoteId: selectedInvitationNoteId,
+        InviteStatus: inviteActionType,
+      };
+      const res = await axiosInstance.post(
+        INVITE_USER_NOTE_ACCEPT_REJECT_URL,
+        payload,
+      );
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        toast.success(`Invitation ${inviteActionType}`);
+      } else {
+        toast.error(`Not able to ${inviteActionType} note`);
+      }
+    } catch (error) {
+      toast.error(`Not able to ${inviteActionType} note`);
+      console.error(`Not able to ${inviteActionType} note`, error);
+    } finally {
+      setRefresh((prev) => !prev);
+    }
+  };
 
   const handleGetNoteInviteNotifications = async () => {
     if (!userData?.userId) {
@@ -29,7 +80,7 @@ const NotificationsTab = ({ userData, setRefresh, refresh }) => {
       );
 
       if (res?.status === 200) {
-        setNotificationCount( (res?.data?.length || 0));
+        setNotificationCount(res?.data?.length || 0);
         setNotesInviteDetails(res?.data || []);
       }
     } catch (error) {
@@ -46,7 +97,9 @@ const NotificationsTab = ({ userData, setRefresh, refresh }) => {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="text-lg font-semibold mb-4">Notifications <span>{notificationCount}</span></div>
+      <div className="text-lg font-semibold mb-4">
+        Notifications <span>{notificationCount}</span>
+      </div>
 
       {/* List */}
       <div className="space-y-3">
@@ -90,12 +143,28 @@ const NotificationsTab = ({ userData, setRefresh, refresh }) => {
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-                <button className="flex items-center gap-1 text-xs px-3 py-1 rounded-md bg-primary text-white hover:opacity-90">
+                <button
+                  onClick={() => {
+                    setSelectedInvitationNoteId(item?.note_Id);
+                    setSelectedInviteNoteUserId(item?.user_Id);
+                    setInviteActionType("accepted");
+                    setIsGenericConfirmModalOpen(true);
+                  }}
+                  className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md bg-primary text-white hover:opacity-90"
+                >
                   <HiOutlineCheck size={14} />
                   Accept
                 </button>
 
-                <button className="flex items-center gap-1 text-xs px-3 py-1 rounded-md border hover:bg-gray-100">
+                <button
+                  onClick={() => {
+                    setSelectedInvitationNoteId(item?.note_Id);
+                    setSelectedInviteNoteUserId(item?.user_Id);
+                    setInviteActionType("rejected");
+                    setIsGenericConfirmModalOpen(true);
+                  }}
+                  className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md border border-slate-200 hover:bg-gray-100"
+                >
                   <HiOutlineX size={14} />
                   Decline
                 </button>
@@ -108,6 +177,18 @@ const NotificationsTab = ({ userData, setRefresh, refresh }) => {
           </div>
         )}
       </div>
+
+      <GenericConfirmModal
+        isOpen={isGenericConfirmModalOpen}
+        onClose={() => setIsGenericConfirmModalOpen(false)}
+        onConfirm={() => handleAcceptOrRejectNoteInvitation()}
+        title={`${inviteActionType === "accepted" ? "Accept" : "Reject"} Note Invitation`}
+        description={
+          inviteActionType === "accepted"
+            ? "You will be able to collaborate on this note."
+            : "You will NOT able to collaborate on this note."
+        }
+      />
     </div>
   );
 };

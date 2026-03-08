@@ -15,6 +15,36 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("accept-reject-note-invitation")]
+        public async Task<IActionResult> AcceptRejectNoteInvitation(
+    [FromBody] AcceptRejectNoteInvitationRequest request)
+        {
+            if (request.UserId == Guid.Empty || request.NoteId <= 0)
+                return BadRequest("Invalid request");
+
+            if (string.IsNullOrWhiteSpace(request.InviteStatus))
+                return BadRequest("InviteStatus is required");
+
+            var jsonResult = await _db.ExecuteScalarAsync<string>(
+                @"SELECT public.accept_reject_notes_invitation(
+            @user_id_i,
+            @note_id_i,
+            @invite_status_i
+        );",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("user_id_i", request.UserId);
+                    cmd.Parameters.AddWithValue("note_id_i", request.NoteId);
+                    cmd.Parameters.AddWithValue("invite_status_i", request.InviteStatus);
+                }
+            );
+
+            if (string.IsNullOrEmpty(jsonResult))
+                return BadRequest("Function returned null");
+
+            return Content(jsonResult, "application/json");
+        }
+
         [HttpPost("get-note-invit-notifications")]
         public async Task<IActionResult> GetNoteInvitationNotifications(
             [FromBody] GetNoteInvitationNotificationRequest request)

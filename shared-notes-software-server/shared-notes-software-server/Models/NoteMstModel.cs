@@ -1,5 +1,14 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class AcceptRejectNoteInvitationRequest
+    {
+        public Guid UserId { get; set; }
+
+        public long NoteId { get; set; }
+
+        public string InviteStatus { get; set; } = string.Empty;
+        // accepted | rejected
+    }
     public class AddNoteInvitationRequest
     {
         public long NoteId { get; set; }

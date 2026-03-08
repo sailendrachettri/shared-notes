@@ -52,6 +52,7 @@ export const CHANGE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/change-cover-image";
 export const REMOVE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/remove-cover-image";
 export const INVITE_USER_IN_PRIVATE_NOTE_URL = '/mst-note/invite-user'
 export const INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL = '/mst-note/get-note-invit-notifications'
+export const INVITE_USER_NOTE_ACCEPT_REJECT_URL = '/mst-note/accept-reject-note-invitation'
 //#endregion
 
 //#region sub pages
