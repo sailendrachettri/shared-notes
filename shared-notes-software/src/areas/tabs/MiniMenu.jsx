@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from "react";
 import LoggedInUserInfoMenu from "../auth/profiles/LoggedInUserInfoMenu";
-import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
 import { IoCalendarOutline } from "react-icons/io5";
+import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 const MiniMenu = ({
   selectedMiniTab,

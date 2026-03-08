@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FiTrendingUp } from "react-icons/fi";
-import { VIEW_UPLOADED_FILE_URL } from "../../api/api_routes";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import DashboardHeading from "../../reusable/headings/DashboardHeading";
 import ProgressBar from "../../reusable/animations/ProgressBar";
+import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 const ActiveProjectsSection = ({ userFullReport }) => {
   const [hovered, setHovered] = useState({

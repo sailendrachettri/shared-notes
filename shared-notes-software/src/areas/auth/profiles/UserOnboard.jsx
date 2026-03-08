@@ -10,7 +10,7 @@ import {
   FILE_UPLOAD_URL,
   GET_ALL_USERS_URL,
   LOGIN_USER_URL,
-  VIEW_UPLOADED_FILE_URL,
+  
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import AuthToggle from "./AuthToggle";
@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
 import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
 import { setItem } from "../../../api/storage";
+import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 
 export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
   const [fullName, setFullName] = useState("");

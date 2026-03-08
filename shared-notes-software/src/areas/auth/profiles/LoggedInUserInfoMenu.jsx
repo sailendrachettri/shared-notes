@@ -3,12 +3,12 @@ import toast from "react-hot-toast";
 import { IoPowerSharp } from "react-icons/io5";
 import { FiEdit2, FiCheck } from "react-icons/fi";
 import EditUserProfileForm from "./EditUserProfileForm";
-import { VIEW_UPLOADED_FILE_URL } from "../../../api/api_routes";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaUser } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { getItem, removeItem } from "../../../api/storage";
+import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 
 const LoggedInUserInfoMenu = ({
   setIsUserLoggedIn,

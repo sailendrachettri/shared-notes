@@ -28,8 +28,7 @@ import {
   DELETE_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
   RENAME_WORKSPACE_URL,
-  UPDATE_WORKSPACE_TASK_POSITION_URL,
-  VIEW_UPLOADED_FILE_URL,
+  UPDATE_WORKSPACE_TASK_POSITION_URL
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
@@ -38,6 +37,7 @@ import WorkspaceStats from "./WorkspaceStats";
 
 import Select from "react-select";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 
 const primary = "#d25564";
 

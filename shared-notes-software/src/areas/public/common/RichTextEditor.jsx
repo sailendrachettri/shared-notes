@@ -34,7 +34,6 @@ import {
   REMOVE_COVER_ICON_SUB_PAGE_URL,
   REMOVE_COVER_IMAGE_MST_NOTE_URL,
   REMOVE_COVER_IMAGE_SUB_PAGE_URL,
-  VIEW_UPLOADED_FILE_URL,
 } from "../../../api/api_routes";
 import { useMemo } from "react";
 import defaultIcon from "../../../assets/pngs/logo.png";
@@ -44,6 +43,7 @@ import TableMenu from "../helpers/TableMenu";
 import { CustomCodeBlock } from "../../../utils/extensions/CustomCodeBlock";
 import UploadInProgress from "../../../utils/info-screen/UploadInProgress";
 import WorkspaceModeBadge from "../../auth/workspaces/WorkspaceModeBadge";
+import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 
 const RichTextEditor = ({
   value,

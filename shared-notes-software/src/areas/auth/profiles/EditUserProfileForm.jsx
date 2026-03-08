@@ -6,7 +6,7 @@ import {
   UPDATE_USER_PROFILE_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
-import { getItem } from "../../../api/storage";
+import { getItem, setItem } from "../../../api/storage";
 
 const EditUserProfileForm = ({
   initialName = "",
@@ -19,8 +19,7 @@ const EditUserProfileForm = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   const user = await getItem("user");
-  
+    const user = await getItem("user");
 
     if (!user?.userId) {
       toast.error("Unauthorized, Please login and try again.");
@@ -48,8 +47,7 @@ const EditUserProfileForm = ({
 
       const res = await axiosInstance.post(UPDATE_USER_PROFILE_URL, payload);
       if (res?.status == 200) {
-
-        await store.set("user", {
+        await setItem("user", {
           isLoggedIn: true,
           userId: res?.data?.user_id,
           user_name: res?.data?.user_name,

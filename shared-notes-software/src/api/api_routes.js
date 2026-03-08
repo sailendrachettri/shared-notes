@@ -23,8 +23,6 @@ export const LOGIN_USER_URL = "/user/login";
 export const GET_ALL_USERS_URL = "/user/get-all-users";
 export const FILE_UPLOAD_URL = "/upload-files";
 export const DELETE_FILE_URL = "/delete-files";
-// export const VIEW_UPLOADED_FILE_URL = 'https://localhost:44383/uploads'
-export const VIEW_UPLOADED_FILE_URL = 'http://192.168.1.50:5171/uploads'
 
 //#region  Workspaces
 export const ADD_WORKSPACE_URL = 'workspace/add-workspace'
