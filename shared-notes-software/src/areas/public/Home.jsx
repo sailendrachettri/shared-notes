@@ -198,6 +198,7 @@ const Home = ({
               userData={userData}
               setRefresh={setRefresh}
               refresh={refresh}
+              setOpenRegistrationWindow={setOpenRegistrationWindow}
             />
           </div>
         )}

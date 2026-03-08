@@ -11,8 +11,9 @@ import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 import { CapitalizedFirstChar } from "../../utils/string-formate/CapitalizedFirstChar";
 import { GetNameInitials } from "../../utils/string-formate/GetNameInitials";
 import GenericConfirmModal from "../../reusable/GenericConfirmModal";
+import LoginRequired from "../../utils/info-screen/LoginRequired";
 
-const NotificationsTab = ({ userData, setRefresh, refresh }) => {
+const NotificationsTab = ({ userData, setRefresh, refresh, setOpenRegistrationWindow }) => {
   const [notesInviteDetails, setNotesInviteDetails] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
   const [inviteActionType, setInviteActionType] = useState(null);
@@ -92,7 +93,16 @@ const NotificationsTab = ({ userData, setRefresh, refresh }) => {
     handleGetNoteInviteNotifications();
   }, [refresh]);
 
-  console.log(notesInviteDetails);
+  if (!userData?.userId) {
+    return (
+      <LoginRequired
+        description="You must sign in to view this page."
+        onLoginClick={() => {
+          setOpenRegistrationWindow(true);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="w-full">
