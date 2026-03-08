@@ -19,7 +19,8 @@ const Playground = ({
   selectedNoteType,
   refresh,
   selectedNotesMode,
-  selectedNoteCollaboratorsDetails
+  selectedNoteCollaboratorsDetails,
+  userNoteOwnsOrCollaborative
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -157,6 +158,7 @@ const Playground = ({
             setRefresh={setRefresh}
             selectedNotesMode={selectedNotesMode}
             selectedNoteCollaboratorsDetails={selectedNoteCollaboratorsDetails}
+            userNoteOwnsOrCollaborative={userNoteOwnsOrCollaborative}
           />
 
           {/* Custom Toast */}

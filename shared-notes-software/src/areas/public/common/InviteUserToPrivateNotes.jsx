@@ -17,8 +17,9 @@ const InviteUserToPrivateNotes = ({
   selectedNoteId,
   selectedNoteType,
   selectedNoteCollaboratorsDetails,
+  userNoteOwnsOrCollaborative,
 }) => {
-//   console.log(selectedNoteCollaboratorsDetails);
+  //   console.log(selectedNoteCollaboratorsDetails);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [allUsersList, setAllUsersList] = useState([]);
@@ -45,7 +46,7 @@ const InviteUserToPrivateNotes = ({
         INVITE_USER_IN_PRIVATE_NOTE_URL,
         payload,
       );
-    //   console.log(res);
+      //   console.log(res);
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         toast.success("Invitation sent successfully");
       } else if (
@@ -82,10 +83,17 @@ const InviteUserToPrivateNotes = ({
 
   const visibleUsers = selectedNoteCollaboratorsDetails?.slice(0, MAX_VISIBLE);
   const remainingCount = selectedNoteCollaboratorsDetails?.length - MAX_VISIBLE;
-//   console.log(visibleUsers);
+  //   console.log(visibleUsers);
+
+  console.log(userNoteOwnsOrCollaborative);
 
   return (
     <div className="flex items-center gap-3">
+      {/* Owns or colloborative */}
+      <div className="text-[11px] bg-primary/10 text-primary font-semibold px-3 rounded-full py-1">
+        {userNoteOwnsOrCollaborative === "owner" && "Owner"}
+        {userNoteOwnsOrCollaborative === "collaborator" && "Collab"}
+      </div>
       {/* Invited Users */}
       <div className="flex -space-x-2">
         {visibleUsers?.map((user) => (
@@ -116,7 +124,7 @@ const InviteUserToPrivateNotes = ({
       </div>
 
       {/* Invite Button */}
-      {selectedNoteType == "mst-note" && (
+      {selectedNoteType == "mst-note" && userNoteOwnsOrCollaborative === "owner" && (
         <button
           onClick={() => setOpen(true)}
           className="flex items-center gap-2 cursor-pointer px-3 py-2 text-sm bg-primary text-white rounded-lg hover:opacity-90 transition"

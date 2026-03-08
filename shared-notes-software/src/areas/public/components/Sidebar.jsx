@@ -47,6 +47,7 @@ const Sidebar = ({
   setSelectedWordspaceMode,
   setSelectedNotesMode,
   setSelectedNoteCollaboratorsDetails,
+  setUserNoteOwnsOrCollaborative,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -117,6 +118,8 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
+    console.log(note);
+    setUserNoteOwnsOrCollaborative(note?.access_type || '')
     setSelectedNoteCollaboratorsDetails(note?.collaborators || []);
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
