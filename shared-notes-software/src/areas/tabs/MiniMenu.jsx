@@ -6,6 +6,7 @@ import { useRef } from "react";
 import LoggedInUserInfoMenu from "../auth/profiles/LoggedInUserInfoMenu";
 import { IoCalendarOutline } from "react-icons/io5";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
+import { HiOutlineBell } from "react-icons/hi";
 
 const MiniMenu = ({
   selectedMiniTab,
@@ -55,6 +56,14 @@ const MiniMenu = ({
           className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
           <IoCalendarOutline size={22} />
+        </div>
+        <div
+          onClick={() => {
+            setSelectedMiniTab("notifications");
+          }}
+          className={`${selectedMiniTab == "notifications" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+        >
+          <HiOutlineBell size={22} />
         </div>
 
         {/* User */}

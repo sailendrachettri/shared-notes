@@ -9,6 +9,7 @@ import DashboardMain from "../dashboard/DashboardMain";
 import MiniMenu from "../tabs/MiniMenu";
 import RemindersApp from "../remainders/RemindersApp";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
+import NotificationsTab from "../tabs/NotificationsTab";
 
 const Home = ({
   toggleSidebar,
@@ -40,7 +41,6 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
   const [selectedMiniTab, setSelectedMiniTab] = useState("notes-workspaces");
- 
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -171,6 +171,16 @@ const Home = ({
           <div className="w-full mb-10">
             <RemindersApp
               setOpenRegistrationWindow={setOpenRegistrationWindow}
+              userData={userData}
+              setRefresh={setRefresh}
+              refresh={refresh}
+            />
+          </div>
+        )}
+
+        {selectedMiniTab == "notifications" && (
+          <div className="w-full mb-10 bg-white p-6">
+            <NotificationsTab
               userData={userData}
               setRefresh={setRefresh}
               refresh={refresh}

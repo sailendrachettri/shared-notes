@@ -15,6 +15,41 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("get-note-invit-notifications")]
+        public async Task<IActionResult> GetNoteInvitationNotifications(
+            [FromBody] GetNoteInvitationNotificationRequest request)
+                {
+            if (request.UserId == Guid.Empty)
+                return BadRequest("Invalid UserId");
+
+            var result = await _db.ExecuteQueryListAsync<NoteInvitationNotification>(
+                @"SELECT 
+                na.notes_access_id,
+                na.note_id,
+                n.note_title,
+                na.user_id,
+                na.invite_status,
+                na.invited_by,
+                u.user_name AS invited_by_name,
+                u.profile_url,
+                na.created_at
+            FROM public.utbl_notes_access na
+            LEFT JOIN public.utbl_mst_notes n
+                ON na.note_id = n.note_id
+            LEFT JOIN public.utbl_users u
+                ON na.invited_by = u.user_id
+            WHERE na.user_id = @user_id
+            AND na.invite_status = 'pending'
+            ORDER BY na.created_at DESC;",
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("user_id", request.UserId);
+                });
+
+            return Ok(result);
+        }
+        
+
         [HttpPost("invite-user")]
         public async Task<IActionResult> AddInvitation([FromBody] AddNoteInvitationRequest request)
         {

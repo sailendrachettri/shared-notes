@@ -1,0 +1,4 @@
+export const GetNameInitials = (name) => {
+    if (!name) return "?";
+    return name.charAt(0).toUpperCase();
+  };

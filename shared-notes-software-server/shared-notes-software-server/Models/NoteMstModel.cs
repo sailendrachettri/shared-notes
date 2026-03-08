@@ -6,6 +6,30 @@
         public Guid UserId { get; set; }        // invited user
         public Guid InvitedBy { get; set; }     // who invited
     }
+    public class NoteInvitationNotification
+    {
+        public int Notes_Access_Id { get; set; }
+
+        public long Note_Id { get; set; }
+
+        public string Note_Title { get; set; }
+
+        public Guid User_Id { get; set; }
+
+        public string Invite_Status { get; set; }
+
+        public Guid Invited_By { get; set; }
+
+        public string Invited_By_Name { get; set; }
+
+        public string Profile_Url { get; set; }
+
+        public DateTime Created_At { get; set; }
+    }
+    public class GetNoteInvitationNotificationRequest
+    {
+        public Guid UserId { get; set; } 
+    }
     public class AddNoteRequest
     {
         public Guid? UserId { get; set; }
