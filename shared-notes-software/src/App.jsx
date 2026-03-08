@@ -6,11 +6,10 @@ import { axiosInstance } from "./api/axios";
 import { CHECK_SERVER_NETWORK } from "./api/api_routes";
 import ServerNotFound from "./utils/info-screen/ServerNotFound";
 import LoadingPage from "./utils/info-screen/LoadingPage";
-// import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import UserOnboard from "./areas/auth/profiles/UserOnboard";
 import "highlight.js/styles/atom-one-dark.css";
 import { getItem } from "./api/storage";
-// const appWindow = getCurrentWindow();
+import { isTauri } from "./api/platform";
 
 function App() {
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -24,10 +23,11 @@ function App() {
   const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
 
   const currrentEnvironment = window.location.host;
+  console.log(openRegistrationWindow);
 
   const handleLoadUser = async () => {
     const user = await getItem("user");
-    
+
     setUserData(user);
     setIsUserLoggedIn(user?.isLoggedIn);
 
@@ -71,17 +71,24 @@ function App() {
   }, []);
 
   // Control window size based on server status
-  // useEffect(() => {
-  //   const resizeAndCenter = async () => {
-  //     if (serverStatus === true) {
-  //       await appWindow.setSize(new LogicalSize(1180, 650));
-  //     } else {
-  //       await appWindow.setSize(new LogicalSize(480, 360));
-  //     }
-  //   };
+  useEffect(() => {
+    const resizeWindow = async () => {
+      if (!isTauri()) return;
 
-  //   resizeAndCenter();
-  // }, [serverStatus]);
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      const { LogicalSize } = await import("@tauri-apps/api/dpi");
+
+      const appWindow = getCurrentWindow();
+
+      if (serverStatus === true) {
+        await appWindow.setSize(new LogicalSize(1180, 650));
+      } else {
+        await appWindow.setSize(new LogicalSize(480, 360));
+      }
+    };
+
+    resizeWindow();
+  }, [serverStatus]);
 
   // Keyboard shortcut to refresh block
   useEffect(() => {
@@ -150,7 +157,7 @@ function App() {
           selectedWorkspaceMode={selectedWorkspaceMode}
           setSelectedWordspaceMode={setSelectedWordspaceMode}
           setIsUserLoggedIn={setIsUserLoggedIn}
-          userData ={userData}
+          userData={userData}
           setOpenRegistrationWindow={setOpenRegistrationWindow}
         />
       </section>

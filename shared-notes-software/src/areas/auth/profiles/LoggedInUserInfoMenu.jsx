@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoPowerSharp } from "react-icons/io5";
-import { FiEdit2, FiCheck } from "react-icons/fi";
+import { FiEdit2 } from "react-icons/fi";
 import EditUserProfileForm from "./EditUserProfileForm";
 import { formatePrettyDateTime } from "../../../utils/date-time/formatePrettyDateTime";
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,6 +23,7 @@ const LoggedInUserInfoMenu = ({
   useEffect(() => {
     const loadUser = async () => {
       const userDetails = await getItem("user");
+      
       setUser(userDetails);
     };
 

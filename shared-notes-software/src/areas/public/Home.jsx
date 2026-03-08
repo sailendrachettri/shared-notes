@@ -40,6 +40,7 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
   const [selectedMiniTab, setSelectedMiniTab] = useState("notes-workspaces");
+ 
 
   return (
     <div className="h-screen bg-gray-100 p-3">

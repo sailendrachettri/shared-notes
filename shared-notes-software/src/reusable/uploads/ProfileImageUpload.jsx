@@ -25,9 +25,9 @@ const ProfileImageUpload = ({ setUserProfileImage, userProfileImage }) => {
     if (!file) return;
 
     // ✅ File type validation
-    const validTypes = ["image/png", "image/jpeg", "image/avif"];
+    const validTypes = ["image/png", "image/jpeg"];
     if (!validTypes.includes(file.type)) {
-      toast.error("Only PNG, JPEG, or AVIF allowed");
+      toast.error("Only PNG & JPEG allowed");
       return;
     }
 
@@ -53,7 +53,7 @@ const ProfileImageUpload = ({ setUserProfileImage, userProfileImage }) => {
         type="file"
         ref={fileRef}
         onChange={handleFileChange}
-        accept="image/png, image/jpeg, image/avif"
+        accept="image/png, image/jpeg"
         className="hidden"
       />
 
@@ -86,7 +86,7 @@ const ProfileImageUpload = ({ setUserProfileImage, userProfileImage }) => {
             </p>
 
             <p className="text-xs text-slate-500">
-              PNG, JPEG, AVIF • Max 500 KB
+              PNG, JPEG • Max 500 KB
             </p>
           </>
         )}
