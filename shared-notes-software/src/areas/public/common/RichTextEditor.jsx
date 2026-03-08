@@ -526,7 +526,7 @@ const RichTextEditor = ({
 
           {selectedNotesMode == "private" && (
             <div>
-              <InviteUserToPrivateNotes selectedNoteId={selectedNoteId}/>
+              <InviteUserToPrivateNotes selectedNoteType={selectedNoteType} selectedNoteId={selectedNoteId}/>
             </div>
           )}
 

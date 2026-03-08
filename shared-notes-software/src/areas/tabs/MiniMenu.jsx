@@ -14,6 +14,7 @@ const MiniMenu = ({
   setIsUserLoggedIn,
   userData,
   isUserLoggedIn,
+  
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);

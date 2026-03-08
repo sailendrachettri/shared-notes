@@ -7,6 +7,9 @@ import {
 import { axiosInstance } from "../../../api/axios";
 import toast from "react-hot-toast";
 import { getItem } from "../../../api/storage";
+import { MdOutlinePeopleAlt } from "react-icons/md";
+
+
 
 const mockInvitedUsers = [
   { id: 1, name: "John Doe", avatar: "" },
@@ -18,7 +21,7 @@ const mockInvitedUsers = [
 
 const MAX_VISIBLE = 3;
 
-const InviteUserToPrivateNotes = ({ selectedNoteId }) => {
+const InviteUserToPrivateNotes = ({ selectedNoteId, selectedNoteType }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [allUsersList, setAllUsersList] = useState([]);
@@ -79,6 +82,8 @@ const InviteUserToPrivateNotes = ({ selectedNoteId }) => {
   const visibleUsers = mockInvitedUsers.slice(0, MAX_VISIBLE);
   const remainingCount = mockInvitedUsers.length - MAX_VISIBLE;
 
+  console.log(selectedNoteType);
+
   return (
     <div className="flex items-center gap-3">
       {/* Invited Users */}
@@ -111,20 +116,22 @@ const InviteUserToPrivateNotes = ({ selectedNoteId }) => {
       </div>
 
       {/* Invite Button */}
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 text-sm bg-primary text-white rounded-lg hover:opacity-90 transition"
-      >
-        <HiOutlineUserAdd size={18} />
-        Invite
-      </button>
+      {selectedNoteType == "mst-note" && (
+        <button
+          onClick={() => setOpen(true)}
+          className="flex items-center gap-2 cursor-pointer px-3 py-2 text-sm bg-primary text-white rounded-lg hover:opacity-90 transition"
+        >
+          <MdOutlinePeopleAlt size={18} />
+          Invite
+        </button>
+      )}
 
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white w-105 rounded-xl shadow-xl p-5">
             {/* Header */}
-            <div className="flex justify-between items-center mb-4">
+            <div className={`flex justify-between items-center mb-4`}>
               <h2 className="text-lg font-semibold">Invite People</h2>
 
               <button
