@@ -23,7 +23,7 @@ const LoggedInUserInfoMenu = ({
   useEffect(() => {
     const loadUser = async () => {
       const userDetails = await getItem("user");
-      
+
       setUser(userDetails);
     };
 
@@ -39,7 +39,9 @@ const LoggedInUserInfoMenu = ({
     .toUpperCase();
 
   const handleLogoutUser = async () => {
+    let user = await getItem("user");
     await removeItem("user");
+    user = await getItem("user");
     setIsUserLoggedIn(false);
     setShowDetailsMenu(false);
     toast.success("Logged out successfully!");

@@ -41,7 +41,7 @@ const Home = ({
   const [selectedWorkspaceName, setSelectedWorkspaceName] = useState(null);
   const [selectedNotesMode, setSelectedNotesMode] = useState(null);
   const [selectedMiniTab, setSelectedMiniTab] = useState("notes-workspaces");
-  console.log(selectedNoteType)
+  const [selectedNoteCollaboratorsDetails, setSelectedNoteCollaboratorsDetails] = useState([])
 
   return (
     <div className="h-screen bg-gray-100 p-3">
@@ -129,6 +129,7 @@ const Home = ({
                     setSelectedWorkspaceName={setSelectedWorkspaceName}
                     setSelectedWordspaceMode={setSelectedWordspaceMode}
                     setSelectedNotesMode={setSelectedNotesMode}
+                    setSelectedNoteCollaboratorsDetails={setSelectedNoteCollaboratorsDetails}
                   />
                 </div>
               </div>
@@ -147,6 +148,7 @@ const Home = ({
                   selectedNoteType={selectedNoteType}
                   refresh={refresh}
                   selectedNotesMode={selectedNotesMode}
+                  selectedNoteCollaboratorsDetails={selectedNoteCollaboratorsDetails}
                 />
               )}
 

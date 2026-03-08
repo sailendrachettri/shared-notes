@@ -46,6 +46,7 @@ const Sidebar = ({
   setSelectedWorkspaceName,
   setSelectedWordspaceMode,
   setSelectedNotesMode,
+  setSelectedNoteCollaboratorsDetails,
 }) => {
   const [loading, setLoading] = useState(true);
   const [openMenu, setOpenMenu] = useState(null);
@@ -64,7 +65,7 @@ const Sidebar = ({
   const [togglePublic, setTogglePublic] = useState(true);
 
   const handleFetchAllItemList = async () => {
-     const user = await getItem("user");
+    const user = await getItem("user");
 
     /**
      * sort_by_i TEXT,      -- 'title' or 'created_at'
@@ -82,6 +83,7 @@ const Sidebar = ({
       setSidebarItems(res?.data?.data?.public || []);
       setPublicNotes(res?.data?.data?.public || []);
       setPrivateNotes(res?.data?.data?.private || []);
+      console.log(res?.data?.data?.private || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
     } finally {
@@ -115,6 +117,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
+    setSelectedNoteCollaboratorsDetails(note?.collaborators || []);
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
     setOpenMenu(null);

@@ -56,6 +56,7 @@ const RichTextEditor = ({
   fullData,
   setRefresh,
   selectedNotesMode,
+  selectedNoteCollaboratorsDetails
 }) => {
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
@@ -526,7 +527,7 @@ const RichTextEditor = ({
 
           {selectedNotesMode == "private" && (
             <div>
-              <InviteUserToPrivateNotes selectedNoteType={selectedNoteType} selectedNoteId={selectedNoteId}/>
+              <InviteUserToPrivateNotes selectedNoteCollaboratorsDetails={selectedNoteCollaboratorsDetails} selectedNoteType={selectedNoteType} selectedNoteId={selectedNoteId}/>
             </div>
           )}
 

@@ -8,28 +8,29 @@ import { axiosInstance } from "../../../api/axios";
 import toast from "react-hot-toast";
 import { getItem } from "../../../api/storage";
 import { MdOutlinePeopleAlt } from "react-icons/md";
-
-
-
-const mockInvitedUsers = [
-  { id: 1, name: "John Doe", avatar: "" },
-  { id: 2, name: "Sarah Wilson", avatar: "" },
-  { id: 3, name: "Mike Ross", avatar: "" },
-  { id: 4, name: "Emma Watson", avatar: "" },
-  { id: 5, name: "Robert Downey", avatar: "" },
-];
+import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
+import { CapitalizedFirstChar } from "../../../utils/string-formate/CapitalizedFirstChar";
 
 const MAX_VISIBLE = 3;
 
-const InviteUserToPrivateNotes = ({ selectedNoteId, selectedNoteType }) => {
+const InviteUserToPrivateNotes = ({
+  selectedNoteId,
+  selectedNoteType,
+  selectedNoteCollaboratorsDetails,
+}) => {
+//   console.log(selectedNoteCollaboratorsDetails);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [allUsersList, setAllUsersList] = useState([]);
 
   const handleInvitePeople = async (invitedUser) => {
     try {
-      console.log(invitedUser);
       const user = await getItem("user");
+
+      if (invitedUser?.user_id == user?.userId) {
+        toast.error("You are already the owner of this note");
+        return;
+      }
 
       if (!invitedUser?.user_id || !user?.userId) {
         toast.error("User is invalid");
@@ -44,7 +45,7 @@ const InviteUserToPrivateNotes = ({ selectedNoteId, selectedNoteType }) => {
         INVITE_USER_IN_PRIVATE_NOTE_URL,
         payload,
       );
-      console.log(res);
+    //   console.log(res);
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         toast.success("Invitation sent successfully");
       } else if (
@@ -79,31 +80,30 @@ const InviteUserToPrivateNotes = ({ selectedNoteId, selectedNoteType }) => {
     handleGetAllUsers();
   }, []);
 
-  const visibleUsers = mockInvitedUsers.slice(0, MAX_VISIBLE);
-  const remainingCount = mockInvitedUsers.length - MAX_VISIBLE;
-
-  console.log(selectedNoteType);
+  const visibleUsers = selectedNoteCollaboratorsDetails?.slice(0, MAX_VISIBLE);
+  const remainingCount = selectedNoteCollaboratorsDetails?.length - MAX_VISIBLE;
+//   console.log(visibleUsers);
 
   return (
     <div className="flex items-center gap-3">
       {/* Invited Users */}
       <div className="flex -space-x-2">
-        {visibleUsers.map((user) => (
-          <div key={user?.id} className="relative group">
-            {user?.avatar ? (
+        {visibleUsers?.map((user) => (
+          <div key={user?.user_id} className="relative group">
+            {user?.profile_url ? (
               <img
-                src={user?.avatar}
+                src={`${VIEW_UPLOADED_FILE_URL}/${user?.profile_url}`}
                 className="w-9 h-9 rounded-full border-2 border-white object-cover"
               />
             ) : (
               <div className="w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white text-sm font-semibold border-2 border-white">
-                {getInitials(user?.name)}
+                {getInitials(user?.user_name)}
               </div>
             )}
 
             {/* Tooltip */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition">
-              {user?.name}
+              {CapitalizedFirstChar(user?.user_name)}
             </div>
           </div>
         ))}

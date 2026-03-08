@@ -18,7 +18,8 @@ const Playground = ({
   isSubPage,
   selectedNoteType,
   refresh,
-  selectedNotesMode
+  selectedNotesMode,
+  selectedNoteCollaboratorsDetails
 }) => {
   const [selectedFullDetails, setSelectedFullDetails] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -70,7 +71,6 @@ const Playground = ({
   };
 
   const getNotesDetails = async () => {
-   
     if (!currentNotesId || !selectedNoteType) {
       toast.error("NotesId and notes type is required is Required");
       return;
@@ -90,6 +90,7 @@ const Playground = ({
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setSelectedFullDetails(res?.data?.data?.notes_details);
         setfullData(res?.data?.data || null);
+       
         setLastUpdatedAt(
           res?.data?.data?.updated_at || res?.data?.data?.created_at || null,
         );
@@ -110,7 +111,7 @@ const Playground = ({
           SupPageTitle: newTitle || noteHeading,
           Notestype: "mst-note",
         };
-      
+
         const res = await axiosInstance.post(
           RENAME_SUB_PAGE_TITLE_URL,
           payload,
@@ -121,9 +122,8 @@ const Playground = ({
           NoteTitle: newTitle || noteHeading,
           Notestype: "mst-note",
         };
-        
+
         const res = await axiosInstance.post(RENAME_MST_NOTE_URL, payload);
-     
       }
     } catch (error) {
       console.error("Not able to rename", error);
@@ -156,6 +156,7 @@ const Playground = ({
             fullData={fullData}
             setRefresh={setRefresh}
             selectedNotesMode={selectedNotesMode}
+            selectedNoteCollaboratorsDetails={selectedNoteCollaboratorsDetails}
           />
 
           {/* Custom Toast */}
