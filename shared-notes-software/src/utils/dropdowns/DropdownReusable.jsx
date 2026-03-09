@@ -68,6 +68,9 @@ const DropdownReusable = ({
           value={selectedOption}
           isMulti={isMultiple}
           styles={customStyles}
+          formatOptionLabel={(option) =>
+            option.label.charAt(0).toUpperCase() + option.label.slice(1)
+          }
           menuPortalTarget={document.body}
           menuPosition="fixed"
           placeholder={placeholder}
