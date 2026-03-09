@@ -12,8 +12,14 @@ import { CapitalizedFirstChar } from "../../utils/string-formate/CapitalizedFirs
 import { GetNameInitials } from "../../utils/string-formate/GetNameInitials";
 import GenericConfirmModal from "../../reusable/GenericConfirmModal";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
+import NoResultFound from "../../utils/info-screen/NoResultFound";
 
-const NotificationsTab = ({ userData, setRefresh, refresh, setOpenRegistrationWindow }) => {
+const NotificationsTab = ({
+  userData,
+  setRefresh,
+  refresh,
+  setOpenRegistrationWindow,
+}) => {
   const [notesInviteDetails, setNotesInviteDetails] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
   const [inviteActionType, setInviteActionType] = useState(null);
@@ -188,7 +194,10 @@ const NotificationsTab = ({ userData, setRefresh, refresh, setOpenRegistrationWi
           ))
         ) : (
           <div className="text-center text-gray-500 py-10 text-sm">
-            No notifications
+            <NoResultFound
+              title={"All caught up!"}
+              desc={"You don’t have any notifications at the moment."}
+            />
           </div>
         )}
       </div>

@@ -534,7 +534,7 @@ const RichTextEditor = ({
 
           <div>
             <WorkspaceModeBadge
-              privateDesc={`${userNoteOwnsOrCollaborative == 'owner'? 'Only you can access this note.' : 'Only you and your collaborators can access this note.'} `}
+              privateDesc={`Only you and your collaborators can access this note.`}
               publicDesc={"Anyone with access can view this Notes."}
               selectedWorkspaceMode={selectedNotesMode}
             />

@@ -136,7 +136,7 @@ const InviteUserToPrivateNotes = ({
           <div className="bg-white w-105 rounded-xl shadow-xl p-5">
             {/* Header */}
             <div className={`flex justify-between items-center mb-4`}>
-              <h2 className="text-lg font-semibold">Invite People</h2>
+              <h2 className="text-lg font-semibold">Invite Collaborators</h2>
 
               <button
                 onClick={() => setOpen(false)}
