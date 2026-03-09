@@ -28,7 +28,7 @@ import {
   DELETE_WORKSPACE_TASK_URL,
   GET_WORKSPACE_FULL_DETAILS_BY_ID_URL,
   RENAME_WORKSPACE_URL,
-  UPDATE_WORKSPACE_TASK_POSITION_URL
+  UPDATE_WORKSPACE_TASK_POSITION_URL,
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
@@ -38,6 +38,7 @@ import WorkspaceStats from "./WorkspaceStats";
 import Select from "react-select";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
+import { getItem } from "../../../api/storage";
 
 const primary = "#d25564";
 
@@ -355,12 +356,46 @@ function TaskCard({ task, overlay = false, onDelete }) {
 }
 
 /* ─── AddForm ───────────────────────────────────────────────────── */
-function AddForm({ col, onAdd, onCancel, userNameOptions }) {
+function AddForm({
+  col,
+  onAdd,
+  onCancel,
+  userNameOptions,
+  selectedWorkspaceMode,
+}) {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [userIds, setUserIds] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
-  //
+  const handleSelectCollaborators = async (selectedOptions) => {
+    const user = await getItem("user");
+
+    if (!selectedOptions) {
+      setSelectedUsers([]);
+      setUserIds([]);
+      return;
+    }
+
+    if (selectedOptions.length > 5) {
+      toast.error("You can select maximum 5 members");
+      return;
+    }
+
+    const ids = selectedOptions.map((o) => o.value);
+
+    const assigningOthers = ids.some((id) => id !== user?.userId);
+
+    if (selectedWorkspaceMode === "private" && assigningOthers) {
+      toast.error(
+        "You cannot assign others in a private workspace. Make it public to collaborate.",
+      );
+      return;
+    }
+
+    setSelectedUsers(selectedOptions);
+    setUserIds(ids);
+  };
 
   const submit = () => {
     if (!title.trim()) return;
@@ -406,26 +441,17 @@ function AddForm({ col, onAdd, onCancel, userNameOptions }) {
         <Select
           options={userNameOptions}
           isMulti
+          value={selectedUsers}
           styles={customStyles}
           menuPortalTarget={document.body}
           menuPosition="fixed"
-          placeholder="Select team members"
+          placeholder="Select Collaborators"
           classNames={{
             menuList: () => "hide-scrollbar",
           }}
           isOptionDisabled={() => userIds?.length >= 5}
           onChange={(selectedOptions) => {
-            if (!selectedOptions) {
-              setUserIds([]);
-              return;
-            }
-
-            if (selectedOptions?.length <= 5) {
-              const ids = selectedOptions?.map((option) => option.value);
-              setUserIds(ids);
-            } else {
-              toast.error("You can select maximum 5 members");
-            }
+            handleSelectCollaborators(selectedOptions);
           }}
         />
       </div>
@@ -482,6 +508,7 @@ function Column({
   onAdd,
   onDelete,
   userNameOptions,
+  selectedWorkspaceMode,
 }) {
   const safeTasks = tasks ?? [];
   const ids = safeTasks.map((t) => t.id);
@@ -594,6 +621,7 @@ function Column({
               onAdd={onAdd}
               onCancel={() => setAddingIn(null)}
               userNameOptions={userNameOptions}
+              selectedWorkspaceMode={selectedWorkspaceMode}
             />
           )}
         </div>
@@ -1047,6 +1075,7 @@ export default function WorkSpaceBoardView({
                 onAdd={handleAdd(col?.id)}
                 onDelete={handleDeleteTask}
                 userNameOptions={userNameOptions}
+                selectedWorkspaceMode={selectedWorkspaceMode}
               />
             ))}
           </div>

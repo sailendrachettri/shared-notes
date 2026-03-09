@@ -111,6 +111,7 @@ const MiniMenu = ({
         ) : (
           <div className="absolute bottom-7 left-4.5">
             <span
+            title="Sign in"
               onClick={() => {
                 setOpenRegistrationWindow(true);
                 setSelectedType('signin')
