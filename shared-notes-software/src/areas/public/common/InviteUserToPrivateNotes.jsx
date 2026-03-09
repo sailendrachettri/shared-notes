@@ -19,7 +19,6 @@ const InviteUserToPrivateNotes = ({
   selectedNoteCollaboratorsDetails,
   userNoteOwnsOrCollaborative,
 }) => {
-  //   console.log(selectedNoteCollaboratorsDetails);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [allUsersList, setAllUsersList] = useState([]);
@@ -46,7 +45,7 @@ const InviteUserToPrivateNotes = ({
         INVITE_USER_IN_PRIVATE_NOTE_URL,
         payload,
       );
-      //   console.log(res);
+  
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         toast.success("Invitation sent successfully");
       } else if (
@@ -83,9 +82,6 @@ const InviteUserToPrivateNotes = ({
 
   const visibleUsers = selectedNoteCollaboratorsDetails?.slice(0, MAX_VISIBLE);
   const remainingCount = selectedNoteCollaboratorsDetails?.length - MAX_VISIBLE;
-  //   console.log(visibleUsers);
-
-  console.log(userNoteOwnsOrCollaborative);
 
   return (
     <div className="flex items-center gap-3">

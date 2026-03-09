@@ -84,7 +84,6 @@ const Sidebar = ({
       setSidebarItems(res?.data?.data?.public || []);
       setPublicNotes(res?.data?.data?.public || []);
       setPrivateNotes(res?.data?.data?.private || []);
-      console.log(res?.data?.data?.private || []);
     } catch (error) {
       console.error("not able to fetch sidebar items", error);
     } finally {
@@ -118,7 +117,7 @@ const Sidebar = ({
   };
 
   const handleSelectNote = (note) => {
-    console.log(note);
+
     setUserNoteOwnsOrCollaborative(note?.access_type || "");
     setSelectedNoteCollaboratorsDetails(note?.collaborators || []);
     setCurrentNotesId(note?.notes_id);

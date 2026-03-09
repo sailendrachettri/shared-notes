@@ -23,7 +23,7 @@ function App() {
   const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
 
   const currrentEnvironment = window.location.host;
-  console.log(openRegistrationWindow);
+
 
   const handleLoadUser = async () => {
     const user = await getItem("user");

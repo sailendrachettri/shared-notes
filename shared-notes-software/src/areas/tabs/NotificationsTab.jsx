@@ -50,7 +50,6 @@ const NotificationsTab = ({ userData, setRefresh, refresh, setOpenRegistrationWi
         INVITE_USER_NOTE_ACCEPT_REJECT_URL,
         payload,
       );
-      console.log(res);
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         toast.success(`Invitation ${inviteActionType}`);
       } else {

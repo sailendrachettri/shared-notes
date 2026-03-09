@@ -17,7 +17,6 @@ const MiniMenu = ({
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);
-  console.log(showDetailsMenu);
 
   // Close when clicking outside
   useEffect(() => {
