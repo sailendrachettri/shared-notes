@@ -66,7 +66,7 @@ const NotificationsTab = ({ userData, setRefresh, refresh, setOpenRegistrationWi
 
   const handleGetNoteInviteNotifications = async () => {
     if (!userData?.userId) {
-      toast.error("Please login and try again");
+      console.info("Please login and try again");
       return;
     }
 

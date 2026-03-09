@@ -181,7 +181,7 @@ const Home = ({
           </div>
         )}
 
-        {selectedMiniTab == "remainders" && (
+        {selectedMiniTab == "reminders" && (
           <div className="w-full mb-10">
             <RemindersApp
               setOpenRegistrationWindow={setOpenRegistrationWindow}

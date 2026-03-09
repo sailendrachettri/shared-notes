@@ -14,10 +14,10 @@ const MiniMenu = ({
   setIsUserLoggedIn,
   userData,
   isUserLoggedIn,
-  
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);
+  console.log(showDetailsMenu);
 
   // Close when clicking outside
   useEffect(() => {
@@ -30,6 +30,12 @@ const MiniMenu = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!isUserLoggedIn) {
+      setShowDetailsMenu(false);
+    }
+  }, [isUserLoggedIn]);
 
   return (
     <>
@@ -52,9 +58,9 @@ const MiniMenu = ({
         </div>
         <div
           onClick={() => {
-            setSelectedMiniTab("remainders");
+            setSelectedMiniTab("reminders");
           }}
-          className={`${selectedMiniTab == "remainders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+          className={`${selectedMiniTab == "reminders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
           <IoCalendarOutline size={22} />
         </div>
@@ -69,19 +75,18 @@ const MiniMenu = ({
 
         {/* User */}
         {isUserLoggedIn && (
-          <div className="absolute bottom-5 left-3.5">
-            <div
-              onClick={() => setShowDetailsMenu(true)}
-              className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-primary/10 ring-2 ring-white"
-            >
+          <div ref={menuRef} className="absolute bottom-5 left-3.5">
+            <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-primary/10 ring-2 ring-white">
               {userData?.profile_url ? (
                 <img
+                  onClick={() => setShowDetailsMenu((prev) => !prev)}
                   src={`${VIEW_UPLOADED_FILE_URL}/${userData?.profile_url}`}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <span
+                  onClick={() => setShowDetailsMenu((prev) => !prev)}
                   className="w-8 h-8 rounded-full overflow-hidden 
                cursor-pointer 
                ring-2 ring-white 
@@ -95,14 +100,13 @@ const MiniMenu = ({
                 </span>
               )}
             </div>
+            <LoggedInUserInfoMenu
+              setIsUserLoggedIn={setIsUserLoggedIn}
+              setShowDetailsMenu={setShowDetailsMenu}
+              showDetailsMenu={showDetailsMenu}
+            />
           </div>
         )}
-
-        <LoggedInUserInfoMenu
-          setIsUserLoggedIn={setIsUserLoggedIn}
-          setShowDetailsMenu={setShowDetailsMenu}
-          showDetailsMenu={showDetailsMenu}
-        />
       </section>
     </>
   );
