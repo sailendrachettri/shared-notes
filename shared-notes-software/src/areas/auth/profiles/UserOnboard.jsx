@@ -20,13 +20,12 @@ import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
 import { setItem } from "../../../api/storage";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 
-export default function UserOnboard({ open, onClose, setIsUserLoggedIn }) {
+export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selectedType, setSelectedType }) {
   const [fullName, setFullName] = useState("");
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [step, setStep] = useState(1); // 1 = fullName, 2 = pin, 3 = confirmPin
   const [submitting, setSubmitting] = useState(false);
-  const [selectedType, setSelectedType] = useState("signup");
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userProfileImage, setUserProfileImage] = useState("");

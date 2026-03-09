@@ -21,9 +21,9 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
   const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
+  const [selectedType, setSelectedType] = useState("signup");
 
   const currrentEnvironment = window.location.host;
-
 
   const handleLoadUser = async () => {
     const user = await getItem("user");
@@ -159,6 +159,7 @@ function App() {
           setIsUserLoggedIn={setIsUserLoggedIn}
           userData={userData}
           setOpenRegistrationWindow={setOpenRegistrationWindow}
+          setSelectedType={setSelectedType}
         />
       </section>
 
@@ -166,6 +167,8 @@ function App() {
         setIsUserLoggedIn={setIsUserLoggedIn}
         open={openRegistrationWindow}
         onClose={() => setOpenRegistrationWindow(false)}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
       />
     </>
   );

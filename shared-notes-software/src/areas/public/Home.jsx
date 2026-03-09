@@ -23,6 +23,7 @@ const Home = ({
   setSelectedWordspaceMode,
   userData,
   setOpenRegistrationWindow,
+  setSelectedType,
 }) => {
   const [sidebarItems, setSidebarItems] = useState(null);
   const [selectedNoteId, setSelectedNoteId] = useState(null);
@@ -58,6 +59,9 @@ const Home = ({
           setIsUserLoggedIn={setIsUserLoggedIn}
           userData={userData}
           isUserLoggedIn={isUserLoggedIn}
+          setOpenRegistrationWindow={setOpenRegistrationWindow}
+          setSelectedType={setSelectedType}
+          
         />
 
         {selectedMiniTab == "dashboard" && (
@@ -137,7 +141,9 @@ const Home = ({
                     setSelectedNoteCollaboratorsDetails={
                       setSelectedNoteCollaboratorsDetails
                     }
-                    setUserNoteOwnsOrCollaborative={setUserNoteOwnsOrCollaborative}
+                    setUserNoteOwnsOrCollaborative={
+                      setUserNoteOwnsOrCollaborative
+                    }
                   />
                 </div>
               </div>
@@ -169,6 +175,7 @@ const Home = ({
                   selectedWorkspaceId={selectedWorkspaceId}
                   selectedWorkspaceName={selectedWorkspaceName}
                   selectedWorkspaceMode={selectedWorkspaceMode}
+                  setOpenRegistrationWindow={setOpenRegistrationWindow}
                 />
               )}
 

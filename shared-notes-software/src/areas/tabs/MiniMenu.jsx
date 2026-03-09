@@ -7,6 +7,7 @@ import LoggedInUserInfoMenu from "../auth/profiles/LoggedInUserInfoMenu";
 import { IoCalendarOutline } from "react-icons/io5";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 import { HiOutlineBell } from "react-icons/hi";
+import { FiLogIn } from "react-icons/fi";
 
 const MiniMenu = ({
   selectedMiniTab,
@@ -14,6 +15,8 @@ const MiniMenu = ({
   setIsUserLoggedIn,
   userData,
   isUserLoggedIn,
+  setOpenRegistrationWindow,
+   setSelectedType
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);
@@ -73,7 +76,7 @@ const MiniMenu = ({
         </div>
 
         {/* User */}
-        {isUserLoggedIn && (
+        {isUserLoggedIn ? (
           <div ref={menuRef} className="absolute bottom-5 left-3.5">
             <div className="w-8 h-8 rounded-full overflow-hidden cursor-pointer bg-primary/10 ring-2 ring-white">
               {userData?.profile_url ? (
@@ -104,6 +107,18 @@ const MiniMenu = ({
               setShowDetailsMenu={setShowDetailsMenu}
               showDetailsMenu={showDetailsMenu}
             />
+          </div>
+        ) : (
+          <div className="absolute bottom-7 left-4.5">
+            <span
+              onClick={() => {
+                setOpenRegistrationWindow(true);
+                setSelectedType('signin')
+              }}
+              className="cursor-pointer rounded-md hover:text-slate-600 text-slate-500"
+            >
+              <FiLogIn size={18} />
+            </span>
           </div>
         )}
       </section>
