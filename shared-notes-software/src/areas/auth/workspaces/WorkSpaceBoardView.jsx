@@ -442,6 +442,9 @@ function AddForm({
           options={userNameOptions}
           isMulti
           value={selectedUsers}
+          formatOptionLabel={(option) =>
+            option.label.charAt(0).toUpperCase() + option.label.slice(1)
+          }
           styles={customStyles}
           menuPortalTarget={document.body}
           menuPosition="fixed"
