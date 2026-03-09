@@ -10,7 +10,6 @@ import {
   FILE_UPLOAD_URL,
   GET_ALL_USERS_URL,
   LOGIN_USER_URL,
-  
 } from "../../../api/api_routes";
 import toast from "react-hot-toast";
 import AuthToggle from "./AuthToggle";
@@ -19,8 +18,15 @@ import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
 import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
 import { setItem } from "../../../api/storage";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
+import { useNotificationCount } from "../../../hooks/useNotificationCount";
 
-export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selectedType, setSelectedType }) {
+export default function UserOnboard({
+  open,
+  onClose,
+  setIsUserLoggedIn,
+  selectedType,
+  setSelectedType,
+}) {
   const [fullName, setFullName] = useState("");
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
@@ -29,6 +35,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selected
   const [allUsersList, setAllUsersList] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userProfileImage, setUserProfileImage] = useState("");
+  const { refreshNotifications } = useNotificationCount();
 
   const steps = ["Basic Info", "Set PIN", "Confirm PIN"];
 
@@ -91,8 +98,8 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selected
         setFullName("");
         setPin("");
         setConfirmPin("");
-        setStep(1); 
-       
+        setStep(1);
+
         await setItem("user", {
           isLoggedIn: true,
           userId: res?.data?.user_id,
@@ -134,6 +141,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selected
           profile_url: res?.data?.profile_url,
         });
         toast.success("Credential verified");
+        refreshNotifications();
         onClose();
       } else {
         toast.error("Please check your credentials.");
@@ -177,7 +185,7 @@ export default function UserOnboard({ open, onClose, setIsUserLoggedIn, selected
                 <FaUser /> Profile Details
               </h2>
               <button onClick={onClose}>
-                <FaTimes size={20} />
+                <FaTimes size={20} className="cursor-pointer" />
               </button>
             </div>
 

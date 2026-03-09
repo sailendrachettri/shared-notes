@@ -19,6 +19,7 @@ const LoggedInUserInfoMenu = ({
   const [isEditing, setIsEditing] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const fileRef = useRef(null);
+  
 
   useEffect(() => {
     const loadUser = async () => {

@@ -28,7 +28,7 @@ const GenericConfirmModal = ({
             transition={{ duration: 0.2 }}
             className="fixed inset-0 flex items-center justify-center z-50"
           >
-            <div className="bg-white dark:bg-gray-900 w-80 rounded-xl shadow-xl p-6">
+            <div className="bg-white dark:bg-gray-900 max-w-120 rounded-xl shadow-xl p-6">
               
               {/* Title */}
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
