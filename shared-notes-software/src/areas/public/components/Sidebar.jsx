@@ -53,7 +53,7 @@ const Sidebar = ({
   const [openMenu, setOpenMenu] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [subPageTitle, setSubPageTitle] = useState("");
-  const [openNotes, setOpenNotes] = useState({});
+  const [openNoteId, setOpenNoteId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isGenericConfirmModalOpen, setIsGenericConfirmModalOpen] =
@@ -119,7 +119,7 @@ const Sidebar = ({
 
   const handleSelectNote = (note) => {
     console.log(note);
-    setUserNoteOwnsOrCollaborative(note?.access_type || '')
+    setUserNoteOwnsOrCollaborative(note?.access_type || "");
     setSelectedNoteCollaboratorsDetails(note?.collaborators || []);
     setCurrentNotesId(note?.notes_id);
     setSelectedNoteType("mst-note");
@@ -256,43 +256,6 @@ const Sidebar = ({
                     size={workspaceLength}
                     key={1}
                   />
-                  // <div className="flex flex-nowrap justify-between items-center min-h-7">
-                  //   <div
-                  //     onClick={() => {
-                  //       setSelectedTab("workspaces");
-                  //     }}
-                  //     className={`ps-1 text-sm font-semibold text-slate-600`}
-                  //   >
-                  //     Workspaces
-                  //   </div>
-
-                  //   <section>
-                  //     <div className="group-hover:hidden">
-                  //       <span
-                  //         className="inline-flex items-center justify-center
-                  //  min-w-[20px] h-5 px-1.5
-                  //  bg-primary/10 text-primary
-                  //  text-[10px] font-semibold
-                  //  rounded-full"
-                  //       >
-                  //         {publicNotes?.length}
-                  //       </span>
-                  //     </div>
-
-                  //     <div
-                  //       className="hidden group-hover:block text-slate-400"
-                  //       onClick={() => {
-                  //         setToggleWorkspace((prev) => !prev);
-                  //       }}
-                  //     >
-                  //       {toggleWorkspace ? (
-                  //         <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                  //       ) : (
-                  //         <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                  //       )}
-                  //     </div>
-                  //   </section>
-                  // </div>
                 )}
 
                 {toggleWorkspace && (
@@ -329,24 +292,6 @@ const Sidebar = ({
                     size={privateNotes?.length || 0}
                     key={2}
                   />
-
-                  // <div className="flex flex-nowrap justify-between items-center">
-                  //   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                  //     Private
-                  //   </div>
-                  //   <div
-                  //     className="invisible group-hover:visible text-slate-400"
-                  //     onClick={() => {
-                  //       setTogglePrivate((prev) => !prev);
-                  //     }}
-                  //   >
-                  //     {togglePrivate ? (
-                  //       <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                  //     ) : (
-                  //       <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                  //     )}
-                  //   </div>
-                  // </div>
                 )}
 
                 {/* Private Notes */}
@@ -354,7 +299,7 @@ const Sidebar = ({
                   {togglePrivate && (
                     <div>
                       {privateNotes?.map((item) => {
-                        const isOpen = openNotes[item?.note_id];
+                        const isOpen = openNoteId === item?.note_id;
 
                         return (
                           <div key={item?.note_id} className="relative my-2">
@@ -364,10 +309,9 @@ const Sidebar = ({
                                 handleSelectNote(item);
                                 setSelectedNotesMode("private");
 
-                                setOpenNotes((prev) => ({
-                                  ...prev,
-                                  [item?.note_id]: !prev[item?.note_id],
-                                }));
+                                setOpenNoteId((prev) =>
+                                  prev === item?.note_id ? null : item?.note_id,
+                                );
                               }}
                               className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
             ${
@@ -492,10 +436,11 @@ const Sidebar = ({
                                     setSelectedNoteId(item?.note_id);
                                     setIsOpen(true);
                                     setOpenMenu(null);
-                                    setOpenNotes((prev) => ({
-                                      ...prev,
-                                      [item?.note_id]: true,
-                                    }));
+                                    setOpenNoteId((prev) =>
+                                      prev === item?.note_id
+                                        ? null
+                                        : item?.note_id,
+                                    );
                                   }}
                                   className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                                 >
@@ -545,29 +490,12 @@ const Sidebar = ({
                       size={publicNotes?.length || 0}
                       key={3}
                     />
-                    // <div className="flex flex-nowrap justify-between items-center">
-                    //   <div className="ps-1 text-sm font-semibold text-slate-600 pb-1">
-                    //     Shared
-                    //   </div>
-                    //   <div
-                    //     className="invisible group-hover:visible text-slate-400"
-                    //     onClick={() => {
-                    //       setTogglePublic((prev) => !prev);
-                    //     }}
-                    //   >
-                    //     {togglePublic ? (
-                    //       <IoIosArrowUp className="rotate-180 cursor-pointer hover:text-slate-500" />
-                    //     ) : (
-                    //       <IoIosArrowUp className="cursor-pointer hover:text-slate-500" />
-                    //     )}
-                    //   </div>
-                    // </div>
                   )}
 
                   {togglePublic && (
                     <div>
                       {publicNotes?.map((item) => {
-                        const isOpen = openNotes[item?.note_id];
+                        const isOpen = openNoteId === item?.note_id;
 
                         return (
                           <div key={item?.note_id} className="relative my-2">
@@ -576,10 +504,7 @@ const Sidebar = ({
                               onClick={() => {
                                 handleSelectNote(item);
                                 setSelectedNotesMode("public");
-                                setOpenNotes((prev) => ({
-                                  ...prev,
-                                  [item?.note_id]: !prev[item?.note_id],
-                                }));
+                               setOpenNoteId((prev) => (prev === item?.note_id ? null : item?.note_id));
                               }}
                               className={`group w-full capitalize text-sm text-left px-2 py-2.5 cursor-pointer rounded-lg transition-all duration-200
             ${
@@ -705,10 +630,7 @@ const Sidebar = ({
                                     setSelectedNoteId(item?.note_id);
                                     setIsOpen(true);
                                     setOpenMenu(null);
-                                    setOpenNotes((prev) => ({
-                                      ...prev,
-                                      [item?.note_id]: true,
-                                    }));
+                                   setOpenNoteId((prev) => (prev === item?.note_id ? null : item?.note_id));
                                   }}
                                   className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                                 >
