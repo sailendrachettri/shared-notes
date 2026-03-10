@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -846,114 +847,86 @@ export default function FileExplorer() {
         content={
           <section className="flex flex-col h-full min-h-0">
             {/* Top toolbar */}
-            <div className="border-b border-gray-200 bg-white pt-2">
+            <div className="border-b border-gray-200 bg-white pt-2 px-3">
               {/* Navigation row */}
               <div className="flex items-center gap-1 mb-2">
-                <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors">
-                  <ArrowLeft />
-                </button>
-                <button className="p-1.5 rounded hover:bg-gray-100 text-gray-400 transition-colors">
-                  <ArrowRight />
-                </button>
-                <button className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors ml-1">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="4,15 4,20 9,20" />
-                    <polyline points="20,4 20,9 15,9" />
-                    <path d="M20 9L14.5 14.5a7 7 0 1 1-1.5-9.5" />
-                  </svg>
+                {/* Back */}
+                <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
+                  <MdKeyboardArrowLeft  />
                 </button>
 
+                {/* Forward */}
+                <button className="p-1.5 rounded text-gray-400 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
+                  <MdKeyboardArrowRight />
+                </button>
+
+                
+
                 {/* Address bar */}
-                <div
-                  className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white hover:border-blue-400 transition-all cursor-pointer"
-                  style={{ fontSize: "12.5px" }}
-                >
-                  <span style={{ display: "inline-block", marginRight: "1px" }}>
-                    {icons.folder("#FFB900")}
-                  </span>
+                <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white hover:border-primary transition-all cursor-pointer text-[12.5px]">
+                  {icons.folder("#FFB900")}
+
                   <span className="text-gray-400 mx-1">
                     <ChevronRight />
                   </span>
+
                   <span className="font-medium text-gray-700">This PC</span>
+
                   <span className="text-gray-400 mx-1">
                     <ChevronRight />
                   </span>
+
                   <span className="font-medium text-gray-700">Documents</span>
+
                   <span className="text-gray-400 mx-1">
                     <ChevronRight />
                   </span>
-                  <span className="text-blue-600 font-medium">Projects</span>
+
+                  <span className="text-primary font-medium">Projects</span>
                 </div>
 
                 {/* Toolbar actions */}
                 <div className="flex items-center gap-1">
-                  <button
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-white transition-colors"
-                    style={{
-                      background: "#0067C0",
-                      fontSize: "12px",
-                      fontWeight: 500,
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = "#005BA3")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "#0067C0")
-                    }
-                  >
+                  {/* Upload */}
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors">
                     <UploadIcon /> Upload
                   </button>
-                  <button
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-gray-300 bg-white hover:bg-gray-50 transition-colors"
-                    style={{ fontSize: "12px" }}
-                  >
+
+                  {/* New folder */}
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-gray-300 bg-white hover:bg-primary/5 hover:border-primary/40 text-[12px] transition-colors">
                     <FolderPlusIcon /> New folder
                   </button>
+
                   <div className="w-px h-5 bg-gray-200 mx-1" />
+
+                  {/* Grid view */}
                   <button
                     onClick={() => setView("grid")}
-                    className="p-1.5 rounded transition-colors"
-                    style={{
-                      background: view === "grid" ? "#E8F0FE" : "transparent",
-                      color: view === "grid" ? "#1A73E8" : "#6B7280",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (view !== "grid")
-                        e.currentTarget.style.background = "#F3F4F6";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (view !== "grid")
-                        e.currentTarget.style.background = "transparent";
-                    }}
+                    className={`p-1.5 rounded transition-colors
+        ${
+          view === "grid"
+            ? "bg-primary/10 text-primary"
+            : "text-gray-500 hover:bg-primary/10 hover:text-primary"
+        }`}
                   >
                     <GridIcon />
                   </button>
+
+                  {/* List view */}
                   <button
                     onClick={() => setView("list")}
-                    className="p-1.5 rounded transition-colors"
-                    style={{
-                      background: view === "list" ? "#E8F0FE" : "transparent",
-                      color: view === "list" ? "#1A73E8" : "#6B7280",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (view !== "list")
-                        e.currentTarget.style.background = "#F3F4F6";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (view !== "list")
-                        e.currentTarget.style.background = "transparent";
-                    }}
+                    className={`p-1.5 rounded transition-colors
+        ${
+          view === "list"
+            ? "bg-primary/10 text-primary"
+            : "text-gray-500 hover:bg-primary/10 hover:text-primary"
+        }`}
                   >
                     <ListIcon />
                   </button>
-                  <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors ml-1">
+
+                  {/* Sort */}
+                  <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 hover:text-primary transition-colors ml-1">
                     <SortIcon />
                   </button>
                 </div>
