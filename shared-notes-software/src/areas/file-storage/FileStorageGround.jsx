@@ -150,11 +150,50 @@ const ChevronRight = () => (
   </svg>
 );
 
+const ArrowLeft = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <polyline points="15,18 9,12 15,6" />
+  </svg>
+);
+
+const ArrowRight = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <polyline points="9,18 15,12 9,6" transform="rotate(180 12 12)" />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
 
 const UploadIcon = () => (
   <svg
-    width="8"
-    height="8"
+    width="15"
+    height="15"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -168,8 +207,8 @@ const UploadIcon = () => (
 
 const FolderPlusIcon = () => (
   <svg
-    width="9"
-    height="9"
+    width="15"
+    height="15"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -183,8 +222,8 @@ const FolderPlusIcon = () => (
 
 const GridIcon = () => (
   <svg
-    width="9"
-    height="9"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -199,8 +238,8 @@ const GridIcon = () => (
 
 const ListIcon = () => (
   <svg
-    width="9"
-    height="9"
+    width="16"
+    height="16"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -217,8 +256,8 @@ const ListIcon = () => (
 
 const DotsIcon = () => (
   <svg
-    width="8"
-    height="8"
+    width="14"
+    height="14"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -232,8 +271,8 @@ const DotsIcon = () => (
 
 const SortIcon = () => (
   <svg
-    width="8"
-    height="8"
+    width="14"
+    height="14"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -268,7 +307,7 @@ const getFileIcon = (file) => {
 const getLargeIcon = (file) => {
   if (file.type === "folder") {
     return (
-      <svg width="42" height="42" viewBox="0 0 56 56" fill="none">
+      <svg width="43" height="52" viewBox="0 0 56 56" fill="none">
         <path
           d="M4 14C4 11.8 5.8 10 8 10H21.4C22.5 10 23.5 10.45 24.2 11.22L26.6 13.8C27.3 14.57 28.3 15 29.4 15H48C50.2 15 52 16.8 52 19V44C52 46.2 50.2 48 48 48H8C5.8 48 4 46.2 4 44V14Z"
           fill="#FFB900"
