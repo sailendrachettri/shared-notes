@@ -372,9 +372,19 @@ const getLargeIcon = (file) => {
 const navItems = [
   {
     label: "Quick access",
-    items: ["Desktop", "Downloads", "Documents", "Pictures"],
+    items: [
+      "All Files",
+      "Documents",
+      "Pictures",
+      "Audios",
+      "Videos",
+      "Code",
+      "Applications",
+      "Design",
+      "Databases",
+      "Archives",
+    ],
   },
-  { label: "This PC", items: ["C: Drive", "D: Drive"] },
 ];
 
 const files = [
@@ -779,88 +789,64 @@ export default function FileExplorer() {
         sidebar={
           <section>
             {/* Sidebar */}
-            <aside>
-              {/* Sidebar header */}
-              <div className="px-3 pt-3 pb-2">
-                <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-white border border-gray-200 shadow-sm">
-                  <SearchIcon />
-                  <input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search"
-                    className="bg-transparent outline-none text-xs w-full placeholder-gray-400"
-                    style={{ fontSize: "12px" }}
-                  />
-                </div>
-              </div>
-
-              {/* Nav tree */}
-              <div className="flex-1 overflow-auto py-1 px-1">
-                {navItems.map((section) => (
-                  <div key={section.label} className="mb-1">
-                    <button
-                      onClick={() => toggleExpand(section.label)}
-                      className="flex items-center gap-1 w-full px-2 py-1 rounded text-left text-gray-500 hover:bg-gray-100 transition-colors"
+            <div className="flex-1 overflow-auto py-1 px-1 mt-2">
+              {navItems.map((section) => (
+                <div key={section.label}>
+                  <button
+                    onClick={() => toggleExpand(section.label)}
+                    className="flex items-center gap-1 w-full px-2 py-1 rounded text-left text-gray-500 hover:bg-gray-100 transition-colors"
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    <span
                       style={{
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        letterSpacing: "0.02em",
+                        transform: expandedNav.includes(section.label)
+                          ? "rotate(90deg)"
+                          : "rotate(0deg)",
+                        transition: "transform 0.15s",
+                        display: "inline-block",
                       }}
                     >
-                      <span
-                        style={{
-                          transform: expandedNav.includes(section.label)
-                            ? "rotate(90deg)"
-                            : "rotate(0deg)",
-                          transition: "transform 0.15s",
-                          display: "inline-block",
-                        }}
-                      >
-                        <ChevronRight />
-                      </span>
-                      {section.label.toUpperCase()}
-                    </button>
+                      <ChevronRight />
+                    </span>
+                    {section.label.toUpperCase()}
+                  </button>
 
-                    {expandedNav.includes(section.label) &&
-                      section.items.map((item) => (
+                  {expandedNav.includes(section.label) &&
+                    section.items.map((item) => {
+                      const isActive = activeNav === item;
+
+                      return (
                         <button
                           key={item}
                           onClick={() => setActiveNav(item)}
-                          className="flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-left transition-colors"
-                          style={{
-                            paddingLeft: "20px",
-                            background:
-                              activeNav === item ? "#E8F0FE" : "transparent",
-                            color: activeNav === item ? "#1A73E8" : "#374151",
-                          }}
-                          onMouseEnter={(e) => {
-                            if (activeNav !== item)
-                              e.currentTarget.style.background = "#F3F4F6";
-                          }}
-                          onMouseLeave={(e) => {
-                            if (activeNav !== item)
-                              e.currentTarget.style.background = "transparent";
-                          }}
+                          className={`flex items-center gap-2 w-full mt-1 pl-5 px-2 py-1.5 rounded-md text-left transition-colors text-[12.5px]
+        ${
+          isActive
+            ? "bg-[#E8F0FE] text-primary"
+            : "text-gray-700 hover:bg-gray-100 cursor-pointer"
+        }`}
                         >
-                          <span style={{ opacity: 0.85 }}>
-                            {icons.folder(
-                              activeNav === item ? "#1A73E8" : "#FFB900",
-                            )}
+                          <span className="opacity-85">
+                            {icons.folder(isActive ? "#d25564" : "#FFB900")}
                           </span>
-                          <span style={{ fontSize: "12.5px" }}>{item}</span>
+
+                          <span>{item}</span>
                         </button>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </aside>
+                      );
+                    })}
+                </div>
+              ))}
+            </div>
           </section>
         }
         content={
           <section className="flex flex-col h-full min-h-0">
-           
             {/* Top toolbar */}
-            <div className="border-b border-gray-200 bg-white">
+            <div className="border-b border-gray-200 bg-white pt-2">
               {/* Navigation row */}
               <div className="flex items-center gap-1 mb-2">
                 <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors">
@@ -977,37 +963,24 @@ export default function FileExplorer() {
             {/* File area */}
             <div className="flex-1 overflow-auto min-h-0">
               {view === "list" ? (
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <table className="w-full border-collapse">
                   <thead>
-                    <tr
-                      style={{
-                        background: "#F9FAFB",
-                        borderBottom: "1px solid #E5E7EB",
-                      }}
-                    >
+                    <tr className="bg-gray-50 border-b border-gray-200">
                       {["Name", "Date modified", "Type", "Size"].map((h, i) => (
                         <th
                           key={h}
-                          style={{
-                            textAlign: "left",
-                            padding: "6px 12px",
-                            fontSize: "11.5px",
-                            fontWeight: 600,
-                            color: "#6B7280",
-                            letterSpacing: "0.02em",
-                            width: i === 0 ? "45%" : i === 3 ? "10%" : "20%",
-                            cursor: "pointer",
-                            userSelect: "none",
-                          }}
+                          className={`text-left px-3 py-[6px] text-[11.5px] font-semibold text-gray-500 tracking-wide cursor-pointer select-none
+              ${i === 0 ? "w-[45%]" : i === 3 ? "w-[10%]" : "w-[20%]"}`}
                         >
                           {h}
                         </th>
                       ))}
-                      <th style={{ width: "5%" }} />
+                      <th className="w-[5%]" />
                     </tr>
                   </thead>
+
                   <tbody>
-                    {/* Folders first */}
+                    {/* Folders */}
                     {folders.map((file, i) => (
                       <FileRow
                         key={i}
@@ -1017,19 +990,17 @@ export default function FileExplorer() {
                         onSelect={() => setSelectedFile(`f${i}`)}
                       />
                     ))}
-                    {/* Divider if both exist */}
+
+                    {/* Divider */}
                     {folders.length > 0 && fileItems.length > 0 && (
                       <tr>
                         <td
                           colSpan={5}
-                          style={{
-                            height: "4px",
-                            background: "#F9FAFB",
-                            borderBottom: "1px solid #F0F0F0",
-                          }}
+                          className="h-[4px] bg-gray-50 border-b border-gray-100"
                         />
                       </tr>
                     )}
+
                     {/* Files */}
                     {fileItems.map((file, i) => (
                       <FileRow
@@ -1043,31 +1014,15 @@ export default function FileExplorer() {
                   </tbody>
                 </table>
               ) : (
-                <div style={{ padding: "16px" }}>
-                  {/* Folders section */}
+                <div className="p-4">
+                  {/* Folders */}
                   {folders.length > 0 && (
                     <>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "#9CA3AF",
-                          letterSpacing: "0.05em",
-                          marginBottom: "8px",
-                          paddingLeft: "4px",
-                        }}
-                      >
+                      <div className="text-[11px] font-semibold text-gray-400 tracking-wider mb-2 pl-1">
                         FOLDERS
                       </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns:
-                            "repeat(auto-fill, minmax(130px, 1fr))",
-                          gap: "4px",
-                          marginBottom: "20px",
-                        }}
-                      >
+
+                      <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
                         {folders.map((file, i) => (
                           <GridItem
                             key={i}
@@ -1080,29 +1035,15 @@ export default function FileExplorer() {
                       </div>
                     </>
                   )}
-                  {/* Files section */}
+
+                  {/* Files */}
                   {fileItems.length > 0 && (
                     <>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 600,
-                          color: "#9CA3AF",
-                          letterSpacing: "0.05em",
-                          marginBottom: "8px",
-                          paddingLeft: "4px",
-                        }}
-                      >
+                      <div className="text-[11px] font-semibold text-gray-400 tracking-wider mb-2 pl-1">
                         FILES
                       </div>
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns:
-                            "repeat(auto-fill, minmax(130px, 1fr))",
-                          gap: "4px",
-                        }}
-                      >
+
+                      <div className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
                         {fileItems.map((file, i) => (
                           <GridItem
                             key={i}
@@ -1126,105 +1067,68 @@ export default function FileExplorer() {
 }
 
 function FileRow({ file, index, selected, onSelect }) {
-  const [hovered, setHovered] = useState(false);
-  const bg = selected ? "#EBF3FB" : hovered ? "#F5F5F5" : "transparent";
-
   return (
     <tr
       onClick={onSelect}
       onDoubleClick={() => {}}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: bg,
-        cursor: "default",
-        userSelect: "none",
-        transition: "background 0.1s",
-      }}
+      className={`group select-none cursor-default transition-colors
+      ${selected ? "bg-blue-50" : "hover:bg-gray-100"}`}
     >
-      <td style={{ padding: "5px 12px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <td className="px-3 py-[5px]">
+        <div className="flex items-center gap-2">
           {getFileIcon(file)}
-          <span
-            style={{
-              fontSize: "13px",
-              fontWeight: file.type === "folder" ? 400 : 400,
-              color: "#1F2937",
-            }}
-          >
+          <span className="text-[13px] text-gray-800 font-normal">
             {file.name}
           </span>
         </div>
       </td>
-      <td style={{ padding: "5px 12px", color: "#6B7280", fontSize: "12.5px" }}>
+
+      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">
         {file.modified}
       </td>
-      <td style={{ padding: "5px 12px", color: "#6B7280", fontSize: "12.5px" }}>
+
+      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">
         {file.type === "folder"
           ? "File folder"
           : `${file.extension?.toUpperCase()} File` || "File"}
       </td>
-      <td style={{ padding: "5px 12px", color: "#6B7280", fontSize: "12.5px" }}>
-        {file.size}
-      </td>
-      <td style={{ padding: "5px 6px", textAlign: "right" }}>
-        {(hovered || selected) && (
-          <button
-            style={{
-              padding: "2px 4px",
-              borderRadius: "4px",
-              color: "#9CA3AF",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#E5E7EB")}
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "transparent")
-            }
-          >
-            <DotsIcon />
-          </button>
-        )}
+
+      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">{file.size}</td>
+
+      <td className="px-[6px] py-[5px] text-right">
+        <button
+          className={`p-[2px] rounded text-gray-400 hover:bg-gray-200
+          ${selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}
+          transition`}
+        >
+          <DotsIcon />
+        </button>
       </td>
     </tr>
   );
 }
 
 function GridItem({ file, index, selected, onSelect }) {
-  const [hovered, setHovered] = useState(false);
+  const isLongName = file.name.length > 22;
+  const displayName = isLongName ? file.name.slice(0, 22) + "…" : file.name;
+
   return (
     <div
       onClick={onSelect}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "12px 8px",
-        borderRadius: "6px",
-        cursor: "default",
-        background: selected ? "#EBF3FB" : hovered ? "#F3F4F6" : "transparent",
-        border: selected ? "1px solid #93C5FD" : "1px solid transparent",
-        transition: "all 0.1s",
-        userSelect: "none",
-      }}
+      className={`flex flex-col items-center px-2 py-3 rounded-md select-none transition-all border
+  ${
+    selected
+      ? "bg-[#d2556407] border-[#d25564]"
+      : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
+  }`}
     >
-      <div style={{ marginBottom: "8px" }}>{getLargeIcon(file)}</div>
-      <div
-        style={{
-          fontSize: "12px",
-          textAlign: "center",
-          color: "#1F2937",
-          wordBreak: "break-word",
-          lineHeight: "1.3",
-          maxWidth: "110px",
-        }}
-      >
-        {file.name.length > 22 ? file.name.slice(0, 22) + "…" : file.name}
+      <div className="mb-2">{getLargeIcon(file)}</div>
+
+      <div className="text-[12px] text-center text-gray-800 break-words leading-[1.3] max-w-[110px]">
+        {displayName}
       </div>
-      <div style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "2px" }}>
+
+      <div className="text-[11px] text-gray-400 mt-[2px]">
         {file.type === "folder" ? `${file.items} items` : file.size}
       </div>
     </div>
