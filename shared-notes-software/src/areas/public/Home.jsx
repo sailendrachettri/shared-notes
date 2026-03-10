@@ -10,6 +10,7 @@ import MiniMenu from "../tabs/MiniMenu";
 import RemindersApp from "../remainders/RemindersApp";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
 import NotificationsTab from "../tabs/NotificationsTab";
+import FileStorageMain from "../file-storage/FileStorageMain";
 
 const Home = ({
   toggleSidebar,
@@ -61,7 +62,6 @@ const Home = ({
           isUserLoggedIn={isUserLoggedIn}
           setOpenRegistrationWindow={setOpenRegistrationWindow}
           setSelectedType={setSelectedType}
-          
         />
 
         {selectedMiniTab == "dashboard" && (
@@ -207,6 +207,11 @@ const Home = ({
               refresh={refresh}
               setOpenRegistrationWindow={setOpenRegistrationWindow}
             />
+          </div>
+        )}
+        {selectedMiniTab == "file-storage" && (
+          <div className="w-full mb-10 h-full flex-1 overflow-auto">
+            <FileStorageMain />
           </div>
         )}
       </div>
