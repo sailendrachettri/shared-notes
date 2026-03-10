@@ -96,7 +96,7 @@ const MiniMenu = ({
           }}
           className={`${selectedMiniTab == "file-storage" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
-          <GrStorage size={24} />
+          <GrStorage size={20} />
         </div>
 
         {/* User */}

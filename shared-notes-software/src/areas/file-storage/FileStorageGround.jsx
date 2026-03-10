@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { GrStorage } from "react-icons/gr";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -149,50 +150,11 @@ const ChevronRight = () => (
   </svg>
 );
 
-const ArrowLeft = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="15,18 9,12 15,6" />
-  </svg>
-);
-
-const ArrowRight = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="9,18 15,12 9,6" transform="rotate(180 12 12)" />
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
 
 const UploadIcon = () => (
   <svg
-    width="15"
-    height="15"
+    width="8"
+    height="8"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -206,8 +168,8 @@ const UploadIcon = () => (
 
 const FolderPlusIcon = () => (
   <svg
-    width="15"
-    height="15"
+    width="9"
+    height="9"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -221,8 +183,8 @@ const FolderPlusIcon = () => (
 
 const GridIcon = () => (
   <svg
-    width="16"
-    height="16"
+    width="9"
+    height="9"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -237,8 +199,8 @@ const GridIcon = () => (
 
 const ListIcon = () => (
   <svg
-    width="16"
-    height="16"
+    width="9"
+    height="9"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -255,8 +217,8 @@ const ListIcon = () => (
 
 const DotsIcon = () => (
   <svg
-    width="14"
-    height="14"
+    width="8"
+    height="8"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -270,8 +232,8 @@ const DotsIcon = () => (
 
 const SortIcon = () => (
   <svg
-    width="14"
-    height="14"
+    width="8"
+    height="8"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -306,7 +268,7 @@ const getFileIcon = (file) => {
 const getLargeIcon = (file) => {
   if (file.type === "folder") {
     return (
-      <svg width="52" height="52" viewBox="0 0 56 56" fill="none">
+      <svg width="42" height="42" viewBox="0 0 56 56" fill="none">
         <path
           d="M4 14C4 11.8 5.8 10 8 10H21.4C22.5 10 23.5 10.45 24.2 11.22L26.6 13.8C27.3 14.57 28.3 15 29.4 15H48C50.2 15 52 16.8 52 19V44C52 46.2 50.2 48 48 48H8C5.8 48 4 46.2 4 44V14Z"
           fill="#FFB900"
@@ -791,7 +753,21 @@ export default function FileExplorer() {
           <section>
             {/* Sidebar */}
             <div className="flex-1 overflow-auto py-1 px-1 mt-2">
-              {navItems.map((section) => (
+              {/* Brand */}
+              <div className="flex items-center gap-3 px-3">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
+                  <GrStorage  size={24} />
+                </div>
+                <div>
+                  <h1 className="font-bold text-lg">Storage</h1>
+                  <p className="text-xs text-slate-400">By SharedNotes</p>
+                </div>
+              </div>
+
+              <hr className="my-2 border-slate-200" />
+
+             <div>
+               {navItems.map((section) => (
                 <div key={section.label}>
                   <button
                     onClick={() => toggleExpand(section.label)}
@@ -841,26 +817,25 @@ export default function FileExplorer() {
                     })}
                 </div>
               ))}
+             </div>
             </div>
           </section>
         }
         content={
-          <section className="flex flex-col h-full min-h-0">
+          <section className="flex flex-col h-full min-h-0 px-3">
             {/* Top toolbar */}
-            <div className="border-b border-gray-200 bg-white pt-2 px-3">
+            <div className="border-b border-gray-200 bg-white pt-2 ">
               {/* Navigation row */}
               <div className="flex items-center gap-1 mb-2">
                 {/* Back */}
                 <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
-                  <MdKeyboardArrowLeft  />
+                  <MdKeyboardArrowLeft />
                 </button>
 
                 {/* Forward */}
                 <button className="p-1.5 rounded text-gray-400 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
                   <MdKeyboardArrowRight />
                 </button>
-
-                
 
                 {/* Address bar */}
                 <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white hover:border-primary transition-all cursor-pointer text-[12.5px]">
@@ -1056,17 +1031,17 @@ function FileRow({ file, index, selected, onSelect }) {
         </div>
       </td>
 
-      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">
+      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
         {file.modified}
       </td>
 
-      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">
+      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
         {file.type === "folder"
           ? "File folder"
           : `${file.extension?.toUpperCase()} File` || "File"}
       </td>
 
-      <td className="px-3 py-[5px] text-[12.5px] text-gray-500">{file.size}</td>
+      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">{file.size}</td>
 
       <td className="px-[6px] py-[5px] text-right">
         <button
@@ -1088,7 +1063,7 @@ function GridItem({ file, index, selected, onSelect }) {
   return (
     <div
       onClick={onSelect}
-      className={`flex flex-col items-center px-2 py-3 rounded-md select-none transition-all border
+      className={`flex flex-col items-center py-3 rounded-md select-none transition-all border
   ${
     selected
       ? "bg-[#d2556407] border-[#d25564]"
