@@ -658,7 +658,7 @@ export default function FileExplorer() {
       };
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
-     
+
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
         toast.success(res?.data?.message || "Folder created successfully");
 
@@ -827,11 +827,12 @@ export default function FileExplorer() {
                         FOLDERS
                       </div>
 
-                      <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
+                      <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]">
+                        {/* Create new folder input */}
                         {creatingFolder && view === "grid" && (
                           <div
                             ref={createInputRef}
-                            className="flex flex-col items-center py-3 rounded-md border bg-[#d2556407] border-[#d25564]"
+                            className="flex flex-col h-fit items-center rounded-md border bg-[#d2556407] border-[#d25564]"
                           >
                             <div className="mb-2">
                               {getLargeIcon({ type: "folder" })}
@@ -846,7 +847,7 @@ export default function FileExplorer() {
                                 if (e.key === "Escape")
                                   setCreatingFolder(false);
                               }}
-                              className="text-[12px] border border-primary focus:outline-none focus:border-primary rounded px-2 py-[2px] text-center w-[90px]"
+                              className="text-[12px] border-t border-primary focus:outline-none focus:border-primary rounded text-center w-full py-1"
                             />
                           </div>
                         )}
@@ -871,7 +872,7 @@ export default function FileExplorer() {
                         FILES
                       </div>
 
-                      <div className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
+                      <div className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]">
                         {fileItems.map((file, i) => (
                           <GridItem
                             key={i}
@@ -935,7 +936,6 @@ function FileRow({ file, index, selected, onSelect }) {
     </tr>
   );
 }
-
 function GridItem({ file, index, selected, onSelect }) {
   const isLongName = file.name.length > 22;
   const displayName = isLongName ? file.name.slice(0, 22) + "…" : file.name;
@@ -943,22 +943,22 @@ function GridItem({ file, index, selected, onSelect }) {
   return (
     <div
       onClick={onSelect}
-      className={`flex flex-col items-center py-3 rounded-md select-none transition-all border
-  ${
-    selected
-      ? "bg-[#d2556407] border-[#d25564]"
-      : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
-  }`}
+      className={`flex flex-col items-center py-2 px-1 rounded-md select-none transition-all border
+      ${
+        selected
+          ? "bg-[#d2556407] border-[#d25564]"
+          : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
+      }`}
     >
-      <div className="mb-2">{getLargeIcon(file)}</div>
+      <div className="mb-1">{getLargeIcon(file)}</div>
 
-      <div className="text-[12px] text-center text-gray-800 break-words leading-[1.3] max-w-[110px]">
+      <div className="text-[12px] text-center text-gray-800 break-words leading-[1.2] max-w-[110px] px-[7px]">
         {displayName}
       </div>
 
-      <div className="text-[11px] text-gray-400 mt-[2px]">
+      {/* <div className="text-[11px] text-gray-400 mt-[1px]">
         {file.type === "folder" ? `${file.items} items` : file.size}
-      </div>
+      </div> */}
     </div>
   );
 }
