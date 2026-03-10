@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { GrStorage } from "react-icons/gr";
+import FileStorageSidebar from "./FileStorageSidebar";
+import TopToolBar from "./TopToolBar";
+import { useEffect } from "react";
+import { ADD_FOLDER_URL } from "../../api/api_routes";
+import { axiosInstance } from "../../api/axios";
+import toast from "react-hot-toast";
+import { getItem } from "../../api/storage";
+import { useRef } from "react";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -137,123 +145,6 @@ const icons = {
   ),
 };
 
-const ChevronRight = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.5"
-  >
-    <polyline points="9,18 15,12 9,6" />
-  </svg>
-);
-
-const ArrowLeft = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="15,18 9,12 15,6" />
-  </svg>
-);
-
-const ArrowRight = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="9,18 15,12 9,6" transform="rotate(180 12 12)" />
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <circle cx="11" cy="11" r="8" />
-    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-  </svg>
-);
-
-const UploadIcon = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <polyline points="16,16 12,12 8,16" />
-    <line x1="12" y1="12" x2="12" y2="21" />
-    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
-  </svg>
-);
-
-const FolderPlusIcon = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-    <line x1="12" y1="11" x2="12" y2="17" />
-    <line x1="9" y1="14" x2="15" y2="14" />
-  </svg>
-);
-
-const GridIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <rect x="3" y="3" width="7" height="7" />
-    <rect x="14" y="3" width="7" height="7" />
-    <rect x="14" y="14" width="7" height="7" />
-    <rect x="3" y="14" width="7" height="7" />
-  </svg>
-);
-
-const ListIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="8" y1="6" x2="21" y2="6" />
-    <line x1="8" y1="12" x2="21" y2="12" />
-    <line x1="8" y1="18" x2="21" y2="18" />
-    <line x1="3" y1="6" x2="3.01" y2="6" />
-    <line x1="3" y1="12" x2="3.01" y2="12" />
-    <line x1="3" y1="18" x2="3.01" y2="18" />
-  </svg>
-);
-
 const DotsIcon = () => (
   <svg
     width="14"
@@ -266,28 +157,6 @@ const DotsIcon = () => (
     <circle cx="12" cy="5" r="1" fill="currentColor" />
     <circle cx="12" cy="12" r="1" fill="currentColor" />
     <circle cx="12" cy="19" r="1" fill="currentColor" />
-  </svg>
-);
-
-const SortIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="4" y1="6" x2="20" y2="6" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-    <line
-      x1="12"
-      y1="18"
-      x2="12"
-      y2="18"
-      strokeLinecap="round"
-      strokeWidth="3"
-    />
   </svg>
 );
 
@@ -370,24 +239,6 @@ const getLargeIcon = (file) => {
     </svg>
   );
 };
-
-const navItems = [
-  {
-    label: "Quick access",
-    items: [
-      "All Files",
-      "Documents",
-      "Pictures",
-      "Audios",
-      "Videos",
-      "Code",
-      "Applications",
-      "Design",
-      "Databases",
-      "Archives",
-    ],
-  },
-];
 
 const files = [
   {
@@ -767,11 +618,14 @@ const files = [
 ];
 
 export default function FileExplorer() {
-  const [view, setView] = useState("list");
+  const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
   const [search, setSearch] = useState("");
   const [activeNav, setActiveNav] = useState("Documents");
   const [expandedNav, setExpandedNav] = useState(["Quick access"]);
+  const [creatingFolder, setCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const createInputRef = useRef(null);
 
   const filtered = files.filter((f) =>
     f.name.toLowerCase().includes(search.toLowerCase()),
@@ -785,167 +639,104 @@ export default function FileExplorer() {
     );
   };
 
+  const createFolder = async () => {
+    const userData = await getItem("user");
+
+    try {
+      if (!newFolderName.trim()) return;
+
+      if (!userData?.userId) {
+        toast.error("Please login and try again");
+        return;
+      }
+
+      const payload = {
+        FolderName: newFolderName,
+        ParentFolderId: null,
+        UserId: userData?.userId || null,
+        FolderVisibility: userData?.userId ? "private" : "public",
+      };
+
+      const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
+     
+      if (res?.data?.success === true && res?.data?.status === "CREATED") {
+        toast.success(res?.data?.message || "Folder created successfully");
+
+        setCreatingFolder(false);
+        setNewFolderName("");
+      } else if (
+        res?.data?.success === false &&
+        res?.data?.status === "EXISTS"
+      ) {
+        toast.error(res?.data?.message || "Folder already exist");
+      } else {
+        toast.error("Can't create folder at the moment");
+      }
+    } catch (error) {
+      console.error("Not able to create folder", error);
+      toast.error("Can't create folder at the moment");
+    } finally {
+      // setRefresh((prev) => !prev);
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        creatingFolder &&
+        createInputRef.current &&
+        !createInputRef.current.contains(e.target)
+      ) {
+        setCreatingFolder(false);
+        setNewFolderName("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [creatingFolder]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.code === "KeyN") {
+        e.preventDefault();
+        setCreatingFolder(true);
+        setNewFolderName("New Folder");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <>
       <MainLayout
         sidebar={
           <section>
             {/* Sidebar */}
-            <div className="flex-1 overflow-auto py-1 px-1 mt-2">
-              {/* Brand */}
-              <div className="flex items-center gap-3 px-3">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
-                  <GrStorage  size={24} />
-                </div>
-                <div>
-                  <h1 className="font-bold text-lg">File Storage</h1>
-                  <p className="text-xs text-slate-400">By SharedNotes</p>
-                </div>
-              </div>
-
-              <hr className="my-2 border-slate-200" />
-
-             <div>
-               {navItems.map((section) => (
-                <div key={section.label}>
-                  <button
-                    onClick={() => toggleExpand(section.label)}
-                    className="flex items-center gap-1 w-full px-2 py-1 rounded text-left text-gray-500 hover:bg-gray-100 transition-colors"
-                    style={{
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    <span
-                      style={{
-                        transform: expandedNav.includes(section.label)
-                          ? "rotate(90deg)"
-                          : "rotate(0deg)",
-                        transition: "transform 0.15s",
-                        display: "inline-block",
-                      }}
-                    >
-                      <ChevronRight />
-                    </span>
-                    {section.label.toUpperCase()}
-                  </button>
-
-                  {expandedNav.includes(section.label) &&
-                    section.items.map((item) => {
-                      const isActive = activeNav === item;
-
-                      return (
-                        <button
-                          key={item}
-                          onClick={() => setActiveNav(item)}
-                          className={`flex items-center gap-2 w-full mt-1 pl-5 px-2 py-1.5 rounded-md text-left transition-colors text-[12.5px]
-        ${
-          isActive
-            ? "bg-[#E8F0FE] text-primary"
-            : "text-gray-700 hover:bg-gray-100 cursor-pointer"
-        }`}
-                        >
-                          <span className="opacity-85">
-                            {icons.folder(isActive ? "#d25564" : "#FFB900")}
-                          </span>
-
-                          <span>{item}</span>
-                        </button>
-                      );
-                    })}
-                </div>
-              ))}
-             </div>
-            </div>
+            <FileStorageSidebar
+              setActiveNav={setActiveNav}
+              activeNav={activeNav}
+              expandedNav={expandedNav}
+              icons={icons}
+              toggleExpand={toggleExpand}
+            />
           </section>
         }
         content={
           <section className="flex flex-col h-full min-h-0 px-3">
             {/* Top toolbar */}
-            <div className="border-b border-gray-200 bg-white pt-2 ">
-              {/* Navigation row */}
-              <div className="flex items-center gap-1 mb-2">
-                {/* Back */}
-                <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
-                  <MdKeyboardArrowLeft />
-                </button>
-
-                {/* Forward */}
-                <button className="p-1.5 rounded text-gray-400 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
-                  <MdKeyboardArrowRight />
-                </button>
-
-                {/* Address bar */}
-                <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white hover:border-primary transition-all cursor-pointer text-[12.5px]">
-                  {icons.folder("#FFB900")}
-
-                  <span className="text-gray-400 mx-1">
-                    <ChevronRight />
-                  </span>
-
-                  <span className="font-medium text-gray-700">This PC</span>
-
-                  <span className="text-gray-400 mx-1">
-                    <ChevronRight />
-                  </span>
-
-                  <span className="font-medium text-gray-700">Documents</span>
-
-                  <span className="text-gray-400 mx-1">
-                    <ChevronRight />
-                  </span>
-
-                  <span className="text-primary font-medium">Projects</span>
-                </div>
-
-                {/* Toolbar actions */}
-                <div className="flex items-center gap-1">
-                  {/* Upload */}
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors">
-                    <UploadIcon /> Upload
-                  </button>
-
-                  {/* New folder */}
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md border border-gray-300 bg-white hover:bg-primary/10 hover:text-primary hover:border-primary/20 text-[12px] transition-colors">
-                    <FolderPlusIcon /> New folder
-                  </button>
-
-                  <div className="w-px h-5 bg-gray-200 mx-1" />
-
-                  {/* Grid view */}
-                  <button
-                    onClick={() => setView("grid")}
-                    className={`p-1.5 rounded transition-colors
-        ${
-          view === "grid"
-            ? "bg-primary/10 text-primary"
-            : "text-gray-500 hover:bg-primary/10 hover:text-primary"
-        }`}
-                  >
-                    <GridIcon />
-                  </button>
-
-                  {/* List view */}
-                  <button
-                    onClick={() => setView("list")}
-                    className={`p-1.5 rounded transition-colors
-        ${
-          view === "list"
-            ? "bg-primary/10 text-primary"
-            : "text-gray-500 hover:bg-primary/10 hover:text-primary"
-        }`}
-                  >
-                    <ListIcon />
-                  </button>
-
-                  {/* Sort */}
-                  <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 hover:text-primary transition-colors ml-1">
-                    <SortIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
+            <TopToolBar
+              icons={icons}
+              setView={setView}
+              view={view}
+              setCreatingFolder={setCreatingFolder}
+              setNewFolderName={setNewFolderName}
+            />
 
             {/* File area */}
             <div className="flex-1 overflow-auto min-h-0">
@@ -967,6 +758,33 @@ export default function FileExplorer() {
                   </thead>
 
                   <tbody>
+                    {creatingFolder && (
+                      <tr className="bg-blue-50">
+                        <td className="px-3 py-[5px]">
+                          <div
+                            ref={createInputRef}
+                            className="flex items-center gap-2"
+                          >
+                            {icons.folder()}
+                            <input
+                              autoFocus
+                              value={newFolderName}
+                              onChange={(e) => setNewFolderName(e.target.value)}
+                              onBlur={createFolder}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") createFolder();
+                                if (e.key === "Escape")
+                                  setCreatingFolder(false);
+                              }}
+                              className="text-[13px] border border-primary focus:outline-none focus:border-primary rounded px-1 py-[2px]"
+                            />
+                          </div>
+                        </td>
+
+                        <td colSpan={4}></td>
+                      </tr>
+                    )}
+
                     {/* Folders */}
                     {folders.map((file, i) => (
                       <FileRow
@@ -1010,6 +828,29 @@ export default function FileExplorer() {
                       </div>
 
                       <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
+                        {creatingFolder && view === "grid" && (
+                          <div
+                            ref={createInputRef}
+                            className="flex flex-col items-center py-3 rounded-md border bg-[#d2556407] border-[#d25564]"
+                          >
+                            <div className="mb-2">
+                              {getLargeIcon({ type: "folder" })}
+                            </div>
+
+                            <input
+                              autoFocus
+                              value={newFolderName}
+                              onChange={(e) => setNewFolderName(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") createFolder();
+                                if (e.key === "Escape")
+                                  setCreatingFolder(false);
+                              }}
+                              className="text-[12px] border border-primary focus:outline-none focus:border-primary rounded px-2 py-[2px] text-center w-[90px]"
+                            />
+                          </div>
+                        )}
+
                         {folders.map((file, i) => (
                           <GridItem
                             key={i}
