@@ -1,4 +1,6 @@
 import { FcOpenedFolder } from "react-icons/fc";
+import NoResultFound from "../../utils/info-screen/NoResultFound";
+import dirSvg from "../../assets/svgs/files_dir.svg";
 
 const GridStructureView = ({
   folders,
@@ -6,12 +8,13 @@ const GridStructureView = ({
   selectedFile,
   heading,
   openFolder,
+  isSubfolder,
 }) => {
   console.log(folders);
 
   return (
     <>
-      {folders?.length > 0 && (
+      {folders?.length > 0 ? (
         <section>
           <div className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2 pl-1">
             {heading || "FOLDERS"}
@@ -50,6 +53,20 @@ const GridStructureView = ({
               );
             })}
           </div>
+        </section>
+      ) : (
+        <section>
+          {isSubfolder == "yes" && (
+            <div>
+              <NoResultFound
+                desc={
+                  "This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
+                }
+                img={dirSvg}
+                title={"Empty Directory"}
+              />
+            </div>
+          )}
         </section>
       )}
     </>

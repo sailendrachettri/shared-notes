@@ -168,6 +168,7 @@ export default function FileExplorer({
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
+  const [parentDirVisibility, setParentDirectoryVisibility] = useState(null);
   const createInputRef = useRef(null);
 
   const sections = [
@@ -184,6 +185,7 @@ export default function FileExplorer({
 
   const openFolder = (folder) => {
     console.log(folder);
+    setParentDirectoryVisibility(folder?.folder_visibility);
     setFolderStack((prev) => [...prev, currentFolderId]);
     setCurrentFolderId(folder.folder_id);
   };
@@ -218,7 +220,7 @@ export default function FileExplorer({
         FolderName: newFolderName,
         ParentFolderId: currentFolderId || null,
         UserId: userData?.userId || null,
-        FolderVisibility: userData?.userId ? "private" : "public",
+        FolderVisibility: parentDirVisibility || "public",
       };
 
       console.log(payload);
@@ -374,6 +376,7 @@ export default function FileExplorer({
                         selectedFile={selectedFile}
                         heading={section.heading}
                         openFolder={openFolder}
+                        isSubfolder={"no"}
                       />
                     ))
                   ) : (
@@ -383,6 +386,7 @@ export default function FileExplorer({
                       selectedFile={selectedFile}
                       heading="Folders"
                       openFolder={openFolder}
+                      isSubfolder={"yes"}
                     />
                   )}
                 </div>

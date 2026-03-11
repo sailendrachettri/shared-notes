@@ -91,7 +91,7 @@ namespace shared_notes_software_server.Controllers
                 {
                     cmd.Parameters.AddWithValue("folder_name_i", model.FolderName);
                     cmd.Parameters.AddWithValue("parent_folder_id_i", (object?)model.ParentFolderId ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("user_id_i", model.UserId);
+                    cmd.Parameters.AddWithValue("user_id_i", (object?)model.UserId ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("folder_visibility_i", model.FolderVisibility);
                 }
             );
