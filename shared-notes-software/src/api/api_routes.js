@@ -4,20 +4,21 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 //#endregion
 
 //#region File storage
-export const ADD_FOLDER_URL = '/file-storage/add-folder'
-export const GET_FOLDER_LIST_URL = '/file-storage/get-folder-list'
+export const ADD_FOLDER_URL = "/file-storage/add-folder";
+export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
+export const GET_FOLDER_ITEMS_URL = "/file-storage/get-folder-items";
 
 // #endregion
 
 // #region Reports
-export const GET_USER_DASHBOARD_REPORTS_URL = '/reports/user/dashboard'
+export const GET_USER_DASHBOARD_REPORTS_URL = "/reports/user/dashboard";
 
 // #endregion
 
 //#region Events
-export const ADD_EVENT_URL = '/events/add-event'
-export const GET_EVENTS_URL = '/events/get-events'
-export const DELETE_EVENT_URL = '/events/delete-event'
+export const ADD_EVENT_URL = "/events/add-event";
+export const GET_EVENTS_URL = "/events/get-events";
+export const DELETE_EVENT_URL = "/events/delete-event";
 
 // #endregion
 
@@ -31,18 +32,20 @@ export const FILE_UPLOAD_URL = "/upload-files";
 export const DELETE_FILE_URL = "/delete-files";
 
 //#region  Workspaces
-export const ADD_WORKSPACE_URL = 'workspace/add-workspace'
-export const GET_WORKSPACES_LIST_URL = 'workspace/get-workspaces-list'
-export const GET_WORKSPACE_FULL_DETAILS_BY_ID_URL = 'workspace/get-workspace-details'
-export const ADD_WORKSPACE_TASK_URL = 'workspace/add-workspace-task'
-export const UPDATE_WORKSPACE_TASK_POSITION_URL = 'workspace/update-workspace-task-position'
-export const DELETE_WORKSPACE_URL = 'workspace/delete-workspace'
-export const DELETE_WORKSPACE_TASK_URL = 'workspace/delete-workspace-task'
-export const RENAME_WORKSPACE_URL = 'workspace/rename-workspace'
-export const MOVE_WORKSPACE_TO_PUBLIC_URL = 'workspace/move-workspace-to-public'
+export const ADD_WORKSPACE_URL = "workspace/add-workspace";
+export const GET_WORKSPACES_LIST_URL = "workspace/get-workspaces-list";
+export const GET_WORKSPACE_FULL_DETAILS_BY_ID_URL =
+  "workspace/get-workspace-details";
+export const ADD_WORKSPACE_TASK_URL = "workspace/add-workspace-task";
+export const UPDATE_WORKSPACE_TASK_POSITION_URL =
+  "workspace/update-workspace-task-position";
+export const DELETE_WORKSPACE_URL = "workspace/delete-workspace";
+export const DELETE_WORKSPACE_TASK_URL = "workspace/delete-workspace-task";
+export const RENAME_WORKSPACE_URL = "workspace/rename-workspace";
+export const MOVE_WORKSPACE_TO_PUBLIC_URL =
+  "workspace/move-workspace-to-public";
 
 // #endregion
-
 
 //#endregion
 
@@ -56,9 +59,11 @@ export const CHANGE_COVER_ICON_MST_NOTE_URL = "/mst-note/change-cover-icon";
 export const REMOVE_COVER_ICON_MST_NOTE_URL = "/mst-note/remove-cover-icon";
 export const CHANGE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/change-cover-image";
 export const REMOVE_COVER_IMAGE_MST_NOTE_URL = "/mst-note/remove-cover-image";
-export const INVITE_USER_IN_PRIVATE_NOTE_URL = '/mst-note/invite-user'
-export const INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL = '/mst-note/get-note-invit-notifications'
-export const INVITE_USER_NOTE_ACCEPT_REJECT_URL = '/mst-note/accept-reject-note-invitation'
+export const INVITE_USER_IN_PRIVATE_NOTE_URL = "/mst-note/invite-user";
+export const INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL =
+  "/mst-note/get-note-invit-notifications";
+export const INVITE_USER_NOTE_ACCEPT_REJECT_URL =
+  "/mst-note/accept-reject-note-invitation";
 //#endregion
 
 //#region sub pages

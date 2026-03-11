@@ -5,7 +5,7 @@ import { GrStorage } from "react-icons/gr";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
 import { useEffect } from "react";
-import { ADD_FOLDER_URL } from "../../api/api_routes";
+import { ADD_FOLDER_URL, GET_FOLDER_ITEMS_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
 import toast from "react-hot-toast";
 import { getItem } from "../../api/storage";
@@ -13,6 +13,7 @@ import { useRef } from "react";
 import GridStructureView from "./GridStructureView";
 import { IoFolderOpenOutline } from "react-icons/io5";
 import { HiOutlineRefresh } from "react-icons/hi";
+import { FcOpenedFolder } from "react-icons/fc";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -148,73 +149,6 @@ const icons = {
   ),
 };
 
-const getLargeIcon = (file) => {
-  if (file?.type === "folder") {
-    return (
-      <svg width="43" height="52" viewBox="0 0 56 56" fill="none">
-        <path
-          d="M4 14C4 11.8 5.8 10 8 10H21.4C22.5 10 23.5 10.45 24.2 11.22L26.6 13.8C27.3 14.57 28.3 15 29.4 15H48C50.2 15 52 16.8 52 19V44C52 46.2 50.2 48 48 48H8C5.8 48 4 46.2 4 44V14Z"
-          fill="#FFB900"
-        />
-        <path
-          d="M4 22H52V44C52 46.2 50.2 48 48 48H8C5.8 48 4 46.2 4 44V22Z"
-          fill="#FFC832"
-        />
-        <rect x="4" y="22" width="48" height="2" fill="#FFB900" opacity="0.5" />
-      </svg>
-    );
-  }
-  const colorMap = {
-    pdf: "#E74C3C",
-    txt: "#5B9BD5",
-    png: "#27AE60",
-    jpg: "#27AE60",
-    xlsx: "#107C41",
-    pptx: "#D04423",
-  };
-  const labelMap = {
-    pdf: "PDF",
-    txt: "TXT",
-    png: "PNG",
-    jpg: "JPG",
-    xlsx: "XLS",
-    pptx: "PPT",
-  };
-  const c = colorMap[file?.extension] || "#8E8E8E";
-  const label =
-    labelMap[file?.extension] || file?.extension?.toUpperCase() || "FILE";
-  return (
-    <svg width="44" height="52" viewBox="0 0 44 56" fill="none">
-      <path d="M4 2H30L40 12V54H4V2Z" rx="3" fill={c} />
-      <path d="M4 2H30L40 12V54H4V2Z" fill="url(#docGrad)" />
-      <path d="M30 2L40 12H30V2Z" fill="rgba(0,0,0,0.2)" />
-      <text
-        x="8"
-        y="38"
-        fontSize="9"
-        fill="white"
-        fontWeight="bold"
-        fontFamily="'Segoe UI', Arial"
-      >
-        {label}
-      </text>
-      <defs>
-        <linearGradient
-          id="docGrad"
-          x1="4"
-          y1="2"
-          x2="40"
-          y2="56"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor={c} stopOpacity="0.9" />
-          <stop offset="1" stopColor={c} />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-};
-
 export default function FileExplorer({
   sharedFolders,
   privateFolders,
@@ -229,7 +163,10 @@ export default function FileExplorer({
   const [activeNav, setActiveNav] = useState("Documents");
   const [expandedNav, setExpandedNav] = useState(["Quick access"]);
   const [contextMenu, setContextMenu] = useState(null);
-
+  const [currentFolderId, setCurrentFolderId] = useState(null);
+  const [folderStack, setFolderStack] = useState([]);
+  const [folders, setFolders] = useState([]);
+  const [files, setFiles] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
   const createInputRef = useRef(null);
 
@@ -245,23 +182,46 @@ export default function FileExplorer({
     );
   };
 
+  const openFolder = (folder) => {
+    console.log(folder);
+    setFolderStack((prev) => [...prev, currentFolderId]);
+    setCurrentFolderId(folder.folder_id);
+  };
+
+  const handleFetchNestedFolders = async (parentId) => {
+    try {
+      const user = await getItem("user");
+
+      const payload = {
+        ParentFolderId: parentId,
+        UserId: user?.userId || null,
+      };
+      console.log(payload);
+
+      const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
+      console.log(res);
+
+      setFolders(res?.data?.folders || []);
+      setFiles(res?.data?.files || []);
+    } catch (err) {
+      console.error("Failed to fetch folder items", err);
+    }
+  };
+
   const handleCreateFolder = async () => {
     const userData = await getItem("user");
 
     try {
       if (!newFolderName.trim()) return;
 
-      if (!userData?.userId) {
-        toast.error("Please login and try again");
-        return;
-      }
-
       const payload = {
         FolderName: newFolderName,
-        ParentFolderId: null,
+        ParentFolderId: currentFolderId || null,
         UserId: userData?.userId || null,
         FolderVisibility: userData?.userId ? "private" : "public",
       };
+
+      console.log(payload);
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
@@ -269,6 +229,8 @@ export default function FileExplorer({
         setSelectedFile({ folder_id: res?.data?.folder_id });
         setCreatingFolder(false);
         setNewFolderName("");
+
+        handleFetchNestedFolders(currentFolderId);
       } else if (
         res?.data?.success === false &&
         res?.data?.status === "EXISTS"
@@ -284,6 +246,21 @@ export default function FileExplorer({
       // setRefresh((prev) => !prev);
     }
   };
+
+  const goBack = () => {
+    if (folderStack.length === 0) return;
+
+    const prev = folderStack[folderStack.length - 1];
+
+    setFolderStack((stack) => stack.slice(0, -1));
+    setCurrentFolderId(prev);
+  };
+
+  useEffect(() => {
+    if (currentFolderId !== null) {
+      handleFetchNestedFolders(currentFolderId);
+    }
+  }, [currentFolderId]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -342,6 +319,7 @@ export default function FileExplorer({
           <section className="flex flex-col h-full min-h-0 px-3">
             {/* Top toolbar */}
             <TopToolBar
+              goBack={goBack}
               icons={icons}
               setView={setView}
               view={view}
@@ -367,13 +345,14 @@ export default function FileExplorer({
                   {creatingFolder && view === "grid" && (
                     <div
                       ref={createInputRef}
-                      className="flex flex-col h-[100px] w-[100px] mb-3 items-center rounded-md border bg-[#d2556407] border-[#d25564]"
+                      className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
                     >
                       <div className="mb-2">
-                        {getLargeIcon({ type: "folder" })}
+                        <FcOpenedFolder size={40} />
                       </div>
                       <input
                         autoFocus
+                        maxLength={30}
                         value={newFolderName}
                         onChange={(e) => setNewFolderName(e.target.value)}
                         onFocus={(e) => e.target.select()}
@@ -381,21 +360,31 @@ export default function FileExplorer({
                           if (e.key === "Enter") handleCreateFolder();
                           if (e.key === "Escape") setCreatingFolder(false);
                         }}
-                        className="text-[12px] border-t border-primary focus:outline-none focus:border-primary rounded text-center w-full py-1"
+                        className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
                       />
                     </div>
                   )}
 
-                  {sections?.map((section, index) => (
+                  {currentFolderId === null ? (
+                    sections?.map((section, index) => (
+                      <GridStructureView
+                        key={index}
+                        folders={section.data}
+                        setSelectedFile={setSelectedFile}
+                        selectedFile={selectedFile}
+                        heading={section.heading}
+                        openFolder={openFolder}
+                      />
+                    ))
+                  ) : (
                     <GridStructureView
-                      getLargeIcon={getLargeIcon}
-                      key={index}
-                      folders={section.data}
+                      folders={folders}
                       setSelectedFile={setSelectedFile}
                       selectedFile={selectedFile}
-                      heading={section.heading}
+                      heading="Folders"
+                      openFolder={openFolder}
                     />
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -408,7 +397,7 @@ export default function FileExplorer({
                   top: contextMenu.y,
                   left: contextMenu.x,
                 }}
-                className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-[999]"
+                className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
               >
                 <button
                   className="w-full flex flex-nowrap gap-x-2 text-left px-3 py-2 text-sm hover:bg-gray-100"

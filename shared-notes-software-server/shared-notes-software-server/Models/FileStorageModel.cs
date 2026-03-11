@@ -1,5 +1,11 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class GetFolderItemsRequest
+    {
+        public long? ParentFolderId { get; set; }
+        public Guid? UserId { get; set; }
+    }
+
     public class GetFolderItemListRequest
     {
         public string? SearchText { get; set; }

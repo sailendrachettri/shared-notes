@@ -71,6 +71,7 @@ const TopToolBar = ({
   setView,
   setCreatingFolder,
   setNewFolderName,
+  goBack,
 }) => {
   return (
     <>
@@ -78,7 +79,10 @@ const TopToolBar = ({
         {/* Navigation row */}
         <div className="flex items-center gap-1 mb-2">
           {/* Back */}
-          <button className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
+          <button
+            onClick={goBack}
+            className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors"
+          >
             <MdKeyboardArrowLeft />
           </button>
 
@@ -155,7 +159,6 @@ const TopToolBar = ({
             >
               <ListIcon />
             </button> */}
-
           </div>
         </div>
       </div>

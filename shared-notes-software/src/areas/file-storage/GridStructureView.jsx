@@ -1,10 +1,14 @@
+import { FcOpenedFolder } from "react-icons/fc";
+
 const GridStructureView = ({
-  getLargeIcon,
   folders,
   setSelectedFile,
   selectedFile,
   heading,
+  openFolder,
 }) => {
+  console.log(folders);
+
   return (
     <>
       {folders?.length > 0 && (
@@ -13,32 +17,33 @@ const GridStructureView = ({
             {heading || "FOLDERS"}
           </div>
 
-          <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]">
+          <div className="grid gap-1 mb-5 grid-cols-[repeat(auto-fill,minmax(100px,1fr))] cursor-default">
             {/* Create new folder input */}
 
             {/* Folder items */}
-            {folders?.map((file, i) => {
-              const isLongName = file?.folder_name?.length > 22;
+            {folders?.map((folder, i) => {
+              const isLongName = folder?.folder_name?.length > 22;
               const displayName = isLongName
-                ? file.folder_name.slice(0, 22) + "…"
-                : file.folder_name;
+                ? folder.folder_name.slice(0, 30) + "…"
+                : folder.folder_name;
 
-              const selected = selectedFile?.folder_id === file?.folder_id;
+              const selected = selectedFile?.folder_id === folder?.folder_id;
 
               return (
                 <div
-                  key={file.folder_id || i}
-                  onClick={() => setSelectedFile(file)}
+                  key={folder.folder_id || i}
+                  onClick={() => setSelectedFile(folder)}
+                  onDoubleClick={() => openFolder(folder)}
                   className={`flex flex-col items-center py-2 px-1 rounded-md select-none transition-all border
                 ${
                   selected
-                    ? "bg-[#d2556407] border-[#d25564]"
+                    ? "bg-[#d2556407] border-primary"
                     : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
                 }`}
                 >
-                  <div className="mb-1">{getLargeIcon({ type: "folder" })}</div>
+                  <FcOpenedFolder size={40} />
 
-                  <div className="text-[12px] text-center text-gray-800 break-words leading-[1.2] max-w-[110px] px-[7px]">
+                  <div className="text-[12px] text-center text-gray-800 wrap-break-word leading-[1.2] max-w-27.5 px-1.75">
                     {displayName}
                   </div>
                 </div>

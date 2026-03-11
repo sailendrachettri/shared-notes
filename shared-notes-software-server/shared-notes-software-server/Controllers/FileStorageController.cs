@@ -16,6 +16,33 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("get-folder-items")]
+        public async Task<IActionResult> GetFolderItems([FromBody] GetFolderItemsRequest model)
+        {
+            var query = @"SELECT public.get_folder_items(
+                        @parent_folder_id_i,
+                        @user_id_i
+                  )";
+
+            var result = await _db.ExecuteScalarAsync<string>(
+                query,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue(
+                        "parent_folder_id_i",
+                        (object?)model.ParentFolderId ?? DBNull.Value
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "user_id_i",
+                        (object?)model.UserId ?? DBNull.Value
+                    );
+                }
+            );
+
+            return Content(result, "application/json");
+        }
+
         [HttpPost("get-folder-list")]
         public async Task<IActionResult> GetFolderList([FromBody] GetFolderItemListRequest model)
         {
