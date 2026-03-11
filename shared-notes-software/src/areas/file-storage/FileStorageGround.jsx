@@ -384,6 +384,7 @@ export default function FileExplorer({
                         autoFocus
                         value={newFolderName}
                         onChange={(e) => setNewFolderName(e.target.value)}
+                        onFocus={(e) => e.target.select()}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") handleCreateFolder();
                           if (e.key === "Escape") setCreatingFolder(false);
