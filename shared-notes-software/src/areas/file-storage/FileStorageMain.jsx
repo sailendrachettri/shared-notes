@@ -8,7 +8,9 @@ import { useState } from "react";
 
 const FileStorageMain = () => {
   const [privateFolders, setPrivateFolders] = useState([]);
-  const [sharedAndPublicFolders, setSharedAndPublicFolders] = useState([]);
+  const [sharedFolders, setSharedFolders] = useState([]);
+  const [publicFolders, setPublicFolders] = useState([]);
+  const [creatingFolder, setCreatingFolder] = useState(false);
 
   const handleGetFolders = async () => {
     try {
@@ -23,7 +25,8 @@ const FileStorageMain = () => {
       console.log(res);
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateFolders(res?.data?.data?.owned || []);
-        setSharedAndPublicFolders(res?.data?.data?.shared || []);
+        setSharedFolders(res?.data?.data?.shared || []);
+        setPublicFolders(res?.data?.data?.public || []);
       }
     } catch (error) {
       console.error("Not able to fetch directories", error);
@@ -32,13 +35,16 @@ const FileStorageMain = () => {
 
   useEffect(() => {
     handleGetFolders();
-  }, []);
+  }, [creatingFolder]);
   return (
     <>
       <section className="h-full">
         <FileStorageGround
-          sharedAndPublicFolders={sharedAndPublicFolders}
+          sharedFolders={sharedFolders}
           privateFolders={privateFolders}
+          creatingFolder={creatingFolder}
+          setCreatingFolder={setCreatingFolder}
+          publicFolders={publicFolders}
         />
       </section>
     </>

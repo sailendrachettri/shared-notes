@@ -241,404 +241,27 @@ const getLargeIcon = (file) => {
   );
 };
 
-const files = [
-  {
-    name: "Project Docs",
-    type: "folder",
-    size: "--",
-    modified: "Nov 12, 2024",
-    items: 12,
-    category: "folder",
-  },
-  {
-    name: "Design Assets",
-    type: "folder",
-    size: "--",
-    modified: "Nov 8, 2024",
-    items: 8,
-    category: "folder",
-  },
-  {
-    name: "Archives",
-    type: "folder",
-    size: "--",
-    modified: "Oct 22, 2024",
-    items: 34,
-    category: "folder",
-  },
-  {
-    name: "report.pdf",
-    type: "file",
-    size: "1.2 MB",
-    modified: "Nov 14, 2024",
-    extension: "pdf",
-  },
-  {
-    name: "meeting-notes.txt",
-    type: "file",
-    size: "48 KB",
-    modified: "Nov 15, 2024",
-    extension: "txt",
-  },
-  {
-    name: "image.png",
-    type: "file",
-    size: "2.4 MB",
-    modified: "Nov 7, 2024",
-    extension: "png",
-  },
-  {
-    name: "budget.xlsx",
-    type: "file",
-    size: "890 KB",
-    modified: "Nov 12, 2024",
-    extension: "xlsx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-  {
-    name: "presentation.pptx",
-    type: "file",
-    size: "5.1 MB",
-    modified: "Nov 10, 2024",
-    extension: "pptx",
-  },
-];
-
 export default function FileExplorer({
-  sharedAndPublicFolders,
+  sharedFolders,
   privateFolders,
+  creatingFolder,
+  publicFolders,
+  setCreatingFolder,
 }) {
-  console.log(privateFolders);
-  console.log(sharedAndPublicFolders);
-
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
   const [search, setSearch] = useState("");
   const [activeNav, setActiveNav] = useState("Documents");
   const [expandedNav, setExpandedNav] = useState(["Quick access"]);
-  const [creatingFolder, setCreatingFolder] = useState(false);
+
   const [newFolderName, setNewFolderName] = useState("");
   const createInputRef = useRef(null);
 
-  const filtered = files.filter((f) =>
-    f.name.toLowerCase().includes(search.toLowerCase()),
-  );
-  const folders = filtered.filter((f) => f.type === "folder");
-  const fileItems = filtered.filter((f) => f.type === "file");
+  const sections = [
+    { heading: "Private Folders", data: privateFolders },
+    { heading: "Shared Folders", data: sharedFolders },
+    { heading: "Public Folders", data: publicFolders },
+  ];
 
   const toggleExpand = (label) => {
     setExpandedNav((prev) =>
@@ -646,7 +269,7 @@ export default function FileExplorer({
     );
   };
 
-  const createFolder = async () => {
+  const handleCreateFolder = async () => {
     const userData = await getItem("user");
 
     try {
@@ -665,10 +288,9 @@ export default function FileExplorer({
       };
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
-
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
         toast.success(res?.data?.message || "Folder created successfully");
-
+        setSelectedFile({ folder_id: res?.data?.folder_id });
         setCreatingFolder(false);
         setNewFolderName("");
       } else if (
@@ -749,91 +371,44 @@ export default function FileExplorer({
             <div className="flex-1 overflow-auto min-h-0">
               <div className="p-4">
                 {/* Folders */}
-                {privateFolders?.length > 0 && (
-                  <>
+                <div>
+                  {creatingFolder && view === "grid" && (
+                    <div
+                      ref={createInputRef}
+                      className="flex flex-col h-[100px] w-[100px] mb-3 items-center rounded-md border bg-[#d2556407] border-[#d25564]"
+                    >
+                      <div className="mb-2">
+                        {getLargeIcon({ type: "folder" })}
+                      </div>
+                      <input
+                        autoFocus
+                        value={newFolderName}
+                        onChange={(e) => setNewFolderName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleCreateFolder();
+                          if (e.key === "Escape") setCreatingFolder(false);
+                        }}
+                        className="text-[12px] border-t border-primary focus:outline-none focus:border-primary rounded text-center w-full py-1"
+                      />
+                    </div>
+                  )}
+
+                  {sections?.map((section, index) => (
                     <GridStructureView
-                      createFolder={createFolder}
-                      creatingFolder={creatingFolder}
-                      folders={privateFolders}
                       getLargeIcon={getLargeIcon}
-                      newFolderName={newFolderName}
-                      setCreatingFolder={setCreatingFolder}
-                      setNewFolderName={setNewFolderName}
+                      key={index}
+                      folders={section.data}
                       setSelectedFile={setSelectedFile}
                       selectedFile={selectedFile}
-                      view={view}
-                      createInputRef={createInputRef}
-                      heading={"Private Folders"}
+                      heading={section.heading}
                     />
-                  </>
-                )}
-                {sharedAndPublicFolders?.length > 0 && (
-                  <>
-                    <GridStructureView
-                      createFolder={createFolder}
-                      creatingFolder={creatingFolder}
-                      folders={sharedAndPublicFolders}
-                      getLargeIcon={getLargeIcon}
-                      newFolderName={newFolderName}
-                      setCreatingFolder={setCreatingFolder}
-                      setNewFolderName={setNewFolderName}
-                      setSelectedFile={setSelectedFile}
-                      selectedFile={selectedFile}
-                      view={view}
-                      createInputRef={createInputRef}
-                      heading={"Shared & Public Folders"}
-                    />
-                  </>
-                )}
+                  ))}
+                </div>
               </div>
             </div>
           </section>
         }
       />
     </>
-  );
-}
-
-function FileRow({ file, index, selected, onSelect }) {
-  return (
-    <tr
-      onClick={onSelect}
-      onDoubleClick={() => {}}
-      className={`group select-none cursor-default transition-colors
-      ${selected ? "bg-blue-50" : "hover:bg-gray-100"}`}
-    >
-      <td className="px-3 py-[5px]">
-        <div className="flex items-center gap-2">
-          {getFileIcon(file)}
-          <span className="text-[13px] text-gray-800 font-normal">
-            {file?.name}
-          </span>
-        </div>
-      </td>
-
-      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
-        {file?.modified}
-      </td>
-
-      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
-        {file?.type === "folder"
-          ? "File folder"
-          : `${file?.extension?.toUpperCase()} File` || "File"}
-      </td>
-
-      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
-        {file?.size}
-      </td>
-
-      <td className="px-[6px] py-[5px] text-right">
-        <button
-          className={`p-[2px] rounded text-gray-400 hover:bg-gray-200
-          ${selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}
-          transition`}
-        >
-          <DotsIcon />
-        </button>
-      </td>
-    </tr>
   );
 }
