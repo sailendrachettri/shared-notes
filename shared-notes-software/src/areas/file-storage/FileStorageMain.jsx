@@ -11,18 +11,19 @@ const FileStorageMain = () => {
   const [sharedFolders, setSharedFolders] = useState([]);
   const [publicFolders, setPublicFolders] = useState([]);
   const [creatingFolder, setCreatingFolder] = useState(false);
+  const [search, setSearch] = useState("");
 
   const handleGetFolders = async () => {
     try {
       const user = await getItem("user");
       const payload = {
-        SearchText: "",
+        SearchText: search || "",
         SortBy: "folder_name",
         SortDir: "asc",
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_FOLDER_LIST_URL, payload);
-      console.log(res);
+
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateFolders(res?.data?.data?.owned || []);
         setSharedFolders(res?.data?.data?.shared || []);
@@ -45,6 +46,8 @@ const FileStorageMain = () => {
           creatingFolder={creatingFolder}
           setCreatingFolder={setCreatingFolder}
           publicFolders={publicFolders}
+          search={search}
+          setSearch={setSearch}
         />
       </section>
     </>

@@ -247,10 +247,10 @@ export default function FileExplorer({
   creatingFolder,
   publicFolders,
   setCreatingFolder,
+  search, setSearch
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [search, setSearch] = useState("");
   const [activeNav, setActiveNav] = useState("Documents");
   const [expandedNav, setExpandedNav] = useState(["Quick access"]);
 
