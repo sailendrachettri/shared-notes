@@ -162,7 +162,7 @@ const DotsIcon = () => (
 );
 
 const getFileIcon = (file) => {
-  if (file.type === "folder") return icons.folder();
+  if (file?.type === "folder") return icons.folder();
   const map = {
     pdf: icons.pdf,
     txt: icons.txt,
@@ -171,11 +171,11 @@ const getFileIcon = (file) => {
     xlsx: icons.xlsx,
     pptx: icons.pptx,
   };
-  return (map[file.extension] || icons.default)();
+  return (map[file?.extension] || icons.default)();
 };
 
 const getLargeIcon = (file) => {
-  if (file.type === "folder") {
+  if (file?.type === "folder") {
     return (
       <svg width="43" height="52" viewBox="0 0 56 56" fill="none">
         <path
@@ -206,9 +206,9 @@ const getLargeIcon = (file) => {
     xlsx: "XLS",
     pptx: "PPT",
   };
-  const c = colorMap[file.extension] || "#8E8E8E";
+  const c = colorMap[file?.extension] || "#8E8E8E";
   const label =
-    labelMap[file.extension] || file.extension?.toUpperCase() || "FILE";
+    labelMap[file?.extension] || file?.extension?.toUpperCase() || "FILE";
   return (
     <svg width="44" height="52" viewBox="0 0 44 56" fill="none">
       <path d="M4 2H30L40 12V54H4V2Z" rx="3" fill={c} />
@@ -618,7 +618,13 @@ const files = [
   },
 ];
 
-export default function FileExplorer() {
+export default function FileExplorer({
+  sharedAndPublicFolders,
+  privateFolders,
+}) {
+  console.log(privateFolders);
+  console.log(sharedAndPublicFolders);
+
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
   const [search, setSearch] = useState("");
@@ -741,129 +747,45 @@ export default function FileExplorer() {
 
             {/* File area */}
             <div className="flex-1 overflow-auto min-h-0">
-              {view === "list" ? (
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
-                      {["Name", "Date modified", "Type", "Size"].map((h, i) => (
-                        <th
-                          key={h}
-                          className={`text-left px-3 py-[6px] text-[11.5px] font-semibold text-gray-500 tracking-wide cursor-pointer select-none
-              ${i === 0 ? "w-[45%]" : i === 3 ? "w-[10%]" : "w-[20%]"}`}
-                        >
-                          {h}
-                        </th>
-                      ))}
-                      <th className="w-[5%]" />
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {creatingFolder && (
-                      <tr className="bg-blue-50">
-                        <td className="px-3 py-[5px]">
-                          <div
-                            ref={createInputRef}
-                            className="flex items-center gap-2"
-                          >
-                            {icons.folder()}
-                            <input
-                              autoFocus
-                              value={newFolderName}
-                              onChange={(e) => setNewFolderName(e.target.value)}
-                              onBlur={createFolder}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") createFolder();
-                                if (e.key === "Escape")
-                                  setCreatingFolder(false);
-                              }}
-                              className="text-[13px] border border-primary focus:outline-none focus:border-primary rounded px-1 py-[2px]"
-                            />
-                          </div>
-                        </td>
-
-                        <td colSpan={4}></td>
-                      </tr>
-                    )}
-
-                    {/* Folders */}
-                    {folders.map((file, i) => (
-                      <FileRow
-                        key={i}
-                        file={file}
-                        index={i}
-                        selected={selectedFile === `f${i}`}
-                        onSelect={() => setSelectedFile(`f${i}`)}
-                      />
-                    ))}
-
-                    {/* Divider */}
-                    {folders.length > 0 && fileItems.length > 0 && (
-                      <tr>
-                        <td
-                          colSpan={5}
-                          className="h-[4px] bg-gray-50 border-b border-gray-100"
-                        />
-                      </tr>
-                    )}
-
-                    {/* Files */}
-                    {fileItems.map((file, i) => (
-                      <FileRow
-                        key={i}
-                        file={file}
-                        index={i}
-                        selected={selectedFile === `d${i}`}
-                        onSelect={() => setSelectedFile(`d${i}`)}
-                      />
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="p-4">
-                  {/* Folders */}
-                  {folders.length > 0 && (
-                    <>
-                      <GridStructureView
-                        GridItem={GridItem}
-                        createFolder={createFolder}
-                        creatingFolder={creatingFolder}
-                        folders={folders}
-                        getLargeIcon={getLargeIcon}
-                        newFolderName={newFolderName}
-                        setCreatingFolder={setCreatingFolder}
-                        setNewFolderName={setNewFolderName}
-                        setSelectedFile={setSelectedFile}
-                        selectedFile={selectedFile}
-                        view={view}
-                        createInputRef={createInputRef}
-
-                      />
-                    </>
-                  )}
-
-                  {/* Files */}
-                  {fileItems.length > 0 && (
-                    <>
-                      <div className="text-[11px] font-semibold text-gray-400 tracking-wider mb-2 pl-1">
-                        FILES
-                      </div>
-
-                      <div className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]">
-                        {fileItems.map((file, i) => (
-                          <GridItem
-                            key={i}
-                            file={file}
-                            index={i}
-                            selected={selectedFile === `gd${i}`}
-                            onSelect={() => setSelectedFile(`gd${i}`)}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+              <div className="p-4">
+                {/* Folders */}
+                {privateFolders?.length > 0 && (
+                  <>
+                    <GridStructureView
+                      createFolder={createFolder}
+                      creatingFolder={creatingFolder}
+                      folders={privateFolders}
+                      getLargeIcon={getLargeIcon}
+                      newFolderName={newFolderName}
+                      setCreatingFolder={setCreatingFolder}
+                      setNewFolderName={setNewFolderName}
+                      setSelectedFile={setSelectedFile}
+                      selectedFile={selectedFile}
+                      view={view}
+                      createInputRef={createInputRef}
+                      heading={"Private Folders"}
+                    />
+                  </>
+                )}
+                {sharedAndPublicFolders?.length > 0 && (
+                  <>
+                    <GridStructureView
+                      createFolder={createFolder}
+                      creatingFolder={creatingFolder}
+                      folders={sharedAndPublicFolders}
+                      getLargeIcon={getLargeIcon}
+                      newFolderName={newFolderName}
+                      setCreatingFolder={setCreatingFolder}
+                      setNewFolderName={setNewFolderName}
+                      setSelectedFile={setSelectedFile}
+                      selectedFile={selectedFile}
+                      view={view}
+                      createInputRef={createInputRef}
+                      heading={"Shared & Public Folders"}
+                    />
+                  </>
+                )}
+              </div>
             </div>
           </section>
         }
@@ -884,22 +806,24 @@ function FileRow({ file, index, selected, onSelect }) {
         <div className="flex items-center gap-2">
           {getFileIcon(file)}
           <span className="text-[13px] text-gray-800 font-normal">
-            {file.name}
+            {file?.name}
           </span>
         </div>
       </td>
 
       <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
-        {file.modified}
+        {file?.modified}
       </td>
 
       <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
-        {file.type === "folder"
+        {file?.type === "folder"
           ? "File folder"
-          : `${file.extension?.toUpperCase()} File` || "File"}
+          : `${file?.extension?.toUpperCase()} File` || "File"}
       </td>
 
-      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">{file.size}</td>
+      <td className="px-2 py-[4px] text-[12.5px] text-gray-500">
+        {file?.size}
+      </td>
 
       <td className="px-[6px] py-[5px] text-right">
         <button
@@ -911,31 +835,5 @@ function FileRow({ file, index, selected, onSelect }) {
         </button>
       </td>
     </tr>
-  );
-}
-function GridItem({ file, index, selected, onSelect }) {
-  const isLongName = file.name.length > 22;
-  const displayName = isLongName ? file.name.slice(0, 22) + "…" : file.name;
-
-  return (
-    <div
-      onClick={onSelect}
-      className={`flex flex-col items-center py-2 px-1 rounded-md select-none transition-all border
-      ${
-        selected
-          ? "bg-[#d2556407] border-[#d25564]"
-          : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
-      }`}
-    >
-      <div className="mb-1">{getLargeIcon(file)}</div>
-
-      <div className="text-[12px] text-center text-gray-800 break-words leading-[1.2] max-w-[110px] px-[7px]">
-        {displayName}
-      </div>
-
-      {/* <div className="text-[11px] text-gray-400 mt-[1px]">
-        {file.type === "folder" ? `${file.items} items` : file.size}
-      </div> */}
-    </div>
   );
 }

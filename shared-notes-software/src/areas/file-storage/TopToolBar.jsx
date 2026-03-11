@@ -144,7 +144,7 @@ const TopToolBar = ({
             </button>
 
             {/* List view */}
-            <button
+            {/* <button
               onClick={() => setView("list")}
               className={`p-1.5 rounded transition-colors
         ${
@@ -154,7 +154,7 @@ const TopToolBar = ({
         }`}
             >
               <ListIcon />
-            </button>
+            </button> */}
 
           </div>
         </div>

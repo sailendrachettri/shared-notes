@@ -5,6 +5,7 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 
 //#region File storage
 export const ADD_FOLDER_URL = '/file-storage/add-folder'
+export const GET_FOLDER_LIST_URL = '/file-storage/get-folder-list'
 
 // #endregion
 
