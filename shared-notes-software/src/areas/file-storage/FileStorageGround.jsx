@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import { getItem } from "../../api/storage";
 import { useRef } from "react";
 import GridStructureView from "./GridStructureView";
+import { IoFolderOpenOutline } from "react-icons/io5";
+import { HiOutlineRefresh } from "react-icons/hi";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -146,34 +148,6 @@ const icons = {
   ),
 };
 
-const DotsIcon = () => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <circle cx="12" cy="5" r="1" fill="currentColor" />
-    <circle cx="12" cy="12" r="1" fill="currentColor" />
-    <circle cx="12" cy="19" r="1" fill="currentColor" />
-  </svg>
-);
-
-const getFileIcon = (file) => {
-  if (file?.type === "folder") return icons.folder();
-  const map = {
-    pdf: icons.pdf,
-    txt: icons.txt,
-    png: icons.png,
-    jpg: icons.png,
-    xlsx: icons.xlsx,
-    pptx: icons.pptx,
-  };
-  return (map[file?.extension] || icons.default)();
-};
-
 const getLargeIcon = (file) => {
   if (file?.type === "folder") {
     return (
@@ -247,12 +221,14 @@ export default function FileExplorer({
   creatingFolder,
   publicFolders,
   setCreatingFolder,
-  search, setSearch
+  search,
+  setSearch,
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
   const [activeNav, setActiveNav] = useState("Documents");
   const [expandedNav, setExpandedNav] = useState(["Quick access"]);
+  const [contextMenu, setContextMenu] = useState(null);
 
   const [newFolderName, setNewFolderName] = useState("");
   const createInputRef = useRef(null);
@@ -341,6 +317,12 @@ export default function FileExplorer({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const closeMenu = () => setContextMenu(null);
+    window.addEventListener("click", closeMenu);
+    return () => window.removeEventListener("click", closeMenu);
+  }, []);
+
   return (
     <>
       <MainLayout
@@ -368,7 +350,17 @@ export default function FileExplorer({
             />
 
             {/* File area */}
-            <div className="flex-1 overflow-auto min-h-0">
+            <div
+              className="flex-1 overflow-auto min-h-0"
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenu({
+                  x: e.pageX,
+                  y: e.pageY,
+                  type: "blank",
+                });
+              }}
+            >
               <div className="p-4">
                 {/* Folders */}
                 <div>
@@ -407,6 +399,39 @@ export default function FileExplorer({
                 </div>
               </div>
             </div>
+
+            {/* right click options */}
+
+            {contextMenu && (
+              <div
+                style={{
+                  top: contextMenu.y,
+                  left: contextMenu.x,
+                }}
+                className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-[999]"
+              >
+                <button
+                  className="w-full flex flex-nowrap gap-x-2 text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  <HiOutlineRefresh size={20} />
+                  <span> Refresh</span>
+                </button>
+
+                <button
+                  className="w-full flex flex-nowrap gap-x-2 text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  onClick={() => {
+                    setCreatingFolder(true);
+                    setNewFolderName("New Folder");
+                    setContextMenu(null);
+                  }}
+                >
+                  <IoFolderOpenOutline size={20} /> <span>New Folder</span>
+                </button>
+              </div>
+            )}
           </section>
         }
       />
