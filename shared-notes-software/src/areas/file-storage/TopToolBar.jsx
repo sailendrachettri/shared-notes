@@ -1,5 +1,11 @@
 import React from "react";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineCreateNewFolder, MdGridView, MdOutlineCloudUpload    } from "react-icons/md";
+import {
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
+  MdOutlineCreateNewFolder,
+  MdGridView,
+  MdOutlineCloudUpload,
+} from "react-icons/md";
 
 const TopToolBar = ({
   view,
@@ -12,6 +18,7 @@ const TopToolBar = ({
   setFolderStack,
   goForward,
   forwardStack,
+  fileRef,
 }) => {
   const visibleStack =
     folderStack.length > 5
@@ -87,8 +94,11 @@ const TopToolBar = ({
           {/* Toolbar actions */}
           <div className="flex items-center gap-1">
             {/* Upload */}
-            <button className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors">
-              <MdOutlineCloudUpload  size={18} /> <span>Upload</span>
+            <button
+              onClick={() => fileRef.current.click()}
+              className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors"
+            >
+              <MdOutlineCloudUpload size={18} /> <span>Upload</span>
             </button>
 
             {/* New folder */}
@@ -99,7 +109,8 @@ const TopToolBar = ({
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md border border-gray-300 bg-white hover:bg-primary/10 hover:text-primary hover:border-primary/20 text-[12px] transition-colors"
             >
-              <MdOutlineCreateNewFolder size={18} className="text-slate-700"/> <span>New folder</span>
+              <MdOutlineCreateNewFolder size={18} className="text-slate-700" />{" "}
+              <span>New folder</span>
             </button>
 
             <div className="w-px h-5 bg-gray-200 mx-1" />
@@ -116,19 +127,6 @@ const TopToolBar = ({
             >
               <MdGridView size={18} />
             </button>
-
-            {/* List view */}
-            {/* <button
-              onClick={() => setView("list")}
-              className={`p-1.5 rounded transition-colors
-        ${
-          view === "list"
-            ? "bg-primary/10 text-primary"
-            : "text-gray-500 hover:bg-primary/10 hover:text-primary"
-        }`}
-            >
-              <ListIcon />
-            </button> */}
           </div>
         </div>
       </div>

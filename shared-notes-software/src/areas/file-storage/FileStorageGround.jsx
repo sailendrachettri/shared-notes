@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineAttachFile } from "react-icons/md";
+import {
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
+  MdOutlineAttachFile,
+} from "react-icons/md";
 import { GrStorage } from "react-icons/gr";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
 import { useEffect } from "react";
-import { ADD_FOLDER_URL, GET_FOLDER_ITEMS_URL } from "../../api/api_routes";
+import {
+  ADD_FOLDER_URL,
+  DELETE_FILE_URL,
+  FILE_UPLOAD_URL,
+  GET_FOLDER_ITEMS_URL,
+  UPLOAD_STORAGE_FILE_URL,
+} from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
 import toast from "react-hot-toast";
 import { getItem } from "../../api/storage";
@@ -14,6 +24,7 @@ import GridStructureView from "./GridStructureView";
 import { IoFolderOpenOutline } from "react-icons/io5";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { FcOpenedFolder } from "react-icons/fc";
+import UploadInProgress from "../../utils/info-screen/UploadInProgress";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -169,9 +180,12 @@ export default function FileExplorer({
   const [files, setFiles] = useState([]);
   const [newFolderName, setNewFolderName] = useState("");
   const [parentDirVisibility, setParentDirectoryVisibility] = useState(null);
-  const createInputRef = useRef(null);
   const [forwardStack, setForwardStack] = useState([]);
-  console.log(folderStack);
+  const [uploading, setUploading] = useState(false);
+
+  const createInputRef = useRef(null);
+  const fileRef = useRef(null);
+
   const sections = [
     { heading: "Private Folders", data: privateFolders },
     { heading: "Shared Folders", data: sharedFolders },
@@ -287,6 +301,58 @@ export default function FileExplorer({
     setCurrentFolderId(previous ? previous.id : null);
   };
 
+  const handleUploadStorageFile = async (selectedFileForUpload) => {
+    setUploading(true);
+    try {
+      const user = await getItem("user");
+      const formData = new FormData();
+      formData.append("files", selectedFileForUpload);
+      let fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const uploadedUrl = fileRes?.data[0];
+
+      let payload = {
+        FileName: selectedFileForUpload?.name,
+        FolderId: currentFolderId || null,
+        FileSize: selectedFileForUpload?.size,
+        FileExtension: selectedFileForUpload.name.split(".").pop(),
+        FileVisibility: parentDirVisibility || "public",
+        FilePath: uploadedUrl,
+        UserId: user?.userId || null,
+      };
+
+      const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
+      console.log(res);
+
+      if (
+        res?.data?.data?.success == true &&
+        res?.data?.data?.status == "UPLOADED"
+      ) {
+        toast.success("File uploaded successful");
+        handleFetchNestedFolders(currentFolderId);
+      } else {
+        toast.error("Can't upload file at the moment");
+        // delete the file from the file system
+        if (uploadedUrl) {
+          await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
+        }
+      }
+    } catch (error) {
+      console.error("Can't upload file at the moment", error);
+      toast.error("Can't upload file at the moment");
+      if (uploadedUrl) {
+        await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
+      }
+    } finally {
+      setUploading(false);
+      if (fileRef.current) {
+        fileRef.current.value = "";
+      }
+    }
+  };
+
   useEffect(() => {
     if (currentFolderId !== null) {
       handleFetchNestedFolders(currentFolderId);
@@ -360,6 +426,7 @@ export default function FileExplorer({
               folderStack={folderStack}
               setCurrentFolderId={setCurrentFolderId}
               setFolderStack={setFolderStack}
+              fileRef={fileRef}
             />
 
             {/* File area */}
@@ -449,12 +516,12 @@ export default function FileExplorer({
                 <button
                   className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
                   onClick={() => {
-                    setCreatingFolder(true);
-                    setNewFolderName("New Folder");
+                    fileRef.current.click();
                     setContextMenu(null);
                   }}
                 >
-                  <MdOutlineAttachFile className="rotate-90"  size={20} /> <span>Upload Files</span>
+                  <MdOutlineAttachFile className="rotate-90" size={20} />{" "}
+                  <span>Upload Files</span>
                 </button>
                 <button
                   className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
@@ -468,6 +535,16 @@ export default function FileExplorer({
                 </button>
               </div>
             )}
+
+            <input
+              type="file"
+              ref={fileRef}
+              onChange={(e) => handleUploadStorageFile(e.target.files?.[0])}
+              accept=""
+              className="hidden"
+            />
+
+            {uploading && <UploadInProgress />}
           </section>
         }
       />

@@ -1,5 +1,15 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class UploadFileRequest
+    {
+        public string FileName { get; set; }
+        public long? FolderId { get; set; }
+        public long FileSize { get; set; }
+        public string FileExtension { get; set; }
+        public string FileVisibility { get; set; }
+        public string FilePath { get; set; }
+        public Guid? UserId { get; set; }
+    }
     public class GetFolderItemsRequest
     {
         public long? ParentFolderId { get; set; }

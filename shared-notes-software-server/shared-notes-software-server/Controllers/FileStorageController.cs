@@ -16,6 +16,63 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("upload-file")]
+        public async Task<IActionResult> UploadFile([FromBody] UploadFileRequest model)
+        {
+            var query = @"SELECT public.upload_file(
+                        @file_name_i,
+                        @folder_id_i,
+                        @file_size_i,
+                        @file_extension_i,
+                        @file_visibility_i,
+                        @file_path_i,
+                        @user_id_i
+                  )";
+
+            var result = await _db.ExecuteScalarAsync<string>(
+                query,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue(
+                        "file_name_i",
+                        model.FileName
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "folder_id_i",
+                        (object?)model.FolderId ?? DBNull.Value
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "file_size_i",
+                        model.FileSize
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "file_extension_i",
+                        model.FileExtension
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "file_visibility_i",
+                        model.FileVisibility
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "file_path_i",
+                        model.FilePath
+                    );
+
+                    cmd.Parameters.AddWithValue(
+                        "user_id_i",
+                        (object?)model.UserId ?? DBNull.Value
+                    );
+                }
+            );
+
+            return Content(result, "application/json");
+        }
+
         [HttpPost("get-folder-items")]
         public async Task<IActionResult> GetFolderItems([FromBody] GetFolderItemsRequest model)
         {

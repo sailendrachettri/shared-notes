@@ -7,6 +7,7 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 export const ADD_FOLDER_URL = "/file-storage/add-folder";
 export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
 export const GET_FOLDER_ITEMS_URL = "/file-storage/get-folder-items";
+export const UPLOAD_STORAGE_FILE_URL = "/file-storage/upload-file";
 
 // #endregion
 
