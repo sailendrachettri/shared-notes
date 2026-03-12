@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowViteDevServer", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173", "https://localhost:44383") 
+            .WithOrigins("http://localhost:5173", "https://localhost:44383", "http://localhost:5174") 
             .AllowAnyHeader()
             .SetIsOriginAllowed(_ => true)
             .AllowAnyMethod()
@@ -39,10 +39,15 @@ builder.Services.AddCors(options =>
 
 
 // Configure Kestrel BEFORE Build()
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 1073741824; // 1GB
+});
 builder.WebHost.ConfigureKestrel(options =>
 {
     // HTTP
     options.ListenAnyIP(5171);
+    options.Limits.MaxRequestBodySize = 1073741824; // 1 GB
 
     // HTTPS (requires dev certificate installed)
     //options.ListenAnyIP(t171, listen =>

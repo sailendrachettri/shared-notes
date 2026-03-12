@@ -12,6 +12,8 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
             _env = env;
         }
 
+        [RequestSizeLimit(1073741824)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 1073741824)]
         [HttpPost("/api/v1/upload-files")]
         public IActionResult UploadFiles([FromForm] List<IFormFile> files) 
         {

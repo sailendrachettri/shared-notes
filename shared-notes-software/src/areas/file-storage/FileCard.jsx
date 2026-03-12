@@ -6,6 +6,10 @@ import {
 } from "react-icons/fa";
 import { MdDownload } from "react-icons/md";
 import { HiDocumentText } from "react-icons/hi";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { MdOutlineDownloadDone } from "react-icons/md";
+import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 const formatFileSize = (bytes) => {
   if (!bytes) return "0 B";
@@ -195,16 +199,44 @@ const getFileIcon = (ext, size = 28) => {
   return <Icon size={size} className={cls} />;
 };
 
-const downloadFile = (file) => {
-  const link = document.createElement("a");
-  link.href = `/api/files/download/${file.file_id}`;
-  link.download = file.file_name;
-  link.click();
-};
-
 const FileCard = ({ file, isSelected, onClick }) => {
+  const [downloading, setDownloading] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
+
   const ext = file.file_extension?.toLowerCase();
   const { thumbBg, badgeBg, badgeText } = getTypeConfig(ext);
+
+  const downloadFile = async (file) => {
+    setDownloading(true);
+    try {
+      const response = await fetch(
+        `${VIEW_UPLOADED_FILE_URL}/${file?.file_path}`,
+      );
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = file.file_name;
+
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      setDownloaded(true);
+      toast.success("File download successful");
+    } catch (error) {
+      toast.error("Not able to download file");
+      console.error("Download error:", error);
+    } finally {
+      setDownloading(false);
+      setTimeout(() => setDownloaded(false), 1000);
+    }
+  };
+
   return (
     <div
       onClick={onClick}
@@ -251,7 +283,17 @@ const FileCard = ({ file, isSelected, onClick }) => {
             className="flex items-center justify-center w-6 h-6 rounded-md border border-gray-200 bg-gray-50 text-gray-400
               hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shrink-0"
           >
-            <MdDownload size={14} />
+            {downloading ? (
+              <span>...</span>
+            ) : (
+              <span>
+                {downloaded ? (
+                  <MdOutlineDownloadDone size={14} />
+                ) : (
+                  <MdDownload size={14} />
+                )}
+              </span>
+            )}
           </button>
         </div>
       </div>

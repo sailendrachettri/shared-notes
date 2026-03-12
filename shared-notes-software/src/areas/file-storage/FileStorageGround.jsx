@@ -27,6 +27,7 @@ import { FcOpenedFolder } from "react-icons/fc";
 import UploadInProgress from "../../utils/info-screen/UploadInProgress";
 import LoadingPage from "../../utils/info-screen/LoadingPage";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
+const MAX_FILE_SIZE = 1073741824; // 1gb
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -314,6 +315,10 @@ export default function FileExplorer({
   };
 
   const handleUploadStorageFile = async (selectedFileForUpload) => {
+    if (selectedFileForUpload.size > MAX_FILE_SIZE) {
+      toast.error("File must be less than 1GB");
+      return;
+    }
     setUploading(true);
     let uploadedUrl;
 
