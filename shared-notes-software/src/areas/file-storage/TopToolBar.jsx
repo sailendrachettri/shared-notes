@@ -47,32 +47,40 @@ const GridIcon = () => (
   </svg>
 );
 
-const ListIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="8" y1="6" x2="21" y2="6" />
-    <line x1="8" y1="12" x2="21" y2="12" />
-    <line x1="8" y1="18" x2="21" y2="18" />
-    <line x1="3" y1="6" x2="3.01" y2="6" />
-    <line x1="3" y1="12" x2="3.01" y2="12" />
-    <line x1="3" y1="18" x2="3.01" y2="18" />
-  </svg>
-);
-
 const TopToolBar = ({
-  icons,
   view,
   setView,
   setCreatingFolder,
   setNewFolderName,
   goBack,
+  folderStack,
+  setCurrentFolderId,
+  setFolderStack,
+  goForward,
+  forwardStack,
 }) => {
+  const visibleStack =
+    folderStack.length > 5
+      ? [
+          { ...folderStack[0], realIndex: 0 },
+          { id: "ellipsis", name: "..." },
+          ...folderStack.slice(-3).map((f, i) => ({
+            ...f,
+            realIndex: folderStack.length - 3 + i,
+          })),
+        ]
+      : folderStack.map((f, i) => ({ ...f, realIndex: i }));
+
+  const navigateBreadcrumb = (index) => {
+    const selected = folderStack[index];
+
+    setCurrentFolderId(selected.id);
+
+    setFolderStack(folderStack.slice(0, index + 1));
+  };
+
+  console.log(folderStack);
+
   return (
     <>
       <div className="border-b border-gray-200 bg-white pt-2 ">
@@ -81,37 +89,45 @@ const TopToolBar = ({
           {/* Back */}
           <button
             onClick={goBack}
-            className="p-1.5 rounded text-gray-500 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors"
+            className={`${folderStack?.length > 0 ? "text-gray-500 cursor-pointer hover:text-primary hover:bg-primary/10" : "text-gray-400 cursor-not-allowed"} p-1.5 rounded transition-colors`}
           >
             <MdKeyboardArrowLeft />
           </button>
 
           {/* Forward */}
-          <button className="p-1.5 rounded text-gray-400 hover:bg-primary/10 cursor-pointer hover:text-primary transition-colors">
+          <button
+            onClick={goForward}
+            className={`${forwardStack?.length > 0 ? "text-gray-500 cursor-pointer hover:text-primary hover:bg-primary/10" : "text-gray-400 cursor-not-allowed"} p-1.5 rounded    transition-colors`}
+          >
             <MdKeyboardArrowRight />
           </button>
 
           {/* Address bar */}
-          <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white hover:border-primary transition-all cursor-pointer text-[12.5px]">
-            {icons.folder("#FFB900")}
+          <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white transition-all cursor-pointer text-[12.5px]">
+            <div className="flex items-center text-sm text-gray-600 gap-1">
+              <span
+                className="cursor-pointer hover:underline"
+                onClick={() => {
+                  setCurrentFolderId(null);
+                  setFolderStack([]);
+                }}
+              >
+                Home
+              </span>
 
-            <span className="text-gray-400 mx-1">
-              <MdKeyboardArrowRight />
-            </span>
+              {visibleStack?.map((item, index) => (
+                <React.Fragment key={item?.id}>
+                  <MdKeyboardArrowRight size={16} />
 
-            <span className="font-medium text-gray-700">This PC</span>
-
-            <span className="text-gray-400 mx-1">
-              <MdKeyboardArrowRight />
-            </span>
-
-            <span className="font-medium text-gray-700">Documents</span>
-
-            <span className="text-gray-400 mx-1">
-              <MdKeyboardArrowRight />
-            </span>
-
-            <span className="text-primary font-medium">Projects</span>
+                  <span
+                    className="cursor-pointer hover:underline"
+                    onClick={() => navigateBreadcrumb(item.realIndex)}
+                  >
+                    {item?.name}
+                  </span>
+                </React.Fragment>
+              ))}
+            </div>
           </div>
 
           {/* Toolbar actions */}

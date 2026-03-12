@@ -170,7 +170,8 @@ export default function FileExplorer({
   const [newFolderName, setNewFolderName] = useState("");
   const [parentDirVisibility, setParentDirectoryVisibility] = useState(null);
   const createInputRef = useRef(null);
-
+  const [forwardStack, setForwardStack] = useState([]);
+  console.log(folderStack);
   const sections = [
     { heading: "Private Folders", data: privateFolders },
     { heading: "Shared Folders", data: sharedFolders },
@@ -186,8 +187,16 @@ export default function FileExplorer({
   const openFolder = (folder) => {
     console.log(folder);
     setParentDirectoryVisibility(folder?.folder_visibility);
-    setFolderStack((prev) => [...prev, currentFolderId]);
+    setFolderStack((prev) => [
+      ...prev,
+      {
+        id: folder.folder_id,
+        name: folder.folder_name,
+      },
+    ]);
+    console.log(folderStack);
     setCurrentFolderId(folder.folder_id);
+    setForwardStack([]);
   };
 
   const handleFetchNestedFolders = async (parentId) => {
@@ -249,13 +258,33 @@ export default function FileExplorer({
     }
   };
 
+  const goForward = () => {
+    if (forwardStack.length === 0) return;
+
+    const next = forwardStack[forwardStack.length - 1];
+
+    setForwardStack((prev) => prev.slice(0, -1));
+
+    setFolderStack((prev) => [...prev, { id: next.id, name: next.name }]);
+
+    setCurrentFolderId(next.id);
+  };
+
   const goBack = () => {
     if (folderStack.length === 0) return;
 
-    const prev = folderStack[folderStack.length - 1];
+    const newStack = [...folderStack];
+    const last = newStack.pop();
 
-    setFolderStack((stack) => stack.slice(0, -1));
-    setCurrentFolderId(prev);
+    setForwardStack((prev) => [
+      ...prev,
+      { id: currentFolderId, name: last?.name },
+    ]);
+
+    const previous = newStack[newStack.length - 1];
+
+    setFolderStack(newStack);
+    setCurrentFolderId(previous ? previous.id : null);
   };
 
   useEffect(() => {
@@ -322,11 +351,15 @@ export default function FileExplorer({
             {/* Top toolbar */}
             <TopToolBar
               goBack={goBack}
-              icons={icons}
+              forwardStack={forwardStack}
+              goForward={goForward}
               setView={setView}
               view={view}
               setCreatingFolder={setCreatingFolder}
               setNewFolderName={setNewFolderName}
+              folderStack={folderStack}
+              setCurrentFolderId={setCurrentFolderId}
+              setFolderStack={setFolderStack}
             />
 
             {/* File area */}
