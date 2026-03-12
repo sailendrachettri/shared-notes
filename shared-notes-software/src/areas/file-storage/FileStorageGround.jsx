@@ -25,6 +25,8 @@ import { IoFolderOpenOutline } from "react-icons/io5";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { FcOpenedFolder } from "react-icons/fc";
 import UploadInProgress from "../../utils/info-screen/UploadInProgress";
+import LoadingPage from "../../utils/info-screen/LoadingPage";
+import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 
 const icons = {
   folder: (color = "#FFB900") => (
@@ -182,6 +184,7 @@ export default function FileExplorer({
   const [parentDirVisibility, setParentDirectoryVisibility] = useState(null);
   const [forwardStack, setForwardStack] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
@@ -214,11 +217,17 @@ export default function FileExplorer({
   };
 
   const handleFetchNestedFolders = async (parentId) => {
+    if (!creatingFolder || !uploading) {
+      setLoading(true);
+    }
     try {
       const user = await getItem("user");
+      console.log(parentId);
+      console.log(currentFolderId);
+      console.log(folderStack);
 
       const payload = {
-        ParentFolderId: parentId,
+        ParentFolderId: parentId || null,
         UserId: user?.userId || null,
       };
       console.log(payload);
@@ -230,6 +239,8 @@ export default function FileExplorer({
       setFiles(res?.data?.files || []);
     } catch (err) {
       console.error("Failed to fetch folder items", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -242,7 +253,8 @@ export default function FileExplorer({
       const payload = {
         FolderName: newFolderName,
         ParentFolderId: currentFolderId || null,
-        UserId: userData?.userId || null,
+        UserId:
+          parentDirVisibility == "public" ? null : userData?.userId || null,
         FolderVisibility: parentDirVisibility || "public",
       };
 
@@ -303,6 +315,8 @@ export default function FileExplorer({
 
   const handleUploadStorageFile = async (selectedFileForUpload) => {
     setUploading(true);
+    let uploadedUrl;
+
     try {
       const user = await getItem("user");
       const formData = new FormData();
@@ -311,7 +325,7 @@ export default function FileExplorer({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const uploadedUrl = fileRes?.data[0];
+      uploadedUrl = fileRes?.data[0];
 
       let payload = {
         FileName: selectedFileForUpload?.name,
@@ -320,16 +334,13 @@ export default function FileExplorer({
         FileExtension: selectedFileForUpload.name.split(".").pop(),
         FileVisibility: parentDirVisibility || "public",
         FilePath: uploadedUrl,
-        UserId: user?.userId || null,
+        UserId: parentDirVisibility == "public" ? null : user?.userId || null,
       };
 
       const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
       console.log(res);
 
-      if (
-        res?.data?.data?.success == true &&
-        res?.data?.data?.status == "UPLOADED"
-      ) {
+      if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
         toast.success("File uploaded successful");
         handleFetchNestedFolders(currentFolderId);
       } else {
@@ -346,7 +357,9 @@ export default function FileExplorer({
         await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
       }
     } finally {
-      setUploading(false);
+      setTimeout(() => {
+        setUploading(false);
+      }, 500);
       if (fileRef.current) {
         fileRef.current.value = "";
       }
@@ -354,9 +367,7 @@ export default function FileExplorer({
   };
 
   useEffect(() => {
-    if (currentFolderId !== null) {
-      handleFetchNestedFolders(currentFolderId);
-    }
+    handleFetchNestedFolders(currentFolderId);
   }, [currentFolderId]);
 
   useEffect(() => {
@@ -429,122 +440,143 @@ export default function FileExplorer({
               fileRef={fileRef}
             />
 
-            {/* File area */}
-            <div
-              className="flex-1 overflow-auto min-h-0"
-              onContextMenu={(e) => {
-                e.preventDefault();
-                setContextMenu({
-                  x: e.pageX,
-                  y: e.pageY,
-                  type: "blank",
-                });
-              }}
-            >
-              <div className="p-4">
-                {/* Folders */}
-                <div>
-                  {creatingFolder && view === "grid" && (
-                    <div
-                      ref={createInputRef}
-                      className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
-                    >
-                      <div className="mb-2">
-                        <FcOpenedFolder size={40} />
-                      </div>
-                      <input
-                        autoFocus
-                        maxLength={30}
-                        value={newFolderName}
-                        onChange={(e) => setNewFolderName(e.target.value)}
-                        onFocus={(e) => e.target.select()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleCreateFolder();
-                          if (e.key === "Escape") setCreatingFolder(false);
-                        }}
-                        className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
-                      />
-                    </div>
-                  )}
+            {loading ? (
+              <section>
+                <LoadingPageSoft />
+              </section>
+            ) : (
+              <section className="flex flex-col h-full">
+                {/* File area */}
+                <div
+                  className="flex-1 overflow-auto min-h-0"
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setContextMenu({
+                      x: e.pageX,
+                      y: e.pageY,
+                      type: "blank",
+                    });
+                  }}
+                >
+                  <div className="p-4">
+                    {/* Folders */}
+                    <div>
+                      {creatingFolder && view === "grid" && (
+                        <div
+                          ref={createInputRef}
+                          className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
+                        >
+                          <div className="mb-2">
+                            <FcOpenedFolder size={40} />
+                          </div>
+                          <input
+                            autoFocus
+                            maxLength={30}
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                            onFocus={(e) => e.target.select()}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleCreateFolder();
+                              if (e.key === "Escape") setCreatingFolder(false);
+                            }}
+                            className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
+                          />
+                        </div>
+                      )}
 
-                  {currentFolderId === null ? (
-                    sections?.map((section, index) => (
+                      {currentFolderId === null ? (
+                        sections?.map((section, index) => (
+                          <GridStructureView
+                            itemTypeName={"folder"}
+                            key={index}
+                            dataItems={section.data}
+                            setSelectedFile={setSelectedFile}
+                            selectedFile={selectedFile}
+                            heading={section.heading}
+                            openFolder={openFolder}
+                            isSubfolder={"no"}
+                          />
+                        ))
+                      ) : (
+                        <GridStructureView
+                          itemTypeName={"folder"}
+                          dataItems={folders}
+                          setSelectedFile={setSelectedFile}
+                          selectedFile={selectedFile}
+                          heading="Folders"
+                          openFolder={openFolder}
+                          isSubfolder={"yes"}
+                        />
+                      )}
+
+                      {/* Render files */}
                       <GridStructureView
-                        key={index}
-                        folders={section.data}
+                        itemTypeName={"file"}
+                        dataItems={files}
                         setSelectedFile={setSelectedFile}
                         selectedFile={selectedFile}
-                        heading={section.heading}
+                        heading="Documents"
                         openFolder={openFolder}
                         isSubfolder={"no"}
                       />
-                    ))
-                  ) : (
-                    <GridStructureView
-                      folders={folders}
-                      setSelectedFile={setSelectedFile}
-                      selectedFile={selectedFile}
-                      heading="Folders"
-                      openFolder={openFolder}
-                      isSubfolder={"yes"}
-                    />
-                  )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* right click options */}
+                {/* right click options */}
 
-            {contextMenu && (
-              <div
-                style={{
-                  top: contextMenu.y,
-                  left: contextMenu.x,
-                }}
-                className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
-              >
-                <button
-                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                >
-                  <HiOutlineRefresh size={20} />
-                  <span> Refresh</span>
-                </button>
+                {contextMenu && (
+                  <div
+                    style={{
+                      top: contextMenu.y,
+                      left: contextMenu.x,
+                    }}
+                    className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
+                  >
+                    <button
+                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
+                      onClick={() => {
+                        window.location.reload();
+                      }}
+                    >
+                      <HiOutlineRefresh size={20} />
+                      <span> Refresh</span>
+                    </button>
 
-                <button
-                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                  onClick={() => {
-                    fileRef.current.click();
-                    setContextMenu(null);
-                  }}
-                >
-                  <MdOutlineAttachFile className="rotate-90" size={20} />{" "}
-                  <span>Upload Files</span>
-                </button>
-                <button
-                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                  onClick={() => {
-                    setCreatingFolder(true);
-                    setNewFolderName("New Folder");
-                    setContextMenu(null);
-                  }}
-                >
-                  <IoFolderOpenOutline size={20} /> <span>New Folder</span>
-                </button>
-              </div>
+                    <button
+                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
+                      onClick={() => {
+                        fileRef.current.click();
+                        setContextMenu(null);
+                      }}
+                    >
+                      <MdOutlineAttachFile className="rotate-90" size={20} />{" "}
+                      <span>Upload Files</span>
+                    </button>
+                    <button
+                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
+                      onClick={() => {
+                        setCreatingFolder(true);
+                        setNewFolderName("New Folder");
+                        setContextMenu(null);
+                      }}
+                    >
+                      <IoFolderOpenOutline size={20} /> <span>New Folder</span>
+                    </button>
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  ref={fileRef}
+                  onChange={(e) => handleUploadStorageFile(e.target.files?.[0])}
+                  accept=""
+                  className="hidden"
+                />
+
+                {uploading && <UploadInProgress />}
+              </section>
             )}
-
-            <input
-              type="file"
-              ref={fileRef}
-              onChange={(e) => handleUploadStorageFile(e.target.files?.[0])}
-              accept=""
-              className="hidden"
-            />
-
-            {uploading && <UploadInProgress />}
           </section>
         }
       />
