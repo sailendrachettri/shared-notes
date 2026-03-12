@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineAttachFile } from "react-icons/md";
 import { GrStorage } from "react-icons/gr";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
@@ -437,7 +437,7 @@ export default function FileExplorer({
                 className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
               >
                 <button
-                  className="w-full flex flex-nowrap gap-x-2 text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
                   onClick={() => {
                     window.location.reload();
                   }}
@@ -447,7 +447,17 @@ export default function FileExplorer({
                 </button>
 
                 <button
-                  className="w-full flex flex-nowrap gap-x-2 text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
+                  onClick={() => {
+                    setCreatingFolder(true);
+                    setNewFolderName("New Folder");
+                    setContextMenu(null);
+                  }}
+                >
+                  <MdOutlineAttachFile className="rotate-90"  size={20} /> <span>Upload Files</span>
+                </button>
+                <button
+                  className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
                   onClick={() => {
                     setCreatingFolder(true);
                     setNewFolderName("New Folder");
