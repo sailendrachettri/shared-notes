@@ -199,7 +199,7 @@ const getFileIcon = (ext, size = 28) => {
   return <Icon size={size} className={cls} />;
 };
 
-const FileCard = ({ file, isSelected, onClick }) => {
+const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
   const [downloading, setDownloading] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
@@ -240,6 +240,7 @@ const FileCard = ({ file, isSelected, onClick }) => {
   return (
     <div
       onClick={onClick}
+      onContextMenu={onContextMenu}
       className={`flex flex-col rounded-xl overflow-hidden border transition-all select-none
         ${
           isSelected

@@ -1,7 +1,7 @@
 import React from "react";
 import { FcOpenedFolder } from "react-icons/fc";
 
-const FolderCard = ({ folder, isSelected, onClick, onDoubleClick }) => {
+const FolderCard = ({ folder, isSelected, onClick, onDoubleClick, onContextMenu }) => {
   const name = folder?.folder_name ?? "";
   const displayName = name.length > 30 ? name.slice(0, 30) + "…" : name;
 
@@ -9,6 +9,7 @@ const FolderCard = ({ folder, isSelected, onClick, onDoubleClick }) => {
     <div
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      onContextMenu={onContextMenu}
       className={`flex flex-col items-center py-2.5 px-1.5 rounded-lg select-none transition-all border cursor-default
         ${
           isSelected

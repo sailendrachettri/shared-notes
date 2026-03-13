@@ -2,6 +2,7 @@ import NoResultFound from "../../utils/info-screen/NoResultFound";
 import dirSvg from "../../assets/svgs/files_dir.svg";
 import FileCard from "./FileCard";
 import FolderCard from "./FolderCard";
+import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
 
 const GridStructureView = ({
   dataItems,
@@ -11,6 +12,7 @@ const GridStructureView = ({
   openFolder,
   isSubfolder,
   itemTypeName,
+  setContextMenu,
 }) => {
   const isEmpty = !dataItems || dataItems.length === 0;
 
@@ -44,6 +46,18 @@ const GridStructureView = ({
               file={file}
               isSelected={selectedFile?.file_id === file.file_id}
               onClick={() => setSelectedFile(file)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedFile(file);
+                const pos = getMenuPosition(e.pageX, e.pageY);
+
+                setContextMenu({
+                  x: pos.x,
+                  y: pos.y,
+                  type: "file",
+                });
+              }}
             />
           ))}
         </div>
@@ -57,6 +71,18 @@ const GridStructureView = ({
               isSelected={selectedFile?.folder_id === folder?.folder_id}
               onClick={() => setSelectedFile(folder)}
               onDoubleClick={() => openFolder(folder)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedFile(folder);
+                const pos = getMenuPosition(e.pageX, e.pageY);
+
+                setContextMenu({
+                  x: pos.x,
+                  y: pos.y,
+                  type: "folder",
+                });
+              }}
             />
           ))}
         </div>

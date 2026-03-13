@@ -25,8 +25,10 @@ import { IoFolderOpenOutline } from "react-icons/io5";
 import { HiOutlineRefresh } from "react-icons/hi";
 import { FcOpenedFolder } from "react-icons/fc";
 import UploadInProgress from "../../utils/info-screen/UploadInProgress";
-import LoadingPage from "../../utils/info-screen/LoadingPage";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
+import { AiOutlineDelete } from "react-icons/ai";
+import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
+
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
 const icons = {
@@ -399,6 +401,36 @@ export default function FileExplorer({
     }
   };
 
+  const handleDeleteFolder = async (folder) => {
+    try {
+      await axiosInstance.post("/delete-folder", {
+        FolderId: folder.folder_id,
+      });
+
+      toast.success("Folder deleted");
+
+      handleFetchNestedFolders(currentFolderId);
+    } catch (err) {
+      toast.error("Failed to delete folder");
+    }
+
+    setContextMenu(null);
+  };
+
+  const handleDeleteFile = async (file) => {
+    try {
+      await axiosInstance.post(DELETE_FILE_URL, [file.file_path]);
+
+      toast.success("File deleted");
+
+      handleFetchNestedFolders(currentFolderId);
+    } catch (err) {
+      toast.error("Failed to delete file");
+    }
+
+    setContextMenu(null);
+  };
+
   useEffect(() => {
     handleFetchNestedFolders(currentFolderId);
   }, [currentFolderId]);
@@ -484,9 +516,12 @@ export default function FileExplorer({
                   className="flex-1 overflow-auto min-h-0"
                   onContextMenu={(e) => {
                     e.preventDefault();
+
+                    const pos = getMenuPosition(e.pageX, e.pageY);
+
                     setContextMenu({
-                      x: e.pageX,
-                      y: e.pageY,
+                      x: pos.x,
+                      y: pos.y,
                       type: "blank",
                     });
                   }}
@@ -528,6 +563,7 @@ export default function FileExplorer({
                             heading={section.heading}
                             openFolder={openFolder}
                             isSubfolder={"no"}
+                            setContextMenu={setContextMenu}
                           />
                         ))
                       ) : (
@@ -539,6 +575,7 @@ export default function FileExplorer({
                           heading="Folders"
                           openFolder={openFolder}
                           isSubfolder={"yes"}
+                          setContextMenu={setContextMenu}
                         />
                       )}
 
@@ -551,6 +588,7 @@ export default function FileExplorer({
                         heading="Documents"
                         openFolder={openFolder}
                         isSubfolder={"no"}
+                        setContextMenu={setContextMenu}
                       />
                     </div>
                   </div>
@@ -566,36 +604,58 @@ export default function FileExplorer({
                     }}
                     className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
                   >
-                    <button
-                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                      onClick={() => {
-                        window.location.reload();
-                      }}
-                    >
-                      <HiOutlineRefresh size={20} />
-                      <span> Refresh</span>
-                    </button>
+                    <>
+                      <button
+                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                        onClick={() => window.location.reload()}
+                      >
+                        <HiOutlineRefresh size={20} />
+                        Refresh
+                      </button>
 
-                    <button
-                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                      onClick={() => {
-                        fileRef.current.click();
-                        setContextMenu(null);
-                      }}
-                    >
-                      <MdOutlineAttachFile className="rotate-90" size={20} />{" "}
-                      <span>Upload Files</span>
-                    </button>
-                    <button
-                      className="w-full flex flex-nowrap gap-x-2 cursor-pointer text-left px-3 py-2 text-sm hover:bg-primary/5"
-                      onClick={() => {
-                        setCreatingFolder(true);
-                        setNewFolderName("New Folder");
-                        setContextMenu(null);
-                      }}
-                    >
-                      <IoFolderOpenOutline size={20} /> <span>New Folder</span>
-                    </button>
+                      <button
+                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                        onClick={() => {
+                          fileRef.current.click();
+                          setContextMenu(null);
+                        }}
+                      >
+                        <MdOutlineAttachFile className="rotate-90" size={20} />
+                        Upload Files
+                      </button>
+
+                      <button
+                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                        onClick={() => {
+                          setCreatingFolder(true);
+                          setNewFolderName("New Folder");
+                          setContextMenu(null);
+                        }}
+                      >
+                        <IoFolderOpenOutline size={20} />
+                        New Folder
+                      </button>
+                    </>
+
+                    {contextMenu?.type === "file" && (
+                      <button
+                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                        onClick={() => handleDeleteFile(selectedFile)}
+                      >
+                        <AiOutlineDelete size={20} />
+                        Delete File
+                      </button>
+                    )}
+
+                    {contextMenu?.type === "folder" && (
+                      <button
+                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                        onClick={() => handleDeleteFolder(selectedFile)}
+                      >
+                        <AiOutlineDelete size={20} />
+                        Delete Folder
+                      </button>
+                    )}
                   </div>
                 )}
 
