@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
+import dirSvg from "../../assets/svgs/files_dir.svg";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
@@ -30,6 +31,7 @@ import UploadInProgress from "../../utils/info-screen/UploadInProgress";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 import { AiOutlineDelete } from "react-icons/ai";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
+import NoResultFound from "../../utils/info-screen/NoResultFound";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -196,6 +198,9 @@ export default function FileExplorer({
 
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
+
+  const isCurrentFolderEmpty =
+    currentFolderId !== null && folders.length === 0 && files.length === 0;
 
   const sections = [
     { heading: "Private Folders", data: privateFolders },
@@ -403,7 +408,6 @@ export default function FileExplorer({
       }
     }
   };
-  console.log(folders);
 
   const handleDeleteFolder = async (folder) => {
     try {
@@ -562,67 +566,80 @@ export default function FileExplorer({
                   <div className="p-4">
                     {/* Folders */}
                     <div>
-                      {creatingFolder && view === "grid" && (
-                        <div
-                          ref={createInputRef}
-                          className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
-                        >
-                          <div className="mb-2">
-                            <FcOpenedFolder size={40} />
-                          </div>
-                          <input
-                            autoFocus
-                            maxLength={30}
-                            value={newFolderName}
-                            onChange={(e) => setNewFolderName(e.target.value)}
-                            onFocus={(e) => e.target.select()}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") handleCreateFolder();
-                              if (e.key === "Escape") setCreatingFolder(false);
-                            }}
-                            className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
-                          />
-                        </div>
-                      )}
+                      {isCurrentFolderEmpty ? (
+                        <NoResultFound
+                          desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
+                          img={dirSvg}
+                          title="Empty Directory"
+                        />
+                      ) : (
+                        <>
+                          {creatingFolder && view === "grid" && (
+                            <div
+                              ref={createInputRef}
+                              className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
+                            >
+                              <div className="mb-2">
+                                <FcOpenedFolder size={40} />
+                              </div>
 
-                      {currentFolderId === null ? (
-                        sections?.map((section, index) => (
+                              <input
+                                autoFocus
+                                maxLength={30}
+                                value={newFolderName}
+                                onChange={(e) =>
+                                  setNewFolderName(e.target.value)
+                                }
+                                onFocus={(e) => e.target.select()}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") handleCreateFolder();
+                                  if (e.key === "Escape")
+                                    setCreatingFolder(false);
+                                }}
+                                className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
+                              />
+                            </div>
+                          )}
+
+                          {currentFolderId === null ? (
+                            sections?.map((section, index) => (
+                              <GridStructureView
+                                itemTypeName="folder"
+                                key={index}
+                                dataItems={section.data}
+                                setSelectedFile={setSelectedFile}
+                                selectedFile={selectedFile}
+                                heading={section.heading}
+                                openFolder={openFolder}
+                                isSubfolder="no"
+                                setContextMenu={setContextMenu}
+                              />
+                            ))
+                          ) : (
+                            <GridStructureView
+                              itemTypeName="folder"
+                              dataItems={folders}
+                              setSelectedFile={setSelectedFile}
+                              selectedFile={selectedFile}
+                              heading="Folders"
+                              openFolder={openFolder}
+                              isSubfolder="yes"
+                              setContextMenu={setContextMenu}
+                            />
+                          )}
+
                           <GridStructureView
-                            itemTypeName={"folder"}
-                            key={index}
-                            dataItems={section.data}
+                            itemTypeName="file"
+                            dataItems={files}
                             setSelectedFile={setSelectedFile}
                             selectedFile={selectedFile}
-                            heading={section.heading}
+                            heading="Documents"
                             openFolder={openFolder}
-                            isSubfolder={"no"}
+                            isSubfolder="no"
                             setContextMenu={setContextMenu}
                           />
-                        ))
-                      ) : (
-                        <GridStructureView
-                          itemTypeName={"folder"}
-                          dataItems={folders}
-                          setSelectedFile={setSelectedFile}
-                          selectedFile={selectedFile}
-                          heading="Folders"
-                          openFolder={openFolder}
-                          isSubfolder={"yes"}
-                          setContextMenu={setContextMenu}
-                        />
+                        </>
                       )}
-
-                      {/* Render files */}
-                      <GridStructureView
-                        itemTypeName={"file"}
-                        dataItems={files}
-                        setSelectedFile={setSelectedFile}
-                        selectedFile={selectedFile}
-                        heading="Documents"
-                        openFolder={openFolder}
-                        isSubfolder={"no"}
-                        setContextMenu={setContextMenu}
-                      />
                     </div>
                   </div>
                 </div>

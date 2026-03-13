@@ -16,26 +16,23 @@ const GridStructureView = ({
 }) => {
   const isEmpty = !dataItems || dataItems.length === 0;
 
-  if (isEmpty) {
-    return (
-      <section>
-        {isSubfolder === "yes" && (
-          <NoResultFound
-            desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
-            img={dirSvg}
-            title="Empty Directory"
-          />
-        )}
-      </section>
-    );
-  }
+  console.log(isEmpty);
+  console.log(isSubfolder);
+  console.log(itemTypeName);
 
   return (
     <section className="mb-6">
       {/* Section heading */}
-      <p className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2.5 pl-0.5">
-        {heading || "Documents"}
-      </p>
+      {itemTypeName == "file" && !isEmpty && (
+        <p className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2.5 pl-0.5">
+          {heading || "Documents"}
+        </p>
+      )}
+      {itemTypeName == "folder" && !isEmpty && (
+        <p className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2.5 pl-0.5">
+          {heading || "Documents"}
+        </p>
+      )}
 
       {itemTypeName === "file" ? (
         // ── File card grid ──
