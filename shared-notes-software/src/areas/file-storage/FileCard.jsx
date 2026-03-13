@@ -240,7 +240,7 @@ const FileCard = ({ file, isSelected, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col rounded-xl overflow-hidden cursor-pointer border transition-all select-none
+      className={`flex flex-col rounded-xl overflow-hidden border transition-all select-none
         ${
           isSelected
             ? "border-primary border-[1.5px] bg-[#d2556405]"
@@ -284,13 +284,17 @@ const FileCard = ({ file, isSelected, onClick }) => {
               hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shrink-0"
           >
             {downloading ? (
-              <span>...</span>
+              <span className="tiny-dot-loader">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
             ) : (
               <span>
                 {downloaded ? (
-                  <MdOutlineDownloadDone size={14} />
+                  <MdOutlineDownloadDone className="text-primary" size={14} />
                 ) : (
-                  <MdDownload size={14} />
+                  <MdDownload className="cursor-pointer" size={14} />
                 )}
               </span>
             )}

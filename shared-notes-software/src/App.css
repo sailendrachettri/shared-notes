@@ -69,6 +69,13 @@ textarea {
 }
 
 /* -----------------------------------------------loadings----------------------------------------------- */
+/* to use 
+ <span className="sync-loader">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+*/
 /* for the sync dots loading animation*/
 .sync-loader {
   display: inline-flex;
@@ -92,6 +99,39 @@ textarea {
 }
 
 @keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* small tiny dot animation*/
+.tiny-dot-loader {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.tiny-dot-loader span {
+  width: 3px;
+  height: 3px;
+  background-color: #d25564;
+  border-radius: 50%;
+  animation: tinybounce 1.4s infinite ease-in-out both;
+}
+
+.tiny-dot-loader span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.tiny-dot-loader span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes tinybounce {
   0%,
   80%,
   100% {
@@ -154,7 +194,6 @@ textarea {
     transform: rotate(calc(var(--s, 1) * 120deg)) translate(0);
   }
 }
-
 
 /* mini loader */
 .mini-loader {
@@ -415,7 +454,6 @@ textarea {
   margin-top: 4px;
 }
 
-
 /* Blockquote */
 .notion-editor-content blockquote {
   border-left: 3px solid #e5e7eb;
@@ -450,7 +488,6 @@ textarea {
   background: #282c34;
   color: #abb2bf;
 }
-
 
 /* Horizontal Rule */
 .notion-editor-content hr {
