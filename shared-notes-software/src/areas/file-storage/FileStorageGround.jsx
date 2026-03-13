@@ -199,8 +199,7 @@ export default function FileExplorer({
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
 
-  const isCurrentFolderEmpty =
-    currentFolderId !== null && folders.length === 0 && files.length === 0;
+  const isCurrentFolderEmpty = folders.length === 0 && files.length === 0;
 
   const sections = [
     { heading: "Private Folders", data: privateFolders },
