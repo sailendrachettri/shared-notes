@@ -175,6 +175,7 @@ export default function FileExplorer({
   setCreatingFolder,
   search,
   setSearch,
+  setRefresh,
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -402,6 +403,7 @@ export default function FileExplorer({
       }
     }
   };
+  console.log(folders);
 
   const handleDeleteFolder = async (folder) => {
     try {
@@ -413,15 +415,20 @@ export default function FileExplorer({
         payload,
       );
       console.log(res);
-      if(res){
-
-        toast.success("Folder deleted");
+      console.log(folder);
+      if (res?.data?.success == true) {
+        toast.success("Folder and all its contents deleted successfully.");
+        setFolders((prev) =>
+          prev.filter((f) => f.folder_id !== folder.folder_id),
+        );
       }
 
-
-      handleFetchNestedFolders(currentFolderId);
+      // handleFetchNestedFolders(currentFolderId);
     } catch (err) {
       toast.error("Failed to delete folder");
+    } finally {
+      handleFetchNestedFolders(currentFolderId);
+      setRefresh((prev) => !prev);
     }
 
     setContextMenu(null);

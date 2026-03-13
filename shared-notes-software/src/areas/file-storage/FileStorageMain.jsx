@@ -12,6 +12,7 @@ const FileStorageMain = () => {
   const [publicFolders, setPublicFolders] = useState([]);
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [search, setSearch] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   const handleGetFolders = async () => {
     try {
@@ -28,9 +29,6 @@ const FileStorageMain = () => {
         setPrivateFolders(res?.data?.data?.owned || []);
         setSharedFolders(res?.data?.data?.shared || []);
         setPublicFolders(res?.data?.data?.public || []);
-        // console.log(res?.data?.data?.owned || []);
-        // console.log(res?.data?.data?.shared || []);
-        // console.log(res?.data?.data?.public || []);
       }
     } catch (error) {
       console.error("Not able to fetch directories", error);
@@ -39,7 +37,7 @@ const FileStorageMain = () => {
 
   useEffect(() => {
     handleGetFolders();
-  }, [creatingFolder]);
+  }, [creatingFolder, refresh]);
   return (
     <>
       <section className="h-full">
@@ -51,6 +49,7 @@ const FileStorageMain = () => {
           publicFolders={publicFolders}
           search={search}
           setSearch={setSearch}
+          setRefresh={setRefresh}
         />
       </section>
     </>
