@@ -16,10 +16,6 @@ const GridStructureView = ({
 }) => {
   const isEmpty = !dataItems || dataItems.length === 0;
 
-  console.log(isEmpty);
-  console.log(isSubfolder);
-  console.log(itemTypeName);
-
   return (
     <section className="mb-6">
       {/* Section heading */}

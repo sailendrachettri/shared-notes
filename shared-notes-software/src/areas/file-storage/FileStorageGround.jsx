@@ -550,7 +550,7 @@ export default function FileExplorer({
               <section className="flex flex-col h-full pb-10">
                 {/* File area */}
                 <div
-                  className="flex-1 overflow-auto min-h-0"
+                  className="flex-1 overflow-auto"
                   onContextMenu={(e) => {
                     e.preventDefault();
 
@@ -564,9 +564,34 @@ export default function FileExplorer({
                   }}
                 >
                   <div className="p-4">
+                    {/* Create new folder */}
+                    {creatingFolder && view === "grid" && (
+                      <div
+                        ref={createInputRef}
+                        className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
+                      >
+                        <div className="mb-2">
+                          <FcOpenedFolder size={40} />
+                        </div>
+
+                        <input
+                          autoFocus
+                          maxLength={30}
+                          value={newFolderName}
+                          onChange={(e) => setNewFolderName(e.target.value)}
+                          onFocus={(e) => e.target.select()}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleCreateFolder();
+                            if (e.key === "Escape") setCreatingFolder(false);
+                          }}
+                          className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
+                        />
+                      </div>
+                    )}
+
                     {/* Folders */}
                     <div>
-                      {isCurrentFolderEmpty ? (
+                      {isCurrentFolderEmpty && !creatingFolder ? (
                         <NoResultFound
                           desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
                           img={dirSvg}
@@ -574,47 +599,22 @@ export default function FileExplorer({
                         />
                       ) : (
                         <>
-                          {creatingFolder && view === "grid" && (
-                            <div
-                              ref={createInputRef}
-                              className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
-                            >
-                              <div className="mb-2">
-                                <FcOpenedFolder size={40} />
-                              </div>
-
-                              <input
-                                autoFocus
-                                maxLength={30}
-                                value={newFolderName}
-                                onChange={(e) =>
-                                  setNewFolderName(e.target.value)
-                                }
-                                onFocus={(e) => e.target.select()}
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter") handleCreateFolder();
-                                  if (e.key === "Escape")
-                                    setCreatingFolder(false);
-                                }}
-                                className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
-                              />
-                            </div>
-                          )}
-
                           {currentFolderId === null ? (
-                            sections?.map((section, index) => (
-                              <GridStructureView
-                                itemTypeName="folder"
-                                key={index}
-                                dataItems={section.data}
-                                setSelectedFile={setSelectedFile}
-                                selectedFile={selectedFile}
-                                heading={section.heading}
-                                openFolder={openFolder}
-                                isSubfolder="no"
-                                setContextMenu={setContextMenu}
-                              />
-                            ))
+                            sections
+                              ?.filter((section) => section.data?.length > 0)
+                              .map((section, index) => (
+                                <GridStructureView
+                                  itemTypeName="folder"
+                                  key={index}
+                                  dataItems={section.data}
+                                  setSelectedFile={setSelectedFile}
+                                  selectedFile={selectedFile}
+                                  heading={section.heading}
+                                  openFolder={openFolder}
+                                  isSubfolder="no"
+                                  setContextMenu={setContextMenu}
+                                />
+                              ))
                           ) : (
                             <GridStructureView
                               itemTypeName="folder"
