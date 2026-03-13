@@ -186,6 +186,7 @@ export default function FileExplorer({
   const [forwardStack, setForwardStack] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
@@ -320,6 +321,7 @@ export default function FileExplorer({
       return;
     }
     setUploading(true);
+    setUploadProgress(0);
     let uploadedUrl;
 
     try {
@@ -328,6 +330,12 @@ export default function FileExplorer({
       formData.append("files", selectedFileForUpload);
       let fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(percent);
+        },
       });
 
       uploadedUrl = fileRes?.data[0];
@@ -364,6 +372,7 @@ export default function FileExplorer({
     } finally {
       setTimeout(() => {
         setUploading(false);
+        setUploadProgress(0);
       }, 500);
       if (fileRef.current) {
         fileRef.current.value = "";
@@ -450,7 +459,7 @@ export default function FileExplorer({
                 <LoadingPageSoft />
               </section>
             ) : (
-              <section className="flex flex-col h-full">
+              <section className="flex flex-col h-full pb-10">
                 {/* File area */}
                 <div
                   className="flex-1 overflow-auto min-h-0"
@@ -579,7 +588,7 @@ export default function FileExplorer({
                   className="hidden"
                 />
 
-                {uploading && <UploadInProgress />}
+                {uploading && <UploadInProgress progress={uploadProgress}/>}
               </section>
             )}
           </section>
