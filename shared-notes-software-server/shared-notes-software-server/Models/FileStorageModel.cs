@@ -4,6 +4,16 @@
     {
         public int FileId { get; set; }
     }
+
+    public class DeleteFolderRequest
+    {
+        public int FolderId { get; set; }
+    }
+    public class FilePathModel
+    {
+        public int FileId { get; set; }
+        public string FilePath { get; set; }
+    }
     public class UploadFileRequest
     {
         public string FileName { get; set; }

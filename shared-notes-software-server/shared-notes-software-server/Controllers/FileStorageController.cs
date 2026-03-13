@@ -16,6 +16,82 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("delete-folder")]
+        public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequest model)
+        {
+            // 1️⃣ Get all files inside folder tree
+            var getFilesQuery = @"
+        WITH RECURSIVE folder_tree AS (
+            SELECT folder_id
+            FROM public.utbl_folders
+            WHERE folder_id = @folder_id_i
+
+            UNION ALL
+
+            SELECT f.folder_id
+            FROM public.utbl_folders f
+            INNER JOIN folder_tree ft
+            ON f.parent_folder_id = ft.folder_id
+        )
+        SELECT file_id, file_path
+        FROM public.utbl_files
+        WHERE folder_id IN (SELECT folder_id FROM folder_tree);
+    ";
+
+            var files = await _db.ExecuteQueryListAsync<FilePathModel>(
+                getFilesQuery,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("folder_id_i", model.FolderId);
+                }
+            );
+
+            // 2️⃣ Delete physical files from server
+            foreach (var file in files)
+            {
+                if (!string.IsNullOrWhiteSpace(file.FilePath) && System.IO.File.Exists(file.FilePath))
+                {
+                    System.IO.File.Delete(file.FilePath);
+                }
+            }
+
+            // 3️⃣ Delete database records (files + folders) in ONE CTE scope
+            var deleteQuery = @"
+        WITH RECURSIVE folder_tree AS (
+            SELECT folder_id
+            FROM public.utbl_folders
+            WHERE folder_id = @folder_id_i
+
+            UNION ALL
+
+            SELECT f.folder_id
+            FROM public.utbl_folders f
+            INNER JOIN folder_tree ft
+            ON f.parent_folder_id = ft.folder_id
+        ),
+        deleted_files AS (
+            DELETE FROM public.utbl_files
+            WHERE folder_id IN (SELECT folder_id FROM folder_tree)
+        )
+        DELETE FROM public.utbl_folders
+        WHERE folder_id IN (SELECT folder_id FROM folder_tree);
+    ";
+
+            await _db.ExecuteNonQueryAsync(
+                deleteQuery,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("folder_id_i", model.FolderId);
+                }
+            );
+
+            return Ok(new
+            {
+                success = true,
+                message = "Folder and all contents deleted successfully"
+            });
+        }
+
         [HttpPost("delete-file-from-database")]
         public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequest model)
         {

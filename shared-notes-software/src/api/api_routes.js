@@ -9,6 +9,7 @@ export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
 export const GET_FOLDER_ITEMS_URL = "/file-storage/get-folder-items";
 export const UPLOAD_STORAGE_FILE_URL = "/file-storage/upload-file";
 export const DELETE_STORAGE_FILE_URL = "/file-storage/delete-file-from-database";
+export const DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL = "/file-storage/delete-folder";
 
 // #endregion
 

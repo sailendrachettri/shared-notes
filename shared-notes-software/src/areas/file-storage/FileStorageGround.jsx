@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import {
   ADD_FOLDER_URL,
   DELETE_FILE_URL,
+  DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL,
   DELETE_STORAGE_FILE_URL,
   FILE_UPLOAD_URL,
   GET_FOLDER_ITEMS_URL,
@@ -404,11 +405,19 @@ export default function FileExplorer({
 
   const handleDeleteFolder = async (folder) => {
     try {
-      await axiosInstance.post("/delete-folder", {
+      const payload = {
         FolderId: folder.folder_id,
-      });
+      };
+      const res = await axiosInstance.post(
+        DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL,
+        payload,
+      );
+      console.log(res);
+      if(res){
 
-      toast.success("Folder deleted");
+        toast.success("Folder deleted");
+      }
+
 
       handleFetchNestedFolders(currentFolderId);
     } catch (err) {
