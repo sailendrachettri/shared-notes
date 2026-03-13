@@ -1,5 +1,9 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class DeleteFileRequest
+    {
+        public int FileId { get; set; }
+    }
     public class UploadFileRequest
     {
         public string FileName { get; set; }

@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import {
   ADD_FOLDER_URL,
   DELETE_FILE_URL,
+  DELETE_STORAGE_FILE_URL,
   FILE_UPLOAD_URL,
   GET_FOLDER_ITEMS_URL,
   UPLOAD_STORAGE_FILE_URL,
@@ -418,10 +419,26 @@ export default function FileExplorer({
   };
 
   const handleDeleteFile = async (file) => {
-    try {
-      await axiosInstance.post(DELETE_FILE_URL, [file.file_path]);
+    console.log(file);
 
-      toast.success("File deleted");
+    let res;
+
+    try {
+      // first delete the file from file system
+      res = await axiosInstance.post(DELETE_FILE_URL, [file.file_path]);
+      console.log(res);
+
+      if (res.status == 200) {
+        // if the file delete is successful then also delete from db as well
+        const payload = {
+          FileId: file?.file_id,
+        };
+        res = await axiosInstance.post(DELETE_STORAGE_FILE_URL, payload);
+      }
+
+      if (res?.data?.success == true && res?.data?.status == "DELETED") {
+        toast.success("File deleted");
+      }
 
       handleFetchNestedFolders(currentFolderId);
     } catch (err) {

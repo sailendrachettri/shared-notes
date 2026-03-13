@@ -16,6 +16,40 @@ namespace shared_notes_software_server.Controllers
             _db = db;
         }
 
+        [HttpPost("delete-file-from-database")]
+        public async Task<IActionResult> DeleteFile([FromBody] DeleteFileRequest model)
+        {
+            var query = @"DELETE FROM public.utbl_files
+                  WHERE file_id = @file_id_i";
+
+            var rowsAffected = await _db.ExecuteNonQueryAsync(
+                query,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue(
+                        "file_id_i",
+                        model.FileId
+                    );
+                }
+            );
+
+            if (rowsAffected > 0)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    status = "DELETED",
+                    message = "File deleted successfully"
+                });
+            }
+
+            return Ok(new
+            {
+                success = false,
+                message = "File not found"
+            });
+        }
+
         [HttpPost("upload-file")]
         public async Task<IActionResult> UploadFile([FromBody] UploadFileRequest model)
         {
