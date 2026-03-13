@@ -187,6 +187,7 @@ export default function FileExplorer({
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const abortControllerRef = useRef(null);
 
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
@@ -315,6 +316,15 @@ export default function FileExplorer({
     setCurrentFolderId(previous ? previous.id : null);
   };
 
+  const onCancelClick = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    setUploading(false);
+    setUploadProgress(0);
+  };
+
   const handleUploadStorageFile = async (selectedFileForUpload) => {
     if (selectedFileForUpload.size > MAX_FILE_SIZE) {
       toast.error("File must be less than 1GB");
@@ -324,12 +334,15 @@ export default function FileExplorer({
     setUploadProgress(0);
     let uploadedUrl;
 
+    abortControllerRef.current = new AbortController();
+
     try {
       const user = await getItem("user");
       const formData = new FormData();
       formData.append("files", selectedFileForUpload);
       let fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        signal: abortControllerRef.current.signal,
         onUploadProgress: (progressEvent) => {
           const percent = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total,
@@ -365,9 +378,15 @@ export default function FileExplorer({
       }
     } catch (error) {
       console.error("Can't upload file at the moment", error);
-      toast.error("Can't upload file at the moment");
-      if (uploadedUrl) {
-        await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
+
+      if (error.name === "CanceledError") {
+        toast.error("Upload cancelled");
+        return;
+      } else {
+        toast.error("Can't upload file at the moment");
+        if (uploadedUrl) {
+          await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
+        }
       }
     } finally {
       setTimeout(() => {
@@ -588,7 +607,12 @@ export default function FileExplorer({
                   className="hidden"
                 />
 
-                {uploading && <UploadInProgress progress={uploadProgress}/>}
+                {uploading && (
+                  <UploadInProgress
+                    progress={uploadProgress}
+                    onCancelClick={onCancelClick}
+                  />
+                )}
               </section>
             )}
           </section>
