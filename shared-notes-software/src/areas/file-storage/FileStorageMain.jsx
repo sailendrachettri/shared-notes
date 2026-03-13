@@ -28,9 +28,9 @@ const FileStorageMain = () => {
         setPrivateFolders(res?.data?.data?.owned || []);
         setSharedFolders(res?.data?.data?.shared || []);
         setPublicFolders(res?.data?.data?.public || []);
-        console.log(res?.data?.data?.owned || []);
-        console.log(res?.data?.data?.shared || []);
-        console.log(res?.data?.data?.public || []);
+        // console.log(res?.data?.data?.owned || []);
+        // console.log(res?.data?.data?.shared || []);
+        // console.log(res?.data?.data?.public || []);
       }
     } catch (error) {
       console.error("Not able to fetch directories", error);

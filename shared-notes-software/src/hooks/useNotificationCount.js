@@ -9,7 +9,7 @@ export function useNotificationCount() {
 
   const fetchNotificationCount = useCallback(async () => {
     const userData = await getItem("user");
-    console.log(userData);
+    // console.log(userData);
 
     if (!userData?.userId) {
       setNotificationCount(0);

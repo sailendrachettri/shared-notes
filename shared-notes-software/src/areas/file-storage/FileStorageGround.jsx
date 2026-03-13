@@ -203,7 +203,7 @@ export default function FileExplorer({
   };
 
   const openFolder = (folder) => {
-    console.log(folder);
+    // console.log(folder);
     setParentDirectoryVisibility(folder?.folder_visibility);
     setFolderStack((prev) => [
       ...prev,
@@ -212,7 +212,7 @@ export default function FileExplorer({
         name: folder.folder_name,
       },
     ]);
-    console.log(folderStack);
+    // console.log(folderStack);
     setCurrentFolderId(folder.folder_id);
     setForwardStack([]);
   };
@@ -223,18 +223,18 @@ export default function FileExplorer({
     }
     try {
       const user = await getItem("user");
-      console.log(parentId);
-      console.log(currentFolderId);
-      console.log(folderStack);
+      // console.log(parentId);
+      // console.log(currentFolderId);
+      // console.log(folderStack);
 
       const payload = {
         ParentFolderId: parentId || null,
         UserId: user?.userId || null,
       };
-      console.log(payload);
+      // console.log(payload);
 
       const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
-      console.log(res);
+      // console.log(res);
 
       setFolders(res?.data?.folders || []);
       setFiles(res?.data?.files || []);
@@ -259,7 +259,7 @@ export default function FileExplorer({
         FolderVisibility: parentDirVisibility || "public",
       };
 
-      console.log(payload);
+      // console.log(payload);
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
@@ -343,7 +343,7 @@ export default function FileExplorer({
       };
 
       const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
-      console.log(res);
+      // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
         toast.success("File uploaded successful");
