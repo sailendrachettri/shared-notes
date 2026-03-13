@@ -11,8 +11,8 @@
     }
     public class FilePathModel
     {
-        public int FileId { get; set; }
-        public string FilePath { get; set; }
+        public int File_Id { get; set; }
+        public string File_Path { get; set; }
     }
     public class UploadFileRequest
     {

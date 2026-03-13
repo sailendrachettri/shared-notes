@@ -10,10 +10,13 @@ namespace shared_notes_software_server.Controllers
     public class FileStorageController : ControllerBase
     {
         private readonly DbHelper _db;
+        private readonly IWebHostEnvironment _env;
 
-        public FileStorageController(DbHelper db)
+
+        public FileStorageController(DbHelper db, IWebHostEnvironment env)
         {
             _db = db;
+            _env = env;
         }
 
         [HttpPost("delete-folder")]
@@ -47,11 +50,20 @@ namespace shared_notes_software_server.Controllers
             );
 
             // 2️⃣ Delete physical files from server
+            string directoryPath = Path.Combine(_env.ContentRootPath, "uploadedFiles");
+
             foreach (var file in files)
             {
-                if (!string.IsNullOrWhiteSpace(file.FilePath) && System.IO.File.Exists(file.FilePath))
+                if (string.IsNullOrWhiteSpace(file.File_Path))
+                    continue;
+
+                string safeFileName = Path.GetFileName(file.File_Path);
+
+                string fullPath = Path.Combine(directoryPath, safeFileName);
+
+                if (System.IO.File.Exists(fullPath))
                 {
-                    System.IO.File.Delete(file.FilePath);
+                    System.IO.File.Delete(fullPath);
                 }
             }
 
