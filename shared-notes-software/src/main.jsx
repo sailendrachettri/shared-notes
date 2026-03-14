@@ -13,7 +13,13 @@ streamsaver.mitm = mitm;
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Toaster position="bottom-right" />
+    <Toaster
+      position="bottom-right"
+      containerStyle={{
+        bottom: 40, // distance from bottom
+        right: 20, // optional side spacing
+      }}
+    />
     <App />
   </StrictMode>,
 );
