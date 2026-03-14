@@ -196,19 +196,25 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
       onClick={onClick}
       onContextMenu={onContextMenu}
       className={`group relative flex flex-col items-center py-3 px-2 rounded-lg select-none transition-all border cursor-default w-[110px]
-    ${
-      isSelected
-        ? "bg-[#d2556407] border-primary/30"
-        : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
-    }`}
+          ${
+            isSelected
+              ? "bg-[#d2556407] border-primary/30"
+              : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
+          }`}
     >
-      {/* Thumbnail */}
-      <div className="flex items-center justify-center h-[60px]">
-        {getFileIcon(ext, 60)}
-      </div>
+      <Tooltip
+        text={file.file_name}
+        fileSize={file?.file_size}
+        fileType={ext}
+        lastModified={file?.created_at}
+        visibility={file?.file_visibility}
+      >
+        {/* Thumbnail */}
+        <div className="flex items-center justify-center h-[60px]">
+          {getFileIcon(ext, 60)}
+        </div>
 
-      {/* File Name */}
-      <Tooltip text={file.file_name} fileSize={file?.file_size} fileType={ext} lastModified={file?.created_at} visibility={file?.file_visibility}>
+        {/* File Name */}
         <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2">
           {file.file_name}
         </div>
