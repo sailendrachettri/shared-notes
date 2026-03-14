@@ -20,12 +20,12 @@ const GridStructureView = ({
     <section className="mb-6">
       {/* Section heading */}
       {itemTypeName == "file" && !isEmpty && (
-        <p className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2.5 pl-0.5">
+        <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
           {heading || "Documents"}
         </p>
       )}
       {itemTypeName == "folder" && !isEmpty && (
-        <p className="text-[11px] uppercase font-semibold text-gray-400 tracking-wider mb-2.5 pl-0.5">
+        <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
           {heading || "Documents"}
         </p>
       )}
