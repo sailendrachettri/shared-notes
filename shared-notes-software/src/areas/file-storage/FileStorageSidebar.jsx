@@ -5,6 +5,7 @@ import { axiosInstance } from "../../api/axios";
 import { GET_ALL_FILES_BY_CATEGORY_ID_URL } from "../../api/api_routes";
 import { getItem } from "../../api/storage";
 import { HiOutlineHome } from "react-icons/hi";
+import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 
 const FileStorageSidebar = ({
   fileStorageCategory,
@@ -85,9 +86,9 @@ const FileStorageSidebar = ({
           <span>Home</span>
         </div>
 
-        <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
-          QUICK ACCESS
-        </p>
+        <div className="ps-3">
+          <FileStorageHeading heading={"QUICK ACCESS"} />
+        </div>
 
         <div className="flex flex-col gap-[2px]">
           {fileStorageCategory?.map((category) => {
