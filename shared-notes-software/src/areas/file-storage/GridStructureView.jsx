@@ -20,13 +20,20 @@ const GridStructureView = ({
   return (
     <section className="mb-6">
       {/* Section heading */}
-      {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
+      {/* {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
         <FileStorageHeading heading={heading} />
-      )}
+      )} */}
 
       {itemTypeName === "file" ? (
         // ── File card grid ──
-        <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSelectedFile(null);
+            }
+          }}
+          className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]"
+        >
           {dataItems?.map((file) => (
             <FileCard
               key={file.file_id}
@@ -50,7 +57,14 @@ const GridStructureView = ({
         </div>
       ) : (
         // ── Folder icon grid ──
-        <div className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSelectedFile(null);
+            }
+          }}
+          className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]"
+        >
           {dataItems?.map((folder, i) => (
             <FolderCard
               key={folder.folder_id ?? i}
