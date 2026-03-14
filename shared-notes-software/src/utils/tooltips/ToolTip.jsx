@@ -33,7 +33,7 @@ export default function Tooltip({
       <div
         ref={refs.setReference}
         onMouseEnter={() => {
-          timer = setTimeout(() => setOpen(true), 1000);
+          timer = setTimeout(() => setOpen(true), 700);
         }}
         onMouseLeave={() => {
           clearTimeout(timer);

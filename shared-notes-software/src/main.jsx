@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 import "./index.css";
 import App from "./App.jsx";
-// main.jsx or App.jsx — add at the top
 import { WritableStream } from "streamsaver";
 import mitm from "streamsaver/mitm.html?url"; // vite syntax
 
@@ -15,6 +14,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Toaster
       position="bottom-right"
+      reverseOrder={false}
       containerStyle={{
         bottom: 40, // distance from bottom
         right: 20, // optional side spacing
