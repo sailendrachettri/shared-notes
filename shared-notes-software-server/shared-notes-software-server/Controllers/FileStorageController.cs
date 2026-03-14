@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-using shared_notes_software_server.Models;
 using shared_notes_software_server.Data;
+using shared_notes_software_server.Models;
+using System.IO;
 
 namespace shared_notes_software_server.Controllers
 {
@@ -17,6 +18,40 @@ namespace shared_notes_software_server.Controllers
         {
             _db = db;
             _env = env;
+        }
+
+        [HttpGet("all-file-by-category-id/{categoryId}")]
+        public async Task<IActionResult> GetFilesByCategory(int categoryId, [FromQuery] Guid userId)
+        {
+            string query = @"
+        SELECT DISTINCT f.*
+        FROM utbl_files f
+        LEFT JOIN utbl_mst_file_category_extensions e
+            ON LOWER(f.file_extension) = LOWER(e.extension)
+        WHERE f.is_deleted = false
+        AND (
+                f.file_visibility = 'public'
+                OR (f.file_visibility IN ('private','shared') AND f.user_id = @userId)
+            )
+        AND (
+                @categoryId = 1
+                OR e.file_storage_category_id = @categoryId
+            )
+        ORDER BY f.created_at DESC;
+    ";
+
+            var files = await _db.ExecuteQueryListAsync<FileModel>(query, cmd =>
+            {
+                cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                cmd.Parameters.AddWithValue("@userId", userId);
+            });
+
+            return Ok(new
+            {
+                status = "FETCHED",
+                success = true,
+                data = files
+            });
         }
 
         [HttpGet("get-mst-file-storage-category")]

@@ -6,6 +6,21 @@
         public string File_Storage_Category_Name { get; set; }
         public DateTime Created_At { get; set; }
     }
+
+    public class FileModel
+    {
+        public long file_id { get; set; }
+        public string file_name { get; set; }
+        public long? folder_id { get; set; }
+        public long file_size { get; set; }
+        public string file_extension { get; set; }
+        public string file_visibility { get; set; }
+        public bool is_deleted { get; set; }
+        public DateTime? deleted_at { get; set; }
+        public DateTime created_at { get; set; }
+        public Guid? user_id { get; set; }
+        public string file_path { get; set; }
+    }
     public class DeleteFileRequest
     {
         public int FileId { get; set; }

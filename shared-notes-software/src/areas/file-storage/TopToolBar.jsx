@@ -19,6 +19,10 @@ const TopToolBar = ({
   goForward,
   forwardStack,
   fileRef,
+  showHomePage,
+  selectedCategoryName,
+  setShowHomePage,
+  setActiveNav
 }) => {
   const visibleStack =
     folderStack.length > 5
@@ -39,7 +43,6 @@ const TopToolBar = ({
 
     setFolderStack(folderStack.slice(0, index + 1));
   };
-
 
   return (
     <>
@@ -63,38 +66,48 @@ const TopToolBar = ({
           </button>
 
           {/* Address bar */}
-          <div className="flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50 hover:bg-white transition-all cursor-pointer text-[12.5px]">
-            <div className="flex items-center text-sm text-gray-600 gap-1">
-              <span
-                className="cursor-pointer hover:underline"
-                onClick={() => {
-                  setCurrentFolderId(null);
-                  setFolderStack([]);
-                }}
-              >
-                Home
-              </span>
+          <div
+            className={`${showHomePage ? "hover:bg-white cursor-not-allowed" : ""} flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50  transition-all cursor-pointer text-[12.5px]`}
+          >
+            {showHomePage ? (
+              <div className="flex items-center text-sm text-gray-600 gap-1">
+                <span
+                  className="cursor-pointer hover:underline"
+                  onClick={() => {
+                    setCurrentFolderId(null);
+                    setFolderStack([]);
+                  }}
+                >
+                  Home
+                </span>
 
-              {visibleStack?.map((item, index) => (
-                <React.Fragment key={item?.id}>
-                  <MdKeyboardArrowRight size={16} />
+                {visibleStack?.map((item, index) => (
+                  <React.Fragment key={item?.id}>
+                    <MdKeyboardArrowRight size={16} />
 
-                  <span
-                    className="cursor-pointer hover:underline"
-                    onClick={() => navigateBreadcrumb(item.realIndex)}
-                  >
-                    {item?.name}
-                  </span>
-                </React.Fragment>
-              ))}
-            </div>
+                    <span
+                      className="cursor-pointer hover:underline"
+                      onClick={() => navigateBreadcrumb(item.realIndex)}
+                    >
+                      {item?.name}
+                    </span>
+                  </React.Fragment>
+                ))}
+              </div>
+            ) : (
+              <div>{selectedCategoryName}</div>
+            )}
           </div>
 
           {/* Toolbar actions */}
           <div className="flex items-center gap-1">
             {/* Upload */}
             <button
-              onClick={() => fileRef.current.click()}
+              onClick={() => {
+                fileRef.current.click();
+                setShowHomePage(true);
+                setActiveNav(null)
+              }}
               className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors"
             >
               <MdOutlineCloudUpload size={18} /> <span>Upload</span>
@@ -105,6 +118,8 @@ const TopToolBar = ({
               onClick={() => {
                 setCreatingFolder(true);
                 setNewFolderName("New Folder");
+                setShowHomePage(true);
+                setActiveNav(null)
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md border border-gray-300 bg-white hover:bg-primary/10 hover:text-primary hover:border-primary/20 text-[12px] transition-colors"
             >

@@ -11,6 +11,7 @@ export const UPLOAD_STORAGE_FILE_URL = "/file-storage/upload-file";
 export const DELETE_STORAGE_FILE_URL = "/file-storage/delete-file-from-database";
 export const DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL = "/file-storage/delete-folder";
 export const GET_STORAGE_MST_CATEGORY_URL = "/file-storage/get-mst-file-storage-category";
+export const GET_ALL_FILES_BY_CATEGORY_ID_URL = "/file-storage/all-file-by-category-id";
 
 // #endregion
 
