@@ -206,102 +206,54 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
   const ext = file.file_extension?.toLowerCase();
   const { thumbBg, badgeBg, badgeText } = getTypeConfig(ext);
 
-  const downloadFile = async (file) => {
-    setDownloading(true);
-    try {
-      const response = await fetch(
-        `${VIEW_UPLOADED_FILE_URL}/${file?.file_path}`,
-      );
-      const blob = await response.blob();
-
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = file.file_name;
-
-      document.body.appendChild(link);
-      link.click();
-
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
-      setDownloaded(true);
-      toast.success("File download successful");
-    } catch (error) {
-      toast.error("Not able to download file");
-      console.error("Download error:", error);
-    } finally {
-      setDownloading(false);
-      setTimeout(() => setDownloaded(false), 1000);
-    }
-  };
 
   return (
     <div
       onClick={onClick}
       onContextMenu={onContextMenu}
-      className={`flex flex-col rounded-xl overflow-hidden border transition-all select-none
-        ${
-          isSelected
-            ? "border-primary border-[1.5px] bg-[#d2556405]"
-            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50/50"
-        }`}
+      className={`group relative flex flex-col items-center py-3 px-2 rounded-lg select-none transition-all border cursor-default w-[110px]
+    ${
+      isSelected
+        ? "bg-primary/5 border-primary shadow-sm"
+        : "border-transparent hover:bg-gray-100 hover:border-gray-200"
+    }`}
     >
       {/* Thumbnail */}
-      <div className={`h-24 flex items-center justify-center ${thumbBg}`}>
-        {getFileIcon(ext, 30)}
+      <div className="flex items-center justify-center h-[60px]">
+        {getFileIcon(ext, 60)}
       </div>
 
-      {/* Footer */}
-      <div className="px-2.5 pt-2 pb-2 flex flex-col gap-1.5 border-t border-gray-100 bg-white">
-        <p
-          className="text-[12.5px] font-medium text-gray-800 truncate leading-tight"
-          title={file.file_name}
-        >
+      {/* File Name */}
+      <p
+        className="text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2"
+        title={file.file_name}
+      >
+        {file.file_name}
+      </p>
+
+      {/* Hover Details Panel */}
+      {/* <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 rounded-md bg-white shadow-lg border border-gray-200 text-xs text-gray-700 p-3 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
+        <p className="font-semibold text-gray-900 mb-1 truncate">
           {file.file_name}
         </p>
 
-        <div className="flex items-center gap-1.5">
-          {/* Extension badge */}
-          <span
-            className={`text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md shrink-0 ${badgeBg} ${badgeText}`}
-          >
-            {ext}
-          </span>
+        <div className="space-y-1">
+          <p>
+            <span className="text-gray-500">Type:</span>{" "}
+            {file.file_extension?.toUpperCase()}
+          </p>
 
-          {/* File size */}
-          <span className="text-[11px] text-gray-400 flex-1 text-right">
-            {formatFileSize(file.file_size)}
-          </span>
+          <p>
+            <span className="text-gray-500">Size:</span>{" "}
+            {(file.file_size / 1024).toFixed(2)} KB
+          </p>
 
-          {/* Download */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              downloadFile(file);
-            }}
-            className="flex items-center justify-center w-6 h-6 rounded-md border border-gray-200 bg-gray-50 text-gray-400
-              hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all shrink-0"
-          >
-            {downloading ? (
-              <span className="tiny-dot-loader">
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            ) : (
-              <span>
-                {downloaded ? (
-                  <MdOutlineDownloadDone className="text-primary" size={14} />
-                ) : (
-                  <MdDownload className="cursor-pointer" size={14} />
-                )}
-              </span>
-            )}
-          </button>
+          <p>
+            <span className="text-gray-500">Modified:</span>{" "}
+            {new Date(file.updated_at).toLocaleDateString()}
+          </p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

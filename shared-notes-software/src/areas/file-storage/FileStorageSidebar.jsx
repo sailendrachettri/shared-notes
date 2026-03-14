@@ -1,7 +1,7 @@
 import React from "react";
 import { GrStorage } from "react-icons/gr";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
+import { TbDatabaseLeak } from "react-icons/tb";
 
 const navItems = [
   {
@@ -21,14 +21,20 @@ const navItems = [
   },
 ];
 
-const FileStorageSidebar = ({setActiveNav, toggleExpand, expandedNav, activeNav, icons}) => {
+const FileStorageSidebar = ({
+  setActiveNav,
+  toggleExpand,
+  expandedNav,
+  activeNav,
+  icons,
+}) => {
   return (
     <>
       <div className="flex-1 overflow-auto py-1 px-1 mt-2">
         {/* Brand */}
         <div className="flex items-center gap-3 px-3">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
-            <GrStorage size={24} />
+            <TbDatabaseLeak size={24} />
           </div>
           <div>
             <h1 className="font-bold text-lg">File Storage</h1>

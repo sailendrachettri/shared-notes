@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import dirSvg from "../../assets/svgs/files_dir.svg";
 import {
+  MdDownload,
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
   MdOutlineAttachFile,
@@ -32,6 +33,9 @@ import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 import { AiOutlineDelete } from "react-icons/ai";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
 import NoResultFound from "../../utils/info-screen/NoResultFound";
+import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
+import { DownloadToast } from "./DownloadToast";
+import { downloadFile } from "./DownloadFile";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -194,6 +198,8 @@ export default function FileExplorer({
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [downloadState, setDownloadState] = useState({ active: false });
+
   const abortControllerRef = useRef(null);
 
   const createInputRef = useRef(null);
@@ -687,13 +693,24 @@ export default function FileExplorer({
                     </>
 
                     {contextMenu?.type === "file" && (
-                      <button
-                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                        onClick={() => handleDeleteFile(selectedFile)}
-                      >
-                        <AiOutlineDelete size={20} />
-                        Delete File
-                      </button>
+                      <>
+                        <button
+                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                          onClick={() =>
+                            downloadFile(selectedFile, setDownloadState)
+                          }
+                        >
+                          <MdDownload size={20} />
+                          Download File
+                        </button>
+                        <button
+                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                          onClick={() => handleDeleteFile(selectedFile)}
+                        >
+                          <AiOutlineDelete size={20} />
+                          Delete File
+                        </button>
+                      </>
                     )}
 
                     {contextMenu?.type === "folder" && (
@@ -722,6 +739,10 @@ export default function FileExplorer({
                     onCancelClick={onCancelClick}
                   />
                 )}
+                <DownloadToast
+                  downloadState={downloadState}
+                  onDismiss={() => setDownloadState({ active: false })}
+                />
               </section>
             )}
           </section>

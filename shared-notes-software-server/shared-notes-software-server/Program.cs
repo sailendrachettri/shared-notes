@@ -79,7 +79,9 @@ Directory.CreateDirectory(uploadPath);
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(uploadPath),
-    RequestPath = "/uploads"
+    RequestPath = "/uploads",
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/octet-stream" // forces download for unknown types
 });
 
 

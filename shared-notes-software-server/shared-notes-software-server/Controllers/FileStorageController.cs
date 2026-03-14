@@ -89,7 +89,7 @@ namespace shared_notes_software_server.Controllers
         WHERE folder_id IN (SELECT folder_id FROM folder_tree);
     ";
 
-            await _db.ExecuteNonQueryAsync(
+            await _db.ExecuteNonQueryAsync( 
                 deleteQuery,
                 cmd =>
                 {
