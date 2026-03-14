@@ -7,7 +7,7 @@ import {
 import { MdDownload } from "react-icons/md";
 import { HiDocumentText } from "react-icons/hi";
 import { useState } from "react";
-import toast from "react-hot-toast";
+
 import { MdOutlineDownloadDone } from "react-icons/md";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 

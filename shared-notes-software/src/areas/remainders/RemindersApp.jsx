@@ -19,10 +19,11 @@ import { axiosInstance } from "../../api/axios";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { IoCalendarOutline } from "react-icons/io5";
 import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
-import toast from "react-hot-toast";
+
 import WorkspaceModeBadge from "../auth/workspaces/WorkspaceModeBadge";
 import NoResultFound from "../../utils/info-screen/NoResultFound";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
+import { customToast } from "../../utils/toast/toastConfig";
 
 /* ---------- Constants ---------- */
 
@@ -54,12 +55,12 @@ export default function RemindersApp({ userData, setRefresh, refresh, setOpenReg
   const handleDeteteEvent = async () => {
     try {
       if (!deleteEventId) {
-        toast.error("Can't delete event at the moment");
+        customToast.error("Can't delete event at the moment");
         return;
       }
 
       if (!userData?.userId) {
-        toast.error("Please login and try again");
+        customToast.error("Please login and try again");
         return;
       }
       const payload = {
@@ -69,12 +70,12 @@ export default function RemindersApp({ userData, setRefresh, refresh, setOpenReg
       const res = await axiosInstance.post(DELETE_EVENT_URL, payload);
 
       if (res?.status == 200) {
-        toast.success("Event deleted successful");
+        customToast.success("Event deleted successful");
       } else {
-        toast.error("Can't delete event at the moment");
+        customToast.error("Can't delete event at the moment");
       }
     } catch (error) {
-      toast.error("Can't delete event at the moment");
+      customToast.error("Can't delete event at the moment");
       console.error("not able to delete event", error);
     } finally {
       setRefresh((prev) => !prev);

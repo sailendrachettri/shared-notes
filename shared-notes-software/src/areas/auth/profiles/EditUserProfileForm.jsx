@@ -5,8 +5,9 @@ import {
   FILE_UPLOAD_URL,
   UPDATE_USER_PROFILE_URL,
 } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+
 import { getItem, setItem } from "../../../api/storage";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const EditUserProfileForm = ({
   initialName = "",
@@ -22,7 +23,7 @@ const EditUserProfileForm = ({
     const user = await getItem("user");
 
     if (!user?.userId) {
-      toast.error("Unauthorized, Please login and try again.");
+      customToast.error("Unauthorized, Please login and try again.");
       return;
     }
 
@@ -55,11 +56,11 @@ const EditUserProfileForm = ({
           updated_at: res?.data?.updated_at,
           profile_url: res?.data?.profile_url,
         });
-        toast.success("Profile updated successfully");
+        customToast.success("Profile updated successfully");
         setIsEditing(false);
       }
     } catch (error) {
-      toast.error("Can't update the profile at the moment");
+      customToast.error("Can't update the profile at the moment");
       console.error("Can't update the profile at the moment", error);
     }
   };

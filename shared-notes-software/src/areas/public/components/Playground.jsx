@@ -7,7 +7,8 @@ import {
   RENAME_MST_NOTE_URL,
   RENAME_SUB_PAGE_TITLE_URL,
 } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+import { customToast } from "../../../utils/toast/toastConfig";
+
 
 const Playground = ({
   selectedNoteId,
@@ -73,7 +74,7 @@ const Playground = ({
 
   const getNotesDetails = async () => {
     if (!currentNotesId || !selectedNoteType) {
-      toast.error("NotesId and notes type is required is Required");
+      customToast.error("NotesId and notes type is required is Required");
       return;
     }
 
@@ -128,7 +129,7 @@ const Playground = ({
       }
     } catch (error) {
       console.error("Not able to rename", error);
-      toast.error("Can't rename at this moment");
+      customToast.error("Can't rename at this moment");
     } finally {
       setRefresh((prev) => !prev);
     }

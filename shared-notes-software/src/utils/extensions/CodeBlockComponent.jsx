@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
-import toast from "react-hot-toast";
+import { customToast } from "../toast/toastConfig";
+
 
 const CodeBlockComponent = ({ node, editor, getPos }) => {
   const language = node.attrs.language || "javascript";
@@ -26,7 +27,7 @@ const CodeBlockComponent = ({ node, editor, getPos }) => {
       setCopied(false);
 
       // Optional: show user-friendly message
-      toast.error("Copy failed. Please try again.");
+      customToast.error("Copy failed. Please try again.");
     } finally {
       setTimeout(() => {
         setCopied(false);

@@ -5,7 +5,7 @@ import {
 } from "../../utils/date-time/formatePrettyDateTime";
 import { useState } from "react";
 import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
-import toast from "react-hot-toast";
+
 import { axiosInstance } from "../../api/axios";
 import { DELETE_EVENT_URL } from "../../api/api_routes";
 

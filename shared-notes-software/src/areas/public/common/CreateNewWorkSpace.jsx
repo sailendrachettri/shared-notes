@@ -2,8 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_WORKSPACE_URL } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+
 import { getItem } from "../../../api/storage";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const CreateNewWorkSpace = ({
   setIsOpen,
@@ -27,7 +28,7 @@ const CreateNewWorkSpace = ({
       } else if (!makeItPublic) {
         user_decision = user?.userId;
       } else {
-        toast.error("Can't create notes at the moment");
+        customToast.error("Can't create notes at the moment");
         return;
       }
     }
@@ -40,16 +41,16 @@ const CreateNewWorkSpace = ({
       const res = await axiosInstance.post(ADD_WORKSPACE_URL, payload);
       
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
-        toast.success("Workspace created successful");
+        customToast.success("Workspace created successful");
         setIsOpen(false);
         setSelectedTab(null);
         setTitle(null);
       } else {
-        toast.error("Can't add workspace at the moment");
+        customToast.error("Can't add workspace at the moment");
       }
     } catch (error) {
       console.error("not able to add workspace", error);
-      toast.error("Can't add workspace at the moment");
+      customToast.error("Can't add workspace at the moment");
     } finally {
       setTimeout(() => {
         setSubmitting(false);

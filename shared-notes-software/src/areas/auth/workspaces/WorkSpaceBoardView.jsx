@@ -30,7 +30,7 @@ import {
   RENAME_WORKSPACE_URL,
   UPDATE_WORKSPACE_TASK_POSITION_URL,
 } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+
 import WorkspaceModeBadge from "./WorkspaceModeBadge";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import WorkspaceStats from "./WorkspaceStats";
@@ -316,7 +316,7 @@ function TaskCard({ task, overlay = false, onDelete }) {
 
   const handleDeleteWorkSpaceTask = async () => {
     if (!deletionWorkspaceTaskId) {
-      toast.error("Can't delete task at the moment");
+      customToast.error("Can't delete task at the moment");
       return;
     }
     onDelete(deletionWorkspaceTaskId);
@@ -328,11 +328,11 @@ function TaskCard({ task, overlay = false, onDelete }) {
       const res = await axiosInstance.post(DELETE_WORKSPACE_TASK_URL, payload);
 
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
-        toast.success("Task deleted successful");
+        customToast.success("Task deleted successful");
       }
     } catch (error) {
       console.error("Can't delete task at the moment", error);
-      toast.error("Can't delete task at the moment");
+      customToast.error("Can't delete task at the moment");
     } finally {
       setDeletionWorkspaceTaskId(null);
       setIsDeleteOpen(false);
@@ -378,7 +378,7 @@ function AddForm({
     }
 
     if (selectedOptions.length > 5) {
-      toast.error("You can select maximum 5 members");
+      customToast.error("You can select maximum 5 members");
       return;
     }
 
@@ -387,7 +387,7 @@ function AddForm({
     const assigningOthers = ids.some((id) => id !== user?.userId);
 
     if (selectedWorkspaceMode === "private" && assigningOthers) {
-      toast.error(
+      customToast.error(
         "You cannot assign others in a private workspace. Make it public to collaborate.",
       );
       return;
@@ -813,7 +813,7 @@ export default function WorkSpaceBoardView({
       await axiosInstance.put(UPDATE_WORKSPACE_TASK_POSITION_URL, { updates });
     } catch (error) {
       console.error("Failed to save task position", error);
-      toast.error("Could not save new position — reverting");
+      customToast.error("Could not save new position — reverting");
       setTasks(tasksSnapshot.current); // rollback
     }
   };
@@ -876,11 +876,11 @@ export default function WorkSpaceBoardView({
         ),
       );
 
-      toast.success("Task added");
+      customToast.success("Task added");
     } catch (error) {
       console.error("Add failed", error);
       setTasks((prev) => prev.filter((t) => t.id !== tempId));
-      toast.error("Failed to create task");
+      customToast.error("Failed to create task");
     }
   };
 
@@ -894,11 +894,11 @@ export default function WorkSpaceBoardView({
       const res = await axiosInstance.post(RENAME_WORKSPACE_URL, payload);
       if (res.status == 200) {
       } else {
-        toast.error("Can't rename workspace");
+        customToast.error("Can't rename workspace");
       }
     } catch (error) {
       console.error("not able to rename workspace");
-      toast.error("Can't rename workspace");
+      customToast.error("Can't rename workspace");
     } finally {
       setRefresh((prev) => !prev);
     }
@@ -908,7 +908,7 @@ export default function WorkSpaceBoardView({
   const handleGetWorkSpaceFullDetails = async () => {
     try {
       if (!selectedWorkspaceId) {
-        toast.error("Workspace Id is required");
+        customToast.error("Workspace Id is required");
         return;
       }
 
@@ -922,7 +922,7 @@ export default function WorkSpaceBoardView({
       const response = res.data;
 
       if (!response.success) {
-        toast.error("Failed to fetch workspace");
+        customToast.error("Failed to fetch workspace");
         return;
       }
 
@@ -952,7 +952,7 @@ export default function WorkSpaceBoardView({
       setTasks(formattedTasks);
     } catch (error) {
       console.error("Can't get workspace details", error);
-      toast.error("Something went wrong fetching workspace");
+      customToast.error("Something went wrong fetching workspace");
     } finally {
       setLoading(false);
     }

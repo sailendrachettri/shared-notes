@@ -4,7 +4,7 @@ import {
   INVITE_USER_NOTE_ACCEPT_REJECT_URL,
   INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL,
 } from "../../api/api_routes";
-import toast from "react-hot-toast";
+
 import { HiOutlineCheck, HiOutlineX } from "react-icons/hi";
 import { formatePrettyDateTime } from "../../utils/date-time/formatePrettyDateTime";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
@@ -13,6 +13,7 @@ import { GetNameInitials } from "../../utils/string-formate/GetNameInitials";
 import GenericConfirmModal from "../../reusable/GenericConfirmModal";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
 import NoResultFound from "../../utils/info-screen/NoResultFound";
+import { customToast } from "../../utils/toast/toastConfig";
 
 const NotificationsTab = ({
   userData,
@@ -33,17 +34,17 @@ const NotificationsTab = ({
   const handleAcceptOrRejectNoteInvitation = async () => {
     try {
       if (!userData?.userId) {
-        toast.error("Please login and try again");
+        customToast.error("Please login and try again");
         return;
       }
 
       if (!inviteActionType) {
-        toast.error("Please select action");
+        customToast.error("Please select action");
         return;
       }
 
       if (!selectedInvitationNoteId) {
-        toast.error("Invalid Note Id");
+        customToast.error("Invalid Note Id");
         return;
       }
 
@@ -57,12 +58,12 @@ const NotificationsTab = ({
         payload,
       );
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
-        toast.success(`Invitation ${inviteActionType}`);
+        customToast.success(`Invitation ${inviteActionType}`);
       } else {
-        toast.error(`Not able to ${inviteActionType} note`);
+        customToast.error(`Not able to ${inviteActionType} note`);
       }
     } catch (error) {
-      toast.error(`Not able to ${inviteActionType} note`);
+      customToast.error(`Not able to ${inviteActionType} note`);
       console.error(`Not able to ${inviteActionType} note`, error);
     } finally {
       setRefresh((prev) => !prev);

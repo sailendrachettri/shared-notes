@@ -5,11 +5,12 @@ import {
   INVITE_USER_IN_PRIVATE_NOTE_URL,
 } from "../../../api/api_routes";
 import { axiosInstance } from "../../../api/axios";
-import toast from "react-hot-toast";
+
 import { getItem } from "../../../api/storage";
 import { MdOutlinePeopleAlt } from "react-icons/md";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import { CapitalizedFirstChar } from "../../../utils/string-formate/CapitalizedFirstChar";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const MAX_VISIBLE = 3;
 
@@ -28,12 +29,12 @@ const InviteUserToPrivateNotes = ({
       const user = await getItem("user");
 
       if (invitedUser?.user_id == user?.userId) {
-        toast.error("You are already the owner of this note");
+        customToast.error("You are already the owner of this note");
         return;
       }
 
       if (!invitedUser?.user_id || !user?.userId) {
-        toast.error("User is invalid");
+        customToast.error("User is invalid");
       }
 
       const payload = {
@@ -47,18 +48,18 @@ const InviteUserToPrivateNotes = ({
       );
   
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
-        toast.success("Invitation sent successfully");
+        customToast.success("Invitation sent successfully");
       } else if (
         res?.data?.success == false &&
         res?.data?.status == "ALREADY_EXISTS"
       ) {
-        toast.error(res?.data?.message || "Something went wrong");
+        customToast.error(res?.data?.message || "Something went wrong");
       } else {
-        toast.error("Not able to send invitation");
+        customToast.error("Not able to send invitation");
       }
     } catch (error) {
       console.error("not able to send invitation", error);
-      toast.error("Not able to send invitation");
+      customToast.error("Not able to send invitation");
     }
   };
 

@@ -36,7 +36,7 @@ import {
 } from "../../../api/api_routes";
 import { useMemo } from "react";
 import defaultIcon from "../../../assets/pngs/logo.png";
-import toast from "react-hot-toast";
+
 import FormattingMenu from "../helpers/FormattingMenu";
 import TableMenu from "../helpers/TableMenu";
 import { CustomCodeBlock } from "../../../utils/extensions/CustomCodeBlock";
@@ -44,6 +44,7 @@ import UploadInProgress from "../../../utils/info-screen/UploadInProgress";
 import WorkspaceModeBadge from "../../auth/workspaces/WorkspaceModeBadge";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import InviteUserToPrivateNotes from "./InviteUserToPrivateNotes";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const RichTextEditor = ({
   value,
@@ -240,11 +241,11 @@ const RichTextEditor = ({
       );
       res;
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
-        toast.success("Cover image removed");
+        customToast.success("Cover image removed");
       }
     } catch (error) {
       console.error("not able remove cover image");
-      toast.error("Not able to remove cover image");
+      customToast.error("Not able to remove cover image");
     } finally {
       setRefresh((prev) => !prev);
     }
@@ -265,12 +266,12 @@ const RichTextEditor = ({
         payload,
       );
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
-        toast.success("Icon removed successful!");
+        customToast.success("Icon removed successful!");
       } else {
-        toast.error("Can't remove icon at the moment");
+        customToast.error("Can't remove icon at the moment");
       }
     } catch (err) {
-      toast.error("Can't remove icon at the moment");
+      customToast.error("Can't remove icon at the moment");
       console.error("Cover upload failed:", err);
     } finally {
       setShowMenu(false);

@@ -4,7 +4,8 @@ import { FiAlertCircle } from "react-icons/fi";
 import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
 import { axiosInstance } from "../../api/axios";
 import { ADD_EVENT_URL } from "../../api/api_routes";
-import toast from "react-hot-toast";
+import { customToast } from "../../utils/toast/toastConfig";
+
 
 const today = new Date().toISOString().split("T")[0];
 
@@ -51,7 +52,7 @@ const AddEventForm = ({
       if (!form.date) return setError("Date required");
 
       if (!userData?.userId) {
-        toast.error("Please login and try again");
+        customToast.error("Please login and try again");
         return;
       }
       const payload = {
@@ -65,18 +66,18 @@ const AddEventForm = ({
       const res = await axiosInstance.post(ADD_EVENT_URL, payload);
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
-        toast.success(res?.data?.message || "Event created successful");
+        customToast.success(res?.data?.message || "Event created successful");
         setForm(emptyForm());
         setCategory(selectedCategory?.value);
         setCategoryName(selectedCategory?.label);
         setShowForm(false);
         setError("");
       } else {
-        toast.error("Can't create event at the moment");
+        customToast.error("Can't create event at the moment");
       }
     } catch (error) {
       console.error("not able to add event", error);
-      toast.error("Can't create event at the moment");
+      customToast.error("Can't create event at the moment");
     } finally {
       setTimeout(() => {
         setSubmitting(false);

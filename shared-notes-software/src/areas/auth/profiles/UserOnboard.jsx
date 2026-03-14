@@ -11,7 +11,7 @@ import {
   GET_ALL_USERS_URL,
   LOGIN_USER_URL,
 } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+
 import AuthToggle from "./AuthToggle";
 import { useEffect } from "react";
 import { isWeakPin } from "../../../utils/encryptions/isWeakPin";
@@ -19,6 +19,7 @@ import ProfileImageUpload from "../../../reusable/uploads/ProfileImageUpload";
 import { setItem } from "../../../api/storage";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import { useNotificationCount } from "../../../hooks/useNotificationCount";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 export default function UserOnboard({
   open,
@@ -41,15 +42,15 @@ export default function UserOnboard({
 
   const handleNext = () => {
     if (step === 1 && !fullName.trim()) {
-      return toast.error("Please enter your full name");
+      return customToast.error("Please enter your full name");
     }
 
     if (step === 2 && pin?.length !== 4) {
-      return toast.error("PIN must be 4 digits");
+      return customToast.error("PIN must be 4 digits");
     }
 
     if (step == 2 && isWeakPin(pin)) {
-      toast.error("Please use a strong PIN");
+      customToast.error("Please use a strong PIN");
       setPin("");
       return;
     }
@@ -72,8 +73,8 @@ export default function UserOnboard({
     setSubmitting(true);
 
     try {
-      if (confirmPin.length !== 4) return toast.error("PIN must be 4 digits");
-      if (pin !== confirmPin) return toast.error("PINs do not match");
+      if (confirmPin.length !== 4) return customToast.error("PIN must be 4 digits");
+      if (pin !== confirmPin) return customToast.error("PINs do not match");
 
       const formData = new FormData();
       formData.append("files", userProfileImage);
@@ -93,7 +94,7 @@ export default function UserOnboard({
 
       if (res?.data?.success == true && res?.data?.status == "CREATED") {
         setIsUserLoggedIn(true);
-        toast.success("User Registration Successful!");
+        customToast.success("User Registration Successful!");
         onClose();
         setFullName("");
         setPin("");

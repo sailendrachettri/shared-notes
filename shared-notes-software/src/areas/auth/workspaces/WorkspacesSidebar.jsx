@@ -9,10 +9,11 @@ import {
 import { useState } from "react";
 import { BiBarChartAlt2 } from "react-icons/bi";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
-import toast from "react-hot-toast";
+
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
 import { getItem } from "../../../api/storage";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const WorkspacesSidebar = ({
   searchText,
@@ -54,7 +55,7 @@ const WorkspacesSidebar = ({
   const handleDeleteWorkspace = async () => {
     try {
       if (!deletionWorkspaceId) {
-        toast.error("Can't delete workspace at the moment");
+        customToast.error("Can't delete workspace at the moment");
         console.error("Workspace id is required");
         return;
       }
@@ -64,10 +65,10 @@ const WorkspacesSidebar = ({
       const res = await axiosInstance.post(DELETE_WORKSPACE_URL, payload);
 
       if (res?.status == 200) {
-        toast.success("Workspace deleted successful");
+        customToast.success("Workspace deleted successful");
       }
     } catch (error) {
-      toast.error("Can't delete workspace at the moment");
+      customToast.error("Can't delete workspace at the moment");
       console.error("not able to delete the workspace", error);
     } finally {
       setDeletionWorkspaceId(null);
@@ -106,7 +107,7 @@ const WorkspacesSidebar = ({
   const handleMoveWorkspaceToPublic = async () => {
     try {
       if (!selectedWorkspaceIdMoveToPublic) {
-        toast.error("Can't make it public at the moment");
+        customToast.error("Can't make it public at the moment");
         console.error("Invalid workspace id");
         return;
       }
@@ -119,11 +120,11 @@ const WorkspacesSidebar = ({
       );
 
       if (res?.data?.status == "UPDATED" && res?.data?.success == true) {
-        toast.success("Workspace is public now");
+        customToast.success("Workspace is public now");
       }
     } catch (error) {
       console.error("not able to make workspace public", error);
-      toast.error("Not able to make workspace public");
+      customToast.error("Not able to make workspace public");
     } finally {
       setRefresh((prev) => !prev);
       setIsGenericConfirmModalOpen(false);

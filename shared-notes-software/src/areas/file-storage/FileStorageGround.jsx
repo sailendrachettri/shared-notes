@@ -21,7 +21,7 @@ import {
   UPLOAD_STORAGE_FILE_URL,
 } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
-import toast from "react-hot-toast";
+
 import { getItem } from "../../api/storage";
 import { useRef } from "react";
 import GridStructureView from "./GridStructureView";
@@ -36,6 +36,7 @@ import NoResultFound from "../../utils/info-screen/NoResultFound";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 import { DownloadToast } from "./DownloadToast";
 import { downloadFile } from "./DownloadFile";
+import { customToast } from "../../utils/toast/toastConfig";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -280,7 +281,7 @@ export default function FileExplorer({
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
-        toast.success(res?.data?.message || "Folder created successfully");
+        customToast.success(res?.data?.message || "Folder created successfully");
         setSelectedFile({ folder_id: res?.data?.folder_id });
         setCreatingFolder(false);
         setNewFolderName("");
@@ -290,13 +291,13 @@ export default function FileExplorer({
         res?.data?.success === false &&
         res?.data?.status === "EXISTS"
       ) {
-        toast.error(res?.data?.message || "Folder already exist");
+        customToast.error(res?.data?.message || "Folder already exist");
       } else {
-        toast.error("Can't create folder at the moment");
+        customToast.error("Can't create folder at the moment");
       }
     } catch (error) {
       console.error("Not able to create folder", error);
-      toast.error("Can't create folder at the moment");
+      customToast.error("Can't create folder at the moment");
     } finally {
       // setRefresh((prev) => !prev);
     }
@@ -342,7 +343,7 @@ export default function FileExplorer({
 
   const handleUploadStorageFile = async (selectedFileForUpload) => {
     if (selectedFileForUpload.size > MAX_FILE_SIZE) {
-      toast.error("File must be less than 1GB");
+      customToast.error("File must be less than 1GB");
       return;
     }
     setUploading(true);
@@ -382,10 +383,10 @@ export default function FileExplorer({
       // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
-        toast.success("File uploaded successful");
+        customToast.success("File uploaded successful");
         handleFetchNestedFolders(currentFolderId);
       } else {
-        toast.error("Can't upload file at the moment");
+        customToast.error("Can't upload file at the moment");
         // delete the file from the file system
         if (uploadedUrl) {
           await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
@@ -395,10 +396,10 @@ export default function FileExplorer({
       console.error("Can't upload file at the moment", error);
 
       if (error.name === "CanceledError") {
-        toast.error("Upload cancelled");
+        customToast.error("Upload cancelled");
         return;
       } else {
-        toast.error("Can't upload file at the moment");
+        customToast.error("Can't upload file at the moment");
         if (uploadedUrl) {
           await axiosInstance.post(DELETE_FILE_URL, [uploadedUrl]);
         }

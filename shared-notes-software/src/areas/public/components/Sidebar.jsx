@@ -8,7 +8,7 @@ import {
 } from "../../../api/api_routes";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
-import toast from "react-hot-toast";
+
 import { BiBookAlt } from "react-icons/bi";
 import DeleteConfirmModal from "../../../reusable/DeleteConfirmModal";
 import GenericConfirmModal from "../../../reusable/GenericConfirmModal";
@@ -16,6 +16,7 @@ import WorkspacesSidebar from "../../auth/workspaces/WorkspacesSidebar";
 import { IoIosArrowUp } from "react-icons/io";
 import CategoryHeading from "../../../reusable/headings/CategoryHeading";
 import { getItem } from "../../../api/storage";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const Sidebar = ({
   setSelectedNoteId,
@@ -101,9 +102,9 @@ const Sidebar = ({
       };
       const res = await axiosInstance.post(DELETE_MST_NOTE_URL, payload);
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
-        toast.success("Note Deleted Successful");
+        customToast.success("Note Deleted Successful");
       } else {
-        toast.error("Can't delete note");
+        customToast.error("Can't delete note");
       }
     } catch (error) {
       console.error("not able to delete note", error);
@@ -149,14 +150,14 @@ const Sidebar = ({
       const res = await axiosInstance.post(MAKE_NOTE_PUBLIC_URL, payload);
       // (res);
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
-        toast.success("Note moved to Shared");
+        customToast.success("Note moved to Shared");
         setRefresh((prev) => !prev);
       } else {
-        toast.error("Can't move note at the momemt");
+        customToast.error("Can't move note at the momemt");
       }
     } catch (error) {
       // ("Not able to move note", error);
-      toast.error("Can't move note at the momemt");
+      customToast.error("Can't move note at the momemt");
     } finally {
       setIsGenericConfirmModalOpen(false);
     }
@@ -180,7 +181,7 @@ const Sidebar = ({
         setSelectedNoteType("sub-page");
         setIsSubPage(true);
       } else {
-        toast.error("Can't create sub pages at the moment");
+        customToast.error("Can't create sub pages at the moment");
       }
     } catch (error) {
       console.error("Not able to create sub page", error);

@@ -1,7 +1,27 @@
-@import "tailwindcss"; 
+@import "tailwindcss";
 
 @theme {
   --color-primary: #d25564;
   --color-secondary: #3e3e55;
   --color-ternary: #ffd788;
+
+  --animate-shimmer: shimmer 1.4s infinite;
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
+
+  @keyframes shrink {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
 }

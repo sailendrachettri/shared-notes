@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { axiosInstance } from "../../../api/axios";
 import { ADD_MST_NOTE_URL } from "../../../api/api_routes";
-import toast from "react-hot-toast";
+
 import { getItem } from "../../../api/storage";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const CreaterNewNotesForm = ({
   setIsOpen,
@@ -40,7 +41,7 @@ const CreaterNewNotesForm = ({
         } else if (!makeItPublic) {
           user_decision = user?.userId;
         } else {
-          toast.error("Can't create notes at the moment");
+          customToast.error("Can't create notes at the moment");
           return;
         }
       }
@@ -66,10 +67,10 @@ const CreaterNewNotesForm = ({
       setTitle("");
       setIsOpen(false);
       setMakeItPublic(false);
-      toast.success("Note created successful!");
+      customToast.success("Note created successful!");
     } catch (error) {
       console.error("Not able to create new note");
-      toast.error("Can't create new note");
+      customToast.error("Can't create new note");
     } finally {
       setTimeout(() => {
         setRefresh((prev) => !prev);

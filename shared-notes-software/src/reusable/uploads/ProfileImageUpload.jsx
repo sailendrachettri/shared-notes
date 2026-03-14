@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { FiUploadCloud, FiX } from "react-icons/fi";
-import toast from "react-hot-toast";
+import { customToast } from "../../utils/toast/toastConfig";
+
 
 const MAX_SIZE = 500 * 1024; // 500 KB
 
@@ -27,18 +28,18 @@ const ProfileImageUpload = ({ setUserProfileImage, userProfileImage }) => {
     // ✅ File type validation
     const validTypes = ["image/png", "image/jpeg"];
     if (!validTypes.includes(file.type)) {
-      toast.error("Only PNG & JPEG allowed");
+      customToast.error("Only PNG & JPEG allowed");
       return;
     }
 
     // ✅ File size validation
     if (file.size > MAX_SIZE) {
-      toast.error("Image must be less than 500 KB");
+      customToast.error("Image must be less than 500 KB");
       return;
     }
 
     setUserProfileImage(file);
-    toast.success("Profile image selected");
+    customToast.success("Profile image selected");
   };
 
   const removeImage = (e) => {

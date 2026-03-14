@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+
 import { IoPowerSharp } from "react-icons/io5";
 import { FiEdit2 } from "react-icons/fi";
 import EditUserProfileForm from "./EditUserProfileForm";
@@ -9,6 +9,7 @@ import { FaUser } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import { getItem, removeItem } from "../../../api/storage";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const LoggedInUserInfoMenu = ({
   setIsUserLoggedIn,
@@ -45,7 +46,7 @@ const LoggedInUserInfoMenu = ({
     user = await getItem("user");
     setIsUserLoggedIn(false);
     setShowDetailsMenu(false);
-    toast.success("Logged out successfully!");
+    customToast.success("Logged out successfully!");
   };
 
   const handleImageChange = (e) => {
@@ -53,7 +54,7 @@ const LoggedInUserInfoMenu = ({
     if (!file) return;
 
     if (file.size > 500 * 1024) {
-      toast.error("Image must be less than 500KB");
+      customToast.error("Image must be less than 500KB");
       return;
     }
 
