@@ -20,9 +20,9 @@ const GridStructureView = ({
   return (
     <section className="mb-6">
       {/* Section heading */}
-      {/* {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
+      {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
         <FileStorageHeading heading={heading} />
-      )} */}
+      )}
 
       {itemTypeName === "file" ? (
         // ── File card grid ──
