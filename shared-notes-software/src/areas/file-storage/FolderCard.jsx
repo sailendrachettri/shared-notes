@@ -13,7 +13,7 @@ const FolderCard = ({ folder, isSelected, onClick, onDoubleClick, onContextMenu 
       className={`flex flex-col items-center py-2.5 px-1.5 rounded-lg select-none transition-all border cursor-default
         ${
           isSelected
-            ? "bg-[#d2556407] border-primary"
+            ? "bg-[#d2556407] border-primary/30"
             : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
         }`}
     >

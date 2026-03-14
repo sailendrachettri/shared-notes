@@ -4,19 +4,8 @@ import {
   FaFileAudio,
   FaFilePdf,
 } from "react-icons/fa";
-import { MdDownload } from "react-icons/md";
 import { HiDocumentText } from "react-icons/hi";
-import { useState } from "react";
-
-import { MdOutlineDownloadDone } from "react-icons/md";
-import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
-
-const formatFileSize = (bytes) => {
-  if (!bytes) return "0 B";
-  const sizes = ["B", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i];
-};
+import Tooltip from "../../utils/tooltips/ToolTip";
 
 const FILE_TYPE_MAP = {
   // Images
@@ -200,12 +189,7 @@ const getFileIcon = (ext, size = 28) => {
 };
 
 const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
-  const [downloading, setDownloading] = useState(false);
-  const [downloaded, setDownloaded] = useState(false);
-
   const ext = file.file_extension?.toLowerCase();
-  const { thumbBg, badgeBg, badgeText } = getTypeConfig(ext);
-
 
   return (
     <div
@@ -214,8 +198,8 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
       className={`group relative flex flex-col items-center py-3 px-2 rounded-lg select-none transition-all border cursor-default w-[110px]
     ${
       isSelected
-        ? "bg-primary/5 border-primary shadow-sm"
-        : "border-transparent hover:bg-gray-100 hover:border-gray-200"
+        ? "bg-[#d2556407] border-primary/30"
+        : "border-transparent hover:bg-[#d2556410] hover:border-[#d2556413]"
     }`}
     >
       {/* Thumbnail */}
@@ -224,36 +208,11 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
       </div>
 
       {/* File Name */}
-      <p
-        className="text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2"
-        title={file.file_name}
-      >
-        {file.file_name}
-      </p>
-
-      {/* Hover Details Panel */}
-      {/* <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 rounded-md bg-white shadow-lg border border-gray-200 text-xs text-gray-700 p-3 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
-        <p className="font-semibold text-gray-900 mb-1 truncate">
+      <Tooltip text={file.file_name} fileSize={file?.file_size} fileType={ext} lastModified={file?.created_at} visibility={file?.file_visibility}>
+        <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2">
           {file.file_name}
-        </p>
-
-        <div className="space-y-1">
-          <p>
-            <span className="text-gray-500">Type:</span>{" "}
-            {file.file_extension?.toUpperCase()}
-          </p>
-
-          <p>
-            <span className="text-gray-500">Size:</span>{" "}
-            {(file.file_size / 1024).toFixed(2)} KB
-          </p>
-
-          <p>
-            <span className="text-gray-500">Modified:</span>{" "}
-            {new Date(file.updated_at).toLocaleDateString()}
-          </p>
         </div>
-      </div> */}
+      </Tooltip>
     </div>
   );
 };
