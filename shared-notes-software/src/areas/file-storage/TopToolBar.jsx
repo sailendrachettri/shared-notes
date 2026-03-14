@@ -40,7 +40,6 @@ const TopToolBar = ({
     setFolderStack(folderStack.slice(0, index + 1));
   };
 
-  // console.log(folderStack);
 
   return (
     <>

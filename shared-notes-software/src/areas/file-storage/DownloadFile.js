@@ -16,8 +16,6 @@ export const downloadFile = async (file, setDownloadState) => {
     const token = localStorage.getItem("accessToken");
     const url = `${VIEW_UPLOADED_FILE_URL}/${file?.file_path}`;
 
-    console.log("Downloading:", url); // verify URL is correct
-
     const response = await axios.get(url, {
       responseType: "blob",
       headers: {

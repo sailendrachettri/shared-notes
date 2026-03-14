@@ -221,7 +221,6 @@ export default function FileExplorer({
   };
 
   const openFolder = (folder) => {
-    // console.log(folder);
     setParentDirectoryVisibility(folder?.folder_visibility);
     setFolderStack((prev) => [
       ...prev,
@@ -230,7 +229,7 @@ export default function FileExplorer({
         name: folder.folder_name,
       },
     ]);
-    // console.log(folderStack);
+
     setCurrentFolderId(folder.folder_id);
     setForwardStack([]);
   };
@@ -241,18 +240,13 @@ export default function FileExplorer({
     }
     try {
       const user = await getItem("user");
-      // console.log(parentId);
-      // console.log(currentFolderId);
-      // console.log(folderStack);
 
       const payload = {
         ParentFolderId: parentId || null,
         UserId: user?.userId || null,
       };
-      // console.log(payload);
 
       const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
-      // console.log(res);
 
       setFolders(res?.data?.folders || []);
       setFiles(res?.data?.files || []);
@@ -277,11 +271,11 @@ export default function FileExplorer({
         FolderVisibility: parentDirVisibility || "public",
       };
 
-      // console.log(payload);
-
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
       if (res?.data?.success === true && res?.data?.status === "CREATED") {
-        customToast.success(res?.data?.message || "Folder created successfully");
+        customToast.success(
+          res?.data?.message || "Folder created successfully",
+        );
         setSelectedFile({ folder_id: res?.data?.folder_id });
         setCreatingFolder(false);
         setNewFolderName("");
@@ -380,10 +374,11 @@ export default function FileExplorer({
       };
 
       const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
-      // console.log(res);
 
       if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
-        customToast.success("File uploaded successful");
+        setTimeout(() => {
+          customToast.success("File uploaded successful");
+        }, 600);
         handleFetchNestedFolders(currentFolderId);
       } else {
         customToast.error("Can't upload file at the moment");
@@ -424,10 +419,11 @@ export default function FileExplorer({
         DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL,
         payload,
       );
-      console.log(res);
-      console.log(folder);
+
       if (res?.data?.success == true) {
-        customToast.success("Folder and all its contents deleted successfully.");
+        customToast.success(
+          "Folder and all its contents deleted successfully.",
+        );
         setFolders((prev) =>
           prev.filter((f) => f.folder_id !== folder.folder_id),
         );
@@ -445,14 +441,11 @@ export default function FileExplorer({
   };
 
   const handleDeleteFile = async (file) => {
-    console.log(file);
-
     let res;
 
     try {
       // first delete the file from file system
       res = await axiosInstance.post(DELETE_FILE_URL, [file.file_path]);
-      console.log(res);
 
       if (res.status == 200) {
         // if the file delete is successful then also delete from db as well
