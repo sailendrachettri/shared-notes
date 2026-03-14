@@ -183,11 +183,11 @@ export default function FileExplorer({
   search,
   setSearch,
   setRefresh,
+  fileStorageCategory,
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [activeNav, setActiveNav] = useState("Documents");
-  const [expandedNav, setExpandedNav] = useState(["Quick access"]);
+ 
   const [contextMenu, setContextMenu] = useState(null);
   const [currentFolderId, setCurrentFolderId] = useState(null);
   const [folderStack, setFolderStack] = useState([]);
@@ -213,12 +213,6 @@ export default function FileExplorer({
     { heading: "Shared Folders", data: sharedFolders },
     { heading: "Public Folders", data: publicFolders },
   ];
-
-  const toggleExpand = (label) => {
-    setExpandedNav((prev) =>
-      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label],
-    );
-  };
 
   const openFolder = (folder) => {
     setParentDirectoryVisibility(folder?.folder_visibility);
@@ -516,11 +510,7 @@ export default function FileExplorer({
           <section>
             {/* Sidebar */}
             <FileStorageSidebar
-              setActiveNav={setActiveNav}
-              activeNav={activeNav}
-              expandedNav={expandedNav}
-              icons={icons}
-              toggleExpand={toggleExpand}
+              fileStorageCategory={fileStorageCategory}
             />
           </section>
         }

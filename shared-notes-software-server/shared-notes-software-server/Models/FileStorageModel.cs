@@ -1,5 +1,11 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class FileStorageCategory
+    {
+        public int File_Storage_Category_Id { get; set; }
+        public string File_Storage_Category_Name { get; set; }
+        public DateTime Created_At { get; set; }
+    }
     public class DeleteFileRequest
     {
         public int FileId { get; set; }

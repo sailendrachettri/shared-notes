@@ -48,7 +48,7 @@ export default function Tooltip({
         <div
           ref={refs.setFloating}
           style={floatingStyles}
-          className={`z-50 bg-[#f6f6f6] text-slate-600 text-xs px-3 py-2 rounded-md shadow-md max-w-[420px] ${text?.length > 100 ? "min-w-[340px]" : ""} whitespace-normal break-words`}
+          className={`z-50 bg-[#f6f6f6] text-slate-600 text-xs px-3 py-2 rounded-md shadow-md max-w-[420px] ${text?.length > 100 ? "min-w-[340px]" : "min-w-[240px]"} whitespace-normal break-words`}
         >
           <div className="mt-1 text-slate-800">{text}</div>
           {fileType && (

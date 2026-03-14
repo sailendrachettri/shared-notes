@@ -19,6 +19,28 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpGet("get-mst-file-storage-category")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            string query = @"
+            SELECT 
+                file_storage_category_id   ,
+                file_storage_category_name ,
+                created_at                 
+            FROM public.utbl_mst_file_storage_category
+            ORDER BY file_storage_category_name;
+        ";
+
+            var categories = await _db.ExecuteQueryListAsync<FileStorageCategory>(query);
+
+            return Ok(new
+            {
+                status = "FETCHED",
+                success = true,
+                data = categories
+            });
+        }
+
         [HttpPost("delete-folder")]
         public async Task<IActionResult> DeleteFolder([FromBody] DeleteFolderRequest model)
         {

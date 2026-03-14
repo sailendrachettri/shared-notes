@@ -1,7 +1,10 @@
 import React from "react";
 import FileStorageGround from "./FileStorageGround";
 import { axiosInstance } from "../../api/axios";
-import { GET_FOLDER_LIST_URL } from "../../api/api_routes";
+import {
+  GET_FOLDER_LIST_URL,
+  GET_STORAGE_MST_CATEGORY_URL,
+} from "../../api/api_routes";
 import { useEffect } from "react";
 import { getItem } from "../../api/storage";
 import { useState } from "react";
@@ -13,6 +16,18 @@ const FileStorageMain = () => {
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [search, setSearch] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [fileStorageCategory, setFileStorageCategory] = useState([]);
+
+  const handleGetFileStorageCategory = async () => {
+    try {
+      const res = await axiosInstance.get(GET_STORAGE_MST_CATEGORY_URL);
+      if (res?.data?.success == true && res?.data?.status == "FETCHED") {
+        setFileStorageCategory(res?.data?.data || []);
+      }
+    } catch (error) {
+      console.error("not able to fetch category", error);
+    }
+  };
 
   const handleGetFolders = async () => {
     try {
@@ -37,6 +52,7 @@ const FileStorageMain = () => {
 
   useEffect(() => {
     handleGetFolders();
+    handleGetFileStorageCategory();
   }, [creatingFolder, refresh]);
   return (
     <>
@@ -50,6 +66,7 @@ const FileStorageMain = () => {
           search={search}
           setSearch={setSearch}
           setRefresh={setRefresh}
+          fileStorageCategory={fileStorageCategory}
         />
       </section>
     </>
