@@ -3,6 +3,7 @@ import dirSvg from "../../assets/svgs/files_dir.svg";
 import FileCard from "./FileCard";
 import FolderCard from "./FolderCard";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
+import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 
 const GridStructureView = ({
   dataItems,
@@ -19,15 +20,8 @@ const GridStructureView = ({
   return (
     <section className="mb-6">
       {/* Section heading */}
-      {itemTypeName == "file" && !isEmpty && (
-        <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
-          {heading || "Documents"}
-        </p>
-      )}
-      {itemTypeName == "folder" && !isEmpty && (
-        <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
-          {heading || "Documents"}
-        </p>
+      {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
+        <FileStorageHeading heading={heading} />
       )}
 
       {itemTypeName === "file" ? (

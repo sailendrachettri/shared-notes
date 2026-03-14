@@ -37,6 +37,7 @@ import { DownloadToast } from "./DownloadToast";
 import { downloadFile } from "./DownloadFile";
 import { customToast } from "../../utils/toast/toastConfig";
 import FileCard from "./FileCard";
+import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -389,6 +390,8 @@ export default function FileExplorer({
               setSelectedCategoryName={setSelectedCategoryName}
               activeNav={activeNav}
               setActiveNav={setActiveNav}
+              setCurrentFolderId={setCurrentFolderId}
+              setFolderStack={setFolderStack}
             />
           </section>
         }
@@ -471,9 +474,7 @@ export default function FileExplorer({
                           />
                         ) : (
                           <>
-                            <p className="text-[11px] uppercase text-slate-400 px-3 mb-2">
-                              {selectedCategoryName || "Documents"}
-                            </p>
+                            <FileStorageHeading heading={selectedCategoryName} />
                             <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
                               {filesFromSidebar?.map((file) => (
                                 <FileCard

@@ -12,10 +12,11 @@ const FileStorageSidebar = ({
   setFilesFromSidebar,
   setShowHomePage,
   showHomePage,
-  activeNav, setActiveNav
+  activeNav,
+  setActiveNav,
+  setCurrentFolderId,
+  setFolderStack,
 }) => {
-
-
   const handleGetAllFilesById = async (id) => {
     try {
       const user = await getItem("user");
@@ -62,6 +63,8 @@ const FileStorageSidebar = ({
           onClick={() => {
             setShowHomePage(true);
             setActiveNav(null);
+            setCurrentFolderId(null);
+            setFolderStack([]);
           }}
           className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg mt-1 mb-2
@@ -97,7 +100,7 @@ const FileStorageSidebar = ({
                   setActiveNav(category?.file_Storage_Category_Id);
                   handleGetAllFilesById(category?.file_Storage_Category_Id);
                   setShowHomePage(false);
-                  setSelectedCategoryName(category?.file_Storage_Category_Name)
+                  setSelectedCategoryName(category?.file_Storage_Category_Name);
                 }}
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg mt-1
