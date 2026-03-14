@@ -1,11 +1,10 @@
-// DownloadToast.jsx — Discord-style download progress UI
 import {
   IoDocumentOutline,
   IoCloseOutline,
-  IoCheckmarkCircleOutline,
+  IoCheckmarkOutline,
   IoAlertCircleOutline,
-  IoArrowDownOutline,
-  IoFolderOpenOutline,
+  IoFolderOutline,
+  IoRefreshOutline,
 } from "react-icons/io5";
 
 const formatBytes = (bytes) => {
@@ -16,115 +15,122 @@ const formatBytes = (bytes) => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 };
 
-export const DownloadToast = ({ downloadState, onDismiss }) => {
+export const DownloadToast = ({ downloadState, onDismiss, onRetry }) => {
   if (!downloadState?.active) return null;
 
-  const { fileName, downloadedSize, totalSize, percentage, status } =
-    downloadState;
-
+  const { fileName, downloadedSize, totalSize, percentage, status } = downloadState;
   const isDone = status === "done";
   const isError = status === "error";
+  const isDownloading = status === "downloading";
 
   return (
     <div
+      style={{ boxShadow: "0 2px 12px rgba(0,0,0,0.07)" }}
       className={`
         fixed bottom-5 right-5 z-50 w-[340px]
-        bg-[#1e1f22] border border-[#2b2d31]
-        rounded-xl shadow-2xl shadow-black/60
+        bg-white border border-gray-200
+        rounded-[14px] overflow-hidden
         transition-all duration-300 ease-out
-        ${downloadState.active ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}
+        ${downloadState.active ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}
       `}
     >
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-[#2b2d31]">
+      {/* Header */}
+      <div className="flex items-center justify-between px-3.5 pt-2.5 pb-2 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <IoArrowDownOutline className="text-[#5865f2] text-sm" />
-          <span className="text-[#b5bac1] text-xs font-semibold tracking-widest uppercase">
+          {/* Status dot */}
+          <span
+            className={`
+              w-[7px] h-[7px] rounded-full flex-shrink-0
+              ${isDone ? "bg-[#1a7f4b]" : isError ? "bg-[#c0392b]" : "bg-[#d25564] animate-pulse"}
+            `}
+          />
+          <span className="text-[11px] font-medium tracking-widest uppercase text-gray-400">
             {isDone ? "Downloaded" : isError ? "Failed" : "Downloading"}
           </span>
         </div>
         <button
           onClick={onDismiss}
-          className="text-[#4e5058] hover:text-[#b5bac1] transition-colors rounded-full hover:bg-[#2b2d31] p-0.5"
+          className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-gray-300 hover:bg-gray-100 hover:text-gray-500 transition-colors"
         >
-          <IoCloseOutline size={15} />
+          <IoCloseOutline size={14} />
         </button>
       </div>
 
-      {/* File row */}
-      <div className="flex items-center gap-3 px-4 py-3">
-        {/* File icon */}
+      {/* Body */}
+      <div className="flex items-center gap-3 px-3.5 py-3">
+        {/* Icon */}
         <div
           className={`
-            flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center
-            ${isDone ? "bg-[#248046]/20" : isError ? "bg-[#da373c]/20" : "bg-[#5865f2]/20"}
+            flex-shrink-0 w-[38px] h-[38px] rounded-[10px]
+            flex items-center justify-center
+            ${isDone ? "bg-[#edf7f2]" : isError ? "bg-[#fdf0ef]" : "bg-[#fdf0f1]"}
           `}
         >
           {isDone ? (
-            <IoCheckmarkCircleOutline className="text-[#23a559] text-xl" />
+            <IoCheckmarkOutline size={18} className="text-[#1a7f4b]" />
           ) : isError ? (
-            <IoAlertCircleOutline className="text-[#da373c] text-xl" />
+            <IoAlertCircleOutline size={18} className="text-[#c0392b]" />
           ) : (
-            <IoDocumentOutline className="text-[#5865f2] text-xl" />
+            <IoDocumentOutline size={18} className="text-[#d25564]" />
           )}
         </div>
 
-        {/* File name + size */}
+        {/* File info */}
         <div className="flex-1 min-w-0">
-          <p className="text-[#e0e1e5] text-sm font-medium truncate leading-tight">
+          <p className="text-[13px] font-medium text-gray-800 truncate leading-tight">
             {fileName}
           </p>
-          <p className="text-[#6d6f78] text-xs mt-0.5">
+          <p className="text-[11.5px] mt-0.5">
             {isDone ? (
-              <span className="text-[#23a559]">
-                {formatBytes(totalSize)} — Saved to Downloads
+              <span className="text-[#1a7f4b]">
+                {formatBytes(totalSize)} — saved to downloads
               </span>
             ) : isError ? (
-              <span className="text-[#da373c]">Something went wrong</span>
+              <span className="text-[#c0392b]">Download failed — try again</span>
             ) : (
               <>
-                <span className="text-[#949ba4]">
-                  {formatBytes(downloadedSize)}
-                </span>
+                <span className="text-gray-500">{formatBytes(downloadedSize)}</span>
                 {totalSize > 0 && (
-                  <span className="text-[#6d6f78]">
-                    {" "}/ {formatBytes(totalSize)}
-                  </span>
+                  <span className="text-gray-300"> / {formatBytes(totalSize)}</span>
                 )}
               </>
             )}
           </p>
         </div>
 
-        {/* Percentage badge */}
-        {!isDone && !isError && (
-          <span className="text-[#5865f2] text-xs font-bold tabular-nums">
+        {/* Right action */}
+        {isDownloading && (
+          <span className="text-[12px] font-semibold text-[#d25564] tabular-nums min-w-[34px] text-right">
             {percentage}%
           </span>
         )}
-
-        {/* Open folder icon when done */}
         {isDone && (
-          <button className="text-[#4e5058] hover:text-[#b5bac1] transition-colors">
-            <IoFolderOpenOutline size={17} />
+          <button className="w-[28px] h-[28px] rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#fdf0f1] hover:text-[#d25564] hover:border-[#f5c0c5] transition-all">
+            <IoFolderOutline size={14} />
+          </button>
+        )}
+        {isError && (
+          <button
+            onClick={onRetry}
+            className="w-[28px] h-[28px] rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-[#fdf0f1] hover:text-[#d25564] hover:border-[#f5c0c5] transition-all"
+          >
+            <IoRefreshOutline size={14} />
           </button>
         )}
       </div>
 
       {/* Progress bar */}
       {!isError && (
-        <div className="px-4 pb-3">
-          <div className="w-full h-1.5 bg-[#2b2d31] rounded-full overflow-hidden">
+        <div className="px-3.5 pb-3">
+          <div className="w-full h-[3px] bg-gray-100 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-300 ease-out
-                ${isDone ? "bg-[#23a559]" : "bg-[#5865f2]"}
-                ${!isDone && percentage < 100 ? "relative" : ""}
+              className={`h-full rounded-full transition-all duration-300 ease-out relative overflow-hidden
+                ${isDone ? "bg-[#1a7f4b]" : "bg-[#d25564]"}
               `}
               style={{ width: `${isDone ? 100 : percentage}%` }}
             >
-              {/* Shimmer animation while downloading */}
-              {!isDone && (
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              {isDownloading && (
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_1.4s_infinite]" />
               )}
             </div>
           </div>
