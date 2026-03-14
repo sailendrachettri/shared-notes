@@ -40,9 +40,9 @@ const ToastUI = ({ t, type, message, description }) => {
 
   return (
     <div
-      style={{ borderColor: v.border }}
+      // style={{ borderColor: v.border }}
       className={`
-        flex items-center gap-2.5 bg-white border rounded-[10px]
+        flex items-center gap-2.5 bg-white border rounded-[10px] border-slate-200
         px-3.5 py-2.5 w-[320px] relative overflow-hidden
         shadow-[0_2px_10px_rgba(0,0,0,0.06)]
         transition-all duration-300

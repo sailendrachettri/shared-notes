@@ -111,11 +111,11 @@ export default function UserOnboard({
         });
         setIsUserLoggedIn(true);
       } else {
-        toast.error("Can't create user at the moment");
+        customToast.error("Can't create user at the moment");
       }
     } catch (error) {
       console.error("not able to create user", error);
-      toast.error("Can't create at the moment");
+      customToast.error("Can't create at the moment");
     } finally {
       setSubmitting(false);
     }
@@ -141,15 +141,15 @@ export default function UserOnboard({
           updated_at: res?.data?.updated_at,
           profile_url: res?.data?.profile_url,
         });
-        toast.success("Credential verified");
+        customToast.success("Credential verified");
         refreshNotifications();
         onClose();
       } else {
-        toast.error("Please check your credentials.");
+        customToast.error("Please check your credentials.");
       }
     } catch (error) {
       console.error("Please check your credentials.", error);
-      toast.error("Please check your credentials.");
+      customToast.error("Please check your credentials.");
     } finally {
       setPin("");
     }

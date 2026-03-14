@@ -427,7 +427,7 @@ export default function FileExplorer({
       console.log(res);
       console.log(folder);
       if (res?.data?.success == true) {
-        toast.success("Folder and all its contents deleted successfully.");
+        customToast.success("Folder and all its contents deleted successfully.");
         setFolders((prev) =>
           prev.filter((f) => f.folder_id !== folder.folder_id),
         );
@@ -435,7 +435,7 @@ export default function FileExplorer({
 
       // handleFetchNestedFolders(currentFolderId);
     } catch (err) {
-      toast.error("Failed to delete folder");
+      customToast.error("Failed to delete folder");
     } finally {
       handleFetchNestedFolders(currentFolderId);
       setRefresh((prev) => !prev);
@@ -463,12 +463,12 @@ export default function FileExplorer({
       }
 
       if (res?.data?.success == true && res?.data?.status == "DELETED") {
-        toast.success("File deleted");
+        customToast.success("File deleted");
       }
 
       handleFetchNestedFolders(currentFolderId);
     } catch (err) {
-      toast.error("Failed to delete file");
+      customToast.error("Failed to delete file");
     }
 
     setContextMenu(null);
