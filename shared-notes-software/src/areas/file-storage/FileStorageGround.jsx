@@ -175,7 +175,10 @@ export default function FileStorageGround({
       const payload = {
         FolderName: newFolderName,
         ParentFolderId: currentFolderId || null,
-        UserId: isUserLoggedIn ? userData?.userId : null,
+        UserId:
+          isUserLoggedIn && visiblilityDecision == "private"
+            ? userData?.userId
+            : null,
         FolderVisibility: isUserLoggedIn ? visiblilityDecision : "public",
       };
 
