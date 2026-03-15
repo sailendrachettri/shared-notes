@@ -125,6 +125,17 @@ export default function FileExplorer({
 
   const handleCreateFolder = async () => {
     const userData = await getItem("user");
+    console.log(parentDirVisibility);
+    let visiblilityDecision = "public";
+    if (
+      currentFolderId == null &&
+      parentDirVisibility == null &&
+      userData?.userId
+    ) {
+      visiblilityDecision = "private";
+    } else if (currentFolderId != null && parentDirVisibility == "private" && userData?.userId) {
+      visiblilityDecision = "private";
+    }
 
     try {
       if (!newFolderName.trim()) return;
@@ -134,7 +145,7 @@ export default function FileExplorer({
         ParentFolderId: currentFolderId || null,
         UserId:
           parentDirVisibility == "public" ? null : userData?.userId || null,
-        FolderVisibility: parentDirVisibility || "public",
+        FolderVisibility: visiblilityDecision,
       };
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
