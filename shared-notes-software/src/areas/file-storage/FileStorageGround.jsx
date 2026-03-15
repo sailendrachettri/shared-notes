@@ -71,9 +71,10 @@ export default function FileExplorer({
   const [selectedCategoryName, setSelectedCategoryName] = useState(null);
   const [activeNav, setActiveNav] = useState(null);
   const [showHomePage, setShowHomePage] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
 
   const abortControllerRef = useRef(null);
-
+  const dragCounter = useRef(0);
   const createInputRef = useRef(null);
   const fileRef = useRef(null);
 
@@ -332,7 +333,59 @@ export default function FileExplorer({
     setContextMenu(null);
   };
 
-    // Copy paste file to upload
+  // Drag and drop support
+  useEffect(() => {
+    const handleDragEnter = (e) => {
+      e.preventDefault();
+      dragCounter.current++;
+
+      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+        setIsDragging(true);
+      }
+    };
+
+    const handleDragLeave = (e) => {
+      e.preventDefault();
+      dragCounter.current--;
+
+      if (dragCounter.current === 0) {
+        setIsDragging(false);
+      }
+    };
+
+    const handleDragOver = (e) => {
+      e.preventDefault();
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+
+      setIsDragging(false);
+      dragCounter.current = 0;
+
+      const droppedFiles = e.dataTransfer.files;
+
+      if (!droppedFiles) return;
+
+      for (let i = 0; i < droppedFiles.length; i++) {
+        handleUploadStorageFile(droppedFiles[i]);
+      }
+    };
+
+    window.addEventListener("dragenter", handleDragEnter);
+    window.addEventListener("dragleave", handleDragLeave);
+    window.addEventListener("dragover", handleDragOver);
+    window.addEventListener("drop", handleDrop);
+
+    return () => {
+      window.removeEventListener("dragenter", handleDragEnter);
+      window.removeEventListener("dragleave", handleDragLeave);
+      window.removeEventListener("dragover", handleDragOver);
+      window.removeEventListener("drop", handleDrop);
+    };
+  }, [currentFolderId, parentDirVisibility]);
+
+  // Copy paste file to upload
   useEffect(() => {
     const handlePaste = (e) => {
       const items = e.clipboardData?.items;
@@ -420,7 +473,7 @@ export default function FileExplorer({
           </section>
         }
         content={
-          <section className="flex flex-col h-full min-h-0 px-3">
+          <section className="relative flex flex-col h-full min-h-0 px-3">
             {/* Top toolbar */}
             <TopToolBar
               goBack={goBack}
@@ -440,247 +493,264 @@ export default function FileExplorer({
               setActiveNav={setActiveNav}
             />
 
-            {loading ? (
-              <section>
-                <LoadingPageSoft />
-              </section>
-            ) : (
-              <section className="flex flex-col h-full pb-10">
-                {/* File area */}
-                <div
-                  className="flex-1 overflow-auto"
-                  onContextMenu={(e) => {
-                    e.preventDefault();
+            <div className="relative">
+              {loading ? (
+                <section>
+                  <LoadingPageSoft />
+                </section>
+              ) : (
+                <section className="relative flex flex-col h-full pb-10">
+                  {/* File area */}
+                  <div
+                    className={`flex-1 overflow-auto relative`}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
 
-                    const pos = getMenuPosition(e.pageX, e.pageY);
+                      const pos = getMenuPosition(e.pageX, e.pageY);
 
-                    setContextMenu({
-                      x: pos.x,
-                      y: pos.y,
-                      type: "blank",
-                    });
-                  }}
-                >
-                  <div className="p-4">
-                    {/* Create new folder */}
-                    {creatingFolder && view === "grid" && (
-                      <div
-                        ref={createInputRef}
-                        className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
-                      >
-                        <div className="mb-2">
-                          <FcOpenedFolder size={40} />
+                      setContextMenu({
+                        x: pos.x,
+                        y: pos.y,
+                        type: "blank",
+                      });
+                    }}
+                  >
+                    <div className="p-4">
+                      {/* Create new folder */}
+                      {creatingFolder && view === "grid" && (
+                        <div
+                          ref={createInputRef}
+                          className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
+                        >
+                          <div className="mb-2">
+                            <FcOpenedFolder size={40} />
+                          </div>
+
+                          <input
+                            autoFocus
+                            maxLength={30}
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                            onFocus={(e) => e.target.select()}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleCreateFolder();
+                              if (e.key === "Escape") setCreatingFolder(false);
+                            }}
+                            className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
+                          />
                         </div>
+                      )}
 
-                        <input
-                          autoFocus
-                          maxLength={30}
-                          value={newFolderName}
-                          onChange={(e) => setNewFolderName(e.target.value)}
-                          onFocus={(e) => e.target.select()}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") handleCreateFolder();
-                            if (e.key === "Escape") setCreatingFolder(false);
-                          }}
-                          className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
-                        />
-                      </div>
-                    )}
+                      {/* Filters data */}
+                      {!showHomePage ? (
+                        <section>
+                          {filesFromSidebar?.length <= 0 ? (
+                            <NoResultFound
+                              desc={`There are no files available in the ${selectedCategoryName} category.`}
+                              img={dirSvg}
+                              title="Empty Directory"
+                            />
+                          ) : (
+                            <>
+                              <FileStorageHeading
+                                heading={selectedCategoryName}
+                              />
+                              <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
+                                {filesFromSidebar?.map((file) => (
+                                  <FileCard
+                                    key={file.file_id}
+                                    file={file}
+                                    isSelected={
+                                      selectedFile?.file_id === file.file_id
+                                    }
+                                    onClick={() => setSelectedFile(file)}
+                                    onContextMenu={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setSelectedFile(file);
+                                      const pos = getMenuPosition(
+                                        e.pageX,
+                                        e.pageY,
+                                      );
 
-                    {/* Filters data */}
-                    {!showHomePage ? (
-                      <section>
-                        {filesFromSidebar?.length <= 0 ? (
-                          <NoResultFound
-                            desc={`There are no files available in the ${selectedCategoryName} category.`}
-                            img={dirSvg}
-                            title="Empty Directory"
-                          />
-                        ) : (
-                          <>
-                            <FileStorageHeading heading={selectedCategoryName} />
-                            <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
-                              {filesFromSidebar?.map((file) => (
-                                <FileCard
-                                  key={file.file_id}
-                                  file={file}
-                                  isSelected={
-                                    selectedFile?.file_id === file.file_id
-                                  }
-                                  onClick={() => setSelectedFile(file)}
-                                  onContextMenu={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    setSelectedFile(file);
-                                    const pos = getMenuPosition(
-                                      e.pageX,
-                                      e.pageY,
-                                    );
-
-                                    setContextMenu({
-                                      x: pos.x,
-                                      y: pos.y,
-                                      type: "file",
-                                    });
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          </>
-                        )}
-                      </section>
-                    ) : (
-                      <div>
-                        {isCurrentFolderEmpty && !creatingFolder ? (
-                          <NoResultFound
-                            desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
-                            img={dirSvg}
-                            title="Empty Directory"
-                          />
-                        ) : (
-                          <>
-                            {currentFolderId === null ? (
-                              sections
-                                ?.filter((section) => section.data?.length > 0)
-                                .map((section, index) => (
-                                  <GridStructureView
-                                    itemTypeName="folder"
-                                    key={index}
-                                    dataItems={section.data}
-                                    setSelectedFile={setSelectedFile}
-                                    selectedFile={selectedFile}
-                                    heading={section.heading}
-                                    openFolder={openFolder}
-                                    isSubfolder="no"
-                                    setContextMenu={setContextMenu}
+                                      setContextMenu({
+                                        x: pos.x,
+                                        y: pos.y,
+                                        type: "file",
+                                      });
+                                    }}
                                   />
-                                ))
-                            ) : (
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </section>
+                      ) : (
+                        <div>
+                          {isCurrentFolderEmpty && !creatingFolder ? (
+                            <NoResultFound
+                              desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
+                              img={dirSvg}
+                              title="Empty Directory"
+                            />
+                          ) : (
+                            <>
+                              {currentFolderId === null ? (
+                                sections
+                                  ?.filter(
+                                    (section) => section.data?.length > 0,
+                                  )
+                                  .map((section, index) => (
+                                    <GridStructureView
+                                      itemTypeName="folder"
+                                      key={index}
+                                      dataItems={section.data}
+                                      setSelectedFile={setSelectedFile}
+                                      selectedFile={selectedFile}
+                                      heading={section.heading}
+                                      openFolder={openFolder}
+                                      isSubfolder="no"
+                                      setContextMenu={setContextMenu}
+                                    />
+                                  ))
+                              ) : (
+                                <GridStructureView
+                                  itemTypeName="folder"
+                                  dataItems={folders}
+                                  setSelectedFile={setSelectedFile}
+                                  selectedFile={selectedFile}
+                                  heading="Folders"
+                                  openFolder={openFolder}
+                                  isSubfolder="yes"
+                                  setContextMenu={setContextMenu}
+                                />
+                              )}
+
                               <GridStructureView
-                                itemTypeName="folder"
-                                dataItems={folders}
+                                itemTypeName="file"
+                                dataItems={files}
                                 setSelectedFile={setSelectedFile}
                                 selectedFile={selectedFile}
-                                heading="Folders"
+                                heading="Documents"
                                 openFolder={openFolder}
-                                isSubfolder="yes"
+                                isSubfolder="no"
                                 setContextMenu={setContextMenu}
                               />
-                            )}
-
-                            <GridStructureView
-                              itemTypeName="file"
-                              dataItems={files}
-                              setSelectedFile={setSelectedFile}
-                              selectedFile={selectedFile}
-                              heading="Documents"
-                              openFolder={openFolder}
-                              isSubfolder="no"
-                              setContextMenu={setContextMenu}
-                            />
-                          </>
-                        )}
-                      </div>
-                    )}
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                {/* right click options */}
+                  {/* right click options */}
 
-                {contextMenu && (
-                  <div
-                    style={{
-                      top: contextMenu.y,
-                      left: contextMenu.x,
-                    }}
-                    className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
-                  >
-                    <>
-                      <button
-                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                        onClick={() => window.location.reload()}
-                      >
-                        <HiOutlineRefresh size={20} />
-                        Refresh
-                      </button>
-
-                      <button
-                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                        onClick={() => {
-                          fileRef.current.click();
-                          setContextMenu(null);
-                        }}
-                      >
-                        <MdOutlineAttachFile className="rotate-90" size={20} />
-                        Upload Files
-                      </button>
-
-                      <button
-                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                        onClick={() => {
-                          setCreatingFolder(true);
-                          setNewFolderName("New Folder");
-                          setContextMenu(null);
-                        }}
-                      >
-                        <IoFolderOpenOutline size={20} />
-                        New Folder
-                      </button>
-                    </>
-
-                    {contextMenu?.type === "file" && (
+                  {contextMenu && (
+                    <div
+                      style={{
+                        top: contextMenu.y,
+                        left: contextMenu.x,
+                      }}
+                      className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
+                    >
                       <>
                         <button
                           className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() =>
-                            downloadFile(selectedFile, setDownloadState)
-                          }
+                          onClick={() => window.location.reload()}
                         >
-                          <MdDownload size={20} />
-                          Download File
+                          <HiOutlineRefresh size={20} />
+                          Refresh
                         </button>
+
                         <button
                           className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() => handleDeleteFile(selectedFile)}
+                          onClick={() => {
+                            fileRef.current.click();
+                            setContextMenu(null);
+                          }}
                         >
-                          <AiOutlineDelete size={20} />
-                          Delete File
+                          <MdOutlineAttachFile
+                            className="rotate-90"
+                            size={20}
+                          />
+                          Upload Files
+                        </button>
+
+                        <button
+                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                          onClick={() => {
+                            setCreatingFolder(true);
+                            setNewFolderName("New Folder");
+                            setContextMenu(null);
+                          }}
+                        >
+                          <IoFolderOpenOutline size={20} />
+                          New Folder
                         </button>
                       </>
-                    )}
 
-                    {contextMenu?.type === "folder" && (
-                      <button
-                        className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                        onClick={() => handleDeleteFolder(selectedFile)}
-                      >
-                        <AiOutlineDelete size={20} />
-                        Delete Folder
-                      </button>
-                    )}
-                  </div>
-                )}
+                      {contextMenu?.type === "file" && (
+                        <>
+                          <button
+                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                            onClick={() =>
+                              downloadFile(selectedFile, setDownloadState)
+                            }
+                          >
+                            <MdDownload size={20} />
+                            Download File
+                          </button>
+                          <button
+                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                            onClick={() => handleDeleteFile(selectedFile)}
+                          >
+                            <AiOutlineDelete size={20} />
+                            Delete File
+                          </button>
+                        </>
+                      )}
 
-                <input
-                  type="file"
-                  ref={fileRef}
-                  onChange={(e) => handleUploadStorageFile(e.target.files?.[0])}
-                  accept=""
-                  className="hidden"
-                />
+                      {contextMenu?.type === "folder" && (
+                        <button
+                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                          onClick={() => handleDeleteFolder(selectedFile)}
+                        >
+                          <AiOutlineDelete size={20} />
+                          Delete Folder
+                        </button>
+                      )}
+                    </div>
+                  )}
 
-                {uploading && (
-                  <UploadInProgress
-                    progress={uploadProgress}
-                    onCancelClick={onCancelClick}
+                  <input
+                    type="file"
+                    ref={fileRef}
+                    onChange={(e) =>
+                      handleUploadStorageFile(e.target.files?.[0])
+                    }
+                    accept=""
+                    className="hidden"
                   />
-                )}
-                <DownloadToast
-                  downloadState={downloadState}
-                  onDismiss={() => setDownloadState({ active: false })}
-                />
-              </section>
-            )}
+
+                  {uploading && (
+                    <UploadInProgress
+                      progress={uploadProgress}
+                      onCancelClick={onCancelClick}
+                    />
+                  )}
+                  <DownloadToast
+                    downloadState={downloadState}
+                    onDismiss={() => setDownloadState({ active: false })}
+                  />
+
+                  {isDragging && (
+                    <div className="absolute inset-0 pointer-events-none bg-[#fcf3f4]  border-2 rounded-2xl border-dashed border-primary flex items-center justify-center text-lg font-medium z-9999">
+                      Drop file here to upload
+                    </div>
+                  )}
+                </section>
+              )}
+            </div>
           </section>
         }
       />
