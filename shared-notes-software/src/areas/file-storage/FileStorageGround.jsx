@@ -155,21 +155,20 @@ export default function FileStorageGround({
 
   const handleCreateFolder = async () => {
     const userData = await getItem("user");
-    console.log(parentDirVisibility);
     let visiblilityDecision = "public";
-    if (
-      currentFolderId == null &&
-      parentDirVisibility == null &&
-      userData?.userId
-    ) {
-      visiblilityDecision = "private";
-    } else if (
-      currentFolderId != null &&
-      parentDirVisibility == "private" &&
-      userData?.userId
-    ) {
-      visiblilityDecision = "private";
+
+    if (isUserLoggedIn) {
+      // root folder
+      if (currentFolderId == null) {
+        visiblilityDecision = "private";
+      }
+
+      // inside another folder
+      else {
+        visiblilityDecision = parentDirVisibility;
+      }
     }
+    console.log(visiblilityDecision);
 
     try {
       if (!newFolderName.trim()) return;
@@ -179,7 +178,7 @@ export default function FileStorageGround({
         ParentFolderId: currentFolderId || null,
         UserId:
           parentDirVisibility == "public" ? null : userData?.userId || null,
-        FolderVisibility: visiblilityDecision,
+        FolderVisibility: isUserLoggedIn ? visiblilityDecision : "public",
       };
 
       const res = await axiosInstance.post(ADD_FOLDER_URL, payload);
