@@ -20,6 +20,52 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpPost("make-folder-public")]
+        public async Task<IActionResult> MakeFolderPublic([FromBody] MakeFolderPublicRequest model)
+        {
+            var query = @"
+        WITH RECURSIVE folder_tree AS (
+            SELECT folder_id
+            FROM public.utbl_folders
+            WHERE folder_id = @folder_id_i
+
+            UNION ALL
+
+            SELECT f.folder_id
+            FROM public.utbl_folders f
+            INNER JOIN folder_tree ft
+                ON f.parent_folder_id = ft.folder_id
+        ),
+        update_folders AS (
+            UPDATE public.utbl_folders
+            SET folder_visibility = 'public'
+            WHERE folder_id IN (SELECT folder_id FROM folder_tree)
+        ),
+        update_files AS (
+            UPDATE public.utbl_files
+            SET file_visibility = 'public',
+                user_id = NULL
+            WHERE folder_id IN (SELECT folder_id FROM folder_tree)
+        )
+        SELECT 1;
+    ";
+
+            await _db.ExecuteNonQueryAsync(
+                query,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("folder_id_i", model.FolderId);
+                }
+            );
+
+            return Ok(new
+            {
+                success = true,
+                status = "UPDATED",
+                message = "Folder visibility changed to public"
+            });
+        }
+
         [HttpGet("all-file-by-category-id/{categoryId}")]
         public async Task<IActionResult> GetFilesByCategory(int categoryId, [FromQuery] Guid userId)
         {

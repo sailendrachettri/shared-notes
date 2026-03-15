@@ -211,7 +211,7 @@ const Home = ({
         )}
         {selectedMiniTab == "file-storage" && (
           <div className="w-full mb-10 h-full flex-1 overflow-auto">
-            <FileStorageMain />
+            <FileStorageMain isUserLoggedIn={isUserLoggedIn} />
           </div>
         )}
       </div>

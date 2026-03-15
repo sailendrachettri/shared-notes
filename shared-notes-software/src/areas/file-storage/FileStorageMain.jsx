@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { getItem } from "../../api/storage";
 import { useState } from "react";
 
-const FileStorageMain = () => {
+const FileStorageMain = ({ isUserLoggedIn }) => {
   const [privateFolders, setPrivateFolders] = useState([]);
   const [sharedFolders, setSharedFolders] = useState([]);
   const [publicFolders, setPublicFolders] = useState([]);
@@ -67,6 +67,7 @@ const FileStorageMain = () => {
           setSearch={setSearch}
           setRefresh={setRefresh}
           fileStorageCategory={fileStorageCategory}
+          isUserLoggedIn={isUserLoggedIn}
         />
       </section>
     </>

@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import dirSvg from "../../assets/svgs/files_dir.svg";
-import {
-  MdDownload,
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdOutlineAttachFile,
-} from "react-icons/md";
-import { GrStorage } from "react-icons/gr";
+import { MdOutlineAttachFile } from "react-icons/md";
+import { TbDownload } from "react-icons/tb";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
 import { useEffect } from "react";
@@ -18,6 +13,7 @@ import {
   DELETE_STORAGE_FILE_URL,
   FILE_UPLOAD_URL,
   GET_FOLDER_ITEMS_URL,
+  MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL,
   UPLOAD_STORAGE_FILE_URL,
 } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
@@ -38,10 +34,11 @@ import { downloadFile } from "./DownloadFile";
 import { customToast } from "../../utils/toast/toastConfig";
 import FileCard from "./FileCard";
 import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
+import { MdOutlinePeopleAlt } from "react-icons/md";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
-export default function FileExplorer({
+export default function FileStorageGround({
   sharedFolders,
   privateFolders,
   creatingFolder,
@@ -51,6 +48,7 @@ export default function FileExplorer({
   setSearch,
   setRefresh,
   fileStorageCategory,
+  isUserLoggedIn,
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -89,6 +87,33 @@ export default function FileExplorer({
     private: "Private Documents",
     shared: "Shared Documents",
     public: "Public Documents",
+  };
+
+  const handleMakeItPublicFolder = async () => {
+    try {
+      if (!selectedFile?.folder_id) {
+        customToast.error("Please login and try again");
+      }
+      console.log(selectedFile);
+      const payload = {
+        FolderId: selectedFile?.folder_id,
+      };
+      const res = await axiosInstance.post(
+        MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL,
+        payload,
+      );
+      console.log(res);
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        customToast.success(
+          res?.data?.message || "Visibility changed to public",
+        );
+      }
+    } catch (error) {
+      console.error("not able to make the folder public", error);
+      customToast.error("Not able to make the folder public");
+    } finally {
+      setRefresh((prev) => !prev);
+    }
   };
 
   const openFolder = (folder) => {
@@ -513,16 +538,16 @@ export default function FileExplorer({
               setActiveNav={setActiveNav}
             />
 
-            <div className="relative">
+            <div className="relative overflow-y-auto">
               {loading ? (
                 <section>
                   <LoadingPageSoft />
                 </section>
               ) : (
-                <section className="relative flex flex-col h-full pb-10">
+                <section className="relative flex flex-col h-full">
                   {/* File area */}
                   <div
-                    className={`flex-1 overflow-auto relative`}
+                    className={`flex-1 overflow-y-auto min-h-0`}
                     onContextMenu={(e) => {
                       e.preventDefault();
 
@@ -635,7 +660,9 @@ export default function FileExplorer({
                                   ))
                               ) : (
                                 <div>
-                                  <FileStorageHeading heading={`${parentDirVisibility || 'Public'} Folders`} />
+                                  <FileStorageHeading
+                                    heading={`${parentDirVisibility || "Public"} Folders`}
+                                  />
 
                                   <GridStructureView
                                     itemTypeName="folder"
@@ -729,9 +756,10 @@ export default function FileExplorer({
                               downloadFile(selectedFile, setDownloadState)
                             }
                           >
-                            <MdDownload size={20} />
+                            <TbDownload size={20} />
                             Download File
                           </button>
+
                           <button
                             className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
                             onClick={() => handleDeleteFile(selectedFile)}
@@ -743,13 +771,26 @@ export default function FileExplorer({
                       )}
 
                       {contextMenu?.type === "folder" && (
-                        <button
-                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() => handleDeleteFolder(selectedFile)}
-                        >
-                          <AiOutlineDelete size={20} />
-                          Delete Folder
-                        </button>
+                        <>
+                          {selectedFile?.folder_visibility == "private" &&
+                            isUserLoggedIn &&
+                            currentFolderId == null && (
+                              <button
+                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                onClick={() => handleMakeItPublicFolder()}
+                              >
+                                <MdOutlinePeopleAlt size={20} />
+                                Make it Public
+                              </button>
+                            )}
+                          <button
+                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                            onClick={() => handleDeleteFolder(selectedFile)}
+                          >
+                            <AiOutlineDelete size={20} />
+                            Delete Folder
+                          </button>
+                        </>
                       )}
                     </div>
                   )}

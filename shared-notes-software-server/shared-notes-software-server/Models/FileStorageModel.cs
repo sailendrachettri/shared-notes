@@ -1,5 +1,9 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class MakeFolderPublicRequest
+    {
+        public int FolderId { get; set; }
+    }
     public class FileStorageCategory
     {
         public int File_Storage_Category_Id { get; set; }
