@@ -332,6 +332,30 @@ export default function FileExplorer({
     setContextMenu(null);
   };
 
+    // Copy paste file to upload
+  useEffect(() => {
+    const handlePaste = (e) => {
+      const items = e.clipboardData?.items;
+
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+
+        if (item.kind === "file") {
+          const file = item.getAsFile();
+          if (file) {
+            handleUploadStorageFile(file);
+          }
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [currentFolderId, parentDirVisibility]);
+
   useEffect(() => {
     handleFetchNestedFolders(currentFolderId);
   }, [currentFolderId]);
