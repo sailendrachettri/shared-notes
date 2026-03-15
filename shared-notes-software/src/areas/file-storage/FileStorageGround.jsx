@@ -591,7 +591,7 @@ export default function FileStorageGround({
                         <section>
                           {filesFromSidebar?.length <= 0 ? (
                             <NoResultFound
-                              desc={`There are no files available in the ${selectedCategoryName} category.`}
+                              desc={`There are no files available in the ${selectedCategoryName} directory.`}
                               img={dirSvg}
                               title="Empty Directory"
                             />
