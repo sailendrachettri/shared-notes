@@ -94,7 +94,7 @@ export default function FileStorageGround({
       if (!selectedFile?.folder_id) {
         customToast.error("Please login and try again");
       }
-      console.log(selectedFile);
+
       const payload = {
         FolderId: selectedFile?.folder_id,
       };
@@ -102,7 +102,7 @@ export default function FileStorageGround({
         MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL,
         payload,
       );
-      console.log(res);
+
       if (res?.data?.success == true && res?.data?.status == "UPDATED") {
         customToast.success(
           res?.data?.message || "Visibility changed to public",
@@ -168,7 +168,6 @@ export default function FileStorageGround({
         visiblilityDecision = parentDirVisibility;
       }
     }
-    console.log(visiblilityDecision);
 
     try {
       if (!newFolderName.trim()) return;

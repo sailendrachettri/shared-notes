@@ -29,8 +29,7 @@ const FileStorageSidebar = ({
           params: { userId },
         },
       );
-      console.log(activeNav);
-      console.log(res);
+
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setFilesFromSidebar(res?.data?.data || []);
       }
