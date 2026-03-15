@@ -175,8 +175,7 @@ export default function FileStorageGround({
       const payload = {
         FolderName: newFolderName,
         ParentFolderId: currentFolderId || null,
-        UserId:
-          parentDirVisibility == "public" ? null : userData?.userId || null,
+        UserId: isUserLoggedIn ? userData?.userId : null,
         FolderVisibility: isUserLoggedIn ? visiblilityDecision : "public",
       };
 
@@ -202,7 +201,7 @@ export default function FileStorageGround({
       console.error("Not able to create folder", error);
       customToast.error("Can't create folder at the moment");
     } finally {
-      // setRefresh((prev) => !prev);
+      setRefresh((prev) => !prev);
     }
   };
 
@@ -676,12 +675,14 @@ export default function FileStorageGround({
                               )}
 
                               <section>
-                                <FileStorageHeading
-                                  heading={
-                                    headingMap[parentDirVisibility] ||
-                                    "Public documents"
-                                  }
-                                />
+                                {files?.length > 0 && (
+                                  <FileStorageHeading
+                                    heading={
+                                      headingMap[parentDirVisibility] ||
+                                      "Public documents"
+                                    }
+                                  />
+                                )}
                                 <GridStructureView
                                   itemTypeName="file"
                                   dataItems={files}
