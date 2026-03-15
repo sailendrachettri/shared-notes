@@ -20,7 +20,7 @@ const GridStructureView = ({
   return (
     <section className="mb-6">
       {/* Section heading */}
-      {(itemTypeName == "file" || itemTypeName == "folder") && !isEmpty && (
+      {itemTypeName == "folder" && !isEmpty && isSubfolder == 'no' &&  (
         <FileStorageHeading heading={heading} />
       )}
 

@@ -85,6 +85,11 @@ export default function FileExplorer({
     { heading: "Shared Folders", data: sharedFolders },
     { heading: "Public Folders", data: publicFolders },
   ];
+  const headingMap = {
+    private: "Private Documents",
+    shared: "Shared Documents",
+    public: "Public Documents",
+  };
 
   const openFolder = (folder) => {
     setParentDirectoryVisibility(folder?.folder_visibility);
@@ -133,7 +138,11 @@ export default function FileExplorer({
       userData?.userId
     ) {
       visiblilityDecision = "private";
-    } else if (currentFolderId != null && parentDirVisibility == "private" && userData?.userId) {
+    } else if (
+      currentFolderId != null &&
+      parentDirVisibility == "private" &&
+      userData?.userId
+    ) {
       visiblilityDecision = "private";
     }
 
@@ -625,28 +634,40 @@ export default function FileExplorer({
                                     />
                                   ))
                               ) : (
-                                <GridStructureView
-                                  itemTypeName="folder"
-                                  dataItems={folders}
-                                  setSelectedFile={setSelectedFile}
-                                  selectedFile={selectedFile}
-                                  heading="Folders"
-                                  openFolder={openFolder}
-                                  isSubfolder="yes"
-                                  setContextMenu={setContextMenu}
-                                />
+                                <div>
+                                  <FileStorageHeading heading={`${parentDirVisibility || 'Public'} Folders`} />
+
+                                  <GridStructureView
+                                    itemTypeName="folder"
+                                    dataItems={folders}
+                                    setSelectedFile={setSelectedFile}
+                                    selectedFile={selectedFile}
+                                    heading="Folders"
+                                    openFolder={openFolder}
+                                    isSubfolder="yes"
+                                    setContextMenu={setContextMenu}
+                                  />
+                                </div>
                               )}
 
-                              <GridStructureView
-                                itemTypeName="file"
-                                dataItems={files}
-                                setSelectedFile={setSelectedFile}
-                                selectedFile={selectedFile}
-                                heading="Documents"
-                                openFolder={openFolder}
-                                isSubfolder="no"
-                                setContextMenu={setContextMenu}
-                              />
+                              <section>
+                                <FileStorageHeading
+                                  heading={
+                                    headingMap[parentDirVisibility] ||
+                                    "Public documents"
+                                  }
+                                />
+                                <GridStructureView
+                                  itemTypeName="file"
+                                  dataItems={files}
+                                  setSelectedFile={setSelectedFile}
+                                  selectedFile={selectedFile}
+                                  heading="Documents"
+                                  openFolder={openFolder}
+                                  isSubfolder="no"
+                                  setContextMenu={setContextMenu}
+                                />
+                              </section>
                             </>
                           )}
                         </div>
