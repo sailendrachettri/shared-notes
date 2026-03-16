@@ -6,7 +6,8 @@ import {
   MdGridView,
   MdOutlineCloudUpload,
 } from "react-icons/md";
-import { IoSearch } from "react-icons/io5";
+import { RxDesktop } from "react-icons/rx";
+
 import ExpandSearch from "../../reusable/inputs/ExpandSearch";
 
 const TopToolBar = ({
@@ -70,18 +71,18 @@ const TopToolBar = ({
 
           {/* Address bar */}
           <div
-            className={`${showHomePage ? "cursor-not-allowed" : ""} flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-full border border-slate-200 bg-slate-50/50  transition-all cursor-pointer text-[12.5px]`}
+            className={`${showHomePage ? "cursor-not-allowed" : ""} flex items-center gap-1 cursor-not-allowed flex-1 px-3 py-1 mx-2 rounded-full border border-slate-200 bg-slate-50/50  transition-all text-[12.5px]`}
           >
             {showHomePage ? (
               <div className="flex items-center text-sm text-slate-600 gap-1">
                 <span
-                  className="cursor-pointer hover:underline"
+                  className="cursor-pointer hover:underline flex items-center justify-around gap-2 flex-nowrap"
                   onClick={() => {
                     setCurrentFolderId(null);
                     setFolderStack([]);
                   }}
                 >
-                  Home
+                 <RxDesktop size={17} /> <span>Home</span>
                 </span>
 
                 {visibleStack?.map((item, index) => (
