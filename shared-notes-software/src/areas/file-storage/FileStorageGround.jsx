@@ -518,7 +518,7 @@ export default function FileStorageGround({
           </section>
         }
         content={
-          <section className="relative flex flex-col h-full min-h-0 px-3">
+          <section className="relative flex flex-col h-full min-h-0 px-3 select-none">
             {/* Top toolbar */}
             <TopToolBar
               goBack={goBack}

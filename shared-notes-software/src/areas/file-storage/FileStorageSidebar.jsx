@@ -39,7 +39,7 @@ const FileStorageSidebar = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-white border-r border-slate-200">
+    <div className="flex flex-col h-full bg-white border-r border-slate-200 select-none">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-4">
         <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow">
