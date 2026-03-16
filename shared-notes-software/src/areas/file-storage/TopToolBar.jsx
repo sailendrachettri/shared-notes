@@ -7,6 +7,7 @@ import {
   MdOutlineCloudUpload,
 } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
+import ExpandSearch from "../../reusable/inputs/ExpandSearch";
 
 const TopToolBar = ({
   view,
@@ -69,10 +70,10 @@ const TopToolBar = ({
 
           {/* Address bar */}
           <div
-            className={`${showHomePage ? "hover:bg-white cursor-not-allowed" : ""} flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-md border border-gray-200 bg-gray-50  transition-all cursor-pointer text-[12.5px]`}
+            className={`${showHomePage ? "cursor-not-allowed" : ""} flex items-center gap-1 flex-1 px-3 py-1 mx-2 rounded-full border border-slate-200 bg-slate-50/50  transition-all cursor-pointer text-[12.5px]`}
           >
             {showHomePage ? (
-              <div className="flex items-center text-sm text-gray-600 gap-1">
+              <div className="flex items-center text-sm text-slate-600 gap-1">
                 <span
                   className="cursor-pointer hover:underline"
                   onClick={() => {
@@ -104,14 +105,7 @@ const TopToolBar = ({
           {/* Toolbar actions */}
           <div className="flex items-center gap-1">
             {/* Search */}
-            <div>
-              <input
-                type="text"
-                placeholder="Search..."
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <IoSearch />
-            </div>
+            <ExpandSearch setSearch={setSearch} />
             {/* Upload */}
             <button
               onClick={() => {
