@@ -32,7 +32,7 @@ const GridStructureView = ({
               setSelectedFile(null);
             }
           }}
-          className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]"
+          className="flex items-center justify-start flex-wrap gap-2"
         >
           {dataItems?.map((file) => (
             <FileCard
@@ -63,7 +63,7 @@ const GridStructureView = ({
               setSelectedFile(null);
             }
           }}
-          className="grid gap-1 grid-cols-[repeat(auto-fill,minmax(100px,1fr))]"
+          className="flex items-center justify-start flex-wrap gap-2"
         >
           {dataItems?.map((folder, i) => (
             <FolderCard

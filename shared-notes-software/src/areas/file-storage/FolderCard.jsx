@@ -18,7 +18,7 @@ const FolderCard = ({ folder, isSelected, onClick, onDoubleClick, onContextMenu 
         }`}
     >
       <FcOpenedFolder size={40} />
-      <p className="text-[12px] text-center text-gray-800 break-words leading-[1.3] max-w-[88px] px-1 mt-1.5">
+      <p className="text-[12px] text-center text-gray-800 wrap-break-word leading-[1.3] w-22 px-1 mt-1.5">
         {displayName}
       </p>
     </div>
