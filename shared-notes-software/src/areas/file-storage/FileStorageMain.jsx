@@ -17,6 +17,7 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
   const [search, setSearch] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [fileStorageCategory, setFileStorageCategory] = useState([]);
+  const [currentFolderId, setCurrentFolderId] = useState(null);
 
   const handleGetFileStorageCategory = async () => {
     try {
@@ -39,7 +40,7 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_FOLDER_LIST_URL, payload);
-
+      console.log(res);
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateFolders(res?.data?.data?.owned || []);
         setSharedFolders(res?.data?.data?.shared || []);
@@ -54,6 +55,11 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
     handleGetFolders();
     handleGetFileStorageCategory();
   }, [creatingFolder, refresh]);
+
+  useEffect(() => {
+    console.log(currentFolderId)
+    if (currentFolderId == null) handleGetFolders();
+  }, [search]);
   return (
     <>
       <section className="h-full">
@@ -68,6 +74,8 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
           setRefresh={setRefresh}
           fileStorageCategory={fileStorageCategory}
           isUserLoggedIn={isUserLoggedIn}
+          currentFolderId={currentFolderId}
+          setCurrentFolderId={setCurrentFolderId}
         />
       </section>
     </>

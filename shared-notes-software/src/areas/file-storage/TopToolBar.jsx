@@ -6,6 +6,7 @@ import {
   MdGridView,
   MdOutlineCloudUpload,
 } from "react-icons/md";
+import { IoSearch } from "react-icons/io5";
 
 const TopToolBar = ({
   view,
@@ -22,7 +23,8 @@ const TopToolBar = ({
   showHomePage,
   selectedCategoryName,
   setShowHomePage,
-  setActiveNav
+  setActiveNav,
+  setSearch,
 }) => {
   const visibleStack =
     folderStack.length > 5
@@ -101,12 +103,21 @@ const TopToolBar = ({
 
           {/* Toolbar actions */}
           <div className="flex items-center gap-1">
+            {/* Search */}
+            <div>
+              <input
+                type="text"
+                placeholder="Search..."
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <IoSearch />
+            </div>
             {/* Upload */}
             <button
               onClick={() => {
                 fileRef.current.click();
                 setShowHomePage(true);
-                setActiveNav(null)
+                setActiveNav(null);
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md bg-primary text-white text-[12px] font-medium hover:bg-primary/90 transition-colors"
             >
@@ -119,7 +130,7 @@ const TopToolBar = ({
                 setCreatingFolder(true);
                 setNewFolderName("New Folder");
                 setShowHomePage(true);
-                setActiveNav(null)
+                setActiveNav(null);
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 cursor-pointer rounded-md border border-gray-300 bg-white hover:bg-primary/10 hover:text-primary hover:border-primary/20 text-[12px] transition-colors"
             >

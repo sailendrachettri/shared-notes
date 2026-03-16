@@ -53,6 +53,7 @@
     {
         public long? ParentFolderId { get; set; }
         public Guid? UserId { get; set; }
+        public string? SearchText { get; set; }
     }
 
     public class GetFolderItemListRequest

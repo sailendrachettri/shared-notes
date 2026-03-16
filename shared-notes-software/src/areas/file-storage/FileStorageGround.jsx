@@ -49,12 +49,13 @@ export default function FileStorageGround({
   setRefresh,
   fileStorageCategory,
   isUserLoggedIn,
+  currentFolderId, setCurrentFolderId
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
 
   const [contextMenu, setContextMenu] = useState(null);
-  const [currentFolderId, setCurrentFolderId] = useState(null);
+ 
   const [folderStack, setFolderStack] = useState([]);
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
@@ -137,12 +138,15 @@ export default function FileStorageGround({
     try {
       const user = await getItem("user");
 
+      console.log(search)
       const payload = {
         ParentFolderId: parentId || null,
         UserId: user?.userId || null,
+        SearchText: search || "",
       };
 
       const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
+      console.log(res?.data?.folders)
 
       setFolders(res?.data?.folders || []);
       setFiles(res?.data?.files || []);
@@ -456,7 +460,7 @@ export default function FileStorageGround({
 
   useEffect(() => {
     handleFetchNestedFolders(currentFolderId);
-  }, [currentFolderId]);
+  }, [currentFolderId, search]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -536,6 +540,7 @@ export default function FileStorageGround({
               selectedCategoryName={selectedCategoryName}
               setShowHomePage={setShowHomePage}
               setActiveNav={setActiveNav}
+              setSearch={setSearch}
             />
 
             <div className="relative overflow-y-auto">
