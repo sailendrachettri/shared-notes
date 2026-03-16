@@ -21,7 +21,7 @@ export default function ExpandSearch({ setSearch }) {
     <div ref={wrapperRef} className="relative">
       <div
         className={`relative border border-slate-200 rounded-full bg-slate-50/50 overflow-hidden transition-all duration-300 ease-in-out
-        ${open ? "w-56" : "w-10"}
+        ${open ? "xl:w-56 w-40" : "w-10"}
         `}
       >
         <input

@@ -39,6 +39,7 @@ import Select from "react-select";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import { getItem } from "../../../api/storage";
+import LoadingPageSoft from "../../../utils/info-screen/LoadingPageSoft";
 
 const primary = "#d25564";
 
@@ -1027,19 +1028,8 @@ export default function WorkSpaceBoardView({
 
       {/* Loading */}
       {loading && (
-        <div className="flex items-center justify-center py-20">
-          <div
-            className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
-            style={{
-              borderColor: `${BRAND?.secondary} transparent ${BRAND?.secondary} ${BRAND?.secondary}`,
-            }}
-          />
-          <span
-            className="ml-3 text-sm"
-            style={{ color: "rgba(62,62,85,0.4)" }}
-          >
-            Loading workspace…
-          </span>
+        <div>
+          <LoadingPageSoft />
         </div>
       )}
 
