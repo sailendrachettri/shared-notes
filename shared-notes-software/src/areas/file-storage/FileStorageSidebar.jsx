@@ -6,6 +6,9 @@ import { GET_ALL_FILES_BY_CATEGORY_ID_URL } from "../../api/api_routes";
 import { getItem } from "../../api/storage";
 import { HiOutlineHome } from "react-icons/hi";
 import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
+import { FiFileText, FiLayers } from "react-icons/fi";
+import { BiSolidCommentAdd } from "react-icons/bi";
+import { MdOutlineCloudUpload, MdOutlineCreateNewFolder } from "react-icons/md";
 
 const FileStorageSidebar = ({
   fileStorageCategory,
@@ -17,7 +20,12 @@ const FileStorageSidebar = ({
   setActiveNav,
   setCurrentFolderId,
   setFolderStack,
+  setCreatingFolder,
+  setNewFolderName,
+  fileRef
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleGetAllFilesById = async (id) => {
     try {
       const user = await getItem("user");
@@ -126,6 +134,79 @@ const FileStorageSidebar = ({
           })}
         </div>
       </div>
+
+      <button
+        onClick={() => setIsOpen(true)}
+        className="h-12 w-12 absolute bottom-16 left-64 z-40 cursor-pointer rounded-full bg-primary  text-white py-2  shadow-lg shadow-primary/40 hover:shadow-primary/80 duration-150 transition"
+      >
+        <span className="flex items-center justify-center gap-x-2 flex-nowrap">
+          <BiSolidCommentAdd size={20} />
+        </span>
+      </button>
+
+      {isOpen && (
+        <section className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 pb-10 z-10">
+            <h3 className="text-lg font-semibold text-slate-800 mb-6">
+              What would you like to add?
+            </h3>
+
+            <section className="grid grid-cols-2 gap-4">
+              {/* Create Note */}
+              <button
+                onClick={() => {
+                  fileRef.current.click();
+                  setShowHomePage(true);
+                  setActiveNav(null);
+                  setIsOpen(false);
+                }}
+                className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary  transition-all duration-200 group"
+              >
+                <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/5 text-primary mb-3 group-hover:bg-primary/10 transition">
+                  <MdOutlineCloudUpload size={22} />
+                </div>
+
+                <div className="font-medium text-slate-800 text-sm">
+                  Upload Files
+                </div>
+                <div className="text-xs text-slate-500 mt-1 text-center">
+                  Add documents, images, or files to your storage.
+                </div>
+              </button>
+
+              {/* Create Workspace */}
+              <button
+                onClick={() => {
+                  setCreatingFolder(true);
+                  setNewFolderName("New Folder");
+                  setShowHomePage(true);
+                  setActiveNav(null);
+                  setIsOpen(false);
+                }}
+                className="flex flex-col items-center justify-center cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-primary  transition-all duration-200 group"
+              >
+                <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-primary/5 text-primary mb-3 group-hover:bg-primary/10 transition">
+                  <MdOutlineCreateNewFolder size={22} />
+                </div>
+
+                <div className="font-medium text-slate-800 text-sm">
+                  New Folder
+                </div>
+                <div className="text-xs text-slate-500 mt-1 text-center">
+                  Organize your files in a dedicated folder.
+                </div>
+              </button>
+            </section>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

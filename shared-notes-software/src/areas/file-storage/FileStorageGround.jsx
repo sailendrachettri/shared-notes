@@ -49,13 +49,14 @@ export default function FileStorageGround({
   setRefresh,
   fileStorageCategory,
   isUserLoggedIn,
-  currentFolderId, setCurrentFolderId
+  currentFolderId,
+  setCurrentFolderId,
 }) {
   const [view, setView] = useState("grid");
   const [selectedFile, setSelectedFile] = useState(null);
 
   const [contextMenu, setContextMenu] = useState(null);
- 
+
   const [folderStack, setFolderStack] = useState([]);
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
@@ -138,7 +139,7 @@ export default function FileStorageGround({
     try {
       const user = await getItem("user");
 
-      console.log(search)
+      console.log(search);
       const payload = {
         ParentFolderId: parentId || null,
         UserId: user?.userId || null,
@@ -146,7 +147,7 @@ export default function FileStorageGround({
       };
 
       const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
-      console.log(res?.data?.folders)
+      console.log(res?.data?.folders);
 
       setFolders(res?.data?.folders || []);
       setFiles(res?.data?.files || []);
@@ -518,6 +519,9 @@ export default function FileStorageGround({
               setActiveNav={setActiveNav}
               setCurrentFolderId={setCurrentFolderId}
               setFolderStack={setFolderStack}
+              fileRef={fileRef}
+              setCreatingFolder={setCreatingFolder}
+              setNewFolderName={setNewFolderName}
             />
           </section>
         }
