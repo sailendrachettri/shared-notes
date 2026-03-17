@@ -40,7 +40,6 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
         UserId: user?.userId || null,
       };
       const res = await axiosInstance.post(GET_FOLDER_LIST_URL, payload);
-      console.log(res);
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setPrivateFolders(res?.data?.data?.owned || []);
         setSharedFolders(res?.data?.data?.shared || []);
@@ -57,7 +56,6 @@ const FileStorageMain = ({ isUserLoggedIn }) => {
   }, [creatingFolder, refresh]);
 
   useEffect(() => {
-    console.log(currentFolderId)
     if (currentFolderId == null) handleGetFolders();
   }, [search]);
   return (

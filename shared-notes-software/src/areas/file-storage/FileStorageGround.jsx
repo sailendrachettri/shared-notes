@@ -91,8 +91,6 @@ export default function FileStorageGround({
     public: "Public Documents",
   };
 
-  console.log({files});
-
   const handleMakeItPublicFolder = async () => {
     try {
       if (!selectedFile?.folder_id) {
@@ -141,7 +139,6 @@ export default function FileStorageGround({
     try {
       const user = await getItem("user");
 
-      console.log(search);
       const payload = {
         ParentFolderId: parentId || null,
         UserId: user?.userId || null,
@@ -149,7 +146,6 @@ export default function FileStorageGround({
       };
 
       const res = await axiosInstance.post(GET_FOLDER_ITEMS_URL, payload);
-      console.log(res?.data?.folders);
 
       setFolders(res?.data?.folders || []);
       setFiles(res?.data?.files || []);
@@ -280,11 +276,8 @@ export default function FileStorageGround({
         },
       });
 
-      console.log({fileRes})
       uploadedUrl = fileRes?.data?.files[0]?.file;
       uploadedThumblineUrl = fileRes?.data?.files[0]?.thumbnail;
-      console.log({uploadedUrl})
-      console.log({uploadedThumblineUrl})
 
       let payload = {
         FileName: selectedFileForUpload?.name,
@@ -298,7 +291,6 @@ export default function FileStorageGround({
       };
 
       const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
-      
 
       if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
         setTimeout(() => {
