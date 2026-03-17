@@ -48,6 +48,7 @@
         public string FileVisibility { get; set; }
         public string FilePath { get; set; }
         public Guid? UserId { get; set; }
+        public string? ThumbPath { get; set; }
     }
     public class GetFolderItemsRequest
     {

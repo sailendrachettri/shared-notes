@@ -1,7 +1,9 @@
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.FileProviders;
 using shared_notes_software_server.Data;
 using shared_notes_software_server.Helpers;
-using Microsoft.Extensions.Hosting.WindowsServices;
+
+
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,9 +57,6 @@ builder.WebHost.ConfigureKestrel(options =>
     //    listen.UseHttps();
     //});
 });
-
-
-
 
 var app = builder.Build();
 

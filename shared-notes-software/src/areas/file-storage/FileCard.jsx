@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa";
 import { HiDocumentText } from "react-icons/hi";
 import Tooltip from "../../utils/tooltips/ToolTip";
+import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 const FILE_TYPE_MAP = {
   // Images
@@ -189,7 +190,7 @@ const getFileIcon = (ext, size = 28) => {
 };
 
 const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
-  const ext = file.file_extension?.toLowerCase();
+  const ext = file?.file_extension?.toLowerCase();
 
   return (
     <div
@@ -203,20 +204,29 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
           }`}
     >
       <Tooltip
-        text={file.file_name}
+        text={file?.file_name}
         fileSize={file?.file_size}
         fileType={ext}
         lastModified={file?.created_at}
         visibility={file?.file_visibility}
       >
         {/* Thumbnail */}
-        <div className="flex items-center justify-center h-[60px]">
-          {getFileIcon(ext, 60)}
-        </div>
+        {file?.thumb_path ? (
+          <div>
+            <img
+              src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${file?.thumb_path}`}
+              alt={file?.file_name?.substr(0, 5)}
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-[60px]">
+            {getFileIcon(ext, 60)}
+          </div>
+        )}
 
         {/* File Name */}
         <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2">
-          {file.file_name}
+          {file?.file_name}
         </div>
       </Tooltip>
     </div>

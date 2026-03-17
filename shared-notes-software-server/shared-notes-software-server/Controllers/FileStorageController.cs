@@ -251,7 +251,8 @@ namespace shared_notes_software_server.Controllers
                         @file_extension_i,
                         @file_visibility_i,
                         @file_path_i,
-                        @user_id_i
+                        @user_id_i,
+                        @thumb_path
                   )";
 
             var result = await _db.ExecuteScalarAsync<string>(
@@ -291,6 +292,10 @@ namespace shared_notes_software_server.Controllers
                     cmd.Parameters.AddWithValue(
                         "user_id_i",
                         (object?)model.UserId ?? DBNull.Value
+                    );
+                    cmd.Parameters.AddWithValue(
+                        "thumb_path",
+                        (object?)model.ThumbPath ?? DBNull.Value
                     );
                 }
             );

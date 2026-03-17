@@ -91,6 +91,8 @@ export default function FileStorageGround({
     public: "Public Documents",
   };
 
+  console.log({files});
+
   const handleMakeItPublicFolder = async () => {
     try {
       if (!selectedFile?.folder_id) {
@@ -259,6 +261,7 @@ export default function FileStorageGround({
     setUploading(true);
     setUploadProgress(0);
     let uploadedUrl;
+    let uploadedThumblineUrl;
 
     abortControllerRef.current = new AbortController();
 
@@ -277,7 +280,11 @@ export default function FileStorageGround({
         },
       });
 
-      uploadedUrl = fileRes?.data[0];
+      console.log({fileRes})
+      uploadedUrl = fileRes?.data?.files[0]?.file;
+      uploadedThumblineUrl = fileRes?.data?.files[0]?.thumbnail;
+      console.log({uploadedUrl})
+      console.log({uploadedThumblineUrl})
 
       let payload = {
         FileName: selectedFileForUpload?.name,
@@ -287,9 +294,11 @@ export default function FileStorageGround({
         FileVisibility: parentDirVisibility || "public",
         FilePath: uploadedUrl,
         UserId: parentDirVisibility == "public" ? null : user?.userId || null,
+        ThumbPath: uploadedThumblineUrl || null,
       };
 
       const res = await axiosInstance.post(UPLOAD_STORAGE_FILE_URL, payload);
+      
 
       if (res?.data?.success == true && res?.data?.status == "UPLOADED") {
         setTimeout(() => {
