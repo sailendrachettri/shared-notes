@@ -40,6 +40,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import { getItem } from "../../../api/storage";
 import LoadingPageSoft from "../../../utils/info-screen/LoadingPageSoft";
+import { customToast } from "../../../utils/toast/toastConfig";
 
 const primary = "#d25564";
 

@@ -3,9 +3,6 @@ using shared_notes_software_server.Data;
 using shared_notes_software_server.Helpers;
 
 
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWindowsService();
 

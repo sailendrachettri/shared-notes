@@ -138,32 +138,55 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
                     {
                         try
                         {
-                            // ✅ Extract a single JPEG frame at 1 second, scaled to 150px wide, quality 35
-                            var ffmpeg = new Process
+                            // ✅ Direct path to your downloaded ffmpeg.exe — no NuGet package needed
+                            string ffmpegExe = @"C:\Users\Nerd\ffmpeg-8.1-full_build\ffmpeg-8.1-full_build\bin\ffmpeg.exe";
+
+                            if (!System.IO.File.Exists(ffmpegExe))
                             {
-                                StartInfo = new ProcessStartInfo
+                                Console.WriteLine($"[Video Thumb ERROR] ffmpeg.exe not found at: {ffmpegExe}");
+                            }
+                            else
+                            {
+                                var process = new Process
                                 {
-                                    FileName = "ffmpeg",
-                                    Arguments = $"-y -i \"{fullPath}\" -ss 00:00:01 -vframes 1 " +
-                                                $"-vf scale=150:-1 -q:v 10 \"{thumbnailFullPath}\"",
-                                    RedirectStandardError = true,
-                                    RedirectStandardOutput = true,
-                                    UseShellExecute = false,
-                                    CreateNoWindow = true
+                                    StartInfo = new ProcessStartInfo
+                                    {
+                                        FileName = ffmpegExe,
+                                        // -ss 1 = seek to 1 second, -vframes 1 = grab one frame, -vf scale=150:-1 = resize to 150px wide
+                                        Arguments = $"-y -ss 00:00:03 -i \"{fullPath}\" -vframes 1 -vf scale=150:-1 \"{thumbnailFullPath}\"",
+                                        RedirectStandardError = true,
+                                        RedirectStandardOutput = true,
+                                        UseShellExecute = false,
+                                        CreateNoWindow = true
+                                    }
+                                };
+
+                                process.Start();
+                                string ffmpegOutput = await process.StandardError.ReadToEndAsync(); // ffmpeg logs to stderr
+                                await process.WaitForExitAsync();
+
+                                Console.WriteLine($"[Video Thumb] ffmpeg exit code: {process.ExitCode}");
+                                Console.WriteLine($"[Video Thumb] ffmpeg output: {ffmpegOutput}");
+
+                                if (process.ExitCode == 0 && System.IO.File.Exists(thumbnailFullPath))
+                                {
+                                    // ✅ Compress the extracted frame further with ImageSharp
+                                    using var thumbImage = await Image.LoadAsync(thumbnailFullPath);
+                                    await thumbImage.SaveAsJpegAsync(thumbnailFullPath,
+                                        new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder { Quality = 35 });
+
+                                    thumbnailName = Path.GetFileName(thumbnailFullPath);
+                                    Console.WriteLine($"[Video Thumb OK] {thumbnailName}");
                                 }
-                            };
-
-                            ffmpeg.Start();
-                            await ffmpeg.WaitForExitAsync();
-
-                            if (System.IO.File.Exists(thumbnailFullPath))
-                            {
-                                thumbnailName = Path.GetFileName(thumbnailFullPath);
+                                else
+                                {
+                                    Console.WriteLine($"[Video Thumb FAILED] Exit: {process.ExitCode}, File exists: {System.IO.File.Exists(thumbnailFullPath)}");
+                                }
                             }
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"[Video Thumb Error] {file.FileName} → {ex.Message}");
+                            Console.WriteLine($"[Video Thumb ERROR] {ex.GetType().Name}: {ex.Message}");
                         }
                     }
 

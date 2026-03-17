@@ -15,8 +15,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
-    <PackageReference Include="Xabe.FFmpeg.Downloader" Version="6.0.2" />
-	  <PackageReference Include="System.Text.Json" Version="8.0.5" />
+	  
   </ItemGroup>
 
   <ItemGroup>
