@@ -9,6 +9,7 @@ import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 import { FiFileText, FiLayers } from "react-icons/fi";
 import { BiSolidCommentAdd } from "react-icons/bi";
 import { MdOutlineCloudUpload, MdOutlineCreateNewFolder } from "react-icons/md";
+import { useEffect } from "react";
 
 const FileStorageSidebar = ({
   fileStorageCategory,
@@ -22,21 +23,28 @@ const FileStorageSidebar = ({
   setFolderStack,
   setCreatingFolder,
   setNewFolderName,
-  fileRef
+  fileRef,
+  search,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const handleGetAllFilesById = async (id) => {
     try {
       const user = await getItem("user");
       const userId = user?.userId;
+      console.log({ userId });
+      console.log({ selectedCategoryId });
+      console.log({ search });
 
       const res = await axiosInstance.get(
-        `${GET_ALL_FILES_BY_CATEGORY_ID_URL}/${id}`,
+        `${GET_ALL_FILES_BY_CATEGORY_ID_URL}/${id || selectedCategoryId}`,
         {
-          params: { userId },
+          params: { userId, searchText: search },
         },
       );
+
+      console.log({ res });
 
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setFilesFromSidebar(res?.data?.data || []);
@@ -45,6 +53,12 @@ const FileStorageSidebar = ({
       console.error("not able to fetch category files", error);
     }
   };
+
+  useEffect(() => {
+    console.log(selectedCategoryId);
+    console.log(search);
+    if (selectedCategoryId != null) handleGetAllFilesById(selectedCategoryId);
+  }, [search]);
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-slate-200 select-none">
@@ -73,6 +87,7 @@ const FileStorageSidebar = ({
             setActiveNav(null);
             setCurrentFolderId(null);
             setFolderStack([]);
+            setSelectedCategoryName(null);
           }}
           className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg mt-1 mb-2
@@ -106,6 +121,7 @@ const FileStorageSidebar = ({
                 key={category?.file_Storage_Category_Id}
                 onClick={() => {
                   setActiveNav(category?.file_Storage_Category_Id);
+                  setSelectedCategoryId(category?.file_Storage_Category_Id);
                   handleGetAllFilesById(category?.file_Storage_Category_Id);
                   setShowHomePage(false);
                   setSelectedCategoryName(category?.file_Storage_Category_Name);

@@ -523,6 +523,7 @@ export default function FileStorageGround({
               fileRef={fileRef}
               setCreatingFolder={setCreatingFolder}
               setNewFolderName={setNewFolderName}
+              search={search}
             />
           </section>
         }

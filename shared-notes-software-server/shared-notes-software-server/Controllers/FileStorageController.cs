@@ -66,39 +66,47 @@ namespace shared_notes_software_server.Controllers
             });
         }
 
-        [HttpGet("all-file-by-category-id/{categoryId}")]
-        public async Task<IActionResult> GetFilesByCategory(int categoryId, [FromQuery] Guid userId)
-        {
-            string query = @"
-        SELECT DISTINCT f.*
-        FROM utbl_files f
-        LEFT JOIN utbl_mst_file_category_extensions e
-            ON LOWER(f.file_extension) = LOWER(e.extension)
-        WHERE f.is_deleted = false
-        AND (
-                f.file_visibility = 'public'
-                OR (f.file_visibility IN ('private','shared') AND f.user_id = @userId)
-            )
-        AND (
-                @categoryId = 1
-                OR e.file_storage_category_id = @categoryId
-            )
-        ORDER BY f.created_at DESC;
-    ";
-
-            var files = await _db.ExecuteQueryListAsync<FileModel>(query, cmd =>
+            [HttpGet("all-file-by-category-id/{categoryId}")]
+            public async Task<IActionResult> GetFilesByCategory(int categoryId, [FromQuery] Guid userId, [FromQuery] string? searchText)
             {
-                cmd.Parameters.AddWithValue("@categoryId", categoryId);
-                cmd.Parameters.AddWithValue("@userId", userId);
-            });
+                string query = @"
+            SELECT DISTINCT f.*
+            FROM utbl_files f
+            LEFT JOIN utbl_mst_file_category_extensions e
+                ON LOWER(f.file_extension) = LOWER(e.extension)
+            WHERE f.is_deleted = false
+            AND (
+                    f.file_visibility = 'public'
+                    OR (f.file_visibility IN ('private','shared') AND f.user_id = @userId)
+                )
+            AND (
+                    @categoryId = 1
+                    OR e.file_storage_category_id = @categoryId
+                )
+           AND (
+                @searchText IS NULL
+                OR @searchText = ''
+                OR f.file_name ILIKE '%' || @searchText::text || '%'
+            )
+            
+            ORDER BY f.created_at DESC;
+        ";
 
-            return Ok(new
-            {
-                status = "FETCHED",
-                success = true,
-                data = files
-            });
-        }
+                var files = await _db.ExecuteQueryListAsync<FileModel>(query, cmd =>
+                {
+                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    cmd.Parameters.AddWithValue("@searchText", NpgsqlTypes.NpgsqlDbType.Text,
+    (object?)searchText ?? DBNull.Value);
+                });
+
+                return Ok(new
+                {
+                    status = "FETCHED",
+                    success = true,
+                    data = files
+                });
+            }
 
         [HttpGet("get-mst-file-storage-category")]
         public async Task<IActionResult> GetAllCategories()

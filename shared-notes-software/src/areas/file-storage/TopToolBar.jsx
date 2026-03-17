@@ -106,7 +106,8 @@ const TopToolBar = ({
           {/* Toolbar actions */}
           <div className="flex items-center gap-1">
             {/* Search */}
-            <ExpandSearch setSearch={setSearch} />
+           {/* {selectedCategoryName == null && <ExpandSearch setSearch={setSearch} />} */}
+          <ExpandSearch setSearch={setSearch} />
             {/* Upload */}
             <button
               onClick={() => {
