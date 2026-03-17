@@ -215,7 +215,7 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
           <div>
             <img
               src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${file?.thumb_path}`}
-              alt={file?.file_name?.substr(0, 5)}
+              alt={file?.file_name?.substr(0, 5)+'...'}
             />
           </div>
         ) : (
