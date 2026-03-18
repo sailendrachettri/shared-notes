@@ -7,147 +7,31 @@ import {
 import { HiDocumentText } from "react-icons/hi";
 import Tooltip from "../../utils/tooltips/ToolTip";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
+import { getFileIcon } from "../../utils/string-formate/iconsMapping";
 
 const FILE_TYPE_MAP = {
-  // Images
-  jpg: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  jpeg: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  png: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  svg: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  gif: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  webp: {
-    group: "image",
-    thumbBg: "bg-pink-50",
-    badgeBg: "bg-pink-100",
-    badgeText: "text-pink-800",
-  },
-  // Video
-  mp4: {
-    group: "video",
-    thumbBg: "bg-purple-50",
-    badgeBg: "bg-purple-100",
-    badgeText: "text-purple-800",
-  },
-  mkv: {
-    group: "video",
-    thumbBg: "bg-purple-50",
-    badgeBg: "bg-purple-100",
-    badgeText: "text-purple-800",
-  },
-  webm: {
-    group: "video",
-    thumbBg: "bg-purple-50",
-    badgeBg: "bg-purple-100",
-    badgeText: "text-purple-800",
-  },
-  mov: {
-    group: "video",
-    thumbBg: "bg-purple-50",
-    badgeBg: "bg-purple-100",
-    badgeText: "text-purple-800",
-  },
-  // Audio
-  mp3: {
-    group: "audio",
-    thumbBg: "bg-green-50",
-    badgeBg: "bg-green-100",
-    badgeText: "text-green-800",
-  },
-  wav: {
-    group: "audio",
-    thumbBg: "bg-green-50",
-    badgeBg: "bg-green-100",
-    badgeText: "text-green-800",
-  },
-  // PDF
-  pdf: {
-    group: "pdf",
-    thumbBg: "bg-red-50",
-    badgeBg: "bg-red-100",
-    badgeText: "text-red-800",
-  },
-  // Docs
-  doc: {
-    group: "document",
-    thumbBg: "bg-blue-50",
-    badgeBg: "bg-blue-100",
-    badgeText: "text-blue-800",
-  },
-  docx: {
-    group: "document",
-    thumbBg: "bg-blue-50",
-    badgeBg: "bg-blue-100",
-    badgeText: "text-blue-800",
-  },
-  txt: {
-    group: "document",
-    thumbBg: "bg-blue-50",
-    badgeBg: "bg-blue-100",
-    badgeText: "text-blue-800",
-  },
-  // Spreadsheets
-  xls: {
-    group: "document",
-    thumbBg: "bg-emerald-50",
-    badgeBg: "bg-emerald-100",
-    badgeText: "text-emerald-800",
-  },
-  xlsx: {
-    group: "document",
-    thumbBg: "bg-emerald-50",
-    badgeBg: "bg-emerald-100",
-    badgeText: "text-emerald-800",
-  },
-  csv: {
-    group: "document",
-    thumbBg: "bg-emerald-50",
-    badgeBg: "bg-emerald-100",
-    badgeText: "text-emerald-800",
-  },
-  // Archives
-  zip: {
-    group: "archive",
-    thumbBg: "bg-amber-50",
-    badgeBg: "bg-amber-100",
-    badgeText: "text-amber-800",
-  },
-  rar: {
-    group: "archive",
-    thumbBg: "bg-amber-50",
-    badgeBg: "bg-amber-100",
-    badgeText: "text-amber-800",
-  },
-  "7z": {
-    group: "archive",
-    thumbBg: "bg-amber-50",
-    badgeBg: "bg-amber-100",
-    badgeText: "text-amber-800",
-  },
+  jpg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  jpeg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  png: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  svg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  gif: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  webp: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
+  mp4: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+  mkv: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+  webm: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+  mov: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+  mp3: { group: "audio", thumbBg: "bg-green-50", badgeBg: "bg-green-100", badgeText: "text-green-800" },
+  wav: { group: "audio", thumbBg: "bg-green-50", badgeBg: "bg-green-100", badgeText: "text-green-800" },
+  pdf: { group: "pdf", thumbBg: "bg-red-50", badgeBg: "bg-red-100", badgeText: "text-red-800" },
+  doc: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
+  docx: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
+  txt: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
+  xls: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
+  xlsx: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
+  csv: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
+  zip: { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
+  rar: { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
+  "7z": { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
 };
 
 const DEFAULT_TYPE = {
@@ -157,40 +41,155 @@ const DEFAULT_TYPE = {
   badgeText: "text-gray-700",
 };
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+const getTypeConfig = (ext) => FILE_TYPE_MAP[ext?.toLowerCase()] ?? DEFAULT_TYPE;
 
-const getTypeConfig = (ext) =>
-  FILE_TYPE_MAP[ext?.toLowerCase()] ?? DEFAULT_TYPE;
 
-const getFileIcon = (ext, size = 28) => {
-  const group = getTypeConfig(ext).group;
-  const cls =
-    {
-      image: "text-pink-500",
-      video: "text-purple-500",
-      audio: "text-green-500",
-      pdf: "text-red-500",
-      document: "text-blue-500",
-      archive: "text-amber-500",
-      other: "text-gray-400",
-    }[group] ?? "text-gray-400";
+// ─── Sprocket column (reused left & right) ───────────────────────────────────
+const SprocketStrip = ({ side }) => (
+  <div
+    style={{
+      position: "absolute",
+      [side]: 0,
+      top: 0,
+      bottom: 0,
+      width: "9px",
+      background: "#111111",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      paddingBlock: "5px",
+      zIndex: 2,
+    }}
+  >
+    {[0, 1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        style={{
+          width: "5px",
+          height: "4px",
+          borderRadius: "1px",
+          background: "#2b2b2b",
+          border: "0.5px solid #3d3d3d",
+          boxShadow: "inset 0 1px 1px rgba(0,0,0,0.9)",
+        }}
+      />
+    ))}
+  </div>
+);
 
-  const Icon =
-    {
-      image: FaFileImage,
-      video: FaFileVideo,
-      audio: FaFileAudio,
-      pdf: FaFilePdf,
-      document: HiDocumentText,
-      archive: HiDocumentText,
-      other: HiDocumentText,
-    }[group] ?? HiDocumentText;
+// ─── Windows Explorer–style video frame ──────────────────────────────────────
+const VideoFrame = ({ thumbPath, fileName }) => (
+  <div style={{ position: "relative", width: "86px", height: "64px", flexShrink: 0 }}>
+    {/* Main film-strip shell */}
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        borderRadius: "4px",
+        background: "#1a1a1a",
+        boxShadow:
+          "0 2px 6px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06)",
+        overflow: "hidden",
+      }}
+    >
+      <SprocketStrip side="left" />
+      <SprocketStrip side="right" />
 
-  return <Icon size={size} className={cls} />;
-};
+      {/* Viewable area between strips */}
+      <div
+        style={{
+          position: "absolute",
+          left: "9px",
+          right: "9px",
+          top: 0,
+          bottom: 0,
+          overflow: "hidden",
+          background: "#0d0d0d",
+        }}
+      >
+        {thumbPath ? (
+          <img
+            src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${thumbPath}`}
+            alt={fileName?.substr(0, 5) + "..."}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
+        ) : (
+          /* Dark fallback with centred play icon */
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(160deg, #1c1a2e 0%, #0d0b14 100%)",
+            }}
+          >
+            <div
+              style={{
+                width: 0,
+                height: 0,
+                borderTop: "8px solid transparent",
+                borderBottom: "8px solid transparent",
+                borderLeft: "14px solid rgba(255,255,255,0.45)",
+                marginLeft: "2px",
+                filter: "drop-shadow(0 0 4px rgba(255,255,255,0.15))",
+              }}
+            />
+          </div>
+        )}
 
+        {/* Glossy top sheen */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            top: 0,
+            height: "35%",
+            background: "linear-gradient(to bottom, rgba(255,255,255,0.08), transparent)",
+            pointerEvents: "none",
+          }}
+        />
+      </div>
+    </div>
+
+    {/* Purple play-badge — bottom-right, mirrors Windows Explorer overlay */}
+    <div
+      style={{
+        position: "absolute",
+        bottom: "-5px",
+        right: "-5px",
+        width: "20px",
+        height: "20px",
+        borderRadius: "50%",
+        background: "linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)",
+        border: "2px solid white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 1px 5px rgba(0,0,0,0.4)",
+        zIndex: 10,
+      }}
+    >
+      <div
+        style={{
+          width: 0,
+          height: 0,
+          borderTop: "3.5px solid transparent",
+          borderBottom: "3.5px solid transparent",
+          borderLeft: "6px solid white",
+          marginLeft: "1px",
+        }}
+      />
+    </div>
+  </div>
+);
+
+// ─── FileCard ─────────────────────────────────────────────────────────────────
 const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
   const ext = file?.file_extension?.toLowerCase();
+  const isVideo = getTypeConfig(ext).group === "video";
 
   return (
     <div
@@ -210,19 +209,21 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
         lastModified={file?.created_at}
         visibility={file?.file_visibility}
       >
-        {/* Thumbnail */}
-        {file?.thumb_path ? (
-          <div>
+        {/* Thumbnail / frame area */}
+        <div className="flex items-center justify-center" style={{ height: "72px" }}>
+          {isVideo ? (
+            <VideoFrame thumbPath={file?.thumb_path} fileName={file?.file_name} />
+          ) : file?.thumb_path ? (
             <img
               src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${file?.thumb_path}`}
-              alt={file?.file_name?.substr(0, 5)+'...'}
+              alt={file?.file_name?.substr(0, 5) + "..."}
             />
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-[60px]">
-            {getFileIcon(ext, 60)}
-          </div>
-        )}
+          ) : (
+            <div className="flex items-center justify-center">
+              <img src={getFileIcon(ext)} alt="" className="h-16" />
+            </div>
+          )}
+        </div>
 
         {/* File Name */}
         <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2">
