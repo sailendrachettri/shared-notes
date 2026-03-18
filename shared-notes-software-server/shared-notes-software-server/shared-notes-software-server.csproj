@@ -18,9 +18,4 @@
 	  
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="uploadedFiles\" />
-    <Folder Include="uploadedFiles\thumbnails\" />
-  </ItemGroup>
-
 </Project>
