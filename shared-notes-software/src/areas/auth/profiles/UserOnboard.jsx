@@ -82,7 +82,7 @@ export default function UserOnboard({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const uploadedUrl = fileRes?.data[0];
+      const uploadedUrl = fileRes?.data?.files[0]?.file;
 
       const payload = {
         UserName: fullName,
