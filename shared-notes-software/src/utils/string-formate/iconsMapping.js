@@ -117,7 +117,6 @@ const fileIconMap = {
   r:    notepadIcon,
   swift:notepadIcon,
   go:   notepadIcon,
-  rs:   notepadIcon,  // Rust
   dart: notepadIcon,
 
   // ── Shell ──────────────────────────────────────────────────────────────────

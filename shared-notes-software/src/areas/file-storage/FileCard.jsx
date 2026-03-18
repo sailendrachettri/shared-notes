@@ -190,6 +190,7 @@ const VideoFrame = ({ thumbPath, fileName }) => (
 const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
   const ext = file?.file_extension?.toLowerCase();
   const isVideo = getTypeConfig(ext).group === "video";
+  console.log(ext)
 
   return (
     <div
