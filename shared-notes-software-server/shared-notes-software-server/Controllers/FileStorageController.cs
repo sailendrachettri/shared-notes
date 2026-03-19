@@ -36,6 +36,12 @@ namespace shared_notes_software_server.Controllers
             DO UPDATE SET 
                 access_role = EXCLUDED.access_role,
                 status = 'active';
+
+        UPDATE public.utbl_folders
+        SET folder_visibility = 'shared',
+            updated_at = now()
+        WHERE folder_id = @folder_id;
+            
         ";
 
                 foreach (var userId in model.UserIds)
