@@ -388,36 +388,68 @@ export default function FileStorageGround({
     setContextMenu(null);
   };
 
-  const handleRename = async (newFileName) => {
-    const oldFiles = [...files];
+  const handleRename = async (newTitle) => {
+    if (!newTitle) return;
+    /* No api call if the user enters the same name */
+    if (
+      newTitle.trim() === selectedFile?.file_name ||
+      newTitle.trim() === selectedFile?.folder_name
+    ) {
+      return;
+    }
+
     const selectedFileId = selectedFile?.file_id || selectedFile?.folder_id;
 
-    try {
-      if (!newFileName) return;
+    const isFile = !!selectedFile?.file_id;
 
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.file_id === selectedFileId ? { ...f, file_name: newFileName } : f,
-        ),
-      );
+    const oldFiles = [...files];
+    const oldFolders = [...folders];
+
+    try {
+      console.log(isFile);
+
+      if (isFile) {
+        setFiles((prev) =>
+          prev.map((f) =>
+            f.file_id === selectedFileId ? { ...f, file_name: newTitle } : f,
+          ),
+        );
+      } else {
+        console.log(folders);
+        console.log(newTitle);
+        console.log(selectedFileId);
+        setFolders((prev) =>
+          prev.map((f) =>
+            f.folder_id === selectedFileId
+              ? { ...f, folder_name: newTitle }
+              : f,
+          ),
+        );
+        console.log(folders); // same folder name here also
+      }
 
       const payload = {
         FolderOrFileId: selectedFileId,
-        Title: newFileName || "Untitled",
-        FileOrFolderType: selectedFile?.file_id ? "file" : "folder",
+        Title: newTitle.trim() || "Untitled",
+        FileOrFolderType: isFile ? "file" : "folder",
       };
+
       const res = await axiosInstance.post(
         RENAME_STORAGE_FILE_OR_FOLDER_URL,
         payload,
       );
-      console.log(res);
-      if (res?.data?.success == true) {
+
+      if (res?.data?.success === true) {
         customToast.success(res?.data?.message);
       }
     } catch (error) {
       setFiles(oldFiles);
+      setFolders(oldFolders);
+
       console.error("Not able to rename", error);
       customToast.error("Can't rename at the moment");
+    }finally{
+      setRefresh(prev => !prev);
     }
   };
 

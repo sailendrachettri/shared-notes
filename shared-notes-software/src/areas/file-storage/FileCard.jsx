@@ -391,7 +391,7 @@ const FileCard = ({
 
         {/* File Name */}
         <div className="mt-2 max-w-[90px] text-center pt-2">
-          {renaming ? (
+          {renaming && isSelected ? (
             <input
               ref={inputRef}
               value={editName}
