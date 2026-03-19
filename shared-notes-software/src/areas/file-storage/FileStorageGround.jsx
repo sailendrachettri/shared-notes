@@ -406,7 +406,6 @@ export default function FileStorageGround({
     const oldFolders = [...folders];
 
     try {
-      console.log(isFile);
 
       if (isFile) {
         setFiles((prev) =>

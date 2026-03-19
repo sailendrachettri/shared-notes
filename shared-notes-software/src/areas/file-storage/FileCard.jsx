@@ -315,7 +315,6 @@ const FileCard = ({
 }) => {
   const ext = file?.file_extension?.toLowerCase();
   const isVideo = getTypeConfig(ext).group === "video";
-  console.log(renaming);
   const [editName, setEditName] = useState(file?.file_name || "");
   const inputRef = useRef(null);
 

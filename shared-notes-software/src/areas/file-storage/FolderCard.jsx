@@ -16,7 +16,6 @@ const FolderCard = ({
 }) => {
   const name = folder?.folder_name ?? "";
   const displayName = name.length > 30 ? name.slice(0, 30) + "…" : name;
-  console.log(renaming);
   const [editName, setEditName] = useState(name || "");
   const inputRef = useRef(null);
 
