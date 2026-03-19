@@ -467,7 +467,6 @@ export default function FileStorageGround({
   const handleCollaborators = async (users) => {
     try {
       const userIds = users.map((u) => u.value);
-      console.log(userIds);
 
       const invitedBy = await getItem("user");
 
@@ -493,7 +492,7 @@ export default function FileStorageGround({
       } else {
         customToast.error("Can't invite collaborators at the moment");
       }
-      console.log(res);
+
       setShowCollaboratorsPage(false);
     } catch (error) {
       customToast.error("Can't invite collaborators at the moment");
