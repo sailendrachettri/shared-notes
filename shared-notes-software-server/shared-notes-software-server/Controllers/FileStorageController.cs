@@ -20,6 +20,55 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpPost("add-collaborators")]
+        public async Task<IActionResult> AddFileStorageCollaborators([FromBody] AddCollaboratorsRequest model)
+        {
+            if (model == null || model.UserIds == null || !model.UserIds.Any())
+                return BadRequest("Invalid request");
+
+            try
+            {
+                var query = @"
+            INSERT INTO public.utbl_folder_access
+            (folder_id, user_id, access_role, created_at, status, invited_by)
+            VALUES (@folder_id, @user_id, @access_role, now(), 'pending', @invited_by)
+            ON CONFLICT (folder_id, user_id) 
+            DO UPDATE SET 
+                access_role = EXCLUDED.access_role,
+                status = 'active';
+        ";
+
+                foreach (var userId in model.UserIds)
+                {
+                    await _db.ExecuteNonQueryAsync(
+                        query,
+                        cmd =>
+                        {
+                            cmd.Parameters.AddWithValue("folder_id", model.FolderId);
+                            cmd.Parameters.AddWithValue("user_id", userId);
+                            cmd.Parameters.AddWithValue("access_role", model.AccessRole ?? "editor");
+                            cmd.Parameters.AddWithValue("invited_by", model.InvitedBy);
+                        }
+                    );
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Collaborators added successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Failed to add collaborators",
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpPost("rename-file-and-folder")]
         public async Task<IActionResult> RenameFileAndFolder([FromBody] RenameFileAndFolderRequest model)
         {

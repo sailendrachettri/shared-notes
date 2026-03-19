@@ -1,5 +1,12 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class AddCollaboratorsRequest
+    {
+        public long FolderId { get; set; }
+        public List<Guid> UserIds { get; set; }
+        public string AccessRole { get; set; } // viewer / editor
+        public Guid? InvitedBy { get; set; }
+    }
     public class RenameFileAndFolderRequest
     {
         public long FolderOrFileId { get; set; }

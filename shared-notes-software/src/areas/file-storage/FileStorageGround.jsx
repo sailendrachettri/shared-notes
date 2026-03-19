@@ -13,6 +13,7 @@ import {
   DELETE_STORAGE_FILE_URL,
   FILE_UPLOAD_URL,
   GET_FOLDER_ITEMS_URL,
+  INVITE_FILE_STORAGE_COLLABORATORS_URL,
   MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL,
   RENAME_STORAGE_FILE_OR_FOLDER_URL,
   UPLOAD_STORAGE_FILE_URL,
@@ -465,15 +466,43 @@ export default function FileStorageGround({
 
   const handleCollaborators = async (users) => {
     try {
-      setSubmitting(true);
-      console.log(users);
-      console.log(selectedFile);
-      // setShowCollaboratorsPage(false);
+      const userIds = users.map((u) => u.value);
+      console.log(userIds);
+
+      const invitedBy = await getItem("user");
+
+      if (!userIds) {
+        customToast.error("Please select a valid user");
+        return;
+      }
+
+      const payload = {
+        FolderId: selectedFile?.folder_id,
+        UserIds: userIds,
+        AccessRole: "editor",
+        InvitedBy: invitedBy?.userId,
+      };
+
+      const res = await axiosInstance.post(
+        INVITE_FILE_STORAGE_COLLABORATORS_URL,
+        payload,
+      );
+
+      if (res?.data?.success == true) {
+        customToast.success(res?.data?.message || "Invite successful");
+      } else {
+        customToast.error("Can't invite collaborators at the moment");
+      }
+      console.log(res);
+      setShowCollaboratorsPage(false);
     } catch (error) {
+      customToast.error("Can't invite collaborators at the moment");
+      console.error("not able to invite", error);
     } finally {
       setTimeout(() => {
         setSubmitting(false);
       }, 1000);
+      setSelectedUsers([]);
     }
   };
 
@@ -920,13 +949,16 @@ export default function FileStorageGround({
                               </button>
                             )}
 
-                          <button
-                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                            onClick={() => setShowCollaboratorsPage(true)}
-                          >
-                            <MdOutlineHandshake size={20} />
-                            Invite Collaborators
-                          </button>
+                          {currentFolderId == null &&
+                            selectedFile?.folder_visibility == "private" && (
+                              <button
+                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                onClick={() => setShowCollaboratorsPage(true)}
+                              >
+                                <MdOutlineHandshake size={20} />
+                                Invite Collaborators
+                              </button>
+                            )}
 
                           <button
                             className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
