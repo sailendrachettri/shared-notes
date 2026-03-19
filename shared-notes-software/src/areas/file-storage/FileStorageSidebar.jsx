@@ -33,9 +33,6 @@ const FileStorageSidebar = ({
     try {
       const user = await getItem("user");
       const userId = user?.userId;
-      console.log({ userId });
-      console.log({ selectedCategoryId });
-      console.log({ search });
 
       const res = await axiosInstance.get(
         `${GET_ALL_FILES_BY_CATEGORY_ID_URL}/${id || selectedCategoryId}`,
@@ -43,8 +40,6 @@ const FileStorageSidebar = ({
           params: { userId, searchText: search },
         },
       );
-
-      console.log({ res });
 
       if (res?.data?.success == true && res?.data?.status == "FETCHED") {
         setFilesFromSidebar(res?.data?.data || []);
@@ -55,8 +50,6 @@ const FileStorageSidebar = ({
   };
 
   useEffect(() => {
-    console.log(selectedCategoryId);
-    console.log(search);
     if (selectedCategoryId != null) handleGetAllFilesById(selectedCategoryId);
   }, [search]);
 

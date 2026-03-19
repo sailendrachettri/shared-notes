@@ -20,6 +20,53 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpPost("rename-file-and-folder")]
+        public async Task<IActionResult> RenameFileAndFolder([FromBody] RenameFileAndFolderRequest model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Title))
+                return BadRequest("Invalid request");
+
+            string query;
+
+            if (model.FileOrFolderType == "file")
+            {
+                query = @"
+            UPDATE public.utbl_files
+            SET file_name = @title,
+                updated_at = now()
+            WHERE file_id = @folder_or_file_id;
+        ";
+            }
+            else if (model.FileOrFolderType == "folder")
+            {
+                query = @"
+            UPDATE public.utbl_folders
+            SET folder_name = @title,
+                updated_at = now()
+            WHERE folder_id = @folder_or_file_id;
+        ";
+            }
+            else
+            {
+                return BadRequest("Invalid type. Must be 'file' or 'folder'");
+            }
+
+            await _db.ExecuteNonQueryAsync(
+                query,
+                cmd =>
+                {
+                    cmd.Parameters.AddWithValue("folder_or_file_id", model.FolderOrFileId);
+                    cmd.Parameters.AddWithValue("title", model.Title);
+                }
+            );
+
+            return Ok(new
+            {
+                success = true,
+                message = "Renamed successfully"
+            });
+        }
+
         [HttpPost("make-folder-public")]
         public async Task<IActionResult> MakeFolderPublic([FromBody] MakeFolderPublicRequest model)
         {

@@ -1,37 +1,141 @@
-import {
-  FaFileImage,
-  FaFileVideo,
-  FaFileAudio,
-  FaFilePdf,
-} from "react-icons/fa";
-import { HiDocumentText } from "react-icons/hi";
 import Tooltip from "../../utils/tooltips/ToolTip";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 import { getFileIcon } from "../../utils/string-formate/iconsMapping";
-
+import { useEffect, useRef, useState } from "react";
+import { customToast } from "../../utils/toast/toastConfig";
 const FILE_TYPE_MAP = {
-  jpg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  jpeg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  png: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  svg: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  gif: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  webp: { group: "image", thumbBg: "bg-pink-50", badgeBg: "bg-pink-100", badgeText: "text-pink-800" },
-  mp4: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
-  mkv: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
-  webm: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
-  mov: { group: "video", thumbBg: "bg-purple-50", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
-  mp3: { group: "audio", thumbBg: "bg-green-50", badgeBg: "bg-green-100", badgeText: "text-green-800" },
-  wav: { group: "audio", thumbBg: "bg-green-50", badgeBg: "bg-green-100", badgeText: "text-green-800" },
-  pdf: { group: "pdf", thumbBg: "bg-red-50", badgeBg: "bg-red-100", badgeText: "text-red-800" },
-  doc: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
-  docx: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
-  txt: { group: "document", thumbBg: "bg-blue-50", badgeBg: "bg-blue-100", badgeText: "text-blue-800" },
-  xls: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
-  xlsx: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
-  csv: { group: "document", thumbBg: "bg-emerald-50", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
-  zip: { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
-  rar: { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
-  "7z": { group: "archive", thumbBg: "bg-amber-50", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
+  jpg: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  jpeg: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  png: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  svg: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  gif: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  webp: {
+    group: "image",
+    thumbBg: "bg-pink-50",
+    badgeBg: "bg-pink-100",
+    badgeText: "text-pink-800",
+  },
+  mp4: {
+    group: "video",
+    thumbBg: "bg-purple-50",
+    badgeBg: "bg-purple-100",
+    badgeText: "text-purple-800",
+  },
+  mkv: {
+    group: "video",
+    thumbBg: "bg-purple-50",
+    badgeBg: "bg-purple-100",
+    badgeText: "text-purple-800",
+  },
+  webm: {
+    group: "video",
+    thumbBg: "bg-purple-50",
+    badgeBg: "bg-purple-100",
+    badgeText: "text-purple-800",
+  },
+  mov: {
+    group: "video",
+    thumbBg: "bg-purple-50",
+    badgeBg: "bg-purple-100",
+    badgeText: "text-purple-800",
+  },
+  mp3: {
+    group: "audio",
+    thumbBg: "bg-green-50",
+    badgeBg: "bg-green-100",
+    badgeText: "text-green-800",
+  },
+  wav: {
+    group: "audio",
+    thumbBg: "bg-green-50",
+    badgeBg: "bg-green-100",
+    badgeText: "text-green-800",
+  },
+  pdf: {
+    group: "pdf",
+    thumbBg: "bg-red-50",
+    badgeBg: "bg-red-100",
+    badgeText: "text-red-800",
+  },
+  doc: {
+    group: "document",
+    thumbBg: "bg-blue-50",
+    badgeBg: "bg-blue-100",
+    badgeText: "text-blue-800",
+  },
+  docx: {
+    group: "document",
+    thumbBg: "bg-blue-50",
+    badgeBg: "bg-blue-100",
+    badgeText: "text-blue-800",
+  },
+  txt: {
+    group: "document",
+    thumbBg: "bg-blue-50",
+    badgeBg: "bg-blue-100",
+    badgeText: "text-blue-800",
+  },
+  xls: {
+    group: "document",
+    thumbBg: "bg-emerald-50",
+    badgeBg: "bg-emerald-100",
+    badgeText: "text-emerald-800",
+  },
+  xlsx: {
+    group: "document",
+    thumbBg: "bg-emerald-50",
+    badgeBg: "bg-emerald-100",
+    badgeText: "text-emerald-800",
+  },
+  csv: {
+    group: "document",
+    thumbBg: "bg-emerald-50",
+    badgeBg: "bg-emerald-100",
+    badgeText: "text-emerald-800",
+  },
+  zip: {
+    group: "archive",
+    thumbBg: "bg-amber-50",
+    badgeBg: "bg-amber-100",
+    badgeText: "text-amber-800",
+  },
+  rar: {
+    group: "archive",
+    thumbBg: "bg-amber-50",
+    badgeBg: "bg-amber-100",
+    badgeText: "text-amber-800",
+  },
+  "7z": {
+    group: "archive",
+    thumbBg: "bg-amber-50",
+    badgeBg: "bg-amber-100",
+    badgeText: "text-amber-800",
+  },
 };
 
 const DEFAULT_TYPE = {
@@ -41,8 +145,8 @@ const DEFAULT_TYPE = {
   badgeText: "text-gray-700",
 };
 
-const getTypeConfig = (ext) => FILE_TYPE_MAP[ext?.toLowerCase()] ?? DEFAULT_TYPE;
-
+const getTypeConfig = (ext) =>
+  FILE_TYPE_MAP[ext?.toLowerCase()] ?? DEFAULT_TYPE;
 
 // ─── Sprocket column (reused left & right) ───────────────────────────────────
 const SprocketStrip = ({ side }) => (
@@ -80,7 +184,14 @@ const SprocketStrip = ({ side }) => (
 
 // ─── Windows Explorer–style video frame ──────────────────────────────────────
 const VideoFrame = ({ thumbPath, fileName }) => (
-  <div style={{ position: "relative", width: "86px", height: "64px", flexShrink: 0 }}>
+  <div
+    style={{
+      position: "relative",
+      width: "86px",
+      height: "64px",
+      flexShrink: 0,
+    }}
+  >
     {/* Main film-strip shell */}
     <div
       style={{
@@ -112,7 +223,12 @@ const VideoFrame = ({ thumbPath, fileName }) => (
           <img
             src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${thumbPath}`}
             alt={fileName?.substr(0, 5) + "..."}
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
           />
         ) : (
           /* Dark fallback with centred play icon */
@@ -147,7 +263,8 @@ const VideoFrame = ({ thumbPath, fileName }) => (
             inset: 0,
             top: 0,
             height: "35%",
-            background: "linear-gradient(to bottom, rgba(255,255,255,0.08), transparent)",
+            background:
+              "linear-gradient(to bottom, rgba(255,255,255,0.08), transparent)",
             pointerEvents: "none",
           }}
         />
@@ -187,10 +304,50 @@ const VideoFrame = ({ thumbPath, fileName }) => (
 );
 
 // ─── FileCard ─────────────────────────────────────────────────────────────────
-const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
+const FileCard = ({
+  file,
+  isSelected,
+  onClick,
+  onContextMenu,
+  renaming,
+  handleRename,
+  setRenaming,
+}) => {
   const ext = file?.file_extension?.toLowerCase();
   const isVideo = getTypeConfig(ext).group === "video";
-  console.log(ext)
+  console.log(renaming);
+  const [editName, setEditName] = useState(file?.file_name || "");
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (!editName.trim()) {
+        customToast.error("Please enter a valid name");
+        return;
+      }
+      handleRename(editName);
+      setRenaming(false);
+    } else if (e.key === "Escape") {
+      handleRename(null);
+      setRenaming(false);
+    }
+  };
+
+  const handleBlur = () => {
+    handleRename(null);
+    setRenaming(false);
+  };
+
+  useEffect(() => {
+    if (renaming) {
+      setEditName(file?.file_name || "");
+
+      setTimeout(() => {
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }, 0);
+    }
+  }, [renaming, file?.file_name]);
 
   return (
     <div
@@ -211,9 +368,15 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
         visibility={file?.file_visibility}
       >
         {/* Thumbnail / frame area */}
-        <div className="flex items-center justify-center" style={{ height: "72px" }}>
+        <div
+          className="flex items-center justify-center"
+          style={{ height: "72px" }}
+        >
           {isVideo ? (
-            <VideoFrame thumbPath={file?.thumb_path} fileName={file?.file_name} />
+            <VideoFrame
+              thumbPath={file?.thumb_path}
+              fileName={file?.file_name}
+            />
           ) : file?.thumb_path ? (
             <img
               src={`${VIEW_UPLOADED_FILE_URL}/thumbnails/${file?.thumb_path}`}
@@ -227,8 +390,21 @@ const FileCard = ({ file, isSelected, onClick, onContextMenu }) => {
         </div>
 
         {/* File Name */}
-        <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px] mt-2">
-          {file?.file_name}
+        <div className="mt-2 max-w-[90px] text-center pt-2">
+          {renaming ? (
+            <input
+              ref={inputRef}
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+              className="w-full text-[12px] text-center border border-primary rounded px-1 outline-none"
+            />
+          ) : (
+            <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px]">
+              {file?.file_name}
+            </div>
+          )}
         </div>
       </Tooltip>
     </div>

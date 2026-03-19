@@ -14,6 +14,7 @@ import {
   FILE_UPLOAD_URL,
   GET_FOLDER_ITEMS_URL,
   MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL,
+  RENAME_STORAGE_FILE_OR_FOLDER_URL,
   UPLOAD_STORAGE_FILE_URL,
 } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
@@ -35,6 +36,7 @@ import { customToast } from "../../utils/toast/toastConfig";
 import FileCard from "./FileCard";
 import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 import { MdOutlinePeopleAlt } from "react-icons/md";
+import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -72,6 +74,7 @@ export default function FileStorageGround({
   const [activeNav, setActiveNav] = useState(null);
   const [showHomePage, setShowHomePage] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [renaming, setRenaming] = useState(false);
 
   const abortControllerRef = useRef(null);
   const dragCounter = useRef(0);
@@ -85,6 +88,7 @@ export default function FileStorageGround({
     { heading: "Shared Folders", data: sharedFolders },
     { heading: "Public Folders", data: publicFolders },
   ];
+
   const headingMap = {
     private: "Private Documents",
     shared: "Shared Documents",
@@ -384,6 +388,39 @@ export default function FileStorageGround({
     setContextMenu(null);
   };
 
+  const handleRename = async (newFileName) => {
+    const oldFiles = [...files];
+    const selectedFileId = selectedFile?.file_id || selectedFile?.folder_id;
+
+    try {
+      if (!newFileName) return;
+
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.file_id === selectedFileId ? { ...f, file_name: newFileName } : f,
+        ),
+      );
+
+      const payload = {
+        FolderOrFileId: selectedFileId,
+        Title: newFileName || "Untitled",
+        FileOrFolderType: selectedFile?.file_id ? "file" : "folder",
+      };
+      const res = await axiosInstance.post(
+        RENAME_STORAGE_FILE_OR_FOLDER_URL,
+        payload,
+      );
+      console.log(res);
+      if (res?.data?.success == true) {
+        customToast.success(res?.data?.message);
+      }
+    } catch (error) {
+      setFiles(oldFiles);
+      console.error("Not able to rename", error);
+      customToast.error("Can't rename at the moment");
+    }
+  };
+
   // Drag and drop support
   useEffect(() => {
     const handleDragEnter = (e) => {
@@ -620,6 +657,9 @@ export default function FileStorageGround({
                                       selectedFile?.file_id === file.file_id
                                     }
                                     onClick={() => setSelectedFile(file)}
+                                    renaming={renaming}
+                                    setRenaming={setRenaming}
+                                    handleRename={handleRename}
                                     onContextMenu={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
@@ -659,6 +699,9 @@ export default function FileStorageGround({
                                   .map((section, index) => (
                                     <GridStructureView
                                       itemTypeName="folder"
+                                      renaming={renaming}
+                                      setRenaming={setRenaming}
+                                      handleRename={handleRename}
                                       key={index}
                                       dataItems={section.data}
                                       setSelectedFile={setSelectedFile}
@@ -680,6 +723,9 @@ export default function FileStorageGround({
                                     dataItems={folders}
                                     setSelectedFile={setSelectedFile}
                                     selectedFile={selectedFile}
+                                    renaming={renaming}
+                                    setRenaming={setRenaming}
+                                    handleRename={handleRename}
                                     heading="Folders"
                                     openFolder={openFolder}
                                     isSubfolder="yes"
@@ -704,6 +750,9 @@ export default function FileStorageGround({
                                   selectedFile={selectedFile}
                                   heading="Documents"
                                   openFolder={openFolder}
+                                  renaming={renaming}
+                                  setRenaming={setRenaming}
+                                  handleRename={handleRename}
                                   isSubfolder="no"
                                   setContextMenu={setContextMenu}
                                 />
@@ -760,6 +809,25 @@ export default function FileStorageGround({
                           New Folder
                         </button>
                       </>
+
+                      {/* Common for file and folder */}
+                      {
+                        <>
+                          {selectedFile && (
+                            <div>
+                              <button
+                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                onClick={() => {
+                                  setRenaming(true);
+                                }}
+                              >
+                                <MdOutlineDriveFileRenameOutline size={20} />
+                                Rename
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      }
 
                       {contextMenu?.type === "file" && (
                         <>

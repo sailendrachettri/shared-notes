@@ -1,5 +1,12 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class RenameFileAndFolderRequest
+    {
+        public long FolderOrFileId { get; set; }
+        public string Title { get; set; }
+        public string FileOrFolderType {get; set;}
+        
+    }
     public class MakeFolderPublicRequest
     {
         public int FolderId { get; set; }

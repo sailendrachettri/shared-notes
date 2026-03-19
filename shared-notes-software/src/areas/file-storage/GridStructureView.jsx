@@ -1,5 +1,4 @@
-import NoResultFound from "../../utils/info-screen/NoResultFound";
-import dirSvg from "../../assets/svgs/files_dir.svg";
+
 import FileCard from "./FileCard";
 import FolderCard from "./FolderCard";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
@@ -14,13 +13,16 @@ const GridStructureView = ({
   isSubfolder,
   itemTypeName,
   setContextMenu,
+  renaming,
+  setRenaming,
+  handleRename
 }) => {
   const isEmpty = !dataItems || dataItems.length === 0;
 
   return (
     <section className="mb-6">
       {/* Section heading */}
-      {itemTypeName == "folder" && !isEmpty && isSubfolder == 'no' &&  (
+      {itemTypeName == "folder" && !isEmpty && isSubfolder == "no" && (
         <FileStorageHeading heading={heading} />
       )}
 
@@ -40,6 +42,9 @@ const GridStructureView = ({
               file={file}
               isSelected={selectedFile?.file_id === file.file_id}
               onClick={() => setSelectedFile(file)}
+              renaming={renaming}
+              setRenaming={setRenaming}
+              handleRename={handleRename}
               onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -68,6 +73,9 @@ const GridStructureView = ({
           {dataItems?.map((folder, i) => (
             <FolderCard
               key={folder.folder_id ?? i}
+              handleRename={handleRename}
+              renaming={renaming}
+              setRenaming={setRenaming}
               folder={folder}
               isSelected={selectedFile?.folder_id === folder?.folder_id}
               onClick={() => setSelectedFile(folder)}

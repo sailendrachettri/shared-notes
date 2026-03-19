@@ -8,6 +8,7 @@ export const ADD_FOLDER_URL = "/file-storage/add-folder";
 export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
 export const GET_FOLDER_ITEMS_URL = "/file-storage/get-folder-items";
 export const UPLOAD_STORAGE_FILE_URL = "/file-storage/upload-file";
+export const RENAME_STORAGE_FILE_OR_FOLDER_URL = "/file-storage/rename-file-and-folder";
 export const DELETE_STORAGE_FILE_URL = "/file-storage/delete-file-from-database";
 export const MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL = "/file-storage/make-folder-public";
 export const DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL = "/file-storage/delete-folder";

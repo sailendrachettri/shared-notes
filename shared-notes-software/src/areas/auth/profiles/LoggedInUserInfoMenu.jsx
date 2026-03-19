@@ -20,8 +20,6 @@ const LoggedInUserInfoMenu = ({
   const [isEditing, setIsEditing] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const fileRef = useRef(null);
-
-  console.log(user)
   
 
   useEffect(() => {
