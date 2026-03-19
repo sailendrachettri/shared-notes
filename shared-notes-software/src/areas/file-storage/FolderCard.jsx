@@ -55,7 +55,7 @@ const FolderCard = ({
       onClick={onClick}
       onDoubleClick={onDoubleClick}
       onContextMenu={onContextMenu}
-      className={`flex flex-col items-center py-2.5 px-1.5 rounded-lg select-none transition-all border cursor-default
+      className={`flex flex-col items-center w-22.5 py-2.5 px-1.5 rounded-lg select-none transition-all border cursor-default
         ${
           isSelected
             ? "bg-[#d2556407] border-primary/30"
@@ -66,7 +66,7 @@ const FolderCard = ({
       {/* <p className="text-[12px] text-center text-gray-800 wrap-break-word leading-[1.3] w-22 px-1 mt-1.5">
         {}
       </p> */}
-      <div className="mt-2 max-w-[90px] text-center pt-2">
+      <div className="mt-2 text-center pt-2">
         {renaming && isSelected ? (
           <input
             ref={inputRef}
@@ -77,7 +77,7 @@ const FolderCard = ({
             className="w-full text-[12px] text-center border border-primary rounded px-1 outline-none"
           />
         ) : (
-          <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5 max-w-[90px]">
+          <div className="tooltip text-[12px] text-center text-gray-800 break-words leading-[1.3] line-clamp-5">
             {displayName}
           </div>
         )}

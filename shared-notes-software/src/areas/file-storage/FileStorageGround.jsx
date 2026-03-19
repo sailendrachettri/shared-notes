@@ -415,9 +415,7 @@ export default function FileStorageGround({
           ),
         );
       } else {
-        console.log(folders);
-        console.log(newTitle);
-        console.log(selectedFileId);
+        
         setFolders((prev) =>
           prev.map((f) =>
             f.folder_id === selectedFileId
@@ -425,7 +423,7 @@ export default function FileStorageGround({
               : f,
           ),
         );
-        console.log(folders); // same folder name here also
+        setRefresh(prev => !prev); /*Refresh only for the root level folders but for other do optimistic ui updates */
       }
 
       const payload = {
@@ -448,8 +446,6 @@ export default function FileStorageGround({
 
       console.error("Not able to rename", error);
       customToast.error("Can't rename at the moment");
-    }finally{
-      setRefresh(prev => !prev);
     }
   };
 
