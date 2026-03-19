@@ -28,6 +28,7 @@ import { FcOpenedFolder } from "react-icons/fc";
 import UploadInProgress from "../../utils/info-screen/UploadInProgress";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 import { AiOutlineDelete } from "react-icons/ai";
+import { MdOutlineHandshake } from "react-icons/md";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
 import NoResultFound from "../../utils/info-screen/NoResultFound";
 import { DownloadToast } from "./DownloadToast";
@@ -37,6 +38,9 @@ import FileCard from "./FileCard";
 import FileStorageHeading from "../../reusable/headings/FileStorageHeading";
 import { MdOutlinePeopleAlt } from "react-icons/md";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
+import { useUsers } from "../../hooks/useUsers";
+import Modal from "../../reusable/modals/Modal";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -75,6 +79,9 @@ export default function FileStorageGround({
   const [showHomePage, setShowHomePage] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [renaming, setRenaming] = useState(false);
+  const [showCollaboratorsPage, setShowCollaboratorsPage] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const abortControllerRef = useRef(null);
   const dragCounter = useRef(0);
@@ -82,6 +89,14 @@ export default function FileStorageGround({
   const fileRef = useRef(null);
 
   const isCurrentFolderEmpty = folders.length === 0 && files.length === 0;
+
+  const { users } = useUsers();
+
+  const userOptions =
+    users?.map((obj) => ({
+      label: obj?.user_name,
+      value: obj?.user_id,
+    })) || [];
 
   const sections = [
     { heading: "Private Folders", data: privateFolders },
@@ -406,7 +421,6 @@ export default function FileStorageGround({
     const oldFolders = [...folders];
 
     try {
-
       if (isFile) {
         setFiles((prev) =>
           prev.map((f) =>
@@ -414,7 +428,6 @@ export default function FileStorageGround({
           ),
         );
       } else {
-        
         setFolders((prev) =>
           prev.map((f) =>
             f.folder_id === selectedFileId
@@ -422,7 +435,9 @@ export default function FileStorageGround({
               : f,
           ),
         );
-        setRefresh(prev => !prev); /*Refresh only for the root level folders but for other do optimistic ui updates */
+        setRefresh(
+          (prev) => !prev,
+        ); /*Refresh only for the root level folders but for other do optimistic ui updates */
       }
 
       const payload = {
@@ -445,6 +460,20 @@ export default function FileStorageGround({
 
       console.error("Not able to rename", error);
       customToast.error("Can't rename at the moment");
+    }
+  };
+
+  const handleCollaborators = async (users) => {
+    try {
+      setSubmitting(true);
+      console.log(users);
+      console.log(selectedFile);
+      // setShowCollaboratorsPage(false);
+    } catch (error) {
+    } finally {
+      setTimeout(() => {
+        setSubmitting(false);
+      }, 1000);
     }
   };
 
@@ -792,14 +821,13 @@ export default function FileStorageGround({
                   </div>
 
                   {/* right click options */}
-
                   {contextMenu && (
                     <div
                       style={{
                         top: contextMenu.y,
                         left: contextMenu.x,
                       }}
-                      className="fixed bg-white border border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
+                      className="fixed bg-white border min-w-52 border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
                     >
                       <>
                         <button
@@ -891,6 +919,15 @@ export default function FileStorageGround({
                                 Make it Public
                               </button>
                             )}
+
+                          <button
+                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                            onClick={() => setShowCollaboratorsPage(true)}
+                          >
+                            <MdOutlineHandshake size={20} />
+                            Invite Collaborators
+                          </button>
+
                           <button
                             className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
                             onClick={() => handleDeleteFolder(selectedFile)}
@@ -932,6 +969,49 @@ export default function FileStorageGround({
                 </section>
               )}
             </div>
+
+            <Modal
+              isOpen={showCollaboratorsPage}
+              onClose={() => setShowCollaboratorsPage(false)}
+            >
+              <div className="pb-3">
+                <h2 className="text-lg font-semibold mb-4">
+                  Invite people to collaborate?
+                </h2>
+
+                <label className="text-sm text-slate-500 mb-1 block">
+                  Select Users
+                </label>
+
+                <DropdownReusable
+                  options={userOptions}
+                  setSelectedOption={setSelectedUsers}
+                  selectedOption={selectedUsers}
+                  isMultiple={true}
+                  placeholder="Select Collaborators"
+                />
+
+                {/* Actions */}
+                <div className="flex justify-end gap-2 mt-6">
+                  <button
+                    onClick={() => setShowCollaboratorsPage(false)}
+                    className="py-1.5 text-sm rounded-md border border-slate-200 text-slate-600 cursor-pointer px-6"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    disabled={submitting}
+                    onClick={() => {
+                      handleCollaborators(selectedUsers);
+                    }}
+                    className={`${submitting ? "bg-slate-300 text-slate-600" : "bg-primary text-white"} px-5 py-2.5 min-w-56 rounded-md hover:opacity-90 transition font-medium cursor-pointer`}
+                  >
+                    {submitting ? "Adding Collaborators..." : "Add Collaborators"}
+                  </button>
+                </div>
+              </div>
+            </Modal>
           </section>
         }
       />
