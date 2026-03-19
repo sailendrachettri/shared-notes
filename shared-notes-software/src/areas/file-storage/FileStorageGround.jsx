@@ -83,6 +83,7 @@ export default function FileStorageGround({
   const [showCollaboratorsPage, setShowCollaboratorsPage] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   const abortControllerRef = useRef(null);
   const dragCounter = useRef(0);
@@ -94,10 +95,12 @@ export default function FileStorageGround({
   const { users } = useUsers();
 
   const userOptions =
-    users?.map((obj) => ({
-      label: obj?.user_name,
-      value: obj?.user_id,
-    })) || [];
+    users
+      ?.filter((u) => u.user_id !== currentUser?.userId)
+      .map((u) => ({
+        label: u?.user_name,
+        value: u?.user_id,
+      })) || [];
 
   const sections = [
     { heading: "Private Folders", data: privateFolders },
@@ -468,10 +471,12 @@ export default function FileStorageGround({
     try {
       const userIds = users.map((u) => u.value);
 
-      const invitedBy = await getItem("user");
-
       if (!userIds) {
         customToast.error("Please select a valid user");
+        return;
+      }
+      if (!currentUser?.userId) {
+        customToast.error("Please login and try again");
         return;
       }
 
@@ -479,7 +484,7 @@ export default function FileStorageGround({
         FolderId: selectedFile?.folder_id,
         UserIds: userIds,
         AccessRole: "editor",
-        InvitedBy: invitedBy?.userId,
+        InvitedBy: currentUser?.userId,
       };
 
       const res = await axiosInstance.post(
@@ -504,6 +509,15 @@ export default function FileStorageGround({
       setSelectedUsers([]);
     }
   };
+
+  // Get current user
+  useEffect(() => {
+    async function handleGetCurrentUser() {
+      const userData = await getItem("user");
+      setCurrentUser(userData);
+    }
+    handleGetCurrentUser();
+  }, []);
 
   // Drag and drop support
   useEffect(() => {
