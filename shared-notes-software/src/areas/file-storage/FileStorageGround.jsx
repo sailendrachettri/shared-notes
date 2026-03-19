@@ -979,10 +979,6 @@ export default function FileStorageGround({
                   Invite people to collaborate?
                 </h2>
 
-                <label className="text-sm text-slate-500 mb-1 block">
-                  Select Users
-                </label>
-
                 <DropdownReusable
                   options={userOptions}
                   setSelectedOption={setSelectedUsers}
@@ -1007,7 +1003,9 @@ export default function FileStorageGround({
                     }}
                     className={`${submitting ? "bg-slate-300 text-slate-600" : "bg-primary text-white"} px-5 py-2.5 min-w-56 rounded-md hover:opacity-90 transition font-medium cursor-pointer`}
                   >
-                    {submitting ? "Adding Collaborators..." : "Add Collaborators"}
+                    {submitting
+                      ? "Adding Collaborators..."
+                      : "Add Collaborators"}
                   </button>
                 </div>
               </div>
