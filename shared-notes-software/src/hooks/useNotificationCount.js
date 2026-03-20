@@ -1,5 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import { INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL } from "../api/api_routes";
+import {
+  GET_PENDING_FOLDER_ACCESS_LIST_URL,
+  INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL,
+} from "../api/api_routes";
 import { axiosInstance } from "../api/axios";
 import { getItem } from "../api/storage";
 
@@ -23,20 +26,23 @@ export function useNotificationCount() {
         UserId: userData.userId,
       };
 
-      const res = await axiosInstance.post(
+      const res1 = await axiosInstance.post(
         INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL,
         payload,
       );
 
+      const res2 = await axiosInstance.get(GET_PENDING_FOLDER_ACCESS_LIST_URL, {
+        params: { UserId: userData?.userId },
+      });
+
       let total = 0;
 
-      if (res?.status === 200) {
-        total += res?.data?.length || 0;
+      if (res1?.status === 200) {
+        total += res1?.data?.length || 0;
       }
-
-      // Future APIs can be added here
-      // const res2 = await axiosInstance.post(ANOTHER_NOTIFICATION_API)
-      // total += res2?.data?.length || 0
+      if (res2?.status === 200 && res2?.data?.success == true) {
+        total += res2?.data?.data?.length || 0;
+      }
 
       setNotificationCount(total);
     } catch (error) {
