@@ -20,6 +20,61 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpGet("get-pending-folder-access-list")]
+        public async Task<IActionResult> GetFolderAccess([FromQuery] Guid userId)
+        {
+            if (userId == Guid.Empty)
+                return BadRequest("Invalid userId");
+
+            try
+            {
+                var query = @"
+                    SELECT 
+                        acc.folder_access_id AS ""FolderAccessId"",
+                        acc.folder_id AS ""FolderId"",
+                        acc.access_role AS ""AccessRole"",
+                        acc.created_at AS ""CreatedAt"",
+                        acc.user_id AS ""UserId"",
+                        acc.status AS ""Status"",
+                        acc.invited_by AS ""InvitedBy"",
+                        u.user_name AS ""UserName"",
+                        u.profile_url AS ""ProfileUrl"",
+                        f.folder_name AS ""FolderName"", 
+                        f.folder_visibility AS ""FolderVisibility""
+                    FROM public.utbl_folder_access acc
+                    LEFT JOIN public.utbl_users u 
+                        ON u.user_id = acc.invited_by
+                    LEFT JOIN public.utbl_folders f
+                        ON f.folder_id = acc.folder_id 
+                    WHERE acc.user_id = @user_id
+                    AND acc.status = 'pending';
+                    ";
+
+                var data = await _db.ExecuteQueryListAsync<FolderAccessDto>(
+                    query,
+                    cmd =>
+                    {
+                        cmd.Parameters.AddWithValue("user_id", userId);
+                    }
+                );
+
+                return Ok(new
+                {
+                    success = true,
+                    data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Failed to fetch folder access",
+                    error = ex.Message
+                });
+            }
+        }
+
         [HttpPost("add-collaborators")]
         public async Task<IActionResult> AddFileStorageCollaborators([FromBody] AddCollaboratorsRequest model)
         {

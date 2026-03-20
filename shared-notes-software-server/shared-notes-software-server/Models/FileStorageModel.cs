@@ -1,5 +1,23 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class GetFolderAccessRequest
+    {
+        public Guid UserId { get; set; }
+    }
+    public class FolderAccessDto
+    {
+        public long FolderAccessId { get; set; }
+        public long FolderId { get; set; }
+        public string AccessRole { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public Guid UserId { get; set; }
+        public string Status { get; set; }
+        public Guid InvitedBy { get; set; }
+        public string UserName { get; set; }
+        public string ProfileUrl { get; set; }
+        public string FolderName { get; set; }
+        public string FolderVisibility { get; set; }
+    }
     public class AddCollaboratorsRequest
     {
         public long FolderId { get; set; }
