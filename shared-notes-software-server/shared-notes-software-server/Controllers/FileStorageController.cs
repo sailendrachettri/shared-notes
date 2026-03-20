@@ -35,7 +35,8 @@ namespace shared_notes_software_server.Controllers
                             var rowsAffected = await _db.ExecuteNonQueryAsync(
                                 @"
                                     UPDATE public.utbl_folder_access
-                                    SET status = @invite_status
+                                    SET status = @invite_status,
+                                        updated_at = Now()
                                     WHERE folder_access_id = @folder_access_id
                                     AND user_id = @user_id;
                                     ",
