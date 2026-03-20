@@ -9,6 +9,7 @@
         public string InviteStatus { get; set; } = string.Empty;
         // accepted | rejected
     }
+    
     public class AddNoteInvitationRequest
     {
         public long NoteId { get; set; }

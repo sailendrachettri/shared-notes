@@ -20,6 +20,58 @@ namespace shared_notes_software_server.Controllers
             _env = env;
         }
 
+        [HttpPost("accept-reject-file-access-invitation")]
+        public async Task<IActionResult> AcceptRejectFileAccessInvitation(
+                [FromBody] AcceptRejectFileAccessInvitationRequest request)
+                    {
+                        if (request.UserId == Guid.Empty || request.FolderAccessId <= 0)
+                            return BadRequest("Invalid request");
+
+                        if (string.IsNullOrWhiteSpace(request.InviteStatus))
+                            return BadRequest("InviteStatus is required");
+
+                        try
+                        {
+                            var rowsAffected = await _db.ExecuteNonQueryAsync(
+                                @"
+                                    UPDATE public.utbl_folder_access
+                                    SET status = @invite_status
+                                    WHERE folder_access_id = @folder_access_id
+                                    AND user_id = @user_id;
+                                    ",
+                                cmd =>
+                                {
+                                    cmd.Parameters.AddWithValue("user_id", request.UserId);
+                                    cmd.Parameters.AddWithValue("invite_status", request.InviteStatus);
+                                    cmd.Parameters.AddWithValue("folder_access_id", request.FolderAccessId);
+                                }
+                            );
+
+                            if (rowsAffected == 0)
+                                return NotFound(new
+                                {
+                                    success = false,
+                                    message = "Invitation not found or already updated"
+                                });
+
+                            return Ok(new
+                            {
+                                success = true,
+                                status = "UPDATED",
+                                message = $"Invitation {request.InviteStatus} successfully"
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            return StatusCode(500, new
+                            {
+                                success = false,
+                                message = "Failed to update invitation",
+                                error = ex.Message
+                            });
+                        }
+                    }
+
         [HttpGet("get-pending-folder-access-list")]
         public async Task<IActionResult> GetFolderAccess([FromQuery] Guid userId)
         {

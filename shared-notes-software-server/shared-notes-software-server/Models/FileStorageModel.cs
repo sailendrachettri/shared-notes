@@ -1,5 +1,14 @@
 ﻿namespace shared_notes_software_server.Models
 {
+    public class AcceptRejectFileAccessInvitationRequest
+    {
+        public Guid UserId { get; set; }
+
+        public long FolderAccessId { get; set; }
+
+        public string InviteStatus { get; set; } = string.Empty;
+        // accepted | rejected
+    }
     public class GetFolderAccessRequest
     {
         public Guid UserId { get; set; }

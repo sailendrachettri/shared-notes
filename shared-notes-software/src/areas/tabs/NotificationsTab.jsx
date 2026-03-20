@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../api/axios";
 import {
+  ACCEPT_REJECT_FOLDER_ACCESS_INVITE_URL,
   GET_PENDING_FOLDER_ACCESS_LIST_URL,
   INVITE_USER_NOTE_ACCEPT_REJECT_URL,
   INVITE_USER_NOTE_INVITE_NOTIFICATIONS_URL,
@@ -28,14 +29,11 @@ const NotificationsTab = ({
   const [notificationFileAccessCount, setNotificationFileAccessCount] =
     useState(0);
   const [inviteActionType, setInviteActionType] = useState(null);
-  const [selectedInvitationNoteId, setSelectedInvitationNoteId] =
-    useState(null);
+  const [inviteType, setInviteType] = useState(null);
+  const [selectedInvitationId, setSelectedInvitationId] = useState(null);
   const [isGenericConfirmModalOpen, setIsGenericConfirmModalOpen] =
     useState(false);
-  const [selectedInviteNoteUserId, setSelectedInviteNoteUserId] =
-    useState(null);
-
-  console.log(fileAccessInviteDetails);
+  const [selectedInviteUserId, setSelectedInviteUserId] = useState(null);
 
   const handleAcceptOrRejectNoteInvitation = async () => {
     try {
@@ -49,14 +47,14 @@ const NotificationsTab = ({
         return;
       }
 
-      if (!selectedInvitationNoteId) {
+      if (!selectedInvitationId) {
         customToast.error("Invalid Note Id");
         return;
       }
 
       const payload = {
-        UserId: selectedInviteNoteUserId,
-        NoteId: selectedInvitationNoteId,
+        UserId: selectedInviteUserId,
+        NoteId: selectedInvitationId,
         InviteStatus: inviteActionType,
       };
       const res = await axiosInstance.post(
@@ -71,6 +69,45 @@ const NotificationsTab = ({
     } catch (error) {
       customToast.error(`Not able to ${inviteActionType} note`);
       console.error(`Not able to ${inviteActionType} note`, error);
+    } finally {
+      setRefresh((prev) => !prev);
+    }
+  };
+
+  const handleAcceptOrRejectFileStorageInvitation = async () => {
+    try {
+      if (!userData?.userId) {
+        customToast.error("Please login and try again");
+        return;
+      }
+
+      if (!inviteActionType) {
+        customToast.error("Please select action");
+        return;
+      }
+
+      if (!selectedInvitationId) {
+        customToast.error("Invalid Invitation");
+        return;
+      }
+
+      const payload = {
+        UserId: selectedInviteUserId,
+        InviteStatus: inviteActionType,
+        FolderAccessId: selectedInvitationId,
+      };
+      const res = await axiosInstance.post(
+        ACCEPT_REJECT_FOLDER_ACCESS_INVITE_URL,
+        payload,
+      );
+      if (res?.data?.success == true && res?.data?.status == "UPDATED") {
+        customToast.success(`Invitation ${inviteActionType}`);
+      } else {
+        customToast.error(`Not able to ${inviteActionType}`);
+      }
+    } catch (error) {
+      customToast.error(`Not able to ${inviteActionType}`);
+      console.error(`Not able to ${inviteActionType}`, error);
     } finally {
       setRefresh((prev) => !prev);
     }
@@ -100,6 +137,7 @@ const NotificationsTab = ({
       console.error("not able to fetch notification for note", error);
     }
   };
+
   const handleGetFileStorageInviteNotifications = async () => {
     if (!userData?.userId) {
       console.info("Please login and try again");
@@ -155,6 +193,7 @@ const NotificationsTab = ({
         {notesInviteDetails?.length > 0 ||
         fileAccessInviteDetails?.length > 0 ? (
           <>
+            {/* notes notifications */}
             {notesInviteDetails.map((item) => (
               <div
                 key={item?.notes_Access_Id}
@@ -196,10 +235,11 @@ const NotificationsTab = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {
-                      setSelectedInvitationNoteId(item?.note_Id);
-                      setSelectedInviteNoteUserId(item?.user_Id);
+                      setSelectedInvitationId(item?.note_Id);
+                      setSelectedInviteUserId(item?.user_Id);
                       setInviteActionType("accepted");
                       setIsGenericConfirmModalOpen(true);
+                      setInviteType("notes");
                     }}
                     className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md bg-primary text-white hover:opacity-90"
                   >
@@ -209,10 +249,11 @@ const NotificationsTab = ({
 
                   <button
                     onClick={() => {
-                      setSelectedInvitationNoteId(item?.note_Id);
-                      setSelectedInviteNoteUserId(item?.user_Id);
+                      setSelectedInvitationId(item?.note_Id);
+                      setSelectedInviteUserId(item?.user_Id);
                       setInviteActionType("rejected");
                       setIsGenericConfirmModalOpen(true);
+                      setInviteType("notes");
                     }}
                     className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md border border-slate-200 hover:bg-gray-100"
                   >
@@ -264,12 +305,13 @@ const NotificationsTab = ({
                 {/* Actions */}
                 <div className="flex items-center gap-2">
                   <button
-                    // onClick={() => {
-                    //   setSelectedInvitationNoteId(item?.folderAccessId);
-                    //   setSelectedInviteNoteUserId(item?.userId);
-                    //   setInviteActionType("accepted");
-                    //   setIsGenericConfirmModalOpen(true);
-                    // }}
+                    onClick={() => {
+                      setSelectedInvitationId(item?.folderAccessId);
+                      setSelectedInviteUserId(item?.userId);
+                      setInviteActionType("accepted");
+                      setIsGenericConfirmModalOpen(true);
+                      setInviteType("file-storage");
+                    }}
                     className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md bg-primary text-white hover:opacity-90"
                   >
                     <HiOutlineCheck size={14} />
@@ -277,12 +319,13 @@ const NotificationsTab = ({
                   </button>
 
                   <button
-                    // onClick={() => {
-                    //   setSelectedInvitationNoteId(item?.note_Id);
-                    //   setSelectedInviteNoteUserId(item?.user_Id);
-                    //   setInviteActionType("rejected");
-                    //   setIsGenericConfirmModalOpen(true);
-                    // }}
+                    onClick={() => {
+                      setSelectedInvitationId(item?.folderAccessId);
+                      setSelectedInviteUserId(item?.userId);
+                      setInviteActionType("rejected");
+                      setIsGenericConfirmModalOpen(true);
+                      setInviteType("file-storage");
+                    }}
                     className="flex items-center cursor-pointer gap-1 text-xs px-3 py-1 rounded-md border border-slate-200 hover:bg-gray-100"
                   >
                     <HiOutlineX size={14} />
@@ -305,12 +348,16 @@ const NotificationsTab = ({
       <GenericConfirmModal
         isOpen={isGenericConfirmModalOpen}
         onClose={() => setIsGenericConfirmModalOpen(false)}
-        onConfirm={() => handleAcceptOrRejectNoteInvitation()}
-        title={`${inviteActionType === "accepted" ? "Accept" : "Reject"} Note Invitation`}
+        onConfirm={() => {
+          if (inviteType == "notes") handleAcceptOrRejectNoteInvitation();
+          else if (inviteType == "file-storage")
+            handleAcceptOrRejectFileStorageInvitation();
+        }}
+        title={`${inviteActionType === "accepted" ? "Accept" : "Reject"} Invitation`}
         description={
           inviteActionType === "accepted"
-            ? "You will be able to collaborate on this note."
-            : "You will NOT able to collaborate on this note."
+            ? `You will be able to collaborate on this ${inviteType == "notes" ? "Note" : "File"}.`
+            : `You will NOT able to collaborate on this ${inviteType == "notes" ? "Note" : "File"}.`
         }
       />
     </div>

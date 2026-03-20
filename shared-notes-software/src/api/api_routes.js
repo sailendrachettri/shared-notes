@@ -16,6 +16,7 @@ export const GET_STORAGE_MST_CATEGORY_URL = "/file-storage/get-mst-file-storage-
 export const GET_ALL_FILES_BY_CATEGORY_ID_URL = "/file-storage/all-file-by-category-id";
 export const INVITE_FILE_STORAGE_COLLABORATORS_URL = "/file-storage/add-collaborators";
 export const GET_PENDING_FOLDER_ACCESS_LIST_URL = "/file-storage/get-pending-folder-access-list";
+export const ACCEPT_REJECT_FOLDER_ACCESS_INVITE_URL = "/file-storage/accept-reject-file-access-invitation";
 
 // #endregion
 
