@@ -180,12 +180,11 @@ const NotificationsTab = ({
       <div className="flex items-center gap-2 mb-4">
         <h2 className="text-lg font-semibold text-slate-800">Notifications</h2>
 
-        {notificationNoteCount > 0 ||
-          (notificationFileAccessCount > 0 && (
-            <span className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full bg-primary text-white text-xs font-semibold">
-              {notificationNoteCount + notificationFileAccessCount}
-            </span>
-          ))}
+        {(notificationNoteCount > 0 || notificationFileAccessCount > 0) && (
+          <span className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full bg-primary text-white text-xs font-semibold">
+            {notificationNoteCount + notificationFileAccessCount}
+          </span>
+        )}
       </div>
 
       {/* List */}
