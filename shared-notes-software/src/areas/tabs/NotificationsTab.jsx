@@ -175,13 +175,13 @@ const NotificationsTab = ({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full h-[86vh] overflow-y-auto pe-4">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <h2 className="text-lg font-semibold text-slate-800">Notifications</h2>
 
         {(notificationNoteCount > 0 || notificationFileAccessCount > 0) && (
-          <span className="flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full bg-primary text-white text-xs font-semibold">
+          <span className="flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-primary text-white text-xs font-semibold">
             {notificationNoteCount + notificationFileAccessCount}
           </span>
         )}
