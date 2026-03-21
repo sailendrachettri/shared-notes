@@ -58,7 +58,7 @@ const RichTextEditor = ({
   setRefresh,
   selectedNotesMode,
   selectedNoteCollaboratorsDetails,
-  userNoteOwnsOrCollaborative
+  userNoteOwnsOrCollaborative,
 }) => {
   const fileInputRef = useRef(null);
   const iconInputRef = useRef(null);
@@ -92,9 +92,11 @@ const RichTextEditor = ({
         multicolor: true,
       }),
       Link.configure({
-        openOnClick: false,
+        openOnClick: true,
         HTMLAttributes: {
           class: "editor-link",
+          target: "_blank",
+          rel: "noopener noreferrer",
         },
       }),
       TaskList.configure({
@@ -372,6 +374,8 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  
+
   return (
     <div className="notion-editor-wrapper">
       {/* Cover Image Section - ALWAYS render this container */}
@@ -529,7 +533,14 @@ const RichTextEditor = ({
 
           {selectedNotesMode == "private" && (
             <div>
-              <InviteUserToPrivateNotes userNoteOwnsOrCollaborative={userNoteOwnsOrCollaborative} selectedNoteCollaboratorsDetails={selectedNoteCollaboratorsDetails} selectedNoteType={selectedNoteType} selectedNoteId={selectedNoteId}/>
+              <InviteUserToPrivateNotes
+                userNoteOwnsOrCollaborative={userNoteOwnsOrCollaborative}
+                selectedNoteCollaboratorsDetails={
+                  selectedNoteCollaboratorsDetails
+                }
+                selectedNoteType={selectedNoteType}
+                selectedNoteId={selectedNoteId}
+              />
             </div>
           )}
 
@@ -543,7 +554,7 @@ const RichTextEditor = ({
         </div>
 
         {/* Editor Content */}
-        <div className="notion-editor-container relative [&_.ProseMirror>p]:first-letter:uppercase">
+        <div className="notion-editor-container relative">
           {editor && <FormattingMenu editor={editor} />}
           {editor && <TableMenu editor={editor} />}
           <EditorContent editor={editor} />
