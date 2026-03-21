@@ -23,6 +23,7 @@ import { FaRegFaceSmileBeam } from "react-icons/fa6";
 // import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import lowlight from "../../../utils/editor/codeHighlight";
 import { axiosInstance } from "../../../api/axios";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import {
   CHANGE_COVER_ICON_MST_NOTE_URL,
   CHANGE_COVER_ICON_SUB_PAGE_URL,
@@ -45,6 +46,7 @@ import WorkspaceModeBadge from "../../auth/workspaces/WorkspaceModeBadge";
 import { VIEW_UPLOADED_FILE_URL } from "../../../config/env";
 import InviteUserToPrivateNotes from "./InviteUserToPrivateNotes";
 import { customToast } from "../../../utils/toast/toastConfig";
+import { isTauri } from "../../../api/platform";
 
 const RichTextEditor = ({
   value,
@@ -92,7 +94,7 @@ const RichTextEditor = ({
         multicolor: true,
       }),
       Link.configure({
-        openOnClick: true,
+        openOnClick: false,
         HTMLAttributes: {
           class: "editor-link",
           target: "_blank",
@@ -374,7 +376,31 @@ const RichTextEditor = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  
+  useEffect(() => {
+    if (!editor) return;
+
+    const editorDom = editor.view.dom;
+
+    const handleClick = async (e) => {
+      const anchor = e.target.closest("a");
+      if (!anchor || !anchor.href) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isTauri()) {
+        openUrl(anchor.href);
+      } else {
+        window.open(anchor.href, "_blank", "noopener,noreferrer");
+      }
+    };
+
+    editorDom.addEventListener("click", handleClick);
+
+    return () => {
+      editorDom.removeEventListener("click", handleClick);
+    };
+  }, [editor]);
 
   return (
     <div className="notion-editor-wrapper">
