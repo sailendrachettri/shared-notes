@@ -37,6 +37,7 @@ const MiniMenu = ({
   }, []);
 
   useEffect(() => {
+    refreshNotifications();
     if (!isUserLoggedIn) {
       setShowDetailsMenu(false);
     }
