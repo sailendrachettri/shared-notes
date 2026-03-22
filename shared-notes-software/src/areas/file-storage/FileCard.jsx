@@ -280,7 +280,7 @@ const VideoFrame = ({ thumbPath, fileName }) => (
         width: "20px",
         height: "20px",
         borderRadius: "50%",
-        background: "linear-gradient(135deg, #6b21a8 0%, #a855f7 100%)",
+        background: "#d25564",
         border: "2px solid white",
         display: "flex",
         alignItems: "center",

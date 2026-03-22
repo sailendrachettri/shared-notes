@@ -169,7 +169,7 @@ namespace shared_notes_software_server.Controllers
                 return Ok(new
                 {
                     success = true,
-                    message = "Collaborators added successfully"
+                    message = "Collaborators invited successfully"
                 });
             }
             catch (Exception ex)
