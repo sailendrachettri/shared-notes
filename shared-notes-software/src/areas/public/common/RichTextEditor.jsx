@@ -20,7 +20,6 @@ import coverDefaultImage from "../../../assets/pngs/logo.png";
 import { useRef } from "react";
 import { IoImageOutline } from "react-icons/io5";
 import { FaRegFaceSmileBeam } from "react-icons/fa6";
-// import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import lowlight from "../../../utils/editor/codeHighlight";
 import { axiosInstance } from "../../../api/axios";
 import { openUrl } from "@tauri-apps/plugin-opener";
