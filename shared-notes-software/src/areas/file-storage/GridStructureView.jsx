@@ -1,4 +1,3 @@
-
 import FileCard from "./FileCard";
 import FolderCard from "./FolderCard";
 import { getMenuPosition } from "../../utils/window-functions/getMenuPosition";
@@ -15,7 +14,8 @@ const GridStructureView = ({
   setContextMenu,
   renaming,
   setRenaming,
-  handleRename
+  handleRename,
+  openTab
 }) => {
   const isEmpty = !dataItems || dataItems.length === 0;
 
@@ -41,7 +41,10 @@ const GridStructureView = ({
               key={file.file_id}
               file={file}
               isSelected={selectedFile?.file_id === file.file_id}
-              onClick={() => setSelectedFile(file)}
+              onClick={() => {
+                setSelectedFile(file);
+                openTab(file);
+              }}
               renaming={renaming}
               setRenaming={setRenaming}
               handleRename={handleRename}

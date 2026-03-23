@@ -42,6 +42,7 @@ import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
 import { useUsers } from "../../hooks/useUsers";
 import Modal from "../../reusable/modals/Modal";
+import FilePreviewTab from "./FilePreviewTab";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -636,6 +637,47 @@ export default function FileStorageGround({
     return () => window.removeEventListener("click", closeMenu);
   }, []);
 
+  const [tabs, setTabs] = useState([
+    {
+      id: "file-storage",
+      title: "File Storage",
+      type: "storage",
+    },
+  ]);
+
+  const [activeTab, setActiveTab] = useState("file-storage");
+
+  const openTab = (file) => {
+    const tabId = `file-${file.file_id}`;
+
+    const existingTab = tabs.find((t) => t.id === tabId);
+
+    if (existingTab) {
+      setActiveTab(tabId);
+      return;
+    }
+
+    const newTab = {
+      id: tabId,
+      title: file.file_name,
+      type: "file",
+      file,
+    };
+
+    setTabs((prev) => [...prev, newTab]);
+    setActiveTab(tabId);
+  };
+
+  const closeTab = (tabId) => {
+    if (tabId === "file-storage") return;
+
+    setTabs((prev) => prev.filter((t) => t.id !== tabId));
+
+    if (activeTab === tabId) {
+      setActiveTab("file-storage");
+    }
+  };
+
   return (
     <>
       <MainLayout
@@ -660,356 +702,441 @@ export default function FileStorageGround({
           </section>
         }
         content={
-          <section className="relative flex flex-col h-full min-h-0 px-3 select-none">
+          <section className="relative flex flex-col h-full min-h-0 select-none">
             {/* Top toolbar */}
-            <TopToolBar
-              goBack={goBack}
-              forwardStack={forwardStack}
-              goForward={goForward}
-              setView={setView}
-              view={view}
-              setCreatingFolder={setCreatingFolder}
-              setNewFolderName={setNewFolderName}
-              folderStack={folderStack}
-              setCurrentFolderId={setCurrentFolderId}
-              setFolderStack={setFolderStack}
-              fileRef={fileRef}
-              showHomePage={showHomePage}
-              selectedCategoryName={selectedCategoryName}
-              setShowHomePage={setShowHomePage}
-              setActiveNav={setActiveNav}
-              setSearch={setSearch}
-            />
+            <div className="flex text-xs text-slate-700 ">
+              {tabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2 cursor-pointer border-r border-slate-200
+        ${activeTab === tab.id ? "" : "bg-slate-50"}`}
+                >
+                  <span className="truncate max-w-[150px]">{tab.title}</span>
 
-            <div className="relative overflow-y-auto">
-              {loading ? (
-                <section>
-                  <LoadingPageSoft />
-                </section>
-              ) : (
-                <section className="relative flex flex-col h-full">
-                  {/* File area */}
-                  <div
-                    className={`flex-1 overflow-y-auto min-h-0`}
-                    onContextMenu={(e) => {
-                      e.preventDefault();
-
-                      const pos = getMenuPosition(e.pageX, e.pageY);
-
-                      setContextMenu({
-                        x: pos.x,
-                        y: pos.y,
-                        type: "blank",
-                      });
-                    }}
-                  >
-                    <div className="p-4">
-                      {/* Create new folder */}
-                      {creatingFolder && view === "grid" && (
-                        <div
-                          ref={createInputRef}
-                          className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
-                        >
-                          <div className="mb-2">
-                            <FcOpenedFolder size={40} />
-                          </div>
-
-                          <input
-                            autoFocus
-                            maxLength={30}
-                            value={newFolderName}
-                            onChange={(e) => setNewFolderName(e.target.value)}
-                            onFocus={(e) => e.target.select()}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") handleCreateFolder();
-                              if (e.key === "Escape") setCreatingFolder(false);
-                            }}
-                            className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
-                          />
-                        </div>
-                      )}
-
-                      {/* Filters data */}
-                      {!showHomePage ? (
-                        <section>
-                          {filesFromSidebar?.length <= 0 ? (
-                            <NoResultFound
-                              desc={`There are no files available in the ${selectedCategoryName} directory.`}
-                              img={dirSvg}
-                              title="Empty Directory"
-                            />
-                          ) : (
-                            <>
-                              <FileStorageHeading
-                                heading={selectedCategoryName}
-                              />
-                              <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
-                                {filesFromSidebar?.map((file) => (
-                                  <FileCard
-                                    key={file.file_id}
-                                    file={file}
-                                    isSelected={
-                                      selectedFile?.file_id === file.file_id
-                                    }
-                                    onClick={() => setSelectedFile(file)}
-                                    renaming={renaming}
-                                    setRenaming={setRenaming}
-                                    handleRename={handleRename}
-                                    onContextMenu={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      setSelectedFile(file);
-                                      const pos = getMenuPosition(
-                                        e.pageX,
-                                        e.pageY,
-                                      );
-
-                                      setContextMenu({
-                                        x: pos.x,
-                                        y: pos.y,
-                                        type: "file",
-                                      });
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        </section>
-                      ) : (
-                        <div>
-                          {isCurrentFolderEmpty && !creatingFolder ? (
-                            <NoResultFound
-                              desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
-                              img={dirSvg}
-                              title="Empty Directory"
-                            />
-                          ) : (
-                            <>
-                              {currentFolderId === null ? (
-                                sections
-                                  ?.filter(
-                                    (section) => section.data?.length > 0,
-                                  )
-                                  .map((section, index) => (
-                                    <GridStructureView
-                                      itemTypeName="folder"
-                                      renaming={renaming}
-                                      setRenaming={setRenaming}
-                                      handleRename={handleRename}
-                                      key={index}
-                                      dataItems={section.data}
-                                      setSelectedFile={setSelectedFile}
-                                      selectedFile={selectedFile}
-                                      heading={section.heading}
-                                      openFolder={openFolder}
-                                      isSubfolder="no"
-                                      setContextMenu={setContextMenu}
-                                    />
-                                  ))
-                              ) : (
-                                <div>
-                                  <FileStorageHeading
-                                    heading={`${parentDirVisibility || "Public"} Folders`}
-                                  />
-
-                                  <GridStructureView
-                                    itemTypeName="folder"
-                                    dataItems={folders}
-                                    setSelectedFile={setSelectedFile}
-                                    selectedFile={selectedFile}
-                                    renaming={renaming}
-                                    setRenaming={setRenaming}
-                                    handleRename={handleRename}
-                                    heading="Folders"
-                                    openFolder={openFolder}
-                                    isSubfolder="yes"
-                                    setContextMenu={setContextMenu}
-                                  />
-                                </div>
-                              )}
-
-                              <section>
-                                {files?.length > 0 && (
-                                  <FileStorageHeading
-                                    heading={
-                                      headingMap[parentDirVisibility] ||
-                                      "Public documents"
-                                    }
-                                  />
-                                )}
-                                <GridStructureView
-                                  itemTypeName="file"
-                                  dataItems={files}
-                                  setSelectedFile={setSelectedFile}
-                                  selectedFile={selectedFile}
-                                  heading="Documents"
-                                  openFolder={openFolder}
-                                  renaming={renaming}
-                                  setRenaming={setRenaming}
-                                  handleRename={handleRename}
-                                  isSubfolder="no"
-                                  setContextMenu={setContextMenu}
-                                />
-                              </section>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* right click options */}
-                  {contextMenu && (
-                    <div
-                      style={{
-                        top: contextMenu.y,
-                        left: contextMenu.x,
+                  {tab.id !== "file-storage" && (
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        closeTab(tab.id);
                       }}
-                      className="fixed bg-white border min-w-52 border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
+                      className="text-gray-400 hover:text-red-400"
                     >
-                      <>
-                        <button
-                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() => window.location.reload()}
-                        >
-                          <HiOutlineRefresh size={20} />
-                          Refresh
-                        </button>
+                      ✕
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
 
-                        <button
-                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() => {
-                            fileRef.current.click();
-                            setContextMenu(null);
-                          }}
-                        >
-                          <MdOutlineAttachFile
-                            className="rotate-90"
-                            size={20}
-                          />
-                          Upload Files
-                        </button>
+            <div className="flex-1 overflow-hidden">
+              {tabs.map((tab) => {
+                if (tab.id !== activeTab) return null;
 
-                        <button
-                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                          onClick={() => {
-                            setCreatingFolder(true);
-                            setNewFolderName("New Folder");
-                            setContextMenu(null);
-                          }}
-                        >
-                          <IoFolderOpenOutline size={20} />
-                          New Folder
-                        </button>
-                      </>
+                // FILE STORAGE TAB (fixed first tab)
+                if (tab.type === "storage") {
+                  return (
+                    <div key={tab.id}>
+                      <TopToolBar
+                        goBack={goBack}
+                        forwardStack={forwardStack}
+                        goForward={goForward}
+                        setView={setView}
+                        view={view}
+                        setCreatingFolder={setCreatingFolder}
+                        setNewFolderName={setNewFolderName}
+                        folderStack={folderStack}
+                        setCurrentFolderId={setCurrentFolderId}
+                        setFolderStack={setFolderStack}
+                        fileRef={fileRef}
+                        showHomePage={showHomePage}
+                        selectedCategoryName={selectedCategoryName}
+                        setShowHomePage={setShowHomePage}
+                        setActiveNav={setActiveNav}
+                        setSearch={setSearch}
+                      />
 
-                      {/* Common for file and folder */}
-                      {
-                        <>
-                          {selectedFile && (
-                            <div>
-                              <button
-                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                                onClick={() => {
-                                  setRenaming(true);
+                      <div className="relative overflow-y-auto">
+                        {loading ? (
+                          <section>
+                            <LoadingPageSoft />
+                          </section>
+                        ) : (
+                          <section className="relative flex flex-col h-full">
+                            {/* File area */}
+                            {activeTab === "file-storage" && (
+                              <div
+                                className={`flex-1 overflow-y-auto min-h-0`}
+                                onContextMenu={(e) => {
+                                  e.preventDefault();
+
+                                  const pos = getMenuPosition(e.pageX, e.pageY);
+
+                                  setContextMenu({
+                                    x: pos.x,
+                                    y: pos.y,
+                                    type: "blank",
+                                  });
                                 }}
                               >
-                                <MdOutlineDriveFileRenameOutline size={20} />
-                                Rename
-                              </button>
-                            </div>
-                          )}
-                        </>
-                      }
+                                <div className="p-4">
+                                  {/* Create new folder */}
+                                  {creatingFolder && view === "grid" && (
+                                    <div
+                                      ref={createInputRef}
+                                      className="flex flex-col w-fit mb-3 items-center rounded-md border bg-[#d2556407] border-primary"
+                                    >
+                                      <div className="mb-2">
+                                        <FcOpenedFolder size={40} />
+                                      </div>
 
-                      {contextMenu?.type === "file" && (
-                        <>
-                          <button
-                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                            onClick={() =>
-                              downloadFile(selectedFile, setDownloadState)
-                            }
-                          >
-                            <TbDownload size={20} />
-                            Download File
-                          </button>
+                                      <input
+                                        autoFocus
+                                        maxLength={30}
+                                        value={newFolderName}
+                                        onChange={(e) =>
+                                          setNewFolderName(e.target.value)
+                                        }
+                                        onFocus={(e) => e.target.select()}
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter")
+                                            handleCreateFolder();
+                                          if (e.key === "Escape")
+                                            setCreatingFolder(false);
+                                        }}
+                                        className="text-[12px] border-t border-primary focus:outline-none text-center py-2"
+                                      />
+                                    </div>
+                                  )}
 
-                          <button
-                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                            onClick={() => handleDeleteFile(selectedFile)}
-                          >
-                            <AiOutlineDelete size={20} />
-                            Delete File
-                          </button>
-                        </>
-                      )}
+                                  {/* Filters data */}
+                                  {!showHomePage ? (
+                                    <section>
+                                      {filesFromSidebar?.length <= 0 ? (
+                                        <NoResultFound
+                                          desc={`There are no files available in the ${selectedCategoryName} directory.`}
+                                          img={dirSvg}
+                                          title="Empty Directory"
+                                        />
+                                      ) : (
+                                        <>
+                                          <FileStorageHeading
+                                            heading={selectedCategoryName}
+                                          />
+                                          <div className="grid gap-2.5 grid-cols-[repeat(auto-fill,minmax(148px,1fr))]">
+                                            {filesFromSidebar?.map((file) => (
+                                              <FileCard
+                                                key={file.file_id}
+                                                file={file}
+                                                isSelected={
+                                                  selectedFile?.file_id ===
+                                                  file.file_id
+                                                }
+                                                onClick={() =>
+                                                  setSelectedFile(file)
+                                                }
+                                                renaming={renaming}
+                                                setRenaming={setRenaming}
+                                                handleRename={handleRename}
+                                                onContextMenu={(e) => {
+                                                  e.preventDefault();
+                                                  e.stopPropagation();
+                                                  setSelectedFile(file);
+                                                  const pos = getMenuPosition(
+                                                    e.pageX,
+                                                    e.pageY,
+                                                  );
 
-                      {contextMenu?.type === "folder" && (
-                        <>
-                          {selectedFile?.folder_visibility == "private" &&
-                            isUserLoggedIn &&
-                            currentFolderId == null && (
-                              <button
-                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                                onClick={() => handleMakeItPublicFolder()}
-                              >
-                                <MdOutlinePeopleAlt size={20} />
-                                Make it Public
-                              </button>
+                                                  setContextMenu({
+                                                    x: pos.x,
+                                                    y: pos.y,
+                                                    type: "file",
+                                                  });
+                                                }}
+                                              />
+                                            ))}
+                                          </div>
+                                        </>
+                                      )}
+                                    </section>
+                                  ) : (
+                                    <div>
+                                      {isCurrentFolderEmpty &&
+                                      !creatingFolder ? (
+                                        <NoResultFound
+                                          desc="This folder is empty. Create a new folder (Ctrl + Shift + N) or upload files by right-clicking anywhere in this area."
+                                          img={dirSvg}
+                                          title="Empty Directory"
+                                        />
+                                      ) : (
+                                        <>
+                                          {currentFolderId === null ? (
+                                            sections
+                                              ?.filter(
+                                                (section) =>
+                                                  section.data?.length > 0,
+                                              )
+                                              .map((section, index) => (
+                                                <GridStructureView
+                                                  itemTypeName="folder"
+                                                  renaming={renaming}
+                                                  setRenaming={setRenaming}
+                                                  handleRename={handleRename}
+                                                  key={index}
+                                                  dataItems={section.data}
+                                                  setSelectedFile={
+                                                    setSelectedFile
+                                                  }
+                                                  selectedFile={selectedFile}
+                                                  heading={section.heading}
+                                                  openFolder={openFolder}
+                                                  isSubfolder="no"
+                                                  setContextMenu={
+                                                    setContextMenu
+                                                  }
+                                                />
+                                              ))
+                                          ) : (
+                                            <div>
+                                              <FileStorageHeading
+                                                heading={`${parentDirVisibility || "Public"} Folders`}
+                                              />
+
+                                              <GridStructureView
+                                                itemTypeName="folder"
+                                                dataItems={folders}
+                                                setSelectedFile={
+                                                  setSelectedFile
+                                                }
+                                                selectedFile={selectedFile}
+                                                renaming={renaming}
+                                                setRenaming={setRenaming}
+                                                handleRename={handleRename}
+                                                heading="Folders"
+                                                openFolder={openFolder}
+                                                isSubfolder="yes"
+                                                setContextMenu={setContextMenu}
+                                              />
+                                            </div>
+                                          )}
+
+                                          <section>
+                                            {files?.length > 0 && (
+                                              <FileStorageHeading
+                                                heading={
+                                                  headingMap[
+                                                    parentDirVisibility
+                                                  ] || "Public documents"
+                                                }
+                                              />
+                                            )}
+                                            <>
+                                              <GridStructureView
+                                                itemTypeName="file"
+                                                dataItems={files}
+                                                setSelectedFile={
+                                                  setSelectedFile
+                                                }
+                                                selectedFile={selectedFile}
+                                                heading="Documents"
+                                                openFolder={openFolder}
+                                                renaming={renaming}
+                                                setRenaming={setRenaming}
+                                                handleRename={handleRename}
+                                                isSubfolder="no"
+                                                setContextMenu={setContextMenu}
+                                                openTab={openTab}
+                                              />
+                                            </>
+                                          </section>
+                                        </>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
                             )}
 
-                          {currentFolderId == null &&
-                            selectedFile?.folder_visibility == "private" && (
-                              <button
-                                className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                                onClick={() => setShowCollaboratorsPage(true)}
+                            {/* right click options */}
+                            {contextMenu && (
+                              <div
+                                style={{
+                                  top: contextMenu.y,
+                                  left: contextMenu.x,
+                                }}
+                                className="fixed bg-white border min-w-52 border-slate-200 px-1 shadow-lg rounded-md w-44 py-1 z-999"
                               >
-                                <MdOutlineHandshake size={20} />
-                                Invite Collaborators
-                              </button>
+                                <>
+                                  <button
+                                    className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                    onClick={() => window.location.reload()}
+                                  >
+                                    <HiOutlineRefresh size={20} />
+                                    Refresh
+                                  </button>
+
+                                  <button
+                                    className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                    onClick={() => {
+                                      fileRef.current.click();
+                                      setContextMenu(null);
+                                    }}
+                                  >
+                                    <MdOutlineAttachFile
+                                      className="rotate-90"
+                                      size={20}
+                                    />
+                                    Upload Files
+                                  </button>
+
+                                  <button
+                                    className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                    onClick={() => {
+                                      setCreatingFolder(true);
+                                      setNewFolderName("New Folder");
+                                      setContextMenu(null);
+                                    }}
+                                  >
+                                    <IoFolderOpenOutline size={20} />
+                                    New Folder
+                                  </button>
+                                </>
+
+                                {/* Common for file and folder */}
+                                {
+                                  <>
+                                    {selectedFile && (
+                                      <div>
+                                        <button
+                                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                          onClick={() => {
+                                            setRenaming(true);
+                                          }}
+                                        >
+                                          <MdOutlineDriveFileRenameOutline
+                                            size={20}
+                                          />
+                                          Rename
+                                        </button>
+                                      </div>
+                                    )}
+                                  </>
+                                }
+
+                                {contextMenu?.type === "file" && (
+                                  <>
+                                    <button
+                                      className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                      onClick={() =>
+                                        downloadFile(
+                                          selectedFile,
+                                          setDownloadState,
+                                        )
+                                      }
+                                    >
+                                      <TbDownload size={20} />
+                                      Download File
+                                    </button>
+
+                                    <button
+                                      className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                      onClick={() =>
+                                        handleDeleteFile(selectedFile)
+                                      }
+                                    >
+                                      <AiOutlineDelete size={20} />
+                                      Delete File
+                                    </button>
+                                  </>
+                                )}
+
+                                {contextMenu?.type === "folder" && (
+                                  <>
+                                    {selectedFile?.folder_visibility ==
+                                      "private" &&
+                                      isUserLoggedIn &&
+                                      currentFolderId == null && (
+                                        <button
+                                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                          onClick={() =>
+                                            handleMakeItPublicFolder()
+                                          }
+                                        >
+                                          <MdOutlinePeopleAlt size={20} />
+                                          Make it Public
+                                        </button>
+                                      )}
+
+                                    {currentFolderId == null &&
+                                      selectedFile?.folder_visibility ==
+                                        "private" && (
+                                        <button
+                                          className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                          onClick={() =>
+                                            setShowCollaboratorsPage(true)
+                                          }
+                                        >
+                                          <MdOutlineHandshake size={20} />
+                                          Invite Collaborators
+                                        </button>
+                                      )}
+
+                                    <button
+                                      className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
+                                      onClick={() =>
+                                        handleDeleteFolder(selectedFile)
+                                      }
+                                    >
+                                      <AiOutlineDelete size={20} />
+                                      Delete Folder
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             )}
 
-                          <button
-                            className="w-full flex gap-x-2 px-3 py-2 text-sm hover:bg-primary/5"
-                            onClick={() => handleDeleteFolder(selectedFile)}
-                          >
-                            <AiOutlineDelete size={20} />
-                            Delete Folder
-                          </button>
-                        </>
-                      )}
+                            <input
+                              type="file"
+                              ref={fileRef}
+                              onChange={(e) =>
+                                handleUploadStorageFile(e.target.files?.[0])
+                              }
+                              accept=""
+                              className="hidden"
+                            />
+
+                            {uploading && (
+                              <UploadInProgress
+                                progress={uploadProgress}
+                                onCancelClick={onCancelClick}
+                              />
+                            )}
+                            <DownloadToast
+                              downloadState={downloadState}
+                              onDismiss={() =>
+                                setDownloadState({ active: false })
+                              }
+                            />
+
+                            {isDragging && (
+                              <div className="absolute inset-0 pointer-events-none bg-[#fcf3f4]  border-2 rounded-2xl border-dashed border-primary flex items-center justify-center text-lg font-medium z-9999">
+                                Drop file here to upload
+                              </div>
+                            )}
+                          </section>
+                        )}
+                      </div>
                     </div>
-                  )}
+                  );
+                }
 
-                  <input
-                    type="file"
-                    ref={fileRef}
-                    onChange={(e) =>
-                      handleUploadStorageFile(e.target.files?.[0])
-                    }
-                    accept=""
-                    className="hidden"
-                  />
+                // FILE TAB
+                if (tab.type === "file") {
+                  return <FilePreviewTab tab={tab} />;
+                }
 
-                  {uploading && (
-                    <UploadInProgress
-                      progress={uploadProgress}
-                      onCancelClick={onCancelClick}
-                    />
-                  )}
-                  <DownloadToast
-                    downloadState={downloadState}
-                    onDismiss={() => setDownloadState({ active: false })}
-                  />
-
-                  {isDragging && (
-                    <div className="absolute inset-0 pointer-events-none bg-[#fcf3f4]  border-2 rounded-2xl border-dashed border-primary flex items-center justify-center text-lg font-medium z-9999">
-                      Drop file here to upload
-                    </div>
-                  )}
-                </section>
-              )}
+                return null;
+              })}
             </div>
 
             <Modal
