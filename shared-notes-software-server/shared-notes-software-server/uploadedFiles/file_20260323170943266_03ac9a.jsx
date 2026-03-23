@@ -1,0 +1,177 @@
+import { useState, useEffect, useRef } from "react";
+import "./App.css";
+import Navbar from "./areas/public/common/nav-bar/Navbar";
+import Home from "./areas/public/Home";
+import { axiosInstance } from "./api/axios";
+import { CHECK_SERVER_NETWORK } from "./api/api_routes";
+import ServerNotFound from "./utils/info-screen/ServerNotFound";
+import LoadingPage from "./utils/info-screen/LoadingPage";
+import UserOnboard from "./areas/auth/profiles/UserOnboard";
+import "highlight.js/styles/atom-one-dark.css";
+import { getItem } from "./api/storage";
+import { isTauri } from "./api/platform";
+
+function App() {
+  const [toggleSidebar, setToggleSidebar] = useState(false);
+  const [serverStatus, setServerStatus] = useState(null);
+  const intervalRef = useRef(null);
+  const [autoFetchStatus, setAutoFetchStatus] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [openRegistrationWindow, setOpenRegistrationWindow] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(null);
+  const [selectedWorkspaceMode, setSelectedWordspaceMode] = useState(null);
+  const [selectedType, setSelectedType] = useState("signup");
+
+  const currrentEnvironment = window.location.host;
+
+  const handleLoadUser = async () => {
+    const user = await getItem("user");
+
+    setUserData(user);
+    setIsUserLoggedIn(user?.isLoggedIn);
+
+    if (selectedWorkspaceMode == "private") {
+      /**
+       * If Private : when logout remove the workspace from the view
+       */
+      setSelectedWorkspaceId(null);
+    }
+  };
+
+  const handleServerNetworkCheck = async () => {
+    try {
+      const res = await axiosInstance.post(CHECK_SERVER_NETWORK, {
+        SearchText: "",
+      });
+
+      if (res?.data?.success === true && res?.data?.status === "FETCHED") {
+        setServerStatus(true);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      } else {
+        setServerStatus(false);
+      }
+    } catch (error) {
+      console.error("Not able to connect to server", error);
+      setServerStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    handleServerNetworkCheck();
+
+    intervalRef.current = setInterval(handleServerNetworkCheck, 10000);
+    console.info("Connection to server again...");
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  // Control window size based on server status
+  useEffect(() => {
+    const resizeWindow = async () => {
+      if (!isTauri()) return;
+
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      const { LogicalSize } = await import("@tauri-apps/api/dpi");
+
+      const appWindow = getCurrentWindow();
+
+      if (serverStatus === true) {
+        await appWindow.setSize(new LogicalSize(1180, 650));
+      } else {
+        await appWindow.setSize(new LogicalSize(480, 360));
+      }
+    };
+
+    resizeWindow();
+  }, [serverStatus]);
+
+  // Keyboard shortcut to refresh block
+  useEffect(() => {
+    if (currrentEnvironment?.includes("localhost")) {
+      console.info("Allowing page reloading in development");
+      return;
+    }
+
+    const handleKeyDown = (e) => {
+      // F5
+      if (e.key === "F5") {
+        e.preventDefault();
+      }
+
+      // Ctrl + R (Windows/Linux)
+      if (e.ctrlKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+      }
+
+      // Cmd + R (Mac)
+      if (e.metaKey && e.key.toLowerCase() === "r") {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (autoFetchStatus) {
+      const t = setTimeout(() => setAutoFetchStatus(false), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [autoFetchStatus]);
+
+  useEffect(() => {
+    handleLoadUser();
+  }, [isUserLoggedIn]);
+
+  if (serverStatus === null) return <LoadingPage />;
+  if (serverStatus === false) return <ServerNotFound />;
+
+  return (
+    <>
+      <Navbar
+        setToggleSidebar={setToggleSidebar}
+        toggleSidebar={toggleSidebar}
+        autoFetchStatus={autoFetchStatus}
+        isUserLoggedIn={isUserLoggedIn}
+        setOpenRegistrationWindow={setOpenRegistrationWindow}
+        userData={userData}
+        setIsUserLoggedIn={setIsUserLoggedIn}
+      />
+      <section>
+        <Home
+          isUserLoggedIn={isUserLoggedIn}
+          autoFetchStatus={autoFetchStatus}
+          setAutoFetchStatus={setAutoFetchStatus}
+          toggleSidebar={toggleSidebar}
+          selectedWorkspaceId={selectedWorkspaceId}
+          setSelectedWorkspaceId={setSelectedWorkspaceId}
+          selectedWorkspaceMode={selectedWorkspaceMode}
+          setSelectedWordspaceMode={setSelectedWordspaceMode}
+          setIsUserLoggedIn={setIsUserLoggedIn}
+          userData={userData}
+          setOpenRegistrationWindow={setOpenRegistrationWindow}
+          setSelectedType={setSelectedType}
+        />
+      </section>
+
+      <UserOnboard
+        setIsUserLoggedIn={setIsUserLoggedIn}
+        open={openRegistrationWindow}
+        onClose={() => setOpenRegistrationWindow(false)}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+      />
+    </>
+  );
+}
+
+export default App;
