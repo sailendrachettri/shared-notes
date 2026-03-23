@@ -86,44 +86,52 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
                     var contentType = file.ContentType?.ToLower() ?? "";
 
                     // =========================
-                    // 📸 IMAGE THUMBNAIL
+                    // IMAGE THUMBNAIL
                     // =========================
-                    if (contentType.StartsWith("image/"))
+                    var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+                    var validImageExts = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff" };
+
+                    if (validImageExts.Contains(ext))
                     {
                         try
                         {
-                            using (var image = await Image.LoadAsync(fullPath))
+                            // 🚫 Optional: skip tiny files
+                            if (file.Length < 1024)
                             {
-                                // ✅ Only resize if image is actually larger than thumb target
+                                Console.WriteLine($"[Skip] Too small image: {file.FileName}");
+                            }
+                            else
+                            {
+                                using var image = await Image.LoadAsync(fullPath);
+
                                 if (image.Width > 150 || image.Height > 150)
                                 {
                                     image.Mutate(x => x.Resize(new ResizeOptions
                                     {
-                                        Size = new Size(150, 150),   // smaller dimensions
+                                        Size = new Size(150, 150),
                                         Mode = ResizeMode.Max
                                     }));
                                 }
 
-                                // ✅ Save with low quality (30–40 is plenty for a thumbnail)
-                                var jpegEncoder = new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder
-                                {
-                                    Quality = 35
-                                };
+                                await image.SaveAsJpegAsync(thumbnailFullPath,
+                                    new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder { Quality = 35 });
 
-                                await image.SaveAsJpegAsync(thumbnailFullPath, jpegEncoder);
-
-                                // ✅ Only use thumbnail if it's actually smaller than the original
                                 var thumbInfo = new FileInfo(thumbnailFullPath);
+
                                 if (thumbInfo.Length < file.Length)
                                 {
                                     thumbnailName = Path.GetFileName(thumbnailFullPath);
                                 }
                                 else
                                 {
-                                    // Thumbnail is bigger — just skip it, serve original
                                     System.IO.File.Delete(thumbnailFullPath);
                                 }
                             }
+                        }
+                        catch (SixLabors.ImageSharp.UnknownImageFormatException)
+                        {
+                            Console.WriteLine($"[Invalid Image] {file.FileName}");
                         }
                         catch (Exception ex)
                         {

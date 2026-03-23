@@ -709,7 +709,7 @@ export default function FileStorageGround({
                 <div
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 cursor-pointer border-r border-slate-200
+                  className={`flex items-center gap-2 px-4 py-2 cursor-pointer 
         ${activeTab === tab.id ? "" : "bg-slate-50"}`}
                 >
                   <span className="truncate max-w-[150px]">{tab.title}</span>
@@ -729,14 +729,14 @@ export default function FileStorageGround({
               ))}
             </div>
 
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-auto hide-scrollbar">
               {tabs.map((tab) => {
                 if (tab.id !== activeTab) return null;
 
                 // FILE STORAGE TAB (fixed first tab)
                 if (tab.type === "storage") {
                   return (
-                    <div key={tab.id}>
+                    <div key={tab.id} className="px-3 h-full">
                       <TopToolBar
                         goBack={goBack}
                         forwardStack={forwardStack}
@@ -756,13 +756,13 @@ export default function FileStorageGround({
                         setSearch={setSearch}
                       />
 
-                      <div className="relative overflow-y-auto">
+                      <div className="relative">
                         {loading ? (
                           <section>
                             <LoadingPageSoft />
                           </section>
                         ) : (
-                          <section className="relative flex flex-col h-full">
+                          <section className="relative flex flex-col">
                             {/* File area */}
                             {activeTab === "file-storage" && (
                               <div
@@ -819,7 +819,7 @@ export default function FileStorageGround({
                                           title="Empty Directory"
                                         />
                                       ) : (
-                                        <>
+                                        <div>
                                           <FileStorageHeading
                                             heading={selectedCategoryName}
                                           />
@@ -856,7 +856,7 @@ export default function FileStorageGround({
                                               />
                                             ))}
                                           </div>
-                                        </>
+                                        </div>
                                       )}
                                     </section>
                                   ) : (
