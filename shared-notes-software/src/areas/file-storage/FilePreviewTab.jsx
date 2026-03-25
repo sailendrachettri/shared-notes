@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
-import fileErrorImg from "../../assets/pngs/file_error.png";
+import fileErrorImg from "../../assets/icons/png.png";
 import * as mammoth from "mammoth";
 import { formatFileSize } from "../../utils/string-formate/FormateFileSize";
 import { LuDownload } from "react-icons/lu";
@@ -96,7 +96,7 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
   return (
     <>
       <section className="h-full w-full">
-        <div className="flex items-center justify-between px-4 pb-1 pt-2 border-b border-slate-200">
+        <div className="flex items-center justify-between px-4 pb-1 pt-2">
           {/* Left: File info */}
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="text-sm font-medium truncate max-w-[300px]">
