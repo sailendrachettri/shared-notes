@@ -9,3 +9,8 @@ Encryption:
 
 Making the build for windows:
  - Change the .env from development to production
+
+
+Get the file icon:
+    getFileIcon(ext) 
+    For logo creature icon - use getFileIcon('sharednotes')

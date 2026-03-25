@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import dirSvg from "../../assets/svgs/files_dir.svg";
 import { MdOutlineAttachFile } from "react-icons/md";
-import { TbDownload } from "react-icons/tb";
+import { TbDownload, TbFileInvoice } from "react-icons/tb";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
 import { useEffect } from "react";
@@ -43,6 +43,7 @@ import DropdownReusable from "../../utils/dropdowns/DropdownReusable";
 import { useUsers } from "../../hooks/useUsers";
 import Modal from "../../reusable/modals/Modal";
 import FilePreviewTab from "./FilePreviewTab";
+import { getFileIcon } from "../../utils/string-formate/iconsMapping";
 
 const MAX_FILE_SIZE = 1073741824; // 1gb
 
@@ -730,26 +731,43 @@ export default function FileStorageGround({
                   <div
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2  cursor-pointer z-10
-        ${activeTab === tab.id ? "" : "bg-slate-50"}`}
+                    className={`flex items-center gap-2 px-4 py-2 border-r border-white  cursor-pointer z-10
+        ${activeTab === tab.id ? "" : "bg-slate-50 border-[#e2e8f0c8]"}`}
                   >
-                    <span className="truncate max-w-[150px]">{tab.title}</span>
+                    <span className="truncate max-w-37.5 flex items-center justify-center flex-nowrap gap-x-1">
+                      <img
+                        src={getFileIcon("sharednotes")}
+                        className="h-4 w-4 object-contain"
+                        alt=""
+                      />
+                      <span>{tab.title}</span>
+                    </span>
                   </div>
                 ))}
 
               {/* Scrollable tabs */}
-              <div className="flex overflow-x-auto hide-scrollbar">
+              <div
+                ref={scrollRef}
+                className="flex overflow-x-auto hide-scrollbar"
+              >
                 {tabs
                   .filter((t) => t.id !== "file-storage")
                   .map((tab) => (
                     <div
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer whitespace-nowrap
+                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer border-r border-[#e2e8f0c8] whitespace-nowrap
           ${activeTab === tab.id ? "" : "bg-slate-50"}`}
                     >
-                      <span className="truncate max-w-[150px]">
-                        {tab.title}
+                      <span className="truncate max-w-37.5 flex items-center justify-center flex-nowrap gap-x-1">
+                        <img
+                          src={getFileIcon(
+                            tab?.file?.file_extension?.toLowerCase(),
+                          )}
+                          className="h-4 w-4 object-contain"
+                          alt=""
+                        />
+                        <span>{tab.title}</span>
                       </span>
 
                       <span
@@ -766,10 +784,7 @@ export default function FileStorageGround({
               </div>
             </div>
 
-            <div
-              ref={scrollRef}
-              className="flex-1 overflow-auto hide-scrollbar"
-            >
+            <div className="flex-1 overflow-auto hide-scrollbar">
               {tabs.map((tab) => {
                 if (tab.id !== activeTab) return null;
 

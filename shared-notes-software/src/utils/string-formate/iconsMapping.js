@@ -25,6 +25,7 @@ import appstoreIcon from "../../assets/icons/appstore.png";
 import windowsIcon from "../../assets/icons/windows.png";
 import linuxIcon from "../../assets/icons/linux.png";
 import rustIcon from "../../assets/icons/rust.png";
+import sharedNotes from "../../assets/pngs/logo.png";
 
 
 
@@ -227,6 +228,7 @@ const fileIconMap = {
   wasm: defaultDocIcon,
   bin:  defaultDocIcon,
   dat:  defaultDocIcon,
+  sharednotes: sharedNotes
 };
 
 export const getFileIcon = (ext) => {
