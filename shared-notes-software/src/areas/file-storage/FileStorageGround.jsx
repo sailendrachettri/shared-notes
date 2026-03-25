@@ -1111,12 +1111,6 @@ export default function FileStorageGround({
                                 onCancelClick={onCancelClick}
                               />
                             )}
-                            <DownloadToast
-                              downloadState={downloadState}
-                              onDismiss={() =>
-                                setDownloadState({ active: false })
-                              }
-                            />
 
                             {isDragging && (
                               <div className="absolute inset-0 pointer-events-none bg-[#fcf3f4]  border-2 rounded-2xl border-dashed border-primary flex items-center justify-center text-lg font-medium z-9999">
@@ -1132,12 +1126,25 @@ export default function FileStorageGround({
 
                 // FILE TAB
                 if (tab.type === "file") {
-                  return <FilePreviewTab tab={tab} />;
+                  return (
+                    <FilePreviewTab
+                      tab={tab}
+                      onDownload={() =>
+                        downloadFile(tab.file, setDownloadState)
+                      }
+                      downloadState={downloadState}
+                    />
+                  );
                 }
 
                 return null;
               })}
             </div>
+
+            <DownloadToast
+              downloadState={downloadState}
+              onDismiss={() => setDownloadState({ active: false })}
+            />
 
             <Modal
               isOpen={showCollaboratorsPage}

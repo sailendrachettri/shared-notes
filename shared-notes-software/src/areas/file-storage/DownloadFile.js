@@ -3,6 +3,7 @@ import axios from "axios";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 export const downloadFile = async (file, setDownloadState) => {
+ 
   try {
     setDownloadState({
       active: true,
