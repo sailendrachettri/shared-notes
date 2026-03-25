@@ -85,6 +85,8 @@ export default function FileStorageGround({
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [activeTab, setActiveTab] = useState("file-storage");
+  const scrollRef = useRef(null);
 
   const abortControllerRef = useRef(null);
   const dragCounter = useRef(0);
@@ -113,6 +115,45 @@ export default function FileStorageGround({
     private: "Private Documents",
     shared: "Shared Documents",
     public: "Public Documents",
+  };
+
+  const [tabs, setTabs] = useState([
+    {
+      id: "file-storage",
+      title: "File Storage",
+      type: "storage",
+    },
+  ]);
+
+  const openTab = (file) => {
+    const tabId = `file-${file.file_id}`;
+
+    const existingTab = tabs.find((t) => t.id === tabId);
+
+    if (existingTab) {
+      setActiveTab(tabId);
+      return;
+    }
+
+    const newTab = {
+      id: tabId,
+      title: file.file_name,
+      type: "file",
+      file,
+    };
+
+    setTabs((prev) => [...prev, newTab]);
+    setActiveTab(tabId);
+  };
+
+  const closeTab = (tabId) => {
+    if (tabId === "file-storage") return;
+
+    setTabs((prev) => prev.filter((t) => t.id !== tabId));
+
+    if (activeTab === tabId) {
+      setActiveTab("file-storage");
+    }
   };
 
   const handleMakeItPublicFolder = async () => {
@@ -637,46 +678,23 @@ export default function FileStorageGround({
     return () => window.removeEventListener("click", closeMenu);
   }, []);
 
-  const [tabs, setTabs] = useState([
-    {
-      id: "file-storage",
-      title: "File Storage",
-      type: "storage",
-    },
-  ]);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
 
-  const [activeTab, setActiveTab] = useState("file-storage");
-
-  const openTab = (file) => {
-    const tabId = `file-${file.file_id}`;
-
-    const existingTab = tabs.find((t) => t.id === tabId);
-
-    if (existingTab) {
-      setActiveTab(tabId);
-      return;
-    }
-
-    const newTab = {
-      id: tabId,
-      title: file.file_name,
-      type: "file",
-      file,
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY;
+      }
     };
 
-    setTabs((prev) => [...prev, newTab]);
-    setActiveTab(tabId);
-  };
+    el.addEventListener("wheel", handleWheel, { passive: false });
 
-  const closeTab = (tabId) => {
-    if (tabId === "file-storage") return;
-
-    setTabs((prev) => prev.filter((t) => t.id !== tabId));
-
-    if (activeTab === tabId) {
-      setActiveTab("file-storage");
-    }
-  };
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   return (
     <>
@@ -704,32 +722,54 @@ export default function FileStorageGround({
         content={
           <section className="relative flex flex-col h-full min-h-0 select-none">
             {/* Top toolbar */}
-            <div className="flex text-xs text-slate-700 ">
-              {tabs.map((tab) => (
-                <div
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 cursor-pointer 
+            <div className="flex text-xs text-slate-700">
+              {/* Fixed tab */}
+              {tabs
+                .filter((t) => t.id === "file-storage")
+                .map((tab) => (
+                  <div
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-4 py-2  cursor-pointer z-10
         ${activeTab === tab.id ? "" : "bg-slate-50"}`}
-                >
-                  <span className="truncate max-w-[150px]">{tab.title}</span>
+                  >
+                    <span className="truncate max-w-[150px]">{tab.title}</span>
+                  </div>
+                ))}
 
-                  {tab.id !== "file-storage" && (
-                    <span
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        closeTab(tab.id);
-                      }}
-                      className="text-gray-400 hover:text-red-400"
+              {/* Scrollable tabs */}
+              <div className="flex overflow-x-auto hide-scrollbar">
+                {tabs
+                  .filter((t) => t.id !== "file-storage")
+                  .map((tab) => (
+                    <div
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer whitespace-nowrap
+          ${activeTab === tab.id ? "" : "bg-slate-50"}`}
                     >
-                      ✕
-                    </span>
-                  )}
-                </div>
-              ))}
+                      <span className="truncate max-w-[150px]">
+                        {tab.title}
+                      </span>
+
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          closeTab(tab.id);
+                        }}
+                        className="text-gray-400 hover:text-red-400"
+                      >
+                        ✕
+                      </span>
+                    </div>
+                  ))}
+              </div>
             </div>
 
-            <div className="flex-1 overflow-auto hide-scrollbar">
+            <div
+              ref={scrollRef}
+              className="flex-1 overflow-auto hide-scrollbar"
+            >
               {tabs.map((tab) => {
                 if (tab.id !== activeTab) return null;
 
