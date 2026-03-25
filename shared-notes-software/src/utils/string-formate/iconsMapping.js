@@ -25,7 +25,9 @@ import appstoreIcon from "../../assets/icons/appstore.png";
 import windowsIcon from "../../assets/icons/windows.png";
 import linuxIcon from "../../assets/icons/linux.png";
 import rustIcon from "../../assets/icons/rust.png";
-import sharedNotes from "../../assets/pngs/logo.png";
+import videoIcon from "../../assets/icons/video.png";
+import audioIcon from "../../assets/icons/audio.png";
+import sharedNotesIcon from "../../assets/pngs/logo.png";
 
 
 
@@ -161,26 +163,26 @@ const fileIconMap = {
   gif:  gifIcon,
 
   // ── Audio ──────────────────────────────────────────────────────────────────
-  mp3:  defaultDocIcon,
-  wav:  defaultDocIcon,
-  flac: defaultDocIcon,
-  aac:  defaultDocIcon,
-  ogg:  defaultDocIcon,
-  m4a:  defaultDocIcon,
-  wma:  defaultDocIcon,
-  opus: defaultDocIcon,
+  mp3:  audioIcon,
+  wav:  audioIcon,
+  flac: audioIcon,
+  aac:  audioIcon,
+  ogg:  audioIcon,
+  m4a:  audioIcon,
+  wma:  audioIcon,
+  opus: audioIcon,
 
   // ── Video ──────────────────────────────────────────────────────────────────
-  mp4:  defaultDocIcon,
-  mkv:  defaultDocIcon,
-  avi:  defaultDocIcon,
-  mov:  defaultDocIcon,
-  wmv:  defaultDocIcon,
-  flv:  defaultDocIcon,
-  webm: defaultDocIcon,
-  m4v:  defaultDocIcon,
-  mpeg: defaultDocIcon,
-  mpg:  defaultDocIcon,
+  mp4:  videoIcon,
+  mkv:  videoIcon,
+  avi:  videoIcon,
+  mov:  videoIcon,
+  wmv:  videoIcon,
+  flv:  videoIcon,
+  webm: videoIcon,
+  m4v:  videoIcon,
+  mpeg: videoIcon,
+  mpg:  videoIcon,
 
   // ── Archives / Compressed ──────────────────────────────────────────────────
   zip:  zipIcon,
@@ -228,7 +230,7 @@ const fileIconMap = {
   wasm: defaultDocIcon,
   bin:  defaultDocIcon,
   dat:  defaultDocIcon,
-  sharednotes: sharedNotes
+  sharednotes: sharedNotesIcon
 };
 
 export const getFileIcon = (ext) => {

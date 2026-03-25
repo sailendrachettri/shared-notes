@@ -731,13 +731,13 @@ export default function FileStorageGround({
                   <div
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2 border-r border-white  cursor-pointer z-10
+                    className={`flex items-center gap-2 px-4 py-2 border-r border-white hover:bg-[#f8fafc91] cursor-pointer z-10
         ${activeTab === tab.id ? "" : "bg-slate-50 border-[#e2e8f0c8]"}`}
                   >
                     <span className="truncate max-w-37.5 flex items-center justify-center flex-nowrap gap-x-1">
                       <img
                         src={getFileIcon("sharednotes")}
-                        className="h-4 w-4 object-contain"
+                        className="h-4 w-4 object-contain shrink-0"
                         alt=""
                       />
                       <span>{tab.title}</span>
@@ -756,18 +756,18 @@ export default function FileStorageGround({
                     <div
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer border-r border-[#e2e8f0c8] whitespace-nowrap
+                      className={`flex items-center gap-2 group hover:bg-[#f8fafc91] px-4 py-2 cursor-pointer border-r border-[#e2e8f0c8] whitespace-nowrap
           ${activeTab === tab.id ? "" : "bg-slate-50"}`}
                     >
-                      <span className="truncate max-w-37.5 flex items-center justify-center flex-nowrap gap-x-1">
+                      <span className="truncate max-w-37.5  flex items-center justify-center flex-nowrap gap-x-1">
                         <img
                           src={getFileIcon(
                             tab?.file?.file_extension?.toLowerCase(),
                           )}
-                          className="h-4 w-4 object-contain"
+                          className="h-4 w-4 object-contain shrink-0"
                           alt=""
                         />
-                        <span>{tab.title}</span>
+                        <span>{tab.title?.length <= 21 ? tab?.title  : tab.title?.substring(0, 21)+'..'}</span>
                       </span>
 
                       <span
@@ -775,7 +775,7 @@ export default function FileStorageGround({
                           e.stopPropagation();
                           closeTab(tab.id);
                         }}
-                        className="text-gray-400 hover:text-red-400"
+                        className="text-gray-400 hover:text-red-400 invisible group-hover:visible"
                       >
                         ✕
                       </span>
