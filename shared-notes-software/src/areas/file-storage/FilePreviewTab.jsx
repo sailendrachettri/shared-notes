@@ -130,7 +130,7 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
 
           {/* VIDEO */}
           {isVideo && (
-            <video controls className="max-h-[70vh] max-w-[80vw]">
+            <video controls autoPlay muted className="max-h-[70vh] max-w-[80vw]">
               <source src={fileUrl} />
                <p className="text-sm mt-1">Preview not supported</p>
             </video>
@@ -140,7 +140,7 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
           {isAudio && (
             <div className="flex flex-col items-center gap-4">
               <p className="text-sm text-gray-400">{file?.file_name}</p>
-              <audio controls className="w-[400px]">
+              <audio controls autoPlay muted className="w-[400px]">
                 <source src={fileUrl} />
                 <p className="text-sm mt-1">Preview not supported</p>
               </audio>
