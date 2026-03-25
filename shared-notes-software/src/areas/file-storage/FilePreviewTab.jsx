@@ -4,6 +4,7 @@ import fileErrorImg from "../../assets/icons/png.png";
 import * as mammoth from "mammoth";
 import { formatFileSize } from "../../utils/string-formate/FormateFileSize";
 import { LuDownload } from "react-icons/lu";
+import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 
 
 const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
@@ -160,7 +161,9 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
           {isText && (
             <div className="w-full h-full max-w-[90vw] max-h-[80vh] overflow-auto p-4">
               {loadingText ? (
-                <p className="text-gray-400">Loading...</p>
+                <div className="text-gray-400">
+                  <LoadingPageSoft  />
+                </div>
               ) : (
                 <pre
                   className="whitespace-pre-wrap text-sm"
