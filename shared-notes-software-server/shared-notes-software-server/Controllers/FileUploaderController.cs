@@ -97,7 +97,7 @@ namespace AngularWithASPDemo.Server.Controllers.Uploader
                         try
                         {
                             // 🚫 Optional: skip tiny files
-                            if (file.Length < 1024)
+                            if (file.Length < 100)
                             {
                                 Console.WriteLine($"[Skip] Too small image: {file.FileName}");
                             }
