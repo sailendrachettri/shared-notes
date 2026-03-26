@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
-import fileErrorImg from "../../assets/icons/png.png";
 import * as mammoth from "mammoth";
 import { formatFileSize } from "../../utils/string-formate/FormateFileSize";
 import { LuDownload } from "react-icons/lu";
