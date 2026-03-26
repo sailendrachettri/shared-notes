@@ -137,15 +137,15 @@ function App() {
 
   return (
     <>
-      <Navbar
-        setToggleSidebar={setToggleSidebar}
-        toggleSidebar={toggleSidebar}
-        autoFetchStatus={autoFetchStatus}
-        isUserLoggedIn={isUserLoggedIn}
-        setOpenRegistrationWindow={setOpenRegistrationWindow}
-        userData={userData}
-        setIsUserLoggedIn={setIsUserLoggedIn}
-      />
+      <div className="mb-7">
+        <Navbar
+          setToggleSidebar={setToggleSidebar}
+          toggleSidebar={toggleSidebar}
+          autoFetchStatus={autoFetchStatus}
+          isUserLoggedIn={isUserLoggedIn}
+          setOpenRegistrationWindow={setOpenRegistrationWindow}
+        />
+      </div>
       <section>
         <Home
           isUserLoggedIn={isUserLoggedIn}

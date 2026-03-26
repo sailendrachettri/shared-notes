@@ -178,7 +178,7 @@ export default function UserOnboard({
             animate={{ x: 0 }} // slide into place
             exit={{ x: "-100%" }} // slide back out when closing
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-0 w-full sm:w-96 h-full bg-white z-50 p-4 flex flex-col"
+            className="fixed left-0 top-0 w-full sm:w-96 h-full bg-white z-50 p-4 flex flex-col pt-10"
           >
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
