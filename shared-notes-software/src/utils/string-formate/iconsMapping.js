@@ -27,6 +27,8 @@ import windowsIcon from "../../assets/icons/windows.png";
 import linuxIcon from "../../assets/icons/linux.png";
 import rustIcon from "../../assets/icons/rust.png";
 import videoIcon from "../../assets/icons/video.png";
+import svgIcon from "../../assets/icons/svg.png";
+import webpIcon from "../../assets/icons/webp.png";
 import audioIcon from "../../assets/icons/audio.png";
 import sharedNotesIcon from "../../assets/pngs/logo.png";
 
@@ -149,12 +151,12 @@ const fileIconMap = {
   png:  pngIcon,
   jpg:  jpgIcon,
   jpeg: jpgIcon,
-  webp: pngIcon,
+  webp: webpIcon,
   bmp:  pngIcon,
   tiff: pngIcon,
   tif:  pngIcon,
   ico:  pngIcon,
-  svg:  pngIcon,
+  svg:  svgIcon,
   heic: pngIcon,
   heif: pngIcon,
   avif: pngIcon,
