@@ -19,10 +19,7 @@ const Navbar = ({
   autoFetchStatus,
   isUserLoggedIn,
   setOpenRegistrationWindow,
-  userData,
-  setIsUserLoggedIn,
 }) => {
-
   const [appWindow, setAppWindow] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -64,7 +61,7 @@ const Navbar = ({
   return (
     <div
       data-tauri-drag-region={isTauri() ? true : undefined}
-      className="h-8 flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950 select-none"
+      className="fixed top-0 left-0 w-full h-8 z-[9999] flex items-center justify-between px-4 bg-[#e5e7ed] text-slate-950 select-none"
     >
       {/* Left */}
       <div className="flex items-center gap-2">
@@ -98,10 +95,7 @@ const Navbar = ({
 
       {/* Right */}
       <div className="flex h-full gap-x-3 items-center">
-
-        <span
-          onClick={() => setToggleSidebar((prev) => !prev)}
-        >
+        <span onClick={() => setToggleSidebar((prev) => !prev)}>
           {toggleSidebar ? (
             <VscLayoutSidebarLeftOff />
           ) : (
@@ -112,7 +106,6 @@ const Navbar = ({
         {/* Window Controls (Tauri only) */}
         {isTauri() && (
           <div className="flex h-full items-center">
-
             <button
               onClick={minimize}
               className="w-10 h-full flex items-center justify-center hover:bg-zinc-300"
@@ -137,10 +130,8 @@ const Navbar = ({
             >
               <VscChromeClose size={14} />
             </button>
-
           </div>
         )}
-
       </div>
     </div>
   );

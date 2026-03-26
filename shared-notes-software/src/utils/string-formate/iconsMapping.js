@@ -13,6 +13,7 @@ import pdfIcon from "../../assets/icons/pdf.png";
 import wordIcon from "../../assets/icons/word.png";
 import phpIcon from "../../assets/icons/php.png";
 import pngIcon from "../../assets/icons/png.png";
+import jpgIcon from "../../assets/icons/jpg.png";
 import databaseIcon from "../../assets/icons/database.png";
 import pptIcon from "../../assets/icons/ppt.png";
 import pyIcon from "../../assets/icons/py.png";
@@ -26,6 +27,8 @@ import windowsIcon from "../../assets/icons/windows.png";
 import linuxIcon from "../../assets/icons/linux.png";
 import rustIcon from "../../assets/icons/rust.png";
 import videoIcon from "../../assets/icons/video.png";
+import svgIcon from "../../assets/icons/svg.png";
+import webpIcon from "../../assets/icons/webp.png";
 import audioIcon from "../../assets/icons/audio.png";
 import sharedNotesIcon from "../../assets/pngs/logo.png";
 
@@ -146,14 +149,14 @@ const fileIconMap = {
 
   // ── Images ─────────────────────────────────────────────────────────────────
   png:  pngIcon,
-  jpg:  pngIcon,
-  jpeg: pngIcon,
-  webp: pngIcon,
+  jpg:  jpgIcon,
+  jpeg: jpgIcon,
+  webp: webpIcon,
   bmp:  pngIcon,
   tiff: pngIcon,
   tif:  pngIcon,
   ico:  pngIcon,
-  svg:  pngIcon,
+  svg:  svgIcon,
   heic: pngIcon,
   heif: pngIcon,
   avif: pngIcon,

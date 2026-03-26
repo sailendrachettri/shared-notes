@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MainLayout from "../../reusable/layouts/MainLayout";
 import dirSvg from "../../assets/svgs/files_dir.svg";
 import { MdOutlineAttachFile } from "react-icons/md";
-import { TbDownload, TbFileInvoice } from "react-icons/tb";
+import { TbDownload } from "react-icons/tb";
 import FileStorageSidebar from "./FileStorageSidebar";
 import TopToolBar from "./TopToolBar";
 import { useEffect } from "react";
@@ -767,7 +767,11 @@ export default function FileStorageGround({
                           className="h-4 w-4 object-contain shrink-0"
                           alt=""
                         />
-                        <span>{tab.title?.length <= 21 ? tab?.title  : tab.title?.substring(0, 21)+'..'}</span>
+                        <span>
+                          {tab.title?.length <= 21
+                            ? tab?.title
+                            : tab.title?.substring(0, 21) + ".."}
+                        </span>
                       </span>
 
                       <span
@@ -887,9 +891,10 @@ export default function FileStorageGround({
                                                   selectedFile?.file_id ===
                                                   file.file_id
                                                 }
-                                                onClick={() =>
-                                                  setSelectedFile(file)
-                                                }
+                                                onClick={() => {
+                                                  setSelectedFile(file);
+                                                  openTab(file);
+                                                }}
                                                 renaming={renaming}
                                                 setRenaming={setRenaming}
                                                 handleRename={handleRename}

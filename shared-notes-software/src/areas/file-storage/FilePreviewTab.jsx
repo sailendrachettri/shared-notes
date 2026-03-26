@@ -5,6 +5,7 @@ import * as mammoth from "mammoth";
 import { formatFileSize } from "../../utils/string-formate/FormateFileSize";
 import { LuDownload } from "react-icons/lu";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
+import { getFileIcon } from "../../utils/string-formate/iconsMapping";
 
 
 const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
@@ -100,7 +101,7 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
         <div className="flex items-center justify-between px-4 pb-1 pt-2">
           {/* Left: File info */}
           <div className="flex items-center gap-2 overflow-hidden">
-            <span className="text-sm font-medium truncate max-w-[300px]">
+            <span className="text-sm font-medium truncate max-w-75">
               {file?.file_name}
             </span>
             <span className="text-xs bg-primary/5 text-primary font-medium rounded-full py-0.5 px-3">
@@ -125,7 +126,7 @@ const FilePreviewTab = ({ tab, onDownload, downloadState }) => {
               src={fileUrl}
               alt={file?.file_name}
               className="max-h-[60vh] max-w-[60vw] object-contain"
-              onError={(e) => (e.target.src = fileErrorImg)}
+              onError={(e) => (e.target.src = getFileIcon(ext))}
             />
           )}
 
