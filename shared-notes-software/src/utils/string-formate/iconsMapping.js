@@ -13,6 +13,7 @@ import pdfIcon from "../../assets/icons/pdf.png";
 import wordIcon from "../../assets/icons/word.png";
 import phpIcon from "../../assets/icons/php.png";
 import pngIcon from "../../assets/icons/png.png";
+import jpgIcon from "../../assets/icons/jpg.png";
 import databaseIcon from "../../assets/icons/database.png";
 import pptIcon from "../../assets/icons/ppt.png";
 import pyIcon from "../../assets/icons/py.png";
@@ -146,8 +147,8 @@ const fileIconMap = {
 
   // ── Images ─────────────────────────────────────────────────────────────────
   png:  pngIcon,
-  jpg:  pngIcon,
-  jpeg: pngIcon,
+  jpg:  jpgIcon,
+  jpeg: jpgIcon,
   webp: pngIcon,
   bmp:  pngIcon,
   tiff: pngIcon,

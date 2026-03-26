@@ -1,5 +1,5 @@
-// DownloadFile.js — clean and simple, works for all sizes
-import axios from "axios";
+
+import { axiosInstance } from "../../api/axios";
 import { VIEW_UPLOADED_FILE_URL } from "../../config/env";
 
 export const downloadFile = async (file, setDownloadState) => {
@@ -17,12 +17,12 @@ export const downloadFile = async (file, setDownloadState) => {
     const token = localStorage.getItem("accessToken");
     const url = `${VIEW_UPLOADED_FILE_URL}/${file?.file_path}`;
 
-    const response = await axios.get(url, {
+    const response = await axiosInstance.get(url, {
       responseType: "blob",
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      httpsAgent: undefined, // uses browser's own cert handling
+      httpsAgent: undefined, 
       onDownloadProgress: (progressEvent) => {
         const totalSize = progressEvent.total ?? 0;
         const downloadedSize = progressEvent.loaded ?? 0;
