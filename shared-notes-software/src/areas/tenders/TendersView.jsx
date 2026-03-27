@@ -79,11 +79,35 @@ const TendersView = () => {
         `${VIEW_TENDER_IN_OFFICIAL_PORTAL_URL}/${id}`,
       );
       console.log(res);
+      if (res?.status == 200) {
+        customToast.success("Redirectring you in to the official portal");
+        console.log(res?.data?.sessionUrl);
+        openTender(res?.data?.sessionUrl);
+        return;
+      } else {
+        customToast.error("Can't generate link at the moment");
+      }
     } catch (error) {
-      customToast.error("Can't generate link at the moment");
+      customToast.error("Something went wrong");
     } finally {
       setGeneratingLink(false);
     }
+  };
+
+  const openTender = (url) => {
+    const win = window.open("about:blank", "_blank");
+    console.log(win);
+
+    // Step 1: restart session
+    win.location.href =
+      "https://www.sikkimtender.gov.in/nicgep/app?service=restart";
+
+    // Step 2: after delay, go to tender
+    setTimeout(() => {
+      win.location.href = url;
+    }, 4000);
+
+    return;
   };
 
   useEffect(() => {

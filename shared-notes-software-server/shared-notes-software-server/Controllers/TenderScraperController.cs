@@ -53,6 +53,7 @@ namespace shared_notes_software_server.Controllers
             return Redirect(url);
         }
 
+
         // For testing in Swagger — returns the session URL as JSON
         [HttpGet("session-url/{id}")]
         public async Task<IActionResult> GetSessionUrl(string id)
