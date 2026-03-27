@@ -3,6 +3,15 @@ export const GET_NOTES__DETAILS_URL = "/notes/notes-details";
 export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 //#endregion
 
+//#region Tenders
+export const SCRAB_TENDERS_URL = "/tenders/sync"
+export const FETCH_LATEST_TENDERS_URL = "/tenders/latest"
+export const FETCH_TENDERS_BY_TAGS_URL = "/tenders/by-tags"
+export const TENDERS_FULL_DETAILS_URL = "/tenders/details"
+export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/redirect"
+
+//#endregion
+
 //#region File storage
 export const ADD_FOLDER_URL = "/file-storage/add-folder";
 export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";

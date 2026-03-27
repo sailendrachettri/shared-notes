@@ -11,6 +11,7 @@ import RemindersApp from "../remainders/RemindersApp";
 import LoginRequired from "../../utils/info-screen/LoginRequired";
 import NotificationsTab from "../tabs/NotificationsTab";
 import FileStorageMain from "../file-storage/FileStorageMain";
+import TendersMain from "../tenders/TendersMain";
 
 const Home = ({
   toggleSidebar,
@@ -195,6 +196,16 @@ const Home = ({
               userData={userData}
               setRefresh={setRefresh}
               refresh={refresh}
+            />
+          </div>
+        )}
+
+        {selectedMiniTab == "tenders" && (
+          <div className="w-full mb-10 flex-1">
+            <TendersMain
+            // userData={userData}
+            // setRefresh={setRefresh}
+            // refresh={refresh}
             />
           </div>
         )}

@@ -4,7 +4,7 @@ using shared_notes_software_server.Models;
 namespace shared_notes_software_server.Controllers
 {
     [ApiController]
-    [Route("api/tenders")]
+    [Route("api/v1/tenders")]
     public class TenderController : ControllerBase
     {
         private readonly TenderScraperService _scraper;

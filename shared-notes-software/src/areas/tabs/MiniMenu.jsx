@@ -10,6 +10,7 @@ import { HiOutlineBell } from "react-icons/hi";
 import { FiLogIn } from "react-icons/fi";
 import { useNotificationCount } from "../../hooks/useNotificationCount";
 import { TbDatabaseLeak } from "react-icons/tb";
+import { FaHandshake } from "react-icons/fa6";
 
 const MiniMenu = ({
   selectedMiniTab,
@@ -78,6 +79,15 @@ const MiniMenu = ({
           className={`${selectedMiniTab == "file-storage" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
           <TbDatabaseLeak size={22} />
+        </div>
+
+        <div
+          onClick={() => {
+            setSelectedMiniTab("tenders");
+          }}
+          className={`${selectedMiniTab == "tenders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
+        >
+          <FaHandshake size={22} />
         </div>
 
         <div

@@ -127,14 +127,49 @@ public class TenderScraperService
     private string[] GenerateTags(string title)
     {
         var t = title.ToLower();
-        var tags = new List<string>();
+        var tags = new HashSet<string>();
 
-        if (t.Contains("software") || t.Contains("it")) tags.Add("IT");
-        if (t.Contains("hardware")) tags.Add("Hardware");
-        if (t.Contains("consult")) tags.Add("Consulting");
-        if (t.Contains("service")) tags.Add("Services");
-        if (t.Contains("network")) tags.Add("Networking");
+        // 🔹 SOFTWARE / IT PROJECTS
+        if (ContainsAny(t, "software", "application", "system", "portal", "website", "web", "app", "mobile", "erp", "crm", "dashboard", "management system"))
+            tags.Add("IT");
+
+        // 🔹 DEVELOPMENT SPECIFIC
+        if (ContainsAny(t, "development", "design", "implementation", "customization", "upgrade", "enhancement"))
+            tags.Add("Development");
+
+        // 🔹 CLOUD / HOSTING
+        if (ContainsAny(t, "cloud", "hosting", "server", "aws", "azure", "deployment", "saas"))
+            tags.Add("Cloud");
+
+        // 🔹 HARDWARE
+        if (ContainsAny(t, "hardware", "supply", "desktop", "laptop", "printer", "server machine", "equipment"))
+            tags.Add("Hardware");
+
+        // 🔹 NETWORKING
+        if (ContainsAny(t, "network", "lan", "wan", "cabling", "router", "switch", "firewall"))
+            tags.Add("Networking");
+
+        // 🔹 CONSULTING / SERVICES
+        if (ContainsAny(t, "consult", "audit", "support", "maintenance", "amc", "service"))
+            tags.Add("Services");
+
+        // 🔹 SECURITY
+        if (ContainsAny(t, "security", "cyber", "cctv", "surveillance", "firewall", "antivirus"))
+            tags.Add("Security");
+
+        // 🔹 DATA / AI
+        if (ContainsAny(t, "data", "analytics", "ai", "machine learning", "ml", "big data"))
+            tags.Add("Data/AI");
+
+        // 🔹 GOV / E-GOV PROJECTS (very important for tenders)
+        if (ContainsAny(t, "e-governance", "digitization", "online system", "automation"))
+            tags.Add("E-Governance");
 
         return tags.ToArray();
+    }
+
+    private bool ContainsAny(string text, params string[] keywords)
+    {
+        return keywords.Any(k => text.Contains(k));
     }
 }
