@@ -1,16 +1,15 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosInstance } from "../../api/axios";
-import { FETCH_LATEST_TENDERS_URL } from "../../api/api_routes";
+import {
+  FETCH_LATEST_TENDERS_URL,
+  VIEW_TENDER_IN_OFFICIAL_PORTAL_URL,
+} from "../../api/api_routes";
 import ViewFullTenderDetails from "./ViewFullTenderDetails";
 
 import { MdOutlineDescription } from "react-icons/md";
-import {
-  FiCalendar,
-  FiClock,
-  FiExternalLink,
-  FiSearch,
-} from "react-icons/fi";
+import { FiCalendar, FiClock, FiExternalLink, FiSearch } from "react-icons/fi";
 import { formatDate } from "../../utils/date-time/formatePrettyDateTime";
+import { customToast } from "../../utils/toast/toastConfig";
 
 const isExpiringSoon = (dateStr) => {
   if (!dateStr) return false;
@@ -56,6 +55,7 @@ const TendersView = () => {
   const [selectedTenderUnqId, setSelectedTenderUnqId] = useState(null);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [generatingLink, setGeneratingLink] = useState(false);
 
   const handleFetchLatestTenders = async () => {
     setLoading(true);
@@ -68,6 +68,21 @@ const TendersView = () => {
       console.error("not able to fetch latest tenders details", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGenerateOfficialLink = async (id) => {
+    console.log(id);
+    setGeneratingLink(true);
+    try {
+      const res = await axiosInstance.get(
+        `${VIEW_TENDER_IN_OFFICIAL_PORTAL_URL}/${id}`,
+      );
+      console.log(res);
+    } catch (error) {
+      customToast.error("Can't generate link at the moment");
+    } finally {
+      setGeneratingLink(false);
     }
   };
 
@@ -116,10 +131,11 @@ const TendersView = () => {
             {/* Header */}
             <div className="grid grid-cols-12 text-xs font-medium text-gray-400 uppercase tracking-wider px-5 py-3 border-b border-gray-100 bg-gray-50">
               <div className="col-span-4">Title</div>
-              <div className="col-span-2">Reference</div>
+              {/* <div className="col-span-2">Reference</div> */}
               <div className="col-span-2">Published</div>
               <div className="col-span-2">Closing</div>
               <div className="col-span-1">Status</div>
+              <div className="col-span-1">Socurce</div>
               <div className="col-span-1 text-right">Action</div>
             </div>
 
@@ -168,9 +184,9 @@ const TendersView = () => {
                     </div>
 
                     {/* Ref */}
-                    <div className="col-span-2 font-mono text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded w-fit">
+                    {/* <div className="col-span-2 font-mono text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded w-fit">
                       {tender?.refNo || "—"}
-                    </div>
+                    </div> */}
 
                     {/* Published */}
                     <div className="col-span-2 flex items-center gap-1.5 text-xs text-gray-500">
@@ -189,6 +205,21 @@ const TendersView = () => {
                     {/* Status */}
                     <div className="col-span-1">
                       <StatusBadge lastDate={tender?.last_Date} />
+                    </div>
+
+                    <div className="col-span-1">
+                      <button
+                        onClick={() => {
+                          handleGenerateOfficialLink(tender?.tenderUniqueId);
+                          setSelectedTenderUnqId(tender?.tenderUniqueId);
+                        }}
+                        className="text-xs bg-primary/5 text-primary font-medium px-2 py-1 rounded-md cursor-pointer"
+                      >
+                        {generatingLink &&
+                        selectedTenderUnqId == tender?.tenderUniqueId
+                          ? "Generating..."
+                          : "Generate Link"}
+                      </button>
                     </div>
 
                     {/* Action */}

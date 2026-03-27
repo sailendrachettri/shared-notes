@@ -8,7 +8,7 @@ export const SCRAB_TENDERS_URL = "/tenders/sync"
 export const FETCH_LATEST_TENDERS_URL = "/tenders/latest"
 export const FETCH_TENDERS_BY_TAGS_URL = "/tenders/by-tags"
 export const TENDERS_FULL_DETAILS_URL = "/tenders/details"
-export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/redirect"
+export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/session-url"
 
 //#endregion
 

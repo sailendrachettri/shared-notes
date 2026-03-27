@@ -71,6 +71,7 @@ namespace shared_notes_software_server.Controllers
         }
 
 
+
         // 🔄 manual trigger (for testing)
         [HttpPost("sync")]
         public async Task<IActionResult> Sync()
@@ -80,6 +81,7 @@ namespace shared_notes_software_server.Controllers
 
             return Ok(new { count = tenders.Count });
         }
+
 
         // 📥 get latest
         [HttpGet("latest")]
