@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using shared_notes_software_server.Data;
 using shared_notes_software_server.Helpers;
+using static TenderScraperService;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,10 @@ builder.Host.UseWindowsService();
 
 builder.Services.AddScoped<DbConnectionFactory>();
 builder.Services.AddScoped<DbHelper>();
+
+builder.Services.AddScoped<TenderScraperService>();
+builder.Services.AddScoped<TenderDetailService>(); 
+builder.Services.AddScoped<TenderService>();
 
 
 
