@@ -86,10 +86,19 @@ namespace shared_notes_software_server.Controllers
         public async Task<IActionResult> GetLatest()
         {
             var query = @"
-            SELECT * FROM utbl_tenders
-            ORDER BY created_at DESC
-            LIMIT 20;
-        ";
+        SELECT 
+            tender_id        AS Tender_Id,
+            title            AS Title,
+            ref_no           AS RefNo,
+            tender_unique_id AS TenderUniqueId,
+            published_date   AS Published_Date,
+            last_date        AS Last_Date,
+            tags             AS Tags,
+            source           AS Source
+        FROM public.utbl_tenders
+        ORDER BY created_at DESC
+        LIMIT 20;
+    ";
 
             var data = await _db.ExecuteQueryListAsync<TenderDto>(query);
 

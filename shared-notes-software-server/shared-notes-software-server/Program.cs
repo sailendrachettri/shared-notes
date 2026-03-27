@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using shared_notes_software_server.Data;
 using shared_notes_software_server.Helpers;
-using static TenderScraperService;
 
 
 var builder = WebApplication.CreateBuilder(args);
