@@ -166,6 +166,9 @@ const TendersView = () => {
                   </p>
                 </div>
 
+                {/* Source */}
+                <div className="text-sm text-slate-600">Source: <a href="https://www.sikkimtender.gov.in" target="_blank" className="text-primary hover:text-primary/90">https://www.sikkimtender.gov.in</a></div>
+
                 <div>
                   {success ? (
                     <div className="flex items-center text-xs gap-2 text-green-600 bg-green-50 border border-green-200 px-3 py-1.5 rounded-md">

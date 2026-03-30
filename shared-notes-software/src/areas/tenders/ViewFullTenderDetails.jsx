@@ -63,12 +63,6 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
                 </p>
               </div>
 
-              {/* <button
-                onClick={onClose}
-                className="text-gray-500 hover:text-red-500 text-lg me-3 cursor-pointer"
-              >
-                ✕
-              </button> */}
               <div>
                 <span
                   onClick={onClose}
