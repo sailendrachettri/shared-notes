@@ -70,6 +70,7 @@ const TendersView = () => {
 
       if (res?.data?.count > 0) {
         setSuccess(true);
+        handleFetchLatestTenders();
       } else {
         setSuccess(false);
       }
@@ -80,7 +81,6 @@ const TendersView = () => {
       setSyncing(false);
       setTimeout(() => {
         setSuccess(false);
-        handleFetchLatestTenders();
       }, 5000);
     }
   };
@@ -167,7 +167,16 @@ const TendersView = () => {
                 </div>
 
                 {/* Source */}
-                <div className="text-sm text-slate-600">Source: <a href="https://www.sikkimtender.gov.in" target="_blank" className="text-primary hover:text-primary/90">https://www.sikkimtender.gov.in</a></div>
+                <div className="text-sm text-slate-600">
+                  Source:{" "}
+                  <a
+                    href="https://www.sikkimtender.gov.in"
+                    target="_blank"
+                    className="text-primary hover:text-primary/90"
+                  >
+                    https://www.sikkimtender.gov.in
+                  </a>
+                </div>
 
                 <div>
                   {success ? (
@@ -231,9 +240,12 @@ const TendersView = () => {
                     <LoadingPageSoft />
                   </div>
                 ) : filtered.length === 0 ? (
-                  <div className="py-16 flex flex-col items-center gap-2 text-gray-400">
+                  <div className="py-16 flex flex-col items-center gap-2 text-gray-400 min-h-[75vh]">
                     <MdOutlineDescription className="text-3xl text-gray-300" />
-                    <span className="text-sm">No tenders found</span>
+                    <div className="text-sm">No tenders available</div>
+                    <div className="text-sm">
+                      Click "Sync Tenders" to fetch the latest data.
+                    </div>
                   </div>
                 ) : (
                   <div className="divide-y divide-gray-50">
