@@ -45,7 +45,7 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
 
   return (
     <>
-      <section className="w-full h-full flex flex-col">
+      <section className="w-full h-full flex flex-col p-3 overflow-y-auto">
         {loading ? (
           <LoadingPageSoft />
         ) : (

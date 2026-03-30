@@ -201,7 +201,7 @@ const Home = ({
         )}
 
         {selectedMiniTab == "tenders" && (
-          <div className="w-full mb-10 flex-1">
+          <div className="w-full flex-1">
             <TendersMain
             // userData={userData}
             // setRefresh={setRefresh}
