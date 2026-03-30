@@ -14,7 +14,7 @@ public class WebsiteMonitorService : BackgroundService
 
         _httpClient = new HttpClient
         {
-            Timeout = TimeSpan.FromSeconds(10) // ✅ important
+            Timeout = TimeSpan.FromSeconds(10)
         };
     }
 
@@ -69,7 +69,7 @@ public class WebsiteMonitorService : BackgroundService
 
         await db.ExecuteNonQueryAsync(query, cmd =>
         {
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.Parameters.AddWithValue("up_time_id", id);
             cmd.Parameters.AddWithValue("status", status);
             cmd.Parameters.AddWithValue("checkedAt", DateTime.UtcNow);
             cmd.Parameters.AddWithValue("responseTime", responseTime);
