@@ -53,7 +53,7 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
             {/* HEADER */}
             <div className="flex justify-between items-start border-b">
               <div>
-                <h2 className="text-xl font-semibold text-primary">
+                <h2 className="text-xl font-semibold text-slate-600">
                   {f?.Title}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
@@ -63,7 +63,7 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
 
               <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-red-500 text-lg"
+                className="text-gray-500 hover:text-red-500 text-lg me-3 cursor-pointer"
               >
                 ✕
               </button>

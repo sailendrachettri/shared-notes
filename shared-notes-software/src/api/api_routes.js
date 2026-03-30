@@ -4,11 +4,11 @@ export const ADD_UPDATE_NOTES_URL = "/notes/add-update";
 //#endregion
 
 //#region Tenders
-export const SCRAB_TENDERS_URL = "/tenders/sync"
-export const FETCH_LATEST_TENDERS_URL = "/tenders/latest"
-export const FETCH_TENDERS_BY_TAGS_URL = "/tenders/by-tags"
-export const TENDERS_FULL_DETAILS_URL = "/tenders/details"
-export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/session-url"
+export const SYNC_TENDERS_URL = "/tenders/sync";
+export const FETCH_LATEST_TENDERS_URL = "/tenders/latest";
+export const FETCH_TENDERS_BY_TAGS_URL = "/tenders/by-tags";
+export const TENDERS_FULL_DETAILS_URL = "/tenders/details";
+export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/session-url";
 
 //#endregion
 
@@ -17,15 +17,24 @@ export const ADD_FOLDER_URL = "/file-storage/add-folder";
 export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
 export const GET_FOLDER_ITEMS_URL = "/file-storage/get-folder-items";
 export const UPLOAD_STORAGE_FILE_URL = "/file-storage/upload-file";
-export const RENAME_STORAGE_FILE_OR_FOLDER_URL = "/file-storage/rename-file-and-folder";
-export const DELETE_STORAGE_FILE_URL = "/file-storage/delete-file-from-database";
-export const MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL = "/file-storage/make-folder-public";
-export const DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL = "/file-storage/delete-folder";
-export const GET_STORAGE_MST_CATEGORY_URL = "/file-storage/get-mst-file-storage-category";
-export const GET_ALL_FILES_BY_CATEGORY_ID_URL = "/file-storage/all-file-by-category-id";
-export const INVITE_FILE_STORAGE_COLLABORATORS_URL = "/file-storage/add-collaborators";
-export const GET_PENDING_FOLDER_ACCESS_LIST_URL = "/file-storage/get-pending-folder-access-list";
-export const ACCEPT_REJECT_FOLDER_ACCESS_INVITE_URL = "/file-storage/accept-reject-file-access-invitation";
+export const RENAME_STORAGE_FILE_OR_FOLDER_URL =
+  "/file-storage/rename-file-and-folder";
+export const DELETE_STORAGE_FILE_URL =
+  "/file-storage/delete-file-from-database";
+export const MAKE_PARENT_STORAGE_FOLDER_PUBLIC_URL =
+  "/file-storage/make-folder-public";
+export const DELETE_FOLDER_AND_CHILDRENS_STORAGE_FILE_URL =
+  "/file-storage/delete-folder";
+export const GET_STORAGE_MST_CATEGORY_URL =
+  "/file-storage/get-mst-file-storage-category";
+export const GET_ALL_FILES_BY_CATEGORY_ID_URL =
+  "/file-storage/all-file-by-category-id";
+export const INVITE_FILE_STORAGE_COLLABORATORS_URL =
+  "/file-storage/add-collaborators";
+export const GET_PENDING_FOLDER_ACCESS_LIST_URL =
+  "/file-storage/get-pending-folder-access-list";
+export const ACCEPT_REJECT_FOLDER_ACCESS_INVITE_URL =
+  "/file-storage/accept-reject-file-access-invitation";
 
 // #endregion
 
