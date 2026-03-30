@@ -2,10 +2,13 @@ import React from "react";
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-const LoadingPageSoft = () => {
+const LoadingPageSoft = ({label}) => {
   return (
-    <section className="h-[50vh] select-none flex items-center justify-center overflow-hidden">
-      <span><AiOutlineLoading3Quarters size={22} className="animate-spin" /></span>
+    <section className="min-h-[70vh] select-none justify-center overflow-hidden flex items-center flex-col">
+      <div>
+        <AiOutlineLoading3Quarters size={22} className="animate-spin" />
+      </div>
+      <div className="pt-2 text-xs text-slate-600">{label || ""}</div>
     </section>
   );
 };

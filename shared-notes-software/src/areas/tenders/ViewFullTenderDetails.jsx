@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../api/axios";
 import { TENDERS_FULL_DETAILS_URL } from "../../api/api_routes";
+import { GrRevert } from "react-icons/gr";
+
 import {
   MdOutlineBusiness,
   MdOutlineAttachMoney,
@@ -22,7 +24,7 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
         setFullDetails(res?.data || {});
       }
     } catch (error) {
-      console.log("not able to get the full tender data", error);
+      console.error("not able to get the full tender data", error);
     } finally {
       setLoading(false);
     }
@@ -47,13 +49,13 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
     <>
       <section className="w-full h-full flex flex-col p-3 overflow-y-auto">
         {loading ? (
-          <LoadingPageSoft />
+          <LoadingPageSoft label={"Crawling https://www.sikkimtender.gov.in"} />
         ) : (
           <section>
             {/* HEADER */}
-            <div className="flex justify-between items-start border-b">
+            <div className="flex justify-between items-start border-b border-slate-200 px-4">
               <div>
-                <h2 className="text-xl font-semibold text-slate-600">
+                <h2 className="text-lg  font-semibold text-slate-600">
                   {f?.Title}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
@@ -61,12 +63,20 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
                 </p>
               </div>
 
-              <button
+              {/* <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-red-500 text-lg me-3 cursor-pointer"
               >
                 ✕
-              </button>
+              </button> */}
+              <div>
+                <span
+                  onClick={onClose}
+                  className="text-xs flex items-center justify-center flex-nowrap gap-x-1 text-nowrap border px-3 py-2 rounded-md border-slate-200 cursor-pointer hover:bg-slate-50"
+                >
+                  <GrRevert size={14} /> <span> Back to list</span>
+                </span>
+              </div>
             </div>
 
             {/* BODY */}
@@ -74,7 +84,7 @@ const ViewFullTenderDetails = ({ tenderUniqueId, onClose }) => {
               {/* 🏢 Organisation */}
               <Section title="Organisation" icon={<MdOutlineBusiness />}>
                 <Row
-                  label="Organisation Chain"
+                  label="Organization Chain"
                   value={f?.["Organisation Chain"]}
                 />
                 <Row label="Department" value={f?.Name} />
@@ -137,7 +147,7 @@ const Section = ({ title, icon, children }) => (
       <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
     </div>
 
-    <div className="bg-gray-50 rounded-xl p-4">{children}</div>
+    <div className="bg-slate-50 rounded-xl p-4">{children}</div>
   </div>
 );
 

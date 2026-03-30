@@ -67,7 +67,7 @@ const TendersView = () => {
     setSyncing(true);
     try {
       const res = await axiosInstance.post(SYNC_TENDERS_URL);
-      console.log(res);
+
       if (res?.data?.count > 0) {
         setSuccess(true);
       } else {
@@ -100,16 +100,15 @@ const TendersView = () => {
   };
 
   const handleGenerateOfficialLink = async (id) => {
-    console.log(id);
     setGeneratingLink(true);
     try {
       const res = await axiosInstance.get(
         `${VIEW_TENDER_IN_OFFICIAL_PORTAL_URL}/${id}`,
       );
-      console.log(res);
+
       if (res?.status == 200) {
         customToast.success("Redirectring you in to the official portal");
-        console.log(res?.data?.sessionUrl);
+
         openTender(res?.data?.sessionUrl);
         return;
       } else {
@@ -124,7 +123,6 @@ const TendersView = () => {
 
   const openTender = (url) => {
     const win = window.open("about:blank", "_blank");
-    console.log(win);
 
     // Step 1: restart session
     win.location.href =
