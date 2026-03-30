@@ -20,6 +20,7 @@ builder.Services.AddScoped<DbHelper>();
 builder.Services.AddScoped<TenderScraperService>();
 builder.Services.AddScoped<TenderDetailService>(); 
 builder.Services.AddScoped<TenderService>();
+builder.Services.AddHostedService<WebsiteMonitorService>();
 
 
 

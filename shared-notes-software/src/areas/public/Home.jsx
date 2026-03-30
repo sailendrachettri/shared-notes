@@ -12,6 +12,7 @@ import LoginRequired from "../../utils/info-screen/LoginRequired";
 import NotificationsTab from "../tabs/NotificationsTab";
 import FileStorageMain from "../file-storage/FileStorageMain";
 import TendersMain from "../tenders/TendersMain";
+import WebsiteUpTimeMain from "../website-up-time/WebsiteUpTimeMain";
 
 const Home = ({
   toggleSidebar,
@@ -202,10 +203,12 @@ const Home = ({
 
         {selectedMiniTab == "tenders" && (
           <div className="w-full flex-1">
-            <TendersMain
-            // userData={userData}
-            // setRefresh={setRefresh}
-            // refresh={refresh}
+            <TendersMain />
+          </div>
+        )}
+        {selectedMiniTab == "up-time" && (
+          <div className="w-full flex-1">
+            <WebsiteUpTimeMain
             />
           </div>
         )}

@@ -12,6 +12,10 @@ export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/session-url";
 
 //#endregion
 
+//#region Website up time
+export const GET_ALL_WEBSITE_TIME_URL = '/uptime/all'
+//#endregion
+
 //#region File storage
 export const ADD_FOLDER_URL = "/file-storage/add-folder";
 export const GET_FOLDER_LIST_URL = "/file-storage/get-folder-list";
