@@ -40,7 +40,10 @@
            "core:window:allow-set-min-size",   
            "core:window:allow-set-max-size",
            "store:default",
-           "opener:default"
+           "opener:default",
+           "core:webview:allow-create-webview-window",
+            "core:webview:allow-get-all-webviews",
+            "core:webview:allow-create-webview"
           ]
         }
       ]
