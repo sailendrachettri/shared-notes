@@ -16,14 +16,54 @@ namespace shared_notes_software_server.Controllers
         }
 
         // ✅ GET ALL WEBSITES
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("get-all")]
+        public async Task<IActionResult> Search([FromBody] WebsiteSearchRequest request)
         {
-            string query = "SELECT * FROM utbl_websites ORDER BY site_name";
+            int offset = (request.PageNo - 1) * request.PageSize;
 
-            var sites = await _db.ExecuteQueryListAsync<Website>(query);
+            string query = @"
+        SELECT *
+        FROM utbl_websites
+        WHERE (
+                @search::text IS NULL
+                OR site_name ILIKE '%' || @search || '%'
+                OR url ILIKE '%' || @search || '%'
+            )
+        ORDER BY site_name
+        LIMIT @limit OFFSET @offset;
+    ";
 
-            return Ok(sites);
+            string countQuery = @"
+        SELECT COUNT(*)
+        FROM utbl_websites
+        WHERE (
+                @search::text IS NULL
+                OR site_name ILIKE '%' || @search || '%'
+                OR url ILIKE '%' || @search || '%'
+            );
+    ";
+
+            Action<NpgsqlCommand> paramBuilder = cmd =>
+            {
+                cmd.Parameters.AddWithValue("@search",
+                    string.IsNullOrWhiteSpace(request.SearchText)
+                        ? (object)DBNull.Value
+                        : request.SearchText);
+
+                cmd.Parameters.AddWithValue("@limit", request.PageSize);
+                cmd.Parameters.AddWithValue("@offset", offset);
+            };
+
+            var sites = await _db.ExecuteQueryListAsync<Website>(query, paramBuilder);
+            long totalCount = await _db.ExecuteScalarAsync<long>(countQuery, paramBuilder);
+
+            return Ok(new
+            {
+                data = sites,
+                totalCount = totalCount,
+                pageNo = request.PageNo,
+                pageSize = request.PageSize
+            });
         }
 
         // ✅ UPDATE STATUS (used by your background service)

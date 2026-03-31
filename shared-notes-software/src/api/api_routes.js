@@ -13,7 +13,7 @@ export const VIEW_TENDER_IN_OFFICIAL_PORTAL_URL = "/tenders/session-url";
 //#endregion
 
 //#region Website up time
-export const GET_ALL_WEBSITE_TIME_URL = '/uptime/all'
+export const GET_ALL_WEBSITE_TIME_URL = '/uptime/get-all'
 //#endregion
 
 //#region File storage

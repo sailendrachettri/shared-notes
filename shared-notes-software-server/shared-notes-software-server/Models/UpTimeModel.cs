@@ -3,6 +3,12 @@
     public class UpTimeModel
     {
     }
+    public class WebsiteSearchRequest
+    {
+        public string? SearchText { get; set; }
+        public int PageNo { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+    }
     public class Website
     {
         public long Up_Time_Id { get; set; }
