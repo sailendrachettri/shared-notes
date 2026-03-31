@@ -64,19 +64,23 @@ const WebsiteUpTimeMain = () => {
 
             {/* TABLE HEADER */}
             <div className="grid grid-cols-12 text-sm text-gray-500 px-3 pb-2">
+              <div className="col-span-1">Sl No.</div>
               <div className="col-span-4">Website</div>
               <div className="col-span-2">Status</div>
               <div className="col-span-2">Response</div>
-              <div className="col-span-4">Last Checked</div>
+              <div className="col-span-3">Last Checked</div>
             </div>
 
             {/* ROWS */}
             <div className="flex flex-col">
-              {sites?.map((site) => (
+              {sites?.map((site, index) => (
                 <div
                   key={site?.up_Time_Id}
                   className="grid grid-cols-12 items-center px-3 py-3 border-t border-slate-200 hover:bg-gray-50 transition"
                 >
+                  <div>
+                    <p className="text-slate-600">{index+1}</p>
+                  </div>
                   {/* WEBSITE */}
                   <div className="col-span-4 flex items-center gap-3">
                     <FiGlobe className="text-gray-400" />
@@ -114,7 +118,7 @@ const WebsiteUpTimeMain = () => {
                   </div>
 
                   {/* LAST CHECKED */}
-                  <div className="col-span-4 text-sm text-gray-500">
+                  <div className="col-span-3 text-sm text-gray-500">
                     {site?.last_Checked_At
                       ? formatePrettyDateTime(site?.last_Checked_At)
                       : "--"}
