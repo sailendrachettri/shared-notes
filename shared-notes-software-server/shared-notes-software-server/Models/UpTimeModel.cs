@@ -17,5 +17,10 @@
         public bool? Last_Status { get; set; }
         public DateTime? Last_Checked_At { get; set; }
         public int? Response_Time_Ms { get; set; }
+        public bool? Alert_Sent { get; set; }
+    }
+    public class AlertEmail
+    {
+        public string Email { get; set; } = "";
     }
 }
