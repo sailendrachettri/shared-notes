@@ -4,6 +4,8 @@ import { GET_ALL_WEBSITE_TIME_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
 import { formatePrettyDateTime } from "../../utils/date-time/formatePrettyDateTime";
 import Pagination from "../../reusable/paginations/Pagination";
+import { IoMdTime } from "react-icons/io";
+import SearchInput from "../../reusable/inputs/SearchInput";
 
 const WebsiteUpTimeMain = () => {
   const [sites, setSites] = useState([]);
@@ -51,15 +53,37 @@ const WebsiteUpTimeMain = () => {
           <div className="p-6">
             {/* HEADER */}
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-2xl font-semibold">Uptime Monitor</h1>
+              <div className="flex items-center justify-center flex-nowrap gap-x-2">
+                <div className="bg-primary rounded-xl p-2 text-white">
+                  <IoMdTime size={30} />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold">Uptime Monitor</h1>
+                  <div className="text-sm text-slate-600 ps-1">
+                    By SharedNotes
+                  </div>
+                </div>
+              </div>
 
-              <button
-                onClick={fetchSites}
-                className="flex items-center gap-2 text-sm px-3 py-1.5 border border-slate-200 cursor-pointer rounded-md hover:bg-gray-100"
-              >
-                <FiRefreshCw className={`${loading ? "animate-spin" : ""}`} />
-                {loading ? "Checking.." : "Check"}
-              </button>
+              <div className="p-4">
+                <SearchInput
+                  value={searchText}
+                  onChange={setSearchText}
+                  onClear={() => setSearchText("")}
+                  placeholder="Search websites..."
+                  className="w-80"
+                />
+              </div>
+
+              <div className="w-36">
+                <button
+                  onClick={fetchSites}
+                  className="flex items-center justify-center gap-2 text-sm px-3 py-1.5 border border-slate-200 cursor-pointer rounded-md hover:bg-gray-100"
+                >
+                  <FiRefreshCw className={`${loading ? "animate-spin" : ""}`} />
+                  {loading ? "Checking.." : "Check"}
+                </button>
+              </div>
             </div>
 
             {/* TABLE HEADER */}
@@ -79,7 +103,7 @@ const WebsiteUpTimeMain = () => {
                   className="grid grid-cols-12 items-center px-3 py-3 border-t border-slate-200 hover:bg-gray-50 transition"
                 >
                   <div>
-                    <p className="text-slate-600">{index+1}</p>
+                    <p className="text-slate-600">{index + 1}</p>
                   </div>
                   {/* WEBSITE */}
                   <div className="col-span-4 flex items-center gap-3">
