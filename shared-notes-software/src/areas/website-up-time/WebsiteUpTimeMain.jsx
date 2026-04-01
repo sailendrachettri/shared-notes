@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { FiRefreshCw, FiGlobe } from "react-icons/fi";
 import { GET_ALL_WEBSITE_TIME_URL } from "../../api/api_routes";
 import { axiosInstance } from "../../api/axios";
-import { formatePrettyDateTime } from "../../utils/date-time/formatePrettyDateTime";
+import {
+  formatDate,
+  formatePrettyDateTime,
+} from "../../utils/date-time/formatePrettyDateTime";
 import Pagination from "../../reusable/paginations/Pagination";
 import { IoMdTime } from "react-icons/io";
 import SearchInput from "../../reusable/inputs/SearchInput";
@@ -15,7 +18,6 @@ const WebsiteUpTimeMain = () => {
   const [pageSize, setPageSize] = useState(8);
 
   const [pageNo, setPageNo] = useState(1);
-  
 
   const fetchSites = async () => {
     try {
@@ -89,8 +91,9 @@ const WebsiteUpTimeMain = () => {
             {/* TABLE HEADER */}
             <div className="grid grid-cols-12 text-sm text-gray-500 px-3 pb-2">
               <div className="col-span-1">Sl No.</div>
-              <div className="col-span-4">Website</div>
-              <div className="col-span-2">Status</div>
+              <div className="col-span-3">Website</div>
+              <div className="col-span-1">Status</div>
+              <div className="col-span-2">SSL Status</div>
               <div className="col-span-2">Response</div>
               <div className="col-span-3">Last Checked</div>
             </div>
@@ -102,11 +105,13 @@ const WebsiteUpTimeMain = () => {
                   key={site?.up_Time_Id}
                   className="grid grid-cols-12 items-center px-3 py-3 border-t border-slate-200 hover:bg-gray-50 transition"
                 >
-                  <div>
+                  {/* Sl No. */}
+                  <div className="col-span-1">
                     <p className="text-slate-600">{index + 1}</p>
                   </div>
+
                   {/* WEBSITE */}
-                  <div className="col-span-4 flex items-center gap-3">
+                  <div className="col-span-3 flex items-center gap-3">
                     <FiGlobe className="text-gray-400" />
 
                     <div>
@@ -122,7 +127,7 @@ const WebsiteUpTimeMain = () => {
                   </div>
 
                   {/* STATUS */}
-                  <div className="col-span-2">
+                  <div className="col-span-1">
                     <span
                       className={`text-xs font-semibold px-2 py-1 rounded-full ${
                         site?.last_Status
@@ -131,6 +136,33 @@ const WebsiteUpTimeMain = () => {
                       }`}
                     >
                       {site?.last_Status ? "UP" : "DOWN"}
+                    </span>
+                  </div>
+
+                  {/* SSL */}
+                  <div className="col-span-2">
+                    <span
+                      className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full ${
+                        site?.ssl_Valid
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {/* Dot */}
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          site?.ssl_Valid ? "bg-green-500" : "bg-red-500"
+                        }`}
+                      ></span>
+
+                      {/* Text */}
+                      {site?.ssl_Valid
+                        ? `Expires on ${
+                            site?.ssl_Expires_At
+                              ? formatDate(site.ssl_Expires_At)
+                              : "N/A"
+                          }`
+                        : "Expired"}
                     </span>
                   </div>
 

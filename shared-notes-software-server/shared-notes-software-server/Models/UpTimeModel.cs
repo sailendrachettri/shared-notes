@@ -18,6 +18,8 @@
         public DateTime? Last_Checked_At { get; set; }
         public int? Response_Time_Ms { get; set; }
         public bool? Alert_Sent { get; set; }
+        public bool? Ssl_Valid { get; set; }
+        public DateTime? Ssl_Expires_At { get; set; }
     }
     public class AlertEmail
     {
