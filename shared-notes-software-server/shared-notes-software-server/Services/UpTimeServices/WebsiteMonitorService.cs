@@ -40,11 +40,14 @@ public class WebsiteMonitorService : BackgroundService
 
     private async Task CheckWebsite(Website site, DbHelper db, CancellationToken token)
     {
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+        cts.CancelAfter(TimeSpan.FromSeconds(15)); // configurable timeout
+
         try
         {
             var sw = Stopwatch.StartNew();
 
-            var response = await _httpClient.GetAsync(site.Url, token);
+            var response = await _httpClient.GetAsync(site.Url, cts.Token);
 
             sw.Stop();
 
@@ -52,8 +55,14 @@ public class WebsiteMonitorService : BackgroundService
 
             await UpdateStatus(db, site.Up_Time_Id, isUp, (int)sw.ElapsedMilliseconds);
         }
-        catch
+        catch (TaskCanceledException)
         {
+            // Timeout case
+            await UpdateStatus(db, site.Up_Time_Id, false, 0);
+        }
+        catch (Exception)
+        {
+            // DNS failure / socket / SSL etc
             await UpdateStatus(db, site.Up_Time_Id, false, 0);
         }
     }

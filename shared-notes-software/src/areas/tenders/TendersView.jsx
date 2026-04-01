@@ -14,6 +14,9 @@ import { customToast } from "../../utils/toast/toastConfig";
 import LoadingPageSoft from "../../utils/info-screen/LoadingPageSoft";
 import { IoSync } from "react-icons/io5";
 import { FiRefreshCw, FiCheckCircle } from "react-icons/fi";
+import PageHeading from "../../reusable/headings/PageHeading";
+import { FaHandshake } from "react-icons/fa6";
+import SearchInput from "../../reusable/inputs/SearchInput";
 
 const isExpiringSoon = (dateStr) => {
   if (!dateStr) return false;
@@ -156,15 +159,11 @@ const TendersView = () => {
             <div className="p-3 overflow-y-auto">
               {/* Page Header */}
               <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900 tracking-tight">
-                    Latest Tenders
-                  </h1>
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {filtered.length} tender{filtered.length !== 1 ? "s" : ""}{" "}
-                    available
-                  </p>
-                </div>
+                <PageHeading
+                  Icon={FaHandshake}
+                  heading={"Latest Tenders"}
+                  subHeading={`${filtered.length} tender${filtered.length !== 1 ? "s" : ""} available`}
+                />
 
                 {/* Source */}
                 <div className="text-sm text-slate-600">
@@ -208,8 +207,18 @@ const TendersView = () => {
                   )}
                 </div>
 
+                <div className="p-4">
+                  <SearchInput
+                    value={search}
+                    onChange={setSearch}
+                    onClear={() => setSearch("")}
+                    placeholder="Search tenders..."
+                    className="w-80"
+                  />
+                </div>
+
                 {/* Search */}
-                <div className="relative">
+                {/* <div className="relative">
                   <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
                   <input
                     type="text"
@@ -218,7 +227,7 @@ const TendersView = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     className="pl-9 pr-4 py-2 text-sm rounded-lg border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary w-64"
                   />
-                </div>
+                </div> */}
               </div>
 
               {/* Table */}

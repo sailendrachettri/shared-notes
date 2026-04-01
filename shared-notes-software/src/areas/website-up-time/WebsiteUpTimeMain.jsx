@@ -12,10 +12,10 @@ const WebsiteUpTimeMain = () => {
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [searchText, setSearchText] = useState("");
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
 
   const [pageNo, setPageNo] = useState(1);
-  console.log(totalCount);
+  
 
   const fetchSites = async () => {
     try {
@@ -44,13 +44,13 @@ const WebsiteUpTimeMain = () => {
     const interval = setInterval(fetchSites, 10000);
 
     return () => clearInterval(interval);
-  }, [pageNo, pageSize]);
+  }, [pageNo, pageSize, searchText]);
 
   return (
     <>
       <section className="bg-white rounded-md overflow-hidden  pb-2 min-h-[90vh] xl:min-h-[93vh] max-h-[70vh] overflow-y-auto">
         <main className="flex-1 flex flex-col xl:min-h-[83vh]">
-          <div className="p-6">
+          <div className="p-3">
             {/* HEADER */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center justify-center flex-nowrap gap-x-2">
