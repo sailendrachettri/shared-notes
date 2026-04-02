@@ -157,7 +157,7 @@ const WebsiteUpTimeMain = () => {
 
                       {/* Text */}
                       {site?.ssl_Valid
-                        ? `Expires on ${
+                        ? `Valid till ${
                             site?.ssl_Expires_At
                               ? formatDate(site.ssl_Expires_At)
                               : "N/A"
