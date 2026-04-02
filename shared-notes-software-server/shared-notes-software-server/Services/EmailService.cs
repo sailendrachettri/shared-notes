@@ -3,8 +3,8 @@ using System.Net.Mail;
 
 public class EmailService
 {
-    private readonly string _fromEmail = "codebinds@gmail.com";
-    private readonly string _appPassword = "ppyjimpnkuutpgek";
+    private readonly string _fromEmail = Environment.GetEnvironmentVariable("EMAIL_FROM");
+    private readonly string _appPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
 
     public async Task SendAlertAsync(string toEmail, string subject, string body)
     {
