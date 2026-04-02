@@ -115,24 +115,37 @@ public class WebsiteMonitorService : BackgroundService
         });
     }
 
-  
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Wait for network to be ready on boot
+        await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<DbHelper>();
-
-            var sites = await db.ExecuteQueryListAsync<Website>(
-                "SELECT * FROM utbl_websites"
-            );
-
-            // ✅ Fetch all alert emails ONCE per cycle
-            var alertEmails = await GetAlertEmailsAsync(db);
-
-            foreach (var site in sites)
+            try
             {
-                await CheckWebsite(site, db, alertEmails, stoppingToken);
+                using var scope = _scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<DbHelper>();
+
+                var sites = await db.ExecuteQueryListAsync<Website>("SELECT * FROM utbl_websites");
+                var alertEmails = await GetAlertEmailsAsync(db);
+
+                foreach (var site in sites)
+                {
+                    try
+                    {
+                        await CheckWebsite(site, db, alertEmails, stoppingToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"CheckWebsite failed for {site.Url}: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Monitor cycle failed: {ex.Message}");
             }
 
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
@@ -148,7 +161,7 @@ public class WebsiteMonitorService : BackgroundService
         return rows.Select(r => r.Email).ToList();
     }
 
-    
+
 
     private async Task HandleAlert(Website site, bool isUp, DbHelper db, List<string> alertEmails)
     {
@@ -156,26 +169,30 @@ public class WebsiteMonitorService : BackgroundService
 
         var emailService = new EmailService();
 
-        // CASE 1: DOWN
         if (!isUp && site.Last_Status == true && site.Alert_Sent == false)
         {
             var subject = $"[{site.Site_Name}] Outage Detected — Shared Notes UpTime Monitor";
             var body = EmailTemplates.BuildDownEmailBody(site);
 
             foreach (var email in alertEmails)
-                await emailService.SendAlertAsync(email, subject, body);
+            {
+                try { await emailService.SendAlertAsync(email, subject, body); }
+                catch (Exception ex) { Debug.WriteLine($"Email failed for {email}: {ex.Message}"); }
+            }
 
             await UpdateAlertState(db, site.Up_Time_Id, true);
         }
 
-        // CASE 2: RECOVERED
         if (isUp && site.Last_Status == false)
         {
             var subject = $"[{site.Site_Name}] Site Recovered — Shared Notes UpTime Monitor";
             var body = EmailTemplates.BuildRecoveredEmailBody(site);
 
             foreach (var email in alertEmails)
-                await emailService.SendAlertAsync(email, subject, body);
+            {
+                try { await emailService.SendAlertAsync(email, subject, body); }
+                catch (Exception ex) { Debug.WriteLine($"Email failed for {email}: {ex.Message}"); }
+            }
 
             await UpdateAlertState(db, site.Up_Time_Id, false);
         }
