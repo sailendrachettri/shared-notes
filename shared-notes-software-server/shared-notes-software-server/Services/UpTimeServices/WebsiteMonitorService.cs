@@ -23,33 +23,36 @@ public class WebsiteMonitorService : BackgroundService
     private async Task<(bool isHttps, bool sslValid, DateTime? expiresAt)> CheckSslAsync(string url)
     {
         if (!url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-            return (false, false, null); // HTTP site — no SSL at all
+            return (false, false, null);
 
         try
         {
-            var uri = new Uri(url);
+            var handler = new HttpClientHandler();
+            X509Certificate2? cert = null;
+            SslPolicyErrors sslErrors = SslPolicyErrors.None;
 
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
-            using var tcpClient = new System.Net.Sockets.TcpClient();
+            handler.ServerCertificateCustomValidationCallback = (req, certificate, chain, errors) =>
+            {
+                cert = certificate as X509Certificate2;
+                sslErrors = errors;
+                return true; // allow request
+            };
 
-            await tcpClient.ConnectAsync(uri.Host, 443, cts.Token);
+            using var client = new HttpClient(handler);
+            client.Timeout = TimeSpan.FromSeconds(30);
 
-            using var sslStream = new SslStream(tcpClient.GetStream(), false,
-                (sender, cert, chain, errors) => true); // Accept any cert to inspect it
+            await client.GetAsync(url);
 
-            await sslStream.AuthenticateAsClientAsync(uri.Host);
+            var expiresAt = cert?.NotAfter.ToUniversalTime();
 
-            var cert = sslStream.RemoteCertificate as X509Certificate2
-                       ?? new X509Certificate2(sslStream.RemoteCertificate!);
-
-            var expiresAt = cert.NotAfter.ToUniversalTime();
-            bool sslValid = expiresAt > DateTime.UtcNow && sslStream.IsAuthenticated;
+            bool sslValid = cert != null &&
+                            expiresAt > DateTime.UtcNow &&
+                            sslErrors == SslPolicyErrors.None;
 
             return (true, sslValid, expiresAt);
         }
         catch
         {
-            // HTTPS but SSL handshake failed
             return (true, false, null);
         }
     }
