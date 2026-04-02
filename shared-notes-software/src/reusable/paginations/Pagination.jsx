@@ -83,7 +83,7 @@ const Pagination = ({
                   className={`px-3 py-1 text-sm rounded-md ${
                     page === pageNo
                       ? "bg-primary text-white"
-                      : "hover:bg-gray-100 cursor-pointer"
+                      : "hover:bg-gray-100 cursor-pointer bg-slate-50 text-slate-700"
                   }`}
                 >
                   {page}

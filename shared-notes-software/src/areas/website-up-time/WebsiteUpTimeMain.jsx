@@ -129,13 +129,45 @@ const WebsiteUpTimeMain = () => {
                   {/* STATUS */}
                   <div className="col-span-1">
                     <span
-                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                        site?.last_Status
+                      className={`text-xs font-semibold px-2 py-1 rounded-full ${(() => {
+                        const expiry = site?.ssl_Expires_At
+                          ? new Date(site.ssl_Expires_At)
+                          : null;
+
+                        const now = new Date();
+
+                        const isExpiringThisMonth =
+                          expiry &&
+                          expiry.getFullYear() === now.getFullYear() &&
+                          expiry.getMonth() === now.getMonth() &&
+                          expiry > now;
+
+                        if (isExpiringThisMonth) {
+                          return "bg-yellow-100 text-yellow-700";
+                        }
+
+                        return site?.last_Status
                           ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-600"
-                      }`}
+                          : "bg-red-100 text-red-600";
+                      })()}`}
                     >
-                      {site?.last_Status ? "UP" : "DOWN"}
+                      {(() => {
+                        const expiry = site?.ssl_Expires_At
+                          ? new Date(site.ssl_Expires_At)
+                          : null;
+
+                        const now = new Date();
+
+                        const isExpiringThisMonth =
+                          expiry &&
+                          expiry.getFullYear() === now.getFullYear() &&
+                          expiry.getMonth() === now.getMonth() &&
+                          expiry > now;
+
+                        if (isExpiringThisMonth) return "SSL Expiring";
+
+                        return site?.last_Status ? "UP" : "DOWN";
+                      })()}
                     </span>
                   </div>
 

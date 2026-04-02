@@ -159,7 +159,7 @@ public class WebsiteMonitorService : BackgroundService
         // CASE 1: DOWN
         if (!isUp && site.Last_Status == true && site.Alert_Sent == false)
         {
-            var subject = $"🔴 [{site.Site_Name}] Outage Detected — Shared Notes UpTime Monitor";
+            var subject = $"[{site.Site_Name}] Outage Detected — Shared Notes UpTime Monitor";
             var body = EmailTemplates.BuildDownEmailBody(site);
 
             foreach (var email in alertEmails)
@@ -171,7 +171,7 @@ public class WebsiteMonitorService : BackgroundService
         // CASE 2: RECOVERED
         if (isUp && site.Last_Status == false)
         {
-            var subject = $"🟢 [{site.Site_Name}] Site Recovered — Shared Notes UpTime Monitor";
+            var subject = $"[{site.Site_Name}] Site Recovered — Shared Notes UpTime Monitor";
             var body = EmailTemplates.BuildRecoveredEmailBody(site);
 
             foreach (var email in alertEmails)
