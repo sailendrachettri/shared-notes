@@ -73,16 +73,20 @@ export default function UserOnboard({
     setSubmitting(true);
 
     try {
-      if (confirmPin.length !== 4) return customToast.error("PIN must be 4 digits");
+      if (confirmPin.length !== 4)
+        return customToast.error("PIN must be 4 digits");
       if (pin !== confirmPin) return customToast.error("PINs do not match");
 
-      const formData = new FormData();
-      formData.append("files", userProfileImage);
-      let fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const uploadedUrl = fileRes?.data?.files[0]?.file;
+      let fileRes;
+      let uploadedUrl;
+      if (userProfileImage) {
+        const formData = new FormData();
+        formData.append("files", userProfileImage);
+        fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        uploadedUrl = fileRes?.data?.files[0]?.file;
+      }
 
       const payload = {
         UserName: fullName,
@@ -241,7 +245,7 @@ export default function UserOnboard({
                         {fullName?.length >= 3 && (
                           <button
                             onClick={handleNext}
-                            className="bg-primary text-white py-2 px-4 rounded-xl hover:bg-primary/80 transition"
+                            className="bg-primary cursor-pointer text-white py-2 px-4 rounded-xl hover:bg-primary/80 transition"
                           >
                             Next
                           </button>
@@ -266,7 +270,7 @@ export default function UserOnboard({
                           disabled={pin?.length !== 4}
                           className={`py-2 px-4 rounded-xl text-white transition ${
                             pin?.length === 4
-                              ? "bg-primary hover:bg-primary/80"
+                              ? "bg-primary hover:bg-primary/80 cursor-pointer"
                               : "bg-gray-300 cursor-not-allowed"
                           }`}
                         >
@@ -291,7 +295,7 @@ export default function UserOnboard({
                         <button
                           disabled={submitting || confirmPin?.length !== 4}
                           onClick={handleSubmit}
-                          className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
+                          className={`${submitting ? "bg-slate-300 text-slate-700 cursor-not-allowed" : "bg-primary cursor-pointer text-white hover:bg-primary/90"} px-4 py-2 rounded-lg transition`}
                         >
                           {`${submitting ? "Registering.." : "Confirm Registration"}`}
                         </button>
