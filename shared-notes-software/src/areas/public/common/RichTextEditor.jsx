@@ -188,11 +188,23 @@ const RichTextEditor = ({
     }
   }, [heading]);
 
-  const handleChangeCoverClick = () => fileInputRef?.current?.click();
-  const handleChangeIconClick = () => iconInputRef?.current?.click();
+  const handleChangeCoverClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleChangeIconClick = () => {
+    if (iconInputRef.current) {
+      iconInputRef.current.value = null;
+      iconInputRef.current.click();
+    }
+  };
 
   const handleChangeCover = async (e) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
     setUploading(true);
@@ -204,7 +216,7 @@ const RichTextEditor = ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const uploadedUrl = res.data[0];
+      const uploadedUrl = res?.data?.files?.[0]?.file;
 
       const payload =
         selectedNoteType === "mst-note"
@@ -284,6 +296,7 @@ const RichTextEditor = ({
 
   const handleChangeIcon = async (e) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
     setUploading(true);
@@ -295,7 +308,7 @@ const RichTextEditor = ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const uploadedUrl = res.data[0];
+      const uploadedUrl = res?.data?.files?.[0]?.file;
 
       const payload =
         selectedNoteType === "mst-note"
