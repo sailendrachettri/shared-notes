@@ -67,6 +67,7 @@ const RichTextEditor = ({
   const menuRef = useRef(null);
   const titleRef = useRef(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const editor = useEditor({
     extensions: [
@@ -214,6 +215,12 @@ const RichTextEditor = ({
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(percent);
+        },
       });
 
       const uploadedUrl = res?.data?.files?.[0]?.file;
@@ -235,6 +242,7 @@ const RichTextEditor = ({
       setRefresh((prev) => !prev);
       setTimeout(() => {
         setUploading(false);
+        setUploadProgress(0);
       }, 1000);
     }
   };
@@ -306,6 +314,12 @@ const RichTextEditor = ({
       formData.append("files", file);
       let res = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(percent);
+        },
       });
 
       const uploadedUrl = res?.data?.files?.[0]?.file;
@@ -327,6 +341,7 @@ const RichTextEditor = ({
       setRefresh((prev) => !prev);
       setTimeout(() => {
         setUploading(false);
+        setUploadProgress(0);
       }, 1000);
     }
   };
@@ -618,7 +633,7 @@ const RichTextEditor = ({
         />
       </div>
 
-      {uploading && <UploadInProgress />}
+      {uploading && <UploadInProgress progress={uploadProgress}  />}
     </div>
   );
 };
