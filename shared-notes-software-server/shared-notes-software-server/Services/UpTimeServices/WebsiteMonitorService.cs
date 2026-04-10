@@ -60,7 +60,7 @@ public class WebsiteMonitorService : BackgroundService
     private async Task<(bool isUp, int responseTime)> CheckWithRetry(string url, CancellationToken token)
     {
         int retries = 3;
-        int delayMs = 2000;
+        int delayMs = 5000;
 
         for (int attempt = 1; attempt <= retries; attempt++)
         {
@@ -148,7 +148,7 @@ public class WebsiteMonitorService : BackgroundService
                 Debug.WriteLine($"Monitor cycle failed: {ex.Message}");
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(50), stoppingToken);
         }
     }
 
