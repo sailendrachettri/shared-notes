@@ -56,8 +56,8 @@ const AddNewProjectForm = ({setAddNewProject}) => {
 
     const extension = file.name.split(".").pop()?.toLowerCase();
 
-    if (!["pem", "ppk", "key"].includes(extension)) {
-      alert("Please select a .pem, .ppk or .key file.");
+    if (!["pem"].includes(extension)) {
+      customToast.error("Please select a .pem");
       e.target.value = "";
       return;
     }

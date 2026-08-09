@@ -111,5 +111,6 @@ export const REMOVE_COVER_IMAGE_SUB_PAGE_URL = "/sub-page/remove-cover-image";
 //#region Ip whitelist
 export const ADD_PROJECT_URL = "/ip-whitelist/add-project";
 export const GET_ALL_PROJECTS_URL = "/ip-whitelist/get-all-projects";
+export const SINGLE_WHITELIST_IP_BY_ID_URL = "/ip-whitelist//whitelist-ip-by-id/{id}";
 
 //#endregion

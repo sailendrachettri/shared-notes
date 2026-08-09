@@ -15,18 +15,28 @@ import AddNewProjectForm from "./AddNewProjectForm";
 import { GrRevert } from "react-icons/gr";
 import { useEffect } from "react";
 import { axiosInstance } from "../../api/axios";
-import { GET_ALL_PROJECTS_URL } from "../../api/api_routes";
+import { GET_ALL_PROJECTS_URL, SINGLE_WHITELIST_IP_BY_ID_URL } from "../../api/api_routes";
 import { customToast } from "../../utils/toast/toastConfig";
 
 const IpWhiteListHome = () => {
   const [addNewProject, setAddNewProject] = useState(false);
   const [allProjects, setAllProjects] = useState([]);
 
+  const handleSingleProjectIPWhitelist = async(projectId)=>{
+    console.log({projectId});
+
+    const payload = {
+        Id: projectId
+    }
+    const res = await axiosInstance.post(SINGLE_WHITELIST_IP_BY_ID_URL, payload);
+    console.log({res});
+  }
+
   useEffect(() => {
     (async () => {
       try {
         const res = await axiosInstance.get(GET_ALL_PROJECTS_URL);
-        console.log(res);
+        // console.log(res);
 
         setAllProjects(res?.data || []);
       } catch (error) {
@@ -34,7 +44,7 @@ const IpWhiteListHome = () => {
         customToast.warning("No details found!");
       }
     })();
-  }, []);
+  }, [addNewProject]);
 
   const projects = [
     {
@@ -370,7 +380,8 @@ const IpWhiteListHome = () => {
                   <button
                     type="button"
                     disabled={!project?.isActive}
-                    onClick={() => handleWhitelistProject(project)}
+                    // onClick={() => handleWhitelistProject(project)}
+                    onClick={() => handleSingleProjectIPWhitelist(project?.ipWhitelistId)}
                     className="
           mt-5
           flex w-full
