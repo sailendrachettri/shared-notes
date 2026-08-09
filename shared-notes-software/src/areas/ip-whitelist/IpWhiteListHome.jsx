@@ -223,7 +223,7 @@ const IpWhiteListHome = () => {
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
               {allProjects.map((project) => (
                 <div
-                  key={project.ipWhitelistId}
+                  key={project?.ipWhitelistId}
                   className="
         group
         rounded-xl
@@ -255,22 +255,22 @@ const IpWhiteListHome = () => {
                       </div>
 
                       <div>
-                        <h3 className="font-semibold text-[var(--color-secondary)]">
-                          {project.projectName}
+                        <h3 className="font-semibold text-[var(--color-secondary)] capitalize">
+                          {project?.projectName}
                         </h3>
 
                         <div className="mt-1 flex items-center gap-1.5">
                           <FiCheckCircle
                             size={13}
                             className={
-                              project.isActive
+                              project?.isActive
                                 ? "text-[var(--color-primary)]"
                                 : "text-gray-400"
                             }
                           />
 
                           <span className="text-xs text-gray-400">
-                            {project.isActive ? "Active" : "Inactive"}
+                            {project?.isActive ? "Active" : "Inactive"}
                           </span>
                         </div>
                       </div>
@@ -304,7 +304,7 @@ const IpWhiteListHome = () => {
             text-[var(--color-secondary)]
           "
                     >
-                      {project.envType}
+                      {project?.envType}
                     </span>
                   </div>
 
@@ -317,7 +317,7 @@ const IpWhiteListHome = () => {
                       </div>
 
                       <span className="font-mono text-xs font-medium text-gray-700">
-                        {project.serverHost}:{project.sshPort}
+                        {project?.serverHost}:{project?.sshPort}
                       </span>
                     </div>
 
@@ -328,7 +328,7 @@ const IpWhiteListHome = () => {
                       </div>
 
                       <span className="font-mono text-xs font-medium text-gray-700">
-                        :{project.postgresPort}
+                        :{project?.postgresPort}
                       </span>
                     </div>
                   </div>
@@ -345,7 +345,7 @@ const IpWhiteListHome = () => {
                       </div>
 
                       <span className="font-mono text-xs font-medium text-gray-700">
-                        {project.currentIpAddress || "Not whitelisted"}
+                        {project?.currentIpAddress || "Not whitelisted"}
                       </span>
                     </div>
                   </div>
@@ -357,9 +357,9 @@ const IpWhiteListHome = () => {
                     <span>
                       Last whitelisted:{" "}
                       <span className="font-medium text-gray-500">
-                        {project.lastIpCheckDateTime
+                        {project?.lastIpCheckDateTime
                           ? new Date(
-                              project.lastIpCheckDateTime,
+                              project?.lastIpCheckDateTime,
                             ).toLocaleString()
                           : "Never"}
                       </span>
@@ -369,7 +369,7 @@ const IpWhiteListHome = () => {
                   {/* Action */}
                   <button
                     type="button"
-                    disabled={!project.isActive}
+                    disabled={!project?.isActive}
                     onClick={() => handleWhitelistProject(project)}
                     className="
           mt-5
@@ -391,7 +391,7 @@ const IpWhiteListHome = () => {
         "
                   >
                     <FiShield size={16} />
-                    {project.isActive
+                    {project?.isActive
                       ? "Whitelist Current IP"
                       : "Project Inactive"}
                   </button>
