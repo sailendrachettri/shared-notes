@@ -254,11 +254,11 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
           <div className="flex items-center gap-2 text-xs">
             <span
               className={`inline-block w-2 h-2 rounded-full ${
-                status === "running" ? "bg-green-text-green-600 animate-pulse" : "bg-[#5a5a70]"
+                status === "running" ? "bg-green-600 animate-pulse" : "bg-[#5a5a70]"
               }`}
             />
             <span className="text-[#a0a0b8]">
-              {status === "running" ? "process active" : "process finished"}
+              {status === "running" ? "Process active" : "Process finished"}
             </span>
           </div>
           <span className="text-[#5a5a70] text-[10px] tracking-widest">
