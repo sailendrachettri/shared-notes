@@ -20,8 +20,8 @@ const STEPS = [
   "Updating UFW rules...",
 ];
 
-const STEP_DELAY_MS = 780;
-const RESULT_DELAY_MS = 950; // Delay between each project result
+const STEP_DELAY_MS = 1380;
+const RESULT_DELAY_MS = 1050; // Delay between each project result
 
 function timestamp() {
   return new Date().toTimeString().slice(0, 8);
