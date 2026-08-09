@@ -340,7 +340,7 @@ namespace shared_notes_software_server.Controllers
                     ssh_port AS "SshPort",
                     path_to_private_file AS "PathToPrivateFile",
                     postgres_port AS "PostgresPort",
-                    current_ip_address AS "CurrentIpAddress",
+                    current_ip_address::text AS "CurrentIpAddress",
                     last_ip_check_date_time AS "LastIpCheckDateTime",
                     is_active AS "IsActive",
                     created_at AS "CreatedAt",
@@ -376,7 +376,7 @@ namespace shared_notes_software_server.Controllers
                     ssh_port AS "SshPort",
                     path_to_private_file AS "PathToPrivateFile",
                     postgres_port AS "PostgresPort",
-                    current_ip_address AS "CurrentIpAddress",
+                    current_ip_address::text AS "CurrentIpAddress",
                     last_ip_check_date_time AS "LastIpCheckDateTime",
                     is_active AS "IsActive",
                     created_at AS "CreatedAt",
@@ -790,7 +790,7 @@ namespace shared_notes_software_server.Controllers
                 key_passphrase AS "KeyPassphrase",
                 ssh_password AS "SshPassword",
                 postgres_port AS "PostgresPort",
-                current_ip_address AS "CurrentIpAddress"
+                current_ip_address::text AS "CurrentIpAddress"
             FROM utbl_ip_whitelist
             WHERE ip_whitelist_id = @id
               AND is_active = TRUE
@@ -814,21 +814,21 @@ namespace shared_notes_software_server.Controllers
         {
             var projects = await _db.ExecuteQueryListAsync<IpWhitelistModel>(
                 """
-            SELECT
-                ip_whitelist_id AS "IpWhitelistId",
-                project_name AS "ProjectName",
-                server_host AS "ServerHost",
-                ssh_username AS "SshUsername",
-                ssh_port AS "SshPort",
-                path_to_private_file AS "PathToPrivateFile",
-                key_passphrase AS "KeyPassphrase",
-                ssh_password AS "SshPassword",
-                postgres_port AS "PostgresPort",
-                current_ip_address AS "CurrentIpAddress"
-            FROM utbl_ip_whitelist
-            WHERE is_active = TRUE
-            ORDER BY project_name
-            """
+        SELECT
+            ip_whitelist_id AS "IpWhitelistId",
+            project_name AS "ProjectName",
+            server_host AS "ServerHost",
+            ssh_username AS "SshUsername",
+            ssh_port AS "SshPort",
+            path_to_private_file AS "PathToPrivateFile",
+            key_passphrase AS "KeyPassphrase",
+            ssh_password AS "SshPassword",
+            postgres_port AS "PostgresPort",
+            current_ip_address::text AS "CurrentIpAddress"
+        FROM utbl_ip_whitelist
+        WHERE is_active = TRUE
+        ORDER BY project_name
+        """
             );
 
             if (projects.Count == 0)
