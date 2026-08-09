@@ -23,6 +23,7 @@ const MiniMenu = ({
   isUserLoggedIn,
   setOpenRegistrationWindow,
   setSelectedType,
+  setSelectedNoteId
 }) => {
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const menuRef = useRef(null);
@@ -53,6 +54,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("dashboard");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "dashboard" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -61,6 +63,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("notes-workspaces");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "notes-workspaces" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -69,6 +72,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("reminders");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "reminders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -78,6 +82,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("file-storage");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "file-storage" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -87,6 +92,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("tenders");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "tenders" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -95,6 +101,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("up-time");
+            setSelectedNoteId(null);
           }}
           className={`${selectedMiniTab == "up-time" ? "bg-primary/10 text-primary" : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"}  rounded-xl p-2 mt-3`}
         >
@@ -104,6 +111,7 @@ const MiniMenu = ({
           <div
           onClick={() => {
             setSelectedMiniTab("ip-whitelist");
+            setSelectedNoteId(null);
           }}
           className={`${
             selectedMiniTab == "ip-whitelist"
@@ -119,6 +127,7 @@ const MiniMenu = ({
         <div
           onClick={() => {
             setSelectedMiniTab("notifications");
+            setSelectedNoteId(null);
             refreshNotifications();
           }}
           className={`${

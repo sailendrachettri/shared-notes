@@ -65,6 +65,7 @@ const Home = ({
           isUserLoggedIn={isUserLoggedIn}
           setOpenRegistrationWindow={setOpenRegistrationWindow}
           setSelectedType={setSelectedType}
+          setSelectedNoteId={setSelectedNoteId}
         />
 
         {selectedMiniTab == "dashboard" && (
@@ -154,7 +155,7 @@ const Home = ({
 
             {/* Content Card */}
             <div className="flex-1 rounded-md overflow-y-auto max-h-[93vh] hide-scrollbar mb-10">
-              {selectedTab == "notes" && (
+              {selectedTab == "notes" && selectedNoteId && (
                 <Playground
                   selectedNoteId={selectedNoteId}
                   noteHeading={noteHeading}
@@ -182,7 +183,7 @@ const Home = ({
                 />
               )}
 
-              {!selectedNoteId && !selectedWorkspaceId && (
+               {!selectedNoteId && !selectedWorkspaceId && (
                 <section>
                   <InfoScreen />
                 </section>
