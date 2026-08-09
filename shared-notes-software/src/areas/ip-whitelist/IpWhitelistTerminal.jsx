@@ -14,27 +14,28 @@ import {
 // wait reads like a script running rather than a bare spinner. The
 // actual success/failure always comes from the API response below.
 const STEPS = [
-  "resolving public ip via ipify...",
-  "opening ssh connection...",
-  "authenticating with private key...",
-  "updating ufw rules...",
+  "Fetching the current public IP address via ipify...",
+  "Opening ssh connection...",
+  "Authenticating with private key...",
+  "Updating UFW rules...",
 ];
 
-const STEP_DELAY_MS = 380;
+const STEP_DELAY_MS = 780;
+const RESULT_DELAY_MS = 950; // Delay between each project result
 
 function timestamp() {
   return new Date().toTimeString().slice(0, 8);
 }
 
 function LogLine({ line }) {
-  // Unique colour scheme – neon cyan for commands and highlights
+  // Using theme colours
   const toneClass =
     line.tone === "success"
-      ? "text-primary drop-shadow-[0_0_3px_rgba(0,240,255,0.3)]"
+      ? "text-green-600 drop-shadow-[0_0_4px_rgba(210,85,100,0.3)]"
       : line.tone === "error"
       ? "text-[#ff6b8a]"
       : line.tone === "cmd"
-      ? "text-primary font-medium"
+      ? "text-green-600 font-medium"
       : "text-[#8a9ba8]";
 
   return (
@@ -164,8 +165,15 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
 
     const results = data?.results || [];
 
-    for (const r of results) {
-      await sleep(160);
+    // Show each project result with a delay, line by line
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      
+      // Add a small delay between each result (except the first one)
+      if (i > 0) {
+        await sleep(RESULT_DELAY_MS);
+      }
+      
       if (r.success) {
         pushLine(
           `${r.project}: ${r.message}` + (r.newIp ? `  (ip: ${r.newIp})` : ""),
@@ -174,6 +182,11 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
       } else {
         pushLine(`${r.project}: ${r.message}`, "error");
       }
+    }
+
+    // Add a small delay before showing the summary
+    if (results.length > 0) {
+      await sleep(RESULT_DELAY_MS);
     }
 
     const successCount = results.filter((r) => r.success).length;
@@ -196,11 +209,11 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
         className="w-full max-w-4xl max-h-[90vh] rounded-lg overflow-hidden border"
         style={{ fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace" }}
       >
-        {/* header – unique, minimal, no traffic lights */}
-        <div className="flex items-center justify-between px-5 py-3 bg-[#0d1117] border-b border-primary/10">
+        {/* header – using secondary for background */}
+        <div className="flex items-center justify-between px-5 py-3 bg-[#2f2f4a] border-b border-green-text-green-600/20">
           <div className="flex items-center gap-3">
-            <FiTerminal size={16} className="text-primary" />
-            <span className="text-[#b0c4d9] text-sm font-medium tracking-wide">
+            <FiTerminal size={16} className="text-green-600" />
+            <span className="text-[#d0d0e0] text-sm font-medium tracking-wide">
               {mode === "all"
                 ? "WHITELIST · ALL PROJECTS"
                 : `WHITELIST · ${project?.projectName?.toUpperCase() || "PROJECT"}`}
@@ -209,12 +222,12 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
 
           <div className="flex items-center gap-4">
             {status === "running" && (
-              <FiLoader size={16} className="text-primary animate-spin" />
+              <FiLoader size={16} className="text-green-600 animate-spin" />
             )}
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-[#2a3a4a] text-[#8a9ba8] hover:border-primary/40 hover:text-primary transition-all duration-200"
+              className="flex items-center cursor-pointer gap-1.5 text-xs font-medium px-3 py-1.5 rounded-md border border-[#5a5a70] text-[#b0b0c0] hover:border-green-text-green-600 transition-all duration-200"
             >
               {status === "running" ? "Hide" : "Close"}
               <FiX size={14} />
@@ -222,9 +235,9 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
           </div>
         </div>
 
-        {/* terminal output – with scanline texture (optional) */}
+        {/* terminal output – with scanline texture */}
         <div
-          className="bg-[#0b0e12] p-5 h-[400px] overflow-y-auto text-[13px] custom-scrollbar relative"
+          className="bg-[#1a1a2a] p-5 h-[400px] overflow-y-auto text-[13px] custom-scrollbar relative"
           style={{
             backgroundImage:
               "repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px)",
@@ -236,39 +249,39 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
           <div ref={logEndRef} />
         </div>
 
-        {/* footer – subtle status */}
-        <div className="flex items-center justify-between px-5 py-2.5 bg-[#0d1117] border-t border-primary/10">
+        {/* footer – secondary background */}
+        <div className="flex items-center justify-between px-5 py-2.5 bg-[#2f2f4a] border-t border-green-text-green-600/20">
           <div className="flex items-center gap-2 text-xs">
             <span
               className={`inline-block w-2 h-2 rounded-full ${
-                status === "running" ? "bg-primary animate-pulse" : "bg-[#3a4a55]"
+                status === "running" ? "bg-green-text-green-600 animate-pulse" : "bg-[#5a5a70]"
               }`}
             />
-            <span className="text-[#5a6f7e]">
+            <span className="text-[#a0a0b8]">
               {status === "running" ? "process active" : "process finished"}
             </span>
           </div>
-          <span className="text-[#2a3a4a] text-[10px] tracking-widest">
+          <span className="text-[#5a5a70] text-[10px] tracking-widest">
             {mode === "all" ? "BATCH" : "SINGLE"} · {status === "running" ? "⏳" : "✓"}
           </span>
         </div>
       </div>
 
-      {/* Custom scrollbar – neon cyan */}
+      {/* Custom scrollbar – green-text-green-600 colour */}
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
           height: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #0b0e12;
+          background: #2a2a3e;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #00f0ff66;
+          background: #d25564aa;
           border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #00f0ffaa;
+          background: #d25564;
         }
       `}</style>
     </div>

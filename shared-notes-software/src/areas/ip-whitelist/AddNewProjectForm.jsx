@@ -376,7 +376,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
                       px-6 py-8
                       transition
                       hover:border-[var(--color-primary)]/50
-                      hover:bg-[var(--color-primary)]/[0.02]
+                      hover:bg-[var(--color-primary)]/[0.02] cursor-pointer
                     "
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-primary)]/10">
@@ -391,7 +391,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
                     </p>
 
                     <p className="mt-1 text-xs text-gray-400">
-                      .pem, .ppk or .key files
+                      .pem file
                     </p>
                   </button>
                 ) : (

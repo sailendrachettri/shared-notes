@@ -101,6 +101,21 @@ const MiniMenu = ({
           <IoMdTime size={22} />
         </div>
 
+          <div
+          onClick={() => {
+            setSelectedMiniTab("ip-whitelist");
+          }}
+          className={`${
+            selectedMiniTab == "ip-whitelist"
+              ? "bg-primary/10 text-primary"
+              : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"
+          } relative rounded-xl p-2 mt-3 inline-flex items-center justify-center`}
+        >
+          <BsTerminal size={20} />
+
+          
+        </div>
+
         <div
           onClick={() => {
             setSelectedMiniTab("notifications");
@@ -121,20 +136,7 @@ const MiniMenu = ({
           )}
         </div>
 
-        <div
-          onClick={() => {
-            setSelectedMiniTab("ip-whitelist");
-          }}
-          className={`${
-            selectedMiniTab == "ip-whitelist"
-              ? "bg-primary/10 text-primary"
-              : "text-slate-500 cursor-pointer hover:bg-primary/5 hover:text-slate-700"
-          } relative rounded-xl p-2 mt-3 inline-flex items-center justify-center`}
-        >
-          <BsTerminal size={20} />
-
-          
-        </div>
+      
 
         {/* User */}
         {isUserLoggedIn ? (
