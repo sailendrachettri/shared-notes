@@ -596,6 +596,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
 
           <div className="flex items-center justify-end gap-3 pb-8">
             <button
+            onClick={()=>{setAddNewProject(false)}}
               type="button"
               className="
                 rounded-lg
@@ -605,7 +606,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
                 text-sm font-semibold
                 text-gray-600
                 transition
-                hover:bg-gray-50
+                hover:bg-gray-50 cursor-pointer
               "
             >
               Cancel
