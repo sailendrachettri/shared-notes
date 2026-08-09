@@ -132,7 +132,7 @@ const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIs
                           </div>
     
                           <span className="font-mono text-xs font-medium text-gray-700">
-                            {project?.currentIpAddress || "Not whitelisted"}
+                            {project?.currentIpAddress?.replace('/', '.') || "Not whitelisted"}
                           </span>
                         </div>
                       </div>
