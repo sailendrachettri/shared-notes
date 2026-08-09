@@ -107,3 +107,9 @@ export const CHANGE_COVER_IMAGE_SUB_PAGE_URL = "/sub-page/change-cover-image";
 export const REMOVE_COVER_IMAGE_SUB_PAGE_URL = "/sub-page/remove-cover-image";
 
 //#endregion
+
+//#region Ip whitelist
+export const ADD_PROJECT_URL = "/ip-whitelist/add-project";
+export const GET_ALL_PROJECTS_URL = "/ip-whitelist/get-all-projects";
+
+//#endregion

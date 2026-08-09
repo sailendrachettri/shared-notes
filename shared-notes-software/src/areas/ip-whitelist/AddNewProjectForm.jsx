@@ -12,10 +12,15 @@ import {
   FiX,
   FiEye,
   FiEyeOff,
+  FiLoader,
 } from "react-icons/fi";
+import { axiosInstance } from "../../api/axios";
+import { ADD_PROJECT_URL, FILE_UPLOAD_URL } from "../../api/api_routes";
+import { customToast } from "../../utils/toast/toastConfig";
 
-const AddNewProjectForm = () => {
+const AddNewProjectForm = ({setAddNewProject}) => {
   const fileInputRef = useRef(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const [showPassphrase, setShowPassphrase] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +62,8 @@ const AddNewProjectForm = () => {
       return;
     }
 
+    console.log({ file });
+
     setPrivateKey(file);
   };
 
@@ -68,25 +75,68 @@ const AddNewProjectForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    setSubmitting(true);
 
-    const payload = {
-      ...formData,
-      privateKey,
-    };
+    try {
+      e.preventDefault();
 
-    console.log("Project:", payload);
+      let fileRes;
 
-    // Later:
-    // Send FormData to ASP.NET API
+      if (privateKey) {
+        const formData = new FormData();
+        formData.append("files", privateKey);
+        fileRes = await axiosInstance.post(FILE_UPLOAD_URL, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      const uploadedUrl = fileRes?.data?.files[0]?.file;
+
+      console.log({ uploadedUrl });
+
+      const payload = {
+        projectName: formData?.projectName,
+        envType: formData?.environment,
+        description: formData?.description,
+
+        serverHost: formData?.serverHost,
+
+        sshUsername: formData?.sshUsername,
+        sshPort: Number(formData?.sshPort),
+
+        pathToPrivateFile: uploadedUrl,
+
+        keyPassphrase: formData?.sshPassphrase,
+        sshPassword: formData?.sshPassword,
+
+        postgresPort: Number(formData?.postgresPort),
+        isActive: true,
+      };
+
+      console.log("Project:", payload);
+
+      const res = await axiosInstance.post(ADD_PROJECT_URL, payload);
+      console.log({ res });
+
+      if (res.data.success == true && res.data.ip_whitelist_id > 0) {
+        customToast.success("Project added successful");
+        setAddNewProject(false);
+      } else {
+        customToast.error("Not able to add the project at the moment");
+      }
+    } catch (error) {
+      customToast.error(
+        "Server error: Not able to add the project at the moment",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#f8f7f6] py-8">
       <div className="mx-auto">
-       
-
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* ------------------------------------------------ */}
           {/* Project Information */}
@@ -96,10 +146,7 @@ const AddNewProjectForm = () => {
             <div className="border-b border-gray-100 px-6 py-5">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-primary)]/10">
-                  <FiInfo
-                    size={18}
-                    className="text-[var(--color-primary)]"
-                  />
+                  <FiInfo size={18} className="text-[var(--color-primary)]" />
                 </div>
 
                 <div>
@@ -118,7 +165,8 @@ const AddNewProjectForm = () => {
               {/* Project Name */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Project Name <span className="text-[var(--color-primary)]">*</span>
+                  Project Name{" "}
+                  <span className="text-[var(--color-primary)]">*</span>
                 </label>
 
                 <input
@@ -542,7 +590,6 @@ const AddNewProjectForm = () => {
             </div>
           </section>
 
-
           {/* ------------------------------------------------ */}
           {/* Footer Actions */}
           {/* ------------------------------------------------ */}
@@ -563,25 +610,38 @@ const AddNewProjectForm = () => {
             >
               Cancel
             </button>
-
             <button
-              type="submit"
-              className="
-                flex items-center gap-2
-                rounded-lg
-                bg-[var(--color-primary)]
-                px-5 py-2.5
-                text-sm font-semibold
-                text-white
-                shadow-sm
-                transition
-                hover:brightness-95
-                active:scale-[0.98]
-              "
-            >
-              <FiCheck size={17} />
-              Save Project
-            </button>
+  type="submit"
+  disabled={submitting}
+  className={`
+    flex items-center gap-2
+    rounded-lg
+    px-5 py-2.5
+    text-sm font-semibold
+    shadow-sm
+    transition
+    ${
+      submitting
+        ? "cursor-not-allowed bg-slate-300 text-slate-600"
+        : "cursor-pointer bg-[var(--color-primary)] text-white hover:brightness-95 active:scale-[0.98]"
+    }
+  `}
+>
+  {submitting ? (
+    <>
+      <FiLoader
+        size={17}
+        className="animate-spin"
+      />
+      Saving...
+    </>
+  ) : (
+    <>
+      <FiCheck size={17} />
+      Save Project
+    </>
+  )}
+</button>
           </div>
         </form>
       </div>
