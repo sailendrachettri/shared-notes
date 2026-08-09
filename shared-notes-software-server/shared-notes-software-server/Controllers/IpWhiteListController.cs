@@ -704,7 +704,7 @@ namespace shared_notes_software_server.Controllers
         // DELETE PROJECT
         // ============================================================
 
-        [HttpDelete("delete-project-by-id/{id:long}")]
+        [HttpPost("delete-project-by-id/{id:long}")]
         public async Task<IActionResult> DeleteProject(long id)
         {
             if (id <= 0)

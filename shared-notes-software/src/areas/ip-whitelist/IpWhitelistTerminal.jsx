@@ -191,7 +191,7 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
 
     const successCount = results.filter((r) => r.success).length;
     const allSucceeded = results.length > 0 && successCount === results.length;
-    const summary = `${successCount}/${results.length} projects whitelisted successfully.`;
+    const summary = `${successCount}/${results.length} Projects whitelisted successfully.`;
 
     pushLine(summary, allSucceeded ? "success" : "error");
     finish(allSucceeded, summary);
@@ -206,7 +206,7 @@ export default function IpWhitelistTerminal({ mode, project, onClose, onComplete
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 sm:p-6">
       <div
-        className="w-full max-w-4xl max-h-[90vh] rounded-lg overflow-hidden border"
+        className="w-full max-w-4xl max-h-[90vh] rounded-lg overflow-hidden"
         style={{ fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, monospace" }}
       >
         {/* header – using secondary for background */}

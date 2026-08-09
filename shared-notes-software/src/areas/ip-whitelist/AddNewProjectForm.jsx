@@ -135,7 +135,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f7f6] py-8">
+    <div className="min-h-screen py-8">
       <div className="mx-auto">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* ------------------------------------------------ */}

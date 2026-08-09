@@ -113,5 +113,6 @@ export const ADD_PROJECT_URL = "/ip-whitelist/add-project";
 export const GET_ALL_PROJECTS_URL = "/ip-whitelist/get-all-projects";
 export const SINGLE_WHITELIST_IP_BY_ID_URL = "/ip-whitelist/whitelist-ip-by-id/{id}";
 export const ALL_WHITELIST_IP_URL = "/ip-whitelist/whitelist-all";
+export const DELETE_PROJECT_BY_ID_URL = "/ip-whitelist/delete-project-by-id";
 
 //#endregion

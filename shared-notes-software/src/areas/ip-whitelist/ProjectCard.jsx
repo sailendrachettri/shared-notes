@@ -1,8 +1,10 @@
 import React from 'react'
 import { FiCheckCircle, FiClock, FiDatabase, FiMoreVertical, FiPlus, FiServer, FiShield } from 'react-icons/fi';
 import { formatePrettyDateTime } from '../../utils/date-time/formatePrettyDateTime';
+import { RiDeleteBinLine } from "react-icons/ri";
 
-const ProjectCard = ({setAddNewProject, allProjects}) => {
+
+const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIsDeleteOpen}) => {
   return (
     <>
      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -17,7 +19,6 @@ const ProjectCard = ({setAddNewProject, allProjects}) => {
             p-5
             shadow-sm
             transition-all
-            hover:-translate-y-0.5
             hover:border-[var(--color-primary)]/30
             hover:shadow-md
           "
@@ -62,16 +63,17 @@ const ProjectCard = ({setAddNewProject, allProjects}) => {
                         </div>
     
                         <button
+                        onClick={()=>{setSelectedProjectId(project?.ipWhitelistId); setIsDeleteOpen(true)}}
                           type="button"
                           className="
                 rounded-lg p-1.5
                 text-gray-400
                 transition
                 hover:bg-gray-100
-                hover:text-[var(--color-secondary)]
+                hover:text-[var(--color-secondary)] group-hover:visible invisible
               "
                         >
-                          <FiMoreVertical size={18} />
+                          <RiDeleteBinLine size={18} className='text-red-500 opacity-70 cursor-pointer'/>
                         </button>
                       </div>
     

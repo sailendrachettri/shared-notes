@@ -13,16 +13,22 @@ import {
 import AddNewProjectForm from "./AddNewProjectForm";
 import { GrRevert } from "react-icons/gr";
 import { axiosInstance } from "../../api/axios";
-import { GET_ALL_PROJECTS_URL } from "../../api/api_routes";
+import {
+  DELETE_PROJECT_BY_ID_URL,
+  GET_ALL_PROJECTS_URL,
+} from "../../api/api_routes";
 import { customToast } from "../../utils/toast/toastConfig";
 import IpWhitelistTerminal from "./IpWhitelistTerminal";
 import { formatePrettyDateTime } from "../../utils/date-time/formatePrettyDateTime";
 import ProjectCard from "./ProjectCard";
+import DeleteConfirmModal from "../../reusable/DeleteConfirmModal";
 
 const IpWhiteListHome = () => {
   const [addNewProject, setAddNewProject] = useState(false);
   const [allProjects, setAllProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   // Controls the terminal modal. `runId` forces a fresh mount of the
   // terminal component each time a whitelist action is triggered, so
@@ -33,6 +39,28 @@ const IpWhiteListHome = () => {
     project: null,
     runId: 0,
   });
+
+  const handleDeleteProject = async (projectId) => {
+    if(!selectedProjectId){
+        customToast.warning("Please select a project");
+        return;
+    }
+    try {
+      const res = await axiosInstance.post(`${DELETE_PROJECT_BY_ID_URL}/${selectedProjectId}`);
+      console.log({ res });
+
+      if(res.data.success == true && res.status == 200){
+        customToast.success("Project deleted successful");
+      }
+    } catch (error) {
+        console.log(error);
+        customToast.error("Not able to delete this project");
+    } finally {
+        setIsDeleteOpen(false);
+        setSelectedProjectId(null);
+
+    }
+  };
 
   const fetchProjects = useCallback(async () => {
     setLoadingProjects(true);
@@ -49,7 +77,7 @@ const IpWhiteListHome = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [addNewProject, fetchProjects]);
+  }, [addNewProject, fetchProjects, isDeleteOpen]);
 
   const handleSingleProjectIPWhitelist = (project) => {
     if (!project?.ipWhitelistId) return;
@@ -78,9 +106,13 @@ const IpWhiteListHome = () => {
 
   const handleTerminalComplete = (success, summaryMessage) => {
     if (success) {
-      customToast.success(summaryMessage || "Whitelist completed successfully.");
+      customToast.success(
+        summaryMessage || "Whitelist completed successfully.",
+      );
     } else {
-      customToast.error(summaryMessage || "Whitelist failed. Check the log for details.");
+      customToast.error(
+        summaryMessage || "Whitelist failed. Check the log for details.",
+      );
     }
     // Refresh so updated IPs / last-checked timestamps show immediately.
     fetchProjects();
@@ -91,24 +123,22 @@ const IpWhiteListHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f7f6] px-6 py-8 text-[var(--color-secondary)]">
-      <div className="mx-auto max-w-7xl pb-16">
+    <section className="bg-white rounded-md overflow-hidden  pb-2 min-h-[90vh] xl:min-h-[93vh] max-h-[70vh] overflow-y-auto">
+      <main className="flex-1 flex flex-col xl:min-h-[83vh] px-6 py-8">
         {/* Header */}
         <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="mb-2 flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-primary)]/10">
-                <FiShield size={19} className="text-[var(--color-primary)]" />
+            <div className="flex">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--color-primary)]/10">
+                  <FiShield size={19} className="text-[var(--color-primary)]" />
+                </div>
+
+                <h1 className="text-2xl font-bold tracking-tight">
+                  {addNewProject ? "Add New Project" : "IP Whitelist"}
+                </h1>
               </div>
-
-              <span className="text-sm font-medium text-[var(--color-primary)]">
-                Server Access
-              </span>
             </div>
-
-            <h1 className="text-2xl font-bold tracking-tight">
-              {addNewProject ? "Add New Project" : "IP Whitelist"}
-            </h1>
 
             <p className="mt-1 text-sm text-gray-500">
               Manage PostgreSQL access for all your projects.
@@ -122,11 +152,10 @@ const IpWhiteListHome = () => {
             }}
             className="
               flex items-center justify-center gap-2
-              rounded-lg
-              bg-[var(--color-primary)]
+              rounded-lg border
+              border-primary
               px-4 py-2.5
-              text-sm font-semibold text-white
-              shadow-sm
+              text-sm font-semibold text-primary
               transition-all
               hover:brightness-95
               active:scale-[0.98] cursor-pointer
@@ -160,7 +189,7 @@ const IpWhiteListHome = () => {
                     className="
                   flex h-12 w-12 shrink-0 items-center justify-center
                   rounded-xl
-                  bg-[var(--color-secondary)]
+                  bg-primary
                 "
                   >
                     <FiGlobe size={22} className="text-white" />
@@ -176,7 +205,8 @@ const IpWhiteListHome = () => {
                     </p>
 
                     <p className="mt-1 text-xs text-gray-400">
-                      Runs SSH + UFW updates for all active projects, one after another.
+                      Runs SSH + UFW updates for all active projects, one after
+                      another.
                     </p>
                   </div>
                 </div>
@@ -187,7 +217,7 @@ const IpWhiteListHome = () => {
                     className="
                   flex w-full items-center justify-center gap-2
                   rounded-lg
-                  bg-[var(--color-secondary)]
+                  bg-primary
                   px-5 py-3
                   text-sm font-semibold text-white
                   transition-all
@@ -196,7 +226,16 @@ const IpWhiteListHome = () => {
                   lg:w-auto cursor-pointer
                 "
                   >
-                    <FiShield size={18} />
+                    <div className="relative flex items-center justify-center">
+                      {/* Outer animated shield */}
+                      <FiShield
+                        size={24}
+                        className="absolute animate-ping opacity-75"
+                      />
+
+                      {/* Inner static shield */}
+                      <FiShield size={18} className="relative" />
+                    </div>
                     Whitelist IP for All Projects
                   </button>
                 </div>
@@ -209,7 +248,8 @@ const IpWhiteListHome = () => {
                 <h2 className="text-lg font-bold">Projects</h2>
 
                 <p className="mt-1 text-sm text-gray-500">
-                  {allProjects.length} projects configured for PostgreSQL access.
+                  {allProjects.length} projects configured for PostgreSQL
+                  access.
                 </p>
               </div>
 
@@ -226,27 +266,43 @@ const IpWhiteListHome = () => {
               sm:flex
             "
               >
-                <FiRefreshCw size={15} className={loadingProjects ? "animate-spin" : ""} />
+                <FiRefreshCw
+                  size={15}
+                  className={loadingProjects ? "animate-spin" : ""}
+                />
                 Refresh
               </button>
             </div>
 
             {/* Project Cards */}
-           <ProjectCard allProjects={allProjects} setAddNewProject={setAddNewProject} />
+            <ProjectCard
+              allProjects={allProjects}
+              setAddNewProject={setAddNewProject}
+              setSelectedProjectId={setSelectedProjectId}
+              setIsDeleteOpen={setIsDeleteOpen}
+            />
           </>
         )}
-      </div>
 
-      {terminal.open && (
-        <IpWhitelistTerminal
-          key={terminal.runId}
-          mode={terminal.mode}
-          project={terminal.project}
-          onClose={handleTerminalClose}
-          onComplete={handleTerminalComplete}
+        {terminal.open && (
+          <IpWhitelistTerminal
+            key={terminal.runId}
+            mode={terminal.mode}
+            project={terminal.project}
+            onClose={handleTerminalClose}
+            onComplete={handleTerminalComplete}
+          />
+        )}
+
+        <DeleteConfirmModal
+          isOpen={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
+          onConfirm={() => handleDeleteProject()}
+          title="Delete Project"
+          description="This project will be permanently removed."
         />
-      )}
-    </div>
+      </main>
+    </section>
   );
 };
 
