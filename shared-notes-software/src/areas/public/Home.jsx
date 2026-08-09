@@ -13,6 +13,7 @@ import NotificationsTab from "../tabs/NotificationsTab";
 import FileStorageMain from "../file-storage/FileStorageMain";
 import TendersMain from "../tenders/TendersMain";
 import WebsiteUpTimeMain from "../website-up-time/WebsiteUpTimeMain";
+import IpWhiteListHome from "../ip-whitelist/IpWhiteListHome";
 
 const Home = ({
   toggleSidebar,
@@ -223,9 +224,15 @@ const Home = ({
             />
           </div>
         )}
+
         {selectedMiniTab == "file-storage" && (
           <div className="w-full mb-10 h-full flex-1 overflow-auto">
             <FileStorageMain isUserLoggedIn={isUserLoggedIn} />
+          </div>
+        )}
+        {selectedMiniTab == "ip-whitelist" && (
+          <div className="w-full mb-10 h-full flex-1 overflow-auto">
+            <IpWhiteListHome isUserLoggedIn={isUserLoggedIn} />
           </div>
         )}
       </div>
