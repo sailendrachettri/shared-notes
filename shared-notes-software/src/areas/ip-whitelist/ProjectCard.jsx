@@ -2,9 +2,15 @@ import React from 'react'
 import { FiCheckCircle, FiClock, FiDatabase, FiMoreVertical, FiPlus, FiServer, FiShield } from 'react-icons/fi';
 import { formatePrettyDateTime } from '../../utils/date-time/formatePrettyDateTime';
 import { RiDeleteBinLine } from "react-icons/ri";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import WhiteListOptionMenu from './WhiteListOptionMenu';
+import { useState } from 'react';
 
 
-const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIsDeleteOpen}) => {
+
+const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIsDeleteOpen, setSelectedMenuCardId, selectedMenuCardId}) => {
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
     <>
      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -24,7 +30,7 @@ const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIs
           "
                     >
                       {/* Card Top */}
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between relative">
                         <div className="flex items-center gap-3">
                           <div
                             className="
@@ -62,7 +68,7 @@ const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIs
                           </div>
                         </div>
     
-                        <button
+                        {/* <button
                         onClick={()=>{setSelectedProjectId(project?.ipWhitelistId); setIsDeleteOpen(true)}}
                           type="button"
                           className="
@@ -74,7 +80,20 @@ const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIs
               "
                         >
                           <RiDeleteBinLine size={18} className='text-red-500 opacity-70 cursor-pointer'/>
+                        </button> */}
+                        <button
+                        onClick={()=> {setShowMenu(true); setSelectedMenuCardId(project?.ipWhitelistId)}}
+                          type="button"
+                          className="
+                rounded-lg p-1.5
+                text-gray-400
+                transition
+                hover:bg-gray-100
+                hover:text-[var(--color-secondary)]              "
+                        >
+                          <HiOutlineDotsVertical size={18} className='opacity-70 cursor-pointer'/>
                         </button>
+                        {showMenu && ( selectedMenuCardId === project?.ipWhitelistId) &&<WhiteListOptionMenu setIsDeleteOpen={setIsDeleteOpen}  setSelectedProjectId={setSelectedProjectId} selectedMenuCardId={selectedMenuCardId} setShowMenu={setShowMenu} />}
                       </div>
     
                       {/* Environment */}
@@ -221,6 +240,8 @@ const ProjectCard = ({setAddNewProject, allProjects, setSelectedProjectId, setIs
                     </p>
                   </button>
                 </div>
+
+                
     </>
   )
 }
