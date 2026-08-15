@@ -31,6 +31,7 @@ const IpWhiteListHome = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedMenuCardId, setSelectedMenuCardId] = useState(null);
   const [selectedData, setSelectedData] = useState({});
+  const [allowEdit, setAllowEdit] = useState(false);
 
   // Controls the terminal modal. `runId` forces a fresh mount of the
   // terminal component each time a whitelist action is triggered, so
@@ -123,7 +124,7 @@ const IpWhiteListHome = () => {
     useEffect(() => {
     fetchProjects();
 
-    if(selectedMenuCardId){
+    if(selectedMenuCardId && allowEdit){
       const data = allProjects?.filter(obj => obj.ipWhitelistId == selectedMenuCardId);
       console.log({data});
       setSelectedData(data);
@@ -176,7 +177,7 @@ const IpWhiteListHome = () => {
 
         {addNewProject ? (
           <div>
-            <AddNewProjectForm setAddNewProject={setAddNewProject} />
+            <AddNewProjectForm setAddNewProject={setAddNewProject} allowEdit={allowEdit} selectedData={selectedData} />
           </div>
         ) : (
           <>
@@ -290,6 +291,7 @@ const IpWhiteListHome = () => {
               setIsDeleteOpen={setIsDeleteOpen}
               setSelectedMenuCardId={setSelectedMenuCardId}
               selectedMenuCardId={selectedMenuCardId}
+              setAllowEdit={setAllowEdit}
             />
           </>
         )}

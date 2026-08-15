@@ -18,7 +18,7 @@ import { axiosInstance } from "../../api/axios";
 import { ADD_PROJECT_URL, FILE_UPLOAD_URL } from "../../api/api_routes";
 import { customToast } from "../../utils/toast/toastConfig";
 
-const AddNewProjectForm = ({setAddNewProject}) => {
+const AddNewProjectForm = ({setAddNewProject, selectedData, allowEdit}) => {
   const fileInputRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -26,16 +26,19 @@ const AddNewProjectForm = ({setAddNewProject}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [privateKey, setPrivateKey] = useState(null);
 
+  // console.log({selectedData});
+
+
   const [formData, setFormData] = useState({
-    projectName: "",
-    description: "",
-    serverHost: "",
-    sshUsername: "",
-    sshPort: "22",
-    sshPassphrase: "",
-    sshPassword: "",
-    postgresPort: "5432",
-    environment: "Production",
+    projectName: selectedData?.[0].projectName || "",
+    description: selectedData?.[0].description || "",
+    serverHost: selectedData?.[0].serverHost || "",
+    sshUsername: selectedData?.[0].sshUsername || "",
+    sshPort: selectedData?.[0].sshPort || "22",
+    sshPassphrase: selectedData?.[0].keyPassphrase || "",
+    sshPassword: selectedData?.[0].sshPassword || "",
+    postgresPort: selectedData?.[0].postgresPort || "5432",
+    environment: selectedData?.[0].envType || "Production",
     notes: "",
     enabled: true,
   });
@@ -74,6 +77,10 @@ const AddNewProjectForm = ({setAddNewProject}) => {
       fileInputRef.current.value = "";
     }
   };
+
+  const handleFormUpdate = async()=>{
+    console.log("updating form...")
+  }
 
   const handleSubmit = async (e) => {
     setSubmitting(true);
@@ -137,7 +144,7 @@ const AddNewProjectForm = ({setAddNewProject}) => {
   return (
     <div className="min-h-screen py-8">
       <div className="mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={allowEdit ? handleFormUpdate : handleSubmit} className="space-y-6">
           {/* ------------------------------------------------ */}
           {/* Project Information */}
           {/* ------------------------------------------------ */}
@@ -634,12 +641,12 @@ const AddNewProjectForm = ({setAddNewProject}) => {
         size={17}
         className="animate-spin"
       />
-      Saving...
+      {allowEdit ? 'Updating...' : 'Saving...'}
     </>
   ) : (
     <>
       <FiCheck size={17} />
-      Save Project
+      {allowEdit ? 'Update Project':'Save Project'}
     </>
   )}
 </button>
