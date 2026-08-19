@@ -79,7 +79,7 @@ const AddNewProjectForm = ({setAddNewProject, selectedData, allowEdit}) => {
   };
 
   const handleFormUpdate = async()=>{
-    console.log("updating form...")
+    console.log("updating form...");
   }
 
   const handleSubmit = async (e) => {
